@@ -1,0 +1,31 @@
+.content-wraper {
+	margin-top: 10px;
+	min-height: 1166px;
+}
+
+.separador {
+	margin: -8px -20px -8px -20px;
+}
+
+.table {
+	font-size: 10px !important;
+}
+
+.pieChart {
+	height: 377px;
+	width: 755px;
+}
+
+.areaChart {
+	height: 250px;
+	width: 755px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background: #5e779e;
+}
