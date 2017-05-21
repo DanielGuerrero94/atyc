@@ -13,12 +13,11 @@ class CreatePeriodosTable extends Migration
      */
     public function up()
     {
-        Schema::create('periodos', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('sistema.periodos', function (Blueprint $table) {
+            $table->increments('id_periodo');
             $table->string('nombre');
             $table->date('desde');
             $table->date('hasta');
-            $table->timestamps();
         });
     }
 
@@ -29,6 +28,6 @@ class CreatePeriodosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('periodos');
+        Schema::dropIfExists('sistema.periodos');
     }
 }

@@ -11,6 +11,8 @@ class Curso extends Model
 	
 	use SoftDeletes;
 
+	protected $table = "cursos.cursos";
+
 	protected $dates = ['deleted_at'];
 
 	public function profesores()

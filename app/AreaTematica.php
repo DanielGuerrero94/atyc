@@ -10,6 +10,8 @@ class AreaTematica extends Model
 {
     use SoftDeletes;
 
+    protected $table = 'sistema.areas_tematicas';
+
     protected $dates = ['deleted_at'];
 
     public static function table()

@@ -13,8 +13,8 @@ class CreateConveniosTable extends Migration
      */
     public function up()
     {
-        Schema::create('convenios', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('alumnos.convenios', function (Blueprint $table) {
+            $table->increments('id_convenio');
             $table->string('nombre');
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ class CreateConveniosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('convenios');
+        Schema::dropIfExists('alumnos.convenios');
     }
 }

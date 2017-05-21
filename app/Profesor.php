@@ -10,11 +10,23 @@ use Log;
 class Profesor extends Model
 {
 
-	use SoftDeletes;
+    use SoftDeletes;
 
     protected $dates = ['deleted_at'];
 
-	protected $table = "profesors";
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+	protected $table = 'sistema.profesores';
+
+    /**
+     * Primary key asociated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id_profesor';
 
     public function cursos()
     {	

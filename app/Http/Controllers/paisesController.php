@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Pais;
-use Log;
 use DB;
 
 class paisesController extends Controller
@@ -31,11 +30,8 @@ class paisesController extends Controller
     }
 
     public function getIdByNombre($nombre)
-    {
-		Log::info('Pais:'.json_encode($nombre));    	
+    {	
 		$id_pais = DB::table('paises')->select('nombre')->get();
-		/*$id_pais = Pais::where('nombre','=',$nombre)->get('id');*/
-    	Log::info('Pais:'.json_encode($id_pais));
     	return $id_pais;
     }
 

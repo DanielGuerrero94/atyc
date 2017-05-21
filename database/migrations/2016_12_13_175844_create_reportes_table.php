@@ -13,9 +13,10 @@ class CreateReportesTable extends Migration
      */
     public function up()
     {
-        Schema::create('reportes', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('sistema.reportes', function (Blueprint $table) {
+            $table->increments('id_reporte');
             $table->string('nombre');
+            $table->string('view')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateReportesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reportes');
+        Schema::dropIfExists('sistema.reportes');
     }
 }

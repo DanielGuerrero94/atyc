@@ -13,7 +13,7 @@ class PivotCursosAlumnos extends Migration
      */
     public function up()
     {
-        Schema::create('cursos_alumnos', function (Blueprint $table) {
+        Schema::create('cursos.cursos_alumnos', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_cursos');
             $table->integer('id_alumnos');
@@ -30,6 +30,6 @@ class PivotCursosAlumnos extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cursos_alumnos');
+        Schema::dropIfExists('cursos.cursos_alumnos');
     }
 }

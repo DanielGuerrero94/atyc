@@ -42,4 +42,27 @@ class LoginController extends Controller
         Log::debug(json_encode(request()->ip()));
         $this->middleware('guest', ['except' => 'logout']);
     }
+
+    //Sobrecargo estos dos metodos que traigo desde el trait AuthenticatesUsers
+
+     /**
+     * Get the login username to be used by the controller.
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return 'name';
+    }
+
+    /**
+     * Get the needed authorization credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function credentials(Request $request)
+    {
+        return $request->only(strtolower($this->username()), 'password');
+    }
 }

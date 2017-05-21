@@ -13,10 +13,9 @@ class CreatePaisesTable extends Migration
      */
     public function up()
     {
-        Schema::create('paises', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('sistema.paises', function (Blueprint $table) {
+            $table->increments('id_pais');
             $table->string('nombre');
-            $table->timestamps();
         });
     }
 
@@ -27,6 +26,6 @@ class CreatePaisesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('paises');
+        Schema::dropIfExists('sistema.paises');
     }
 }

@@ -42,7 +42,6 @@ class alumnosController extends Controller
 
     public function query($query)
     {
-    	/*return DB::connection('eLearning')->select($query);*/
         return DB::connection('eLearning')->select($query);
     }	
 
@@ -63,7 +62,6 @@ class alumnosController extends Controller
         //Me trae todas las columnas
         /*$query = "SELECT A.id,nombres,apellidos,tipo_doc,nro_doc,P.descripcion as \"provincia\" FROM alumnos A INNER JOIN provincias P ON P.id = provincia";
         $returns = $this->query($query);*/
-
 
         $returns = DB::table('alumnos')
         ->leftJoin('provincias','alumnos.id_provincia','=','provincias.id')
@@ -240,9 +238,8 @@ class alumnosController extends Controller
     public function getNombreOrganismo()
     {
         $nombresOrganismos = Alumno::select('organismo2')->groupBy('organismo2')->orderBy('organismo2')->get();
-        $nombresOrganismos = collect($nombresOrganismos);
 
-        $arrayMapeado = $nombresOrganismos->map(function($item,$key)
+        $arrayMapeado = collect($nombresOrganismos)->map(function($item,$key)
         {
             return $item->organismo2;
         });
@@ -261,9 +258,8 @@ class alumnosController extends Controller
     public function getEstablecimientos()
     {
         $establecimiento = Alumno::select('establecimiento2')->groupBy('establecimiento2')->orderBy('establecimiento2')->get();
-        $establecimiento = collect($establecimiento);
 
-        $arrayMapeado = $establecimiento->map(function($item,$key)
+        $arrayMapeado = collect($establecimiento)->map(function($item,$key)
         {
             return $item->establecimiento2;
         });
@@ -298,10 +294,6 @@ class alumnosController extends Controller
     {
         $ret = Alumno::where('nro_doc','=',$documento)
         ->get();
-        Log::info(json_encode($documento));
-        Log::info(json_encode($ret));
-        Log::info(json_encode(count($ret)));
-
-        return count($ret) != 0?"true":"false";
+        return count($ret) != 0?'true':'false';
     }
 }

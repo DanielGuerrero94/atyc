@@ -13,19 +13,17 @@ class CreateCursosTable extends Migration
      */
     public function up()
     {
-        Schema::create('cursos', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('nombres');
-            $table->string('apellidos');
-            $table->smallInteger('tipo_doc');//FK
-            $table->smallInteger('nro_doc');//unique con tipo_doc
-            $table->string('email');
-            $table->string('cel');
-            $table->string('tel');
+        Schema::create('cursos.cursos', function (Blueprint $table) {
+            $table->increments('id_curso');
+            $table->string('nombre');
             $table->integer('id_provincia');
-            $table->integer('id_tipo_trabajo');
-            $table->integer('id_funcion');
+            $table->integer('id_area_tematica');
+            $table->integer('id_linea_estrategica');
+            $table->date('fecha');
+            $table->float('duracion');
+            $table->smallInteger('edicion');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -36,6 +34,6 @@ class CreateCursosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cursos');
+        Schema::dropIfExists('cursos.cursos');
     }
 }
