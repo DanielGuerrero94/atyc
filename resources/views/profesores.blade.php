@@ -2,40 +2,11 @@
 
 @section('content')
 <div class="container">
-	<div id="filtros" style="display: none;"></div>
+	<div id="filtros">
+		@include('profesores.filtros')
+	</div>
 	<div id="abm">
-		{{ csrf_field() }}	
-		<div class="col-xs-12 ">
-			<div class="box box-info">
-				<div class="box-header">
-					<h2 class="box-tittle">Profesores
-						<div class="btn-group pull-right" role="group" aria-label="...">
-							<div type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-info filter" title="Filtro"><i class="fa fa-sliders" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-info expand" title="Expandir"><i class="fa fa-expand" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-info compress" title="Comprimir" style="display: none;"><i class="fa fa-compress" aria-hidden="true"></i></div>	
-						</div>
-					</h2>
-				</div>
-				<div class="box-body">
-					<table id="table" class="table table-hover">
-						<thead>
-							<tr>
-								<th>Nombres</th>
-								<th>Apellidos</th>
-								<th>Tipo Doc</th>
-								<th>Nro Doc</th>
-								<th>Acciones</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-				<div class="box-footer">
-					<button class="btn btn-success pull-right" id="alta_profesor"><i class="fa fa-plus" aria-hidden="true"></i>Alta Profesor</button>
-				</div>
-			</div>
-		</div>
+		@include('profesores.abm')
 	</div>	
 	<div id="alta" style="display: none;"></div>				
 </div>
@@ -53,86 +24,132 @@
 
 	$(document).ready(function(){
 
-		$('#abm').on('click','.filter',function () {
-
-			$.ajax ({
-				url: 'formularioConFiltros/profesors',
-				method: 'get',
-				success: function(data){
-					$('#filtros').html(data);
-					$('#filtros').show();
-				}
-			});
-
+		$('#abm').on('click','.filter',function () {			
+			$('#filtros .box').show();
 		});
 
 		$('#table').DataTable({
-			searching: false,
-			ajax : 'profesoresTabla',
+			destroy: true,
+			ajax : 'profesores/tabla',
 			columns: [
 			{ data: 'nombres'},
 			{ data: 'apellidos'},
-			{ data: 'tipo_doc'},
+			{ data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
 			{ data: 'acciones'}
 			]
 		});
 
-		$('#filtros').on('click','#filtrar',function () {
-			console.log("sadas");
-			$.ajax({
-				url: 'profesores/filtrado',
-				method: 'get',
-				data: $('#form-filtros').serialize(),
-				success: function(data){
-					console.log('Success');
-					console.log(data);
+		function getFiltrosJson() {
+			var nombres = $('#nombres')	.val();
+			var apellidos = $('#apellidos').val();
+			var id_tipo_doc = $('#tipo_doc option:selected').val()
+			var id_pais = $('#nacionalidad').val();
+			var nro_doc = $('#nro_doc').val();
+			var email = $('#email').val();
+			var cel = $('#cel').val();
+			var tel = $('#tel').val();
 
-					$('#table').DataTable({
-						searching: false,
-						data: data,
-						columns: [
-						{ data: 'nombres'},
-						{ data: 'apellidos'},
-						{ data: 'tipo_doc'},
-						{ data: 'nro_doc'},
-						{ data: 'acciones'}
-						]
-					});
-				},
-				error: function (data) {
-					console.log('Error');
-				}
-			})
-		});
+			return data = {
+				nombres: nombres,
+				apellidos: apellidos,
+				id_tipo_doc: id_tipo_doc,
+				id_pais: id_pais,
+				nro_doc: nro_doc,
+				email: email,
+				cel: cel,
+				tel: tel};
+			};
 
+			$('#filtros').on('click','#filtrar',function () {
 
-		$('#alta_profesor').on('click',function () {
-			$('#filtros').hide();
-			$('#abm').hide();
-			$.ajax({
-				url: 'profesores/alta',
-				method: 'get',
-				success: function(data){
-					$('#alta').html(data);
-					$('#alta').show();
-				}
-			})
-		});
+				var filtrosJson = getFiltrosJson();
+				console.log(filtrosJson);
 
-		$('#abm').on("click",".editar",function(){
-			$('#filtros').hide();
-			$('#abm').hide();
-			var profesor = $(this).data('id');
-			$.ajax({
-				url: 'profesores/'+profesor,
-				method: 'get',
-				success: function(data){
-					$('#alta').html(data);
-					$('#alta').show();
-				}
-			});			
-		});
+				$('#table').DataTable({
+					destroy: true,
+					ajax: {
+						url: 'profesores/filtrado',
+						data: {
+							filtros: filtrosJson 
+						}
+					},
+					columns: [
+					{ data: 'nombres'},
+					{ data: 'apellidos'},
+					{ data: 'tipo_documento.nombre'},
+					{ data: 'nro_doc'},
+					{ data: 'acciones'}
+					]
+				});
+			});
+
+			$('.excel').on('click',function () {
+
+				var filtros = getFiltrosJson();
+				console.log(filtros);
+				var order_by = $('#table').DataTable().order();
+				console.log(order_by);
+
+				$.ajax({
+					url: 'profesores/excel',
+					data: {
+						filtros: filtros,
+						order_by: order_by
+					},
+					beforeSend: function () {
+						alert('Se descargara pronto.');
+					},
+					success: function(data){
+						console.log(data);
+						window.location="descargar/excel/"+data;
+					},
+					error: function (data) {
+						alert('No se pudo crear el archivo.');
+						console.log(data);
+					}
+				});
+			});
+
+			$('.pdf').on('click',function () {
+
+				var filtros = getFiltrosJson();
+				console.log(filtros);
+				var order_by = $('#table').DataTable().order();
+				console.log(order_by);			
+
+				$.ajax({
+					url: 'profesores/pdf',
+					data: {
+						filtros: filtros,
+						order_by: order_by				
+					},
+					beforeSend: function() {
+						alert('Se descargara pronto.');
+					},
+					success: function(data){
+						console.log(data);
+						window.location="descargar/pdf/"+data;
+					},
+					error: function (data) {
+						alert('No se pudo crear el archivo.');
+						console.log(data);
+					}
+				});			
+			});
+
+			$('#alta_profesor').on('click',function () {
+				$('#filtros').hide();
+				$('#abm').hide();
+				$.ajax({
+					url: 'profesores/alta',
+					method: 'get',
+					success: function(data){
+						$('#alta').html(data);
+						$('#alta').show();
+					}
+				})
+			});
 
 		$('#abm').on("click",".eliminar",function(){
 			var profesor = $(this).data('id');

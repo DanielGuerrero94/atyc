@@ -16,6 +16,8 @@ class RespuestasTableSeeder extends Seeder
         *   update g_plannacer.encuestas set respuesta = upper(respuesta)
         */
 
+        \DB::connection('g_plannacer')->statement('update g_plannacer.encuestas set respuesta = upper(respuesta)');
+
         \DB::statement("INSERT INTO encuestas.respuestas(descripcion,created_at,updated_at)
         (SELECT
         sub.respuesta,

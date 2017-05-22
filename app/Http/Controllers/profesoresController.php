@@ -31,7 +31,9 @@ class profesoresController extends Controller
     'nombres' => 'string',
     'apellidos' => 'string',
     'id_tipo_doc' => 'numeric',
-    'id_pais' => 'numeric',
+    'cel' => 'string',
+    'tel' => 'string',
+    'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
     'nro_doc' => 'numeric'];
 
     public function query($query)
@@ -40,35 +42,20 @@ class profesoresController extends Controller
     }
 
     public function get()
-    {/*
-    	$query = "SELECT * FROM profesores";
-    	$ret = $this->query($query);
-    	return view('profesores',['profesores' => json_encode($ret)]);*/
-        return view('profesores');
+    {
+        return view('profesores',$this->getSelectOptions());
     }    
 
-    public function getProfesoresTabla()
+    public function getTabla(Request $r)
     {
-        /*$returns = DB::table('sistema.profesores')
-        ->leftJoin('sistema.tipos_documentos','sistema.profesores.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
-        ->select(
-            'sistema.profesores.id_profesor','sistema.profesores.nombres','sistema.profesores.apellidos',
-            'sistema.tipos_documentos.nombre as tipo_doc',
-            'sistema.profesores.nro_doc')
-        ->whereNull('sistema.profesores.deleted_at')
-        ->get();*/
-
-        $returns = Profesor::select(
-
-        )->with([
-            'tipo_documento'
-        ])->get();
+        $returns = Profesor::select('id_profesor','nombres','apellidos','nro_doc','id_tipo_documento')
+        ->with('tipo_documento');
 
         $returns = collect($returns);
         
         return Datatables::of($returns)
-        ->addColumn('acciones' , function($ret){
-            $accion = Input::get('botones');
+        ->addColumn('acciones' , function($ret) use ($r){
+            $accion = $r->has('botones')?$r->botones:null;
 
             $editarYEliminar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
@@ -89,89 +76,81 @@ class profesoresController extends Controller
         return view('profesores/alta',$this->getSelectOptions());
     }
 
-    public function getFiltrado(Request $r)
+    private function queryLogica(Request $r,$filtros)
     {
-        //Tengo que crear un metodo lo suficientemente generico como para poder ponerlo en abmcontroller
-        //Hago un test solo por nombre para armar el front end
-        $v = Validator::make($r->all(),$this->_filters);
-        if(!$v->fails()){
+        //Filtros las que estan vacias si es que me las pasaron
+        $filtered = $filtros->filter(function ($value,$key)
+        {
+            return $value != "";
+        });
 
-            $ret = collect($r->all());
-
-            Log::info("Antes:".json_encode($ret));
-
-            $filtered = $ret->filter(function ($key,$value)
-            {
-                return $key != "";
-            });
-
-            $mapped = $filtered->map(function ($value,$key)
-            {
-                Log::info(json_encode($value));   
-                Log::info(json_encode($key));
-                $key = mb_strtolower($key);
-                Log::info(json_encode($key));
-                return $value;   
-            });
-
-            /*$reduced = $ret->reduce(function ($reduced,$ret)
-            {  
-                foreach ($ret as $key => $value) {
-                    $reduced[mb_strtolower($key)] = $value;    
-                }
-                Log::info(json_encode($reduced));
-                return $reduced;   
-            },[]);*/
-
-            //Una forma es agregarle le where crudo con DB:raw
-            /*$reduced = "";
-            foreach ($filtered as $key => $value) {
-                
-                    $reduced .= mb_strtolower($key)." LIKE '%".$value."%'";          
-            }
-            Log::info("Para el where: ".json_encode(DB::raw($reduced)));
-
-            $returns = DB::table('profesores')
-            ->where(DB::raw($reduced))
-            ->leftJoin('tipo_docs','profesores.id_tipo_doc','=','tipo_docs.id')
-            ->select(
-                'profesores.id','profesores.nombres','profesores.apellidos',
-                'tipo_docs.nombre as tipo_doc',
-                'profesores.nro_doc')
-            ->whereNull('profesores.deleted_at')
-            ->get();
-
-            Log::info('Datos para la nueva table: '.json_encode($returns));    */
+            //Mapeo pasando a minuscula
+        $mapped = $filtered->map(function ($value,$key)
+        {
+            $key = mb_strtolower($key);
+            return $value;   
+        });
 
             //Otra forma puedo ir agregando clausulas where
-            $returns = DB::table('profesores');
-            /*foreach ($filtered as $key => $value) {
+            $returns = Profesor::table();
+            foreach ($filtered as $key => $value) {
 
-                $returns->where(mb_strtolower($key),'LIKE',"'%".$value."%'");          
-            }*/
-            
-            $aux = $returns
-            ->where('nombres','=','ADRIAN')
-            ->leftJoin('tipo_docs','profesores.id_tipo_doc','=','tipo_docs.id')
+                if($key == 'nombres' || $key == 'apellidos' || $key == 'email'){
+                    $returns = $returns->where('profesores.'.$key,'ilike','%'.$value.'%');                           
+                }else{
+                    $returns = $returns->where('profesores.'.$key,'=',$value);                           
+                }
+            }
+
+            $returns = $returns
+            ->leftJoin('tipo_docs','profesors.id_tipo_doc','=','tipo_docs.id')
             ->select(
-                'profesores.id','profesores.nombres','profesores.apellidos',
+                'profesors.id','profesors.nombres','profesors.apellidos',
                 'tipo_docs.nombre as tipo_doc',
-                'profesores.nro_doc')
-            ->whereNull('profesores.deleted_at')
-            ->get();
+                'profesors.nro_doc')
+            ->whereNull('profesors.deleted_at');
 
-            Log::info('Datos para la nueva table: '.json_encode($aux));  
+            return collect($returns->get()); 
+        }
 
-            return Datatables::of($aux)
-            ->addColumn('acciones' , function($ret){
-                return '<button profesor-id="'.$ret->id.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
-            })            
-            ->make(true); 
-        }else{
-            Log::info('No paso');
-            return json_encode("Los filtros no son validos.");
-        }        
-    }
+        public function getFiltrado(Request $r)
+        {
+            $filtros = collect($r->only('filtros'));
+            $filtros = collect($filtros->get('filtros'));
+
+        //Tengo que crear un metodo lo suficientemente generico como para poder ponerlo en abmcontroller
+        //Hago un test solo por nombre para armar el front end
+            $v = Validator::make($filtros->all(),$this->_filters);
+            if(!$v->fails()){
+
+                $aux = $this->queryLogica($r,$filtros);        
+
+                $reto = Datatables::of($aux)
+                ->addColumn('acciones' , function($ret){
+
+                    $accion = Input::get('botones');
+
+                    $editarYEliminar = '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+
+                    $agregar = '<button profesor-id="'.$ret->id.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+
+                    $botones = $editarYEliminar;
+
+                    if($accion == 'agregar'){
+                        $botones = $agregar;
+                    }           
+                    return $botones;
+                })            
+                ->make(true);
+
+
+                return $reto;
+            }else{
+                Log::info('No paso');
+                Log::info($v->errors());
+                return json_encode($v->errors());
+            }        
+        }
 
     public function getSelectOptions()
     {
@@ -195,6 +174,47 @@ class profesoresController extends Controller
             Log::info('El profesor no paso la verificacion.'); 
         }
     }
+
+    public function getExcel(Request $r)
+        {       
+            $filtros = collect($r->only('filtros'));
+            $filtros = collect($filtros->get('filtros'));
+
+            $data = $this->queryLogica($r,$filtros);
+            $datos = ['profesores' => $data];
+            $path = "profesores_filtrados_".date("Y-m-d_H:i:s");
+
+            Excel::create($path, function ($excel) use ($datos){
+                $excel->sheet('Reporte', function ($sheet) use ($datos){
+                    $sheet->setHeight(1, 20);
+                    $sheet->loadView('excel.profesores', $datos);
+                });
+            })
+            ->store('xls');
+
+            return $path;
+        }
+
+        public function getPDF(Request $r)
+        {
+            $filtros = collect($r->only('filtros'));
+            $filtros = collect($filtros->get('filtros'));
+
+            $data = $this->queryLogica($r,$filtros);
+            $header = array('Nombres','Apellidos','Tipo doc','Nro doc');
+            $column_size = array(65, 65, 25, 35);
+            
+            $mapped = $data->map(function ($item,$key){
+                $profesor = array();
+                array_push($profesor, $item->nombres);
+                array_push($profesor, $item->apellidos);
+                array_push($profesor, $item->tipo_doc);
+                array_push($profesor, $item->nro_doc);
+                return $profesor;
+            });
+
+            return PDF::save($header,$column_size,14,$mapped);
+        }
 
     public function getData(Request $r,$id)
     {

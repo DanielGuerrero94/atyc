@@ -23,19 +23,13 @@ class reportesController extends Controller
 
 	public function get()
 	{
-		$periodos = $this->query("SELECT * FROM periodos");
-		$provincias = $this->query("SELECT * FROM provincias");
-		return view('reportes',['provincias' => $provincias,
-			'periodos' => $periodos]);
+		return view('reportes',['provincias' => Provincia::all(),
+			'periodos' => Periodo::all()]);
 	}
 
 	public function getCursos()
 	{
 		$provincias = Provincia::all();
-		//Una manera de sacar el rol pero tengo que encontrar una mejor
-		$returns = Auth::user()->roles();
-
-		$usuario_rol = $returns;
 		$id_provincia = Auth::user()->id_provincia;
 		$provincia_usuario = Provincia::find($id_provincia);
 
@@ -58,7 +52,6 @@ class reportesController extends Controller
 	{
 		
 		$query = $this->queryLogica($r);
-		Log::info("Query:".$query);
 
 		$returns = DB::select($query);
 		$returns = collect($returns);
@@ -75,24 +68,17 @@ class reportesController extends Controller
 		Log::info("Order By: ".json_encode($r->order_by));
 		//Esta parte me quedo horrible voy a tener que reeverlo porque tengo demasiados if
 		//En el caso que no sea un periodo de los que hay en la tabla le concateno las fechas que me pasaron para la columna periodo
-		$id_provincia;
-
-		if($r->filtros['id_provincia']){
-			$id_provincia = $r->filtros['id_provincia'];
-		}else {
-			$id_provincia = Auth::user()->id_provincia;
-		}
-
+		$id_provincia = $r->filtros['id_provincia']?$r->filtros['id_provincia']:Auth::user()->id_provincia;
 
 		if (array_key_exists('desde',$r->filtros) && array_key_exists('hasta',$r->filtros)) {
-			$query = "SELECT CONCAT('".$r->filtros['desde']."'::date,'/','".$r->filtros['hasta']."'::date) as \"periodo\",* FROM reporte_".$r->id_reporte."('".$id_provincia."','".$r->filtros['desde']."','".$r->filtros['hasta']."')";
+			$query = "SELECT CONCAT('".$r->filtros['desde']."'::date,'/','".$r->filtros['hasta']."'::date) as periodo,* FROM reporte_".$r->id_reporte."('".$id_provincia."','".$r->filtros['desde']."','".$r->filtros['hasta']."')";
 		}elseif ($r->id_reporte == '4') {
-			$query = "SELECT P.nombre as \"periodo\" ,R.provincia,R.capacitados,R.total,R.porcentaje FROM periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R";
+			$query = "SELECT P.nombre as periodo ,R.provincia,R.capacitados,R.total,R.porcentaje FROM sistema.periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R";
 		}
 		elseif ($r->filtros['id_periodo'] == '0') {
-			$query = "SELECT P.nombre as \"periodo\" ,R.provincia,R.cantidad_alumnos FROM periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R";
+			$query = "SELECT P.nombre as periodo ,R.provincia,R.cantidad_alumnos FROM sistema.periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R";
 		}else {
-			$query = "SELECT P.nombre as \"periodo\" ,R.provincia,R.cantidad_alumnos FROM periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R where P.id = ".$r->filtros['id_periodo'];
+			$query = "SELECT P.nombre as periodo ,R.provincia,R.cantidad_alumnos FROM sistema.periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R where P.id = ".$r->filtros['id_periodo'];
 		}
 
 		return $query;
@@ -110,7 +96,7 @@ class reportesController extends Controller
 
 	public function getExcel()
 	{
-		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as \"cantidad_alumnos\", CONCAT(LE.numero,'-',LE.nombre) as \"linea_estrategica\",AT.nombre as \"area_tematica\",P.nombre as \"provincia\",C.duracion from cursos C 
+		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos C 
 		left join cursos_alumnos CA ON CA.id_cursos = C.id 
 		left join alumnos A ON CA.id_alumnos = A.id
 		inner join provincias P ON P.id = C.id_provincia

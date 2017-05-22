@@ -155,7 +155,7 @@
 									<b>{{ $curso->nombre }}</b>
 									<br>
 									<span>Cantidad de alumnos: {{ $curso->alumnos }}  </span>
-									<a href='{{url("/cursos/$curso->id")}}'><span class="btn btn-info btn-xs">Detalles</span></a>
+									<a href='{{url("/cursos/$curso->id_curso")}}'><span class="btn btn-info btn-xs">Detalles</span></a>
 								</div>
 							</div>
 						</li>

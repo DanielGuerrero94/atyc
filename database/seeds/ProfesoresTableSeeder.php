@@ -16,6 +16,8 @@ class ProfesoresTableSeeder extends Seeder
         *   update g_plannacer.profesores set tipo_doc = upper(tipo_doc)
         */
 
+        \DB::connection('g_plannacer')->statement('update g_plannacer.profesores set tipo_doc = upper(tipo_doc)');
+
         \DB::statement("INSERT INTO sistema.profesores (id_profesor,nombres,apellidos,id_tipo_documento,nro_doc,email,cel,tel)
         (SELECT
         sub.id as id_profesor, 

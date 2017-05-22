@@ -16,7 +16,7 @@
 		</div>
 		<div class="box-footer">
 			<button class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</button>
-			<button class="btn btn-primary pull-right" id="modificar" title="Modificar" data-id="{{$area->id}}"><i class="fa fa-plus" aria-hidden="true"></i>Modificar</button>
+			<button class="btn btn-primary pull-right" id="modificar" title="Modificar" data-id="{{$area->id_area_tematica}}"><i class="fa fa-plus" aria-hidden="true"></i>Modificar</button>
 		</div>
 	</div> 
 </div>

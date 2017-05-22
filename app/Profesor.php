@@ -32,6 +32,11 @@ class Profesor extends Model
     	return $this->belongsToMany('App\Curso','cursos_profesores','id_cursos','id_profesores')->withTimestamps();
     }
 
+    public function tipo_documento()
+    {
+        return $this->hasOne('App\TipoDocumento', 'id_tipo_documento', 'id_tipo_documento');
+    }
+
     public function crear(Request $r)
     {
     	$this->nombres = $r->nombres;

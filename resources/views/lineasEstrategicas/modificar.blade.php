@@ -23,7 +23,7 @@
 		</div>
 		<div class="box-footer">
 			<button class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</button>
-			<button class="btn btn-primary pull-right" id="modificar" title="Modificar" data-id="{{$linea->id}}"><i class="fa fa-plus" aria-hidden="true"></i>Modificar</button>
+			<button class="btn btn-primary pull-right" id="modificar" title="Modificar" data-id="{{$linea->id_linea_estrategica}}"><i class="fa fa-plus" aria-hidden="true"></i>Modificar</button>
 		</div>
 	</div> 
 </div>

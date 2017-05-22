@@ -59,7 +59,7 @@ return [
             'sslmode' => 'prefer',
         ],
 
-        'eLearning' => [
+        'g_plannacer' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST_EL'),
             'port' => env('DB_PORT_EL'),

@@ -23,19 +23,31 @@ class alumnosController extends Controller
     'apellidos' => 'required|string',
     'id_tipo_doc' => 'required|numeric',
     'pais' => 'required_if:id_tipo_doc,5,6',
-    'nro_doc' => 'required|numeric|max:8',
+    'nro_doc' => 'required|numeric',
     'localidad' => 'required|string',
     'id_provincia' => 'required|numeric',
     'id_trabaja_en' => 'required|numeric',
-    'id_funcion' => 'required_if:id_trabaja_en,3,4|numeric',
-    'establecimiento' => 'required|string',
-    'efector' => 'required|string',
-    'tipo_organismo' => 'required|string',
-    'nombre_organismo' => 'required|string',
+    'id_funcion' => 'required_if:id_trabaja_en,2,3|numeric',
+    'establecimiento' => 'required_if:id_trabaja_en,2|string',
+    'efector' => 'required_if:id_trabaja_en,2|string',
+    'tipo_organismo' => 'required_if:id_trabaja_en,3|string',
+    'nombre_organismo' => 'required_if:id_trabaja_en,3|string',
     'email' => 'nullable|email',
     'tel' => 'nullable',
     'cel' => 'nullable'
     ];
+
+    private 
+    $_filters = [
+    'nombres' => 'string',
+    'apellidos' => 'string',
+    'id_tipo_doc' => 'numeric',
+    'id_provincia' => 'numeric',
+    'cel' => 'string',
+    'tel' => 'string',
+    'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
+    'localidad' => 'string',
+    'nro_doc' => 'numeric'];
 
     private $campos = ["nombres","apellidos","tipo_doc","nro_doc","provincia","acciones"];
     private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
@@ -57,16 +69,12 @@ class alumnosController extends Controller
         return view('alumnos',['alumnos' => json_encode($ret)]);   
     }    
 
-    public function getAlumnosTabla()
+    public function getTabla(Request $r)
     {
-        //Me trae todas las columnas
-        /*$query = "SELECT A.id,nombres,apellidos,tipo_doc,nro_doc,P.descripcion as \"provincia\" FROM alumnos A INNER JOIN provincias P ON P.id = provincia";
-        $returns = $this->query($query);*/
-
         $returns = Alumno::select('id_alumno','nombres','apellidos','nro_doc','id_provincia','id_tipo_documento')
         ->with([
             'tipo_documento',
-            'provincia'
+            'provincia'                                                         
         ]);        
 
         if(Auth::user()->id_provincia == 25){           
@@ -76,10 +84,22 @@ class alumnosController extends Controller
 
         $returns = collect($returns->get());
 
-        //Tengo que pasarle una coleccion no un array al datatables
+         //Tengo que pasarle una coleccion                                                                                                                                                                                                                                      no un array al datatables
         return Datatables::of($returns)
-        ->addColumn('action' , function($ret){
-            return '<button alumno-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button>'.'<button alumno-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
+        ->addColumn('acciones' , function($ret) use($r){
+
+            $accion = $r->has('botones')?$r->botones:null;
+
+            $editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_alumno.'"><button alumno-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button alumno-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
+
+            $agregar = '<button profesor-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+
+            $botones = $editarYEliminar;
+
+            if($accion == 'agregar'){
+                $botones = $agregar;
+            }           
+            return $botones;
         })            
         ->make(true); 
     }
@@ -132,17 +152,17 @@ class alumnosController extends Controller
 
     public function set(Request $r)
     {
-        $v = Validator::make('',$this->_rules);
+        $v = Validator::make($r->all(),$this->_rules);
 
-        Log::info(json_encode($r->establecimiento));
-        Log::info(json_encode($r->efectores));
-        Log::info(json_encode($r->organismo));
-        if($r->has('pais')){
-            $r->pais = Pais::select('id')->where('nombre','=',$r->pais)->get('id')->first(); 
-            $r->pais = $r->pais['id'];    
+        if(!$v->fails()){
+            if($r->has('pais')){
+                $r->pais = Pais::select('id')->where('nombre','=',$r->pais)->get('id')->first(); 
+                $r->pais = $r->pais['id'];    
+            }
+            $alumno = Alumno::crear($r);
+        }else{
+            return json_encode($v->errors());
         }
-        $alumno = Alumno::crear($r);
-        Log::info(json_encode($alumno));
     }    
 
     public function borrar(Request $r,$id)
@@ -222,8 +242,9 @@ class alumnosController extends Controller
     public function getNombreOrganismo()
     {
         $nombresOrganismos = Alumno::select('organismo2')->groupBy('organismo2')->orderBy('organismo2')->get();
+        $nombresOrganismos = collect($nombresOrganismos);
 
-        $arrayMapeado = collect($nombresOrganismos)->map(function($item,$key)
+        $arrayMapeado = $nombresOrganismos->map(function($item,$key)
         {
             return $item->organismo2;
         });
@@ -242,8 +263,9 @@ class alumnosController extends Controller
     public function getEstablecimientos()
     {
         $establecimiento = Alumno::select('establecimiento2')->groupBy('establecimiento2')->orderBy('establecimiento2')->get();
+        $establecimiento = collect($establecimiento);
 
-        $arrayMapeado = collect($establecimiento)->map(function($item,$key)
+        $arrayMapeado = $establecimiento->map(function($item,$key)
         {
             return $item->establecimiento2;
         });
@@ -259,20 +281,126 @@ class alumnosController extends Controller
         return json_encode($ret);
     }
 
-    /*public function ejemploPdf($)
+    private function queryLogica(Request $r,$filtros)
     {
-        $data = [
-            'lotes' => $lotes,
-            'nombre_padron' => $this->getNombrePadron($padron),
-            'padron' => $padron,            
-            'resumen' => $resumen,
-            'jurisdiccion' => Provincia::where('id_provincia' , Auth::user()->id_provincia)->firstOrFail(),
-            'ddjj' => DDJJSirge::findOrFail($id)
-        ];
+        Log::info(json_encode($filtros));
+        //Filtros las que estan vacias si es que me las pasaron
+        //Estas funciones para filtrar podrian estar en un middleware
+        $filtered = $filtros->filter(function ($value,$key)
+        {
+            return $value != "" && $value != "0";
+        });
 
-        $pdf = PDF::loadView('pdf.ddjj.sirge' , $data);     
-        return $pdf->download("ddjj-sirge-$id.pdf");
-    }*/
+        $returns = DB::table('alumnos');
+
+        $provincia = Auth::user()->id_provincia;
+        //Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
+        if ($provincia != 25) {
+            $returns = $returns->where('alumnos.id_provincia','=',$provincia);
+        }
+
+        foreach ($filtered as $key => $value) {
+
+            if($key == 'nombres' || $key == 'apellidos' || $key == 'localidad' || $key == 'email'){
+                $returns = $returns->where('alumnos.'.$key,'ilike','%'.$value.'%');                           
+            }else{
+                $returns = $returns->where('alumnos.'.$key,'=',$value);                           
+            }
+        }
+
+        $returns = $returns
+        ->leftJoin('provincias','alumnos.id_provincia','=','provincias.id')
+        ->leftJoin('tipo_docs','alumnos.id_tipo_doc','=','tipo_docs.id')
+        ->select(
+            'alumnos.id','alumnos.nombres','alumnos.apellidos',
+            'tipo_docs.nombre as tipo_doc',
+            'alumnos.nro_doc',
+            'provincias.nombre as provincia')
+        ->whereNull('alumnos.deleted_at');
+
+        return collect($returns->get());
+    }
+
+    public function getFiltrado(Request $r){
+        $filtros = collect($r->only('filtros'));
+        $filtros = collect($filtros->get('filtros'));
+
+        $v = Validator::make($filtros->all(),$this->_filters);
+        if(!$v->fails()){
+
+            $aux = $this->queryLogica($r,$filtros);  
+
+            $tabla = Datatables::of($aux)
+            ->addColumn('acciones' , function($ret){
+
+                $accion = Input::get('botones');
+
+                $editarYEliminar = '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+
+                $agregar = '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+
+                $botones = $editarYEliminar;
+
+                if($accion == 'agregar'){
+                    $botones = $agregar;
+                }           
+                return $botones;
+            })            
+            ->make(true);
+
+
+            return $tabla;
+        }else{
+            return json_encode($v->errors());
+        }   
+    }
+
+    public function getExcel(Request $r)
+    {       
+        $filtros = collect($r->only('filtros'));
+        $filtros = collect($filtros->get('filtros'));
+
+        $data = $this->queryLogica($r,$filtros);
+        $datos = ['alumnos' => $data];
+        $path = "alumnos_filtrados_".date("Y-m-d_H:i:s");
+
+        Excel::create($path, function ($excel) use ($datos){
+            $excel->sheet('Reporte', function ($sheet) use ($datos){
+                $sheet->setHeight(1, 20);
+                $sheet->loadView('excel.alumnos', $datos);
+            });
+        })
+        ->store('xls');
+
+        return $path;
+    }
+
+    public function getPdf(Request $r)
+    {
+        $filtros = collect($r->only('filtros'));
+        $filtros = collect($filtros->get('filtros'));
+
+        $data = $this->queryLogica($r,$filtros);
+        /*$datos = ['alumnos' => $data];
+        $path = "alumnos_filtrados_".date("Y-m-d_H:i:s");
+
+        $pdf = PDF::loadView('excel.alumnos',$datos)->save($path.".pdf");*/
+
+        $header = array('Nombres','Apellidos','Tipo Doc','Nro Doc','Provincia');
+        $column_size = array(56,56,20,30,33);
+
+        $mapped = $data->map(function ($item,$key){
+                $alumno = array();
+                array_push($alumno, $item->nombres);
+                array_push($alumno, $item->apellidos);
+                array_push($alumno, $item->tipo_doc);
+                array_push($alumno, $item->nro_doc);
+                array_push($alumno, $item->provincia);
+                return $alumno;
+            });
+
+        return PDF::save($header,$column_size,13,$mapped);
+    }
 
     public function checkDocumentos($documento)
     {

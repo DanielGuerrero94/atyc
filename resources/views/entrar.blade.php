@@ -30,31 +30,31 @@
 <body class="hold-transition login-page">
   <div class="login-box panel panel-primary">
     <div class="login-logo">
-    <a href="../../index2.html"><b>E</b>learning</a>
+      <a href="../../index2.html"><b>E</b>learning</a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
       <p class="login-box-msg">Iniciar sesion</p>
 
       <form action="{{ url('/login') }}" role="form" method="post">
-      {{ csrf_field() }}
-        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} has-feedback">
-          <input id="name" type="name" class="form-control" name="name" placeholder="Nombre">
+        {{ csrf_field() }}        
+        <div class="form-group has-feedback">
+          <input id="name" type="text" name="name" class="form-control" placeholder="Nombre" required autofocus>
           <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
           @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
+          <span class="help-block">
+            <strong>{{ $errors->first('name') }}</strong>
+          </span>
+          @endif
         </div>
         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }} has-feedback">
           <input id="password" type="password" class="form-control" name="password" placeholder="Contraseña">
           <span class="glyphicon glyphicon-lock form-control-feedback"></span>
           @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
+          <span class="help-block">
+            <strong>{{ $errors->first('password') }}</strong>
+          </span>
+          @endif
         </div>
         <div class="row">
           <div class="col-xs-8">
@@ -74,7 +74,7 @@
 
       <div class="social-auth-links text-center">
         <p>----</p>
-          <a href={{url("/registrar")}} class="text-center">Registrarse</a>
+        <a href={{url("/registrar")}} class="text-center">Registrarse</a>
       </div>
       <!-- /.login-box -->
 

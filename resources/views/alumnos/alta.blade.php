@@ -22,10 +22,10 @@
 					<div class="form-group col-sm-6">
 						<label class="control-label col-xs-4" for="tipo_doc">Tipo de Documento:</label>
 						<div class="col-xs-6">
-							<select class="form-control" id="tipo_doc" title="Documento nacional de identidad">
+							<select class="form-control" id="tipo_doc" title="Documento nacional de identidad" name="tipo_doc">
 								@foreach ($documentos as $documento)
 								
-								<option data-id="{{$documento->id}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>
+								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>
 								
 								@endforeach
 							</select>
@@ -58,12 +58,18 @@
 					<div class="form-group col-sm-6">
 						<label for="provincia" class="control-label col-xs-2">Provincia:</label>
 						<div class="col-xs-6">
-							<select class="form-control" id="provincia">
+							@if(Auth::user()->id_provincia == 25)
+							<select class="form-control" id="provincia" name="provincia">
 								@foreach ($provincias as $provincia)
 								
-								<option data-id="{{$provincia->id}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
+								<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
 								@endforeach
 							</select>
+							@else
+							<select class="form-control" id="provincia" name="provincia" disabled>
+								<option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>	
+							</select>
+							@endif
 						</div>
 					</div>			
 				</div>	
@@ -72,13 +78,13 @@
 					<div class="form-group">
 						<label for="trabaja_en" class="control-label col-xs-2">Trabaja en:</label>
 						<div class="col-xs-6">
-							<select class="form-control" id="trabaja_en">
+							<select class="form-control" id="trabaja_en" name="trabaja_en">
 
-								<option data-id="null">Seleccionar</option>
+								<option data-id="0">Seleccionar</option>
 
 								@foreach ($trabajos as $trabajo)
 								
-								<option data-id="{{$trabajo->id}}" title="{{$trabajo->nombre}}">{{$trabajo->nombre}}</option>				 					
+								<option data-id="{{$trabajo->id_trabajo}}" title="{{$trabajo->nombre}}">{{$trabajo->nombre}}</option>				 					
 								@endforeach
 								
 							</select>
@@ -135,7 +141,6 @@
 								</span>
 							</div>
 						</div>
-						<button type="button" class="btn btn-info filter" title="Filtro avanzado"><i class="fa fa-sliders" aria-hidden="true"></i></button>
 					</div>
 				</div>
 				<div class="row">
@@ -155,13 +160,13 @@
 					<div class="form-group" style="display: none;">
 						<label for="funcion" class="control-label col-xs-2">Funcion que desempeña:</label>
 						<div class="col-xs-6">
-							<select class="form-control" id="funcion">
+							<select class="form-control" id="funcion" name="funcion">
 
 								<option data-id="1" title="Seleccionar">Seleccionar</option>
 
 								@foreach ($funciones as $funcion)
 
-								<option data-id="{{$funcion->id}}" title="{{$funcion->nombre}}">{{$funcion->nombre}}</option>	
+								<option data-id="{{$funcion->id_funcion}}" title="{{$funcion->nombre}}">{{$funcion->nombre}}</option>	
 
 								@endforeach
 
@@ -191,7 +196,7 @@
 					</div>
 				</div>
 				<div class="box-footer">
-					<button class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</button>
+					<div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</div>
 					<button class="btn btn-success pull-right" id="crear" title="Alta"><i class="fa fa-plus" aria-hidden="true"></i>Alta</button>
 				</div>
 			</form>
@@ -211,9 +216,16 @@
 			source: {
 				info: {
 					ajax: {
-						type: "get",
 						url: "alumnos/establecimientos",
-						path: "data.info"
+						path: "data.info",
+						success: function(data){
+							console.log("ajax success");
+							console.log(data);							
+						},
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
 					}
 				}
 			},
@@ -230,9 +242,12 @@
 			source: {
 				info: {
 					ajax: {
-						type: "get",
 						url: "paises/nombres",
-						path: "data.info"
+						path: "data.info",
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
 					}
 				}
 			},
@@ -241,26 +256,60 @@
 					console.log('Typeahead Initiated on ' + node.selector);
 				}
 			}
-		});
+		});		
 
 		$.typeahead({
 			input: '.efectores_typeahead',
+			maxItem: 15,
 			order: "desc",
+			backdrop: {
+				"background-color": "#fff"
+			},
+			dropdownFilter: "Filtro",
+			emptyTemplate: 'No hay resultados',
 			source: {
-				info: {
+				nombre: {
 					ajax: {
-						type: "get",
-						url: "efectores/cuies",
-						path: "data.info"
+						url: "efectores/typeahead",
+						path: "data.nombres",
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
 					}
-				}
+				},
+				cuie: {
+					ajax: {
+						url: "efectores/typeahead",
+						path: "data.cuies",
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
+					}
+				},
+				/*siisa: {
+					ajax: {
+						url: "efectores/typeahead",
+						path: "data.siisas",
+						success: function(data){
+							console.log("ajax success");
+							console.log(data);							
+						},
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
+					}
+				},*/
+
 			},
 			callback: {
 				onInit: function (node) {
 					console.log('Typeahead Initiated on ' + node.selector);
 				}
 			}
-		});			
+		});	
 
 		$.typeahead({
 			input: '.nombre_organismo_typeahead',
@@ -268,9 +317,12 @@
 			source: {
 				info: {
 					ajax: {
-						type: "get",
 						url: "alumnos/nombre_organismo",
-						path: "data.info"
+						path: "data.info",
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
 					}
 				}
 			},
@@ -280,6 +332,10 @@
 				}
 			}
 		});
+
+
+		var establecimiento = $('#alta').find('#establecimiento').closest('.form-group');
+		var efectores = $('#alta').find('#efectores').closest('.form-group');
 
 		/*Funciones para que aparezacan o desaparezcan campos en el
 		formulario*/
@@ -290,17 +346,18 @@
 			var tipo_convenio = $('#alta').find('#tipo_convenio').closest('.form-group');
 			var nombre_organismo = $('#alta').find('#nombre_organismo').closest('.form-group');
 			var funcion = $('#alta').find('#funcion').closest('.form-group');
-			var establecimiento = $('#alta').find('#establecimiento').closest('.form-group');
 
 			if ($(this).val() == 'ORGANISMO GUBERNAMENTAL') {
 				tipo_organismo.show();
 				nombre_organismo.show();
 				funcion.show();
 				tipo_convenio.hide();
+				$('#alta').find('#tipo_convenio').prop('checked',false);
 				establecimiento.hide();
+				efectores.hide();
 			}
 			else if($(this).val() == 'ESTABLECIMIENTO DE SALUD'){
-				tipo_convenio.show();
+				tipo_convenio.show();				
 				establecimiento.show();
 				tipo_organismo.hide();
 				nombre_organismo.hide();
@@ -309,14 +366,13 @@
 			else {
 				tipo_organismo.hide();
 				tipo_convenio.hide();
+				$('#alta').find('#tipo_convenio').prop('checked',false);
 				nombre_organismo.hide();
 				funcion.hide();
 				establecimiento.hide();
+				efectores.hide();
 			}			
 		});
-
-		var establecimiento = $('#alta').find('#establecimiento').parent().parent().parent().parent();
-		var efectores = $('#alta').find('#efectores').parent().parent().parent().parent();
 
 		$('#alta').on('change','.checkbox',function () {			
 
@@ -332,8 +388,6 @@
 		});					
 
 		$('#alta').on("click","#tipo_doc",function () {
-			console.log($(this).find(":selected").attr("title"));
-			console.log($('#alta').find("#tipo_doc").attr("title"));
 			$(this).attr("title",$(this).find(":selected").attr("title"));
 			var nacionalidad = $('#alta').find('#nacionalidad');
 			if ($(this).val() == 'DEX' || $(this).val() == 'PAS' ) {
@@ -354,21 +408,12 @@
 			var trabaja_en = form.find('#trabaja_en :selected').data('id');
 			var funcion = form.find('#funcion :selected').data('id');
 			var token = form.find('input').val();
-			/*var serializado = form.serialize();*/
 
 			var serializado = $('#alta :input').not(':hidden').serialize();
 
-			/*console.log(filtrado);*/
-			console.log(serializado);
-			console.log(form);
-			console.log(tipo_doc);
-			console.log(provincia);
-			console.log(trabaja_en);
-			console.log(funcion);
-
-			serializado += '&tipo_doc='+tipo_doc;
-			serializado += '&provincia='+provincia;
-			serializado += '&trabaja_en='+trabaja_en;
+			serializado += '&id_tipo_doc='+tipo_doc;
+			serializado += '&id_provincia='+provincia;
+			serializado += '&id_trabaja_en='+trabaja_en;
 			serializado += '&funcion='+funcion;
 			serializado += '&_token='+token;
 			console.log(serializado);
@@ -378,100 +423,95 @@
 				url : 'alumnos',
 				data : serializado,
 				success : function(data){
-					console.log("Success.");
-					location.reload();	
+					console.log(jQuery.parseJSON(data));
+					console.log(jQuery.parseJSON(data).nro_doc);
+					/*location.reload();	*/
 				},
 				error : function(data){
-					console.log("Error.");
-				}
-			});
-
-		});
-	});	
-
-$('#alta form').validate({
-	onfocusout: function () {
-		if($('#alta form #tipo_doc').val() == 'DNI' && $('#alta form #nro_doc').val() != ''){
-
-			$.ajax({
-				method : 'get',
-				url : 'alumnos/documentos/'+$('#alta form #nro_doc').val(),
-				success : function(data){
-					
-					console.log("Reviso si existe");
+					alert("El alumno no se pudo dar de alta.");
+					console.log("Ajax Error.");
 					console.log(data);
-					if(data === "true"){
-						$('#alta form #nro_doc').removeClass('error').addClass('valid');
-					}
-					else{
-						console.log("El documento ya esta registrado.");
-						$('#alta form #nro_doc').removeClass('valid').addClass('error');
-					}
-				},
-				error : function(data){
-					console.log("No se puede verificar el documento.");
 				}
 			});
 
-		}	
-	},
-	rules : {
-		nombres : "required",
-		apellidos : "required",
-		nro_doc : {
-			required: true,
-			number: true
+		});		
+
+		jQuery.validator.addMethod("selecciono", function(value, element) {
+			return $(element).find(':selected').val() !== "Seleccionar";
+		}, "Debe seleccionar alguna opcion");
+
+		var esNumero = new RegExp(/^[1-9]\d*$/i);
+
+		$('#alta form').validate({
+			debug: true,
+			onfocusout: function () {
+				var form = $('#alta form');
+				var nro_doc = form.find('#nro_doc');
+
+				if( form.find('#tipo_doc').val() == 'DNI' 
+					&& nro_doc.val() != ''
+					&& esNumero.test(nro_doc.val()) 					
+					&& !nro_doc.closest('.form-group').hasClass('has-success')){
+
+					$.ajax({
+						method : 'get',
+						url : 'alumnos/documentos/'+nro_doc.val(),
+						success : function(data){
+
+							if(data == "true"){
+								console.log("El documento ya esta registrado.");
+								nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
+								if(!nro_doc.parent().find('span').length){
+									nro_doc.parent().append("<span class=\"help-block\">El numero de documento ya esta registrado</span>");	
+								}						
+							}
+							else{
+								nro_doc.parent().find('span').remove();
+								nro_doc.closest('.form-group').removeClass('has-error').addClass('has-success');	
+							}
+						},
+						error : function(data){
+							console.log("Fallo la request ajax para validacion de documento.");
+						}
+					});
+
+			}else if(!esNumero.test(nro_doc.val())){
+				nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
+				if(!nro_doc.parent().find('span').length){
+					nro_doc.parent().append("<span class=\"help-block\">Tiene que ingresar un numero de documento</span>");	
+				}
+			}	
 		},
-		localidad : "required",
-		establecimiento : "required",
-		efectores : "required",
-		nombre_organismo : "required",
-		funcion: {
-			depends: function (element) {
-				return $('#alta form #funcion :selected').val() !== "Seleccionar";
-			}
-		} 
-	},
-	messages:{
-		nombres : "Campo obligatorio",
-		apellidos : "Campo obligatorio",
-		nro_doc : "Campo obligatorio",
-		localidad : "Campo obligatorio",
-		establecimiento : "Campo obligatorio",
-		efectores : "Campo obligatorio",
-		nombre_organismo : "Campo obligatorio",
-		funcion : {
-			depends: "Debe seleccionar una opcion"
-		}
-	},
-	highlight: function(element)
-	{
-		console.log(element);
-		$(element).closest('.form-control').removeClass('success').addClass('error');
-	},
-	success: function(element)
-	{
-		$(element).text('').addClass('valid')
-		.closest('.control-group').removeClass('error').addClass('success');
-	},
-	submitHandler : function(form){
-
-		console.log($('form').serialize());
-
-		$.ajax({
-			method : 'post',
-			url : 'areasTematicas/set',
-			data : $('form').serialize(),
-			success : function(data){
-				console.log("Success.");
-				location.reload();	
-			},
-			error : function(data){
-				console.log("Error.");
-			}
-		});
-	}
-});
-
-
+		rules : {
+			nombres : "required",
+			apellidos : "required",
+			localidad : "required",
+			establecimiento : "required",
+			efectores : "required",
+			nombre_organismo : "required",
+			funcion: { selecciono : true},
+			tipo_organismo: { selecciono : true}
+		},
+		messages:{
+			nombres : "Campo obligatorio",
+			apellidos : "Campo obligatorio",
+			localidad : "Campo obligatorio",
+			establecimiento : "Campo obligatorio",
+			efectores : "Campo obligatorio",
+			nombre_organismo : "Campo obligatorio"
+		},
+		highlight: function(element)
+		{
+			$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+		},
+		success: function(element)
+		{
+			$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+		},
+		submitHandler : function(form){
+			console.log("submitHandler");
+		}	
+	});
+	});
 </script> 
+

@@ -2,43 +2,11 @@
 
 @section('content')
 <div class="container">
-	<div id="filtros" style="display: none;"></div>	
+	<div id="filtros">
+		@include('cursos.filtros')
+	</div>	
 	<div id="abm">
-		{{csrf_field()}}
-		<div class="col-md-12">
-			<div class="box box-info">
-				<div class="box-header">
-					<h2 class="box-tittle">Cursos
-						<div class="btn-group pull-right" role="group" aria-label="...">
-							<div type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-info filter" title="Filtro"><i class="fa fa-sliders" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-info expand" title="Expandir"><i class="fa fa-expand" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-info compress" title="Comprimir" style="display: none;"><i class="fa fa-compress" aria-hidden="true"></i></div>	
-						</div>
-					</h2>
-				</div>
-				<div class="box-body">
-					<table id="abm-table" class="table table-hover">
-						<thead>
-							<tr>
-								<th>Nombre</th>
-								<th>Fecha</th>
-								<th>Edicion</th>
-								<th>Duracion</th>
-								<th>Area tematica</th>
-								<th>Linea estrategica</th>
-								<th>Provincia</th>
-								<th>Accion</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-				<div class="box-footer">
-					<button class="btn btn-success pull-right" id="alta_curso"><i class="fa fa-plus" aria-hidden="true"></i>Alta curso</button>
-				</div>
-			</div>
-		</div>	
+		@include('cursos.abm')			
 	</div>
 	<div id="alta" style="display: none;"></div>				
 </div>
@@ -49,31 +17,127 @@
 	$(document).ready(function(){
 
 		$('#abm').on('click','.filter',function () {
-
-			$.ajax ({
-				url: 'formularioConFiltros/cursos',
-				method: 'get',
-				success: function(data){
-					$('#filtros').html(data);
-					$('#filtros').show();
-				}
-			});
-
+			$('#filtros .box').show();
 		});
 
 		$('#abm-table').DataTable({
-			searching: false,
+			destroy: true,
 			ajax : 'cursos/tabla',
 			columns: [
 			{ data: 'nombre'},
 			{ data: 'fecha'},
 			{ data: 'edicion'},
 			{ data: 'duracion'},
-			{ data: 'area_tematica'},
-			{ data: 'linea_estrategica'},
-			{ data: 'provincia'},
-			{ data: 'accion'}
+			{ data: 'area_tematica.nombre'},
+			{ data: 'linea_estrategica.nombre'},
+			{ data: 'provincia.nombre'},
+			{ data: 'acciones'}
 			]
+		});
+
+		function getFiltrosJson() {
+
+			var nombre = $('#nombre').val();
+			var duracion = $('#duracion').val();
+			var edicion = $('#edicion').val();
+			var provincia = $('#provincia option:selected').data('id');
+			var linea_estrategica = $('#linea_estrategica option:selected').data('id');
+			var area_tematica = $('#area_tematica option:selected').data('id');
+			var periodo = $('#periodo option:selected').data('id');
+			var desde = $('#desde').val();
+			var hasta = $('#hasta').val();			
+
+			return data = {
+				nombre: nombre,
+				duracion: duracion,
+				edicion: edicion,
+				id_provincia: provincia,
+				id_linea_estrategica: linea_estrategica,
+				id_area_tematica: area_tematica,
+				id_periodo: periodo,
+				desde: desde,
+				hasta: hasta
+			};
+		};
+
+		$('.excel').on('click',function () {
+
+			var filtros = getFiltrosJson();
+			console.log(filtros);
+			var order_by = $('#abm-table').DataTable().order();
+			console.log(order_by);
+
+			$.ajax({
+				url: 'cursos/excel',
+				data: {
+					filtros: filtros,
+					order_by: order_by
+				},
+				beforeSend: function () {
+					alert('Se descargara pronto.');
+				},
+				success: function(data){
+					console.log(data);
+					window.location="descargar/excel/"+data;
+				},
+				error: function (data) {
+					alert('No se pudo crear el archivo.');
+					console.log(data);
+				}
+			});
+		});
+
+		$('.pdf').on('click',function () {
+
+			var filtros = getFiltrosJson();
+			console.log(filtros);
+			var order_by = $('#abm-table').DataTable().order();
+			console.log(order_by);			
+
+			$.ajax({
+				url: 'cursos/pdf',
+				data: {
+					filtros: filtros,
+					order_by: order_by				
+				},
+				beforeSend: function() {
+					alert('Se descargara pronto.');
+				},
+				success: function(data){
+					console.log(data);
+					window.location="descargar/pdf/"+data;
+				},
+				error: function (data) {
+					alert('No se pudo crear el archivo.');
+					console.log(data);
+				}
+			});			
+		});
+
+		$('#filtros').on('click','#filtrar',function () {			
+
+			var filtrosJson = getFiltrosJson();
+			console.log(filtrosJson);
+
+			$('#abm-table').DataTable({
+				destroy: true,
+				ajax: {
+					url: 'cursos/filtrado',
+					data: {
+						filtros: filtrosJson 
+					}
+				},
+				columns: [
+				{ data: 'nombre'},
+				{ data: 'fecha'},
+				{ data: 'edicion'},
+				{ data: 'duracion'},
+				{ data: 'area_tematica.nombre'},
+				{ data: 'linea_estrategica.nombre'},
+				{ data: 'provincia.nombre'},
+				{ data: 'acciones'}
+				]
+			});
 		});
 
 		$('#alta_curso').on("click",function(){
@@ -90,7 +154,7 @@
 			});
 		});
 
-		$('#abm').on("click",".editar",function(){
+		/*$('#abm').on("click",".editar",function(){
 			var curso = $(this).data('id');
 			console.log(curso);
 			$('#filtros').hide();
@@ -103,7 +167,7 @@
 					$('#alta').show();
 				}
 			})
-		});
+		});*/
 
 		$("#alta").on("click","#volver",function(){
 			console.log('Se vuelve sin crear el curso.');
@@ -112,7 +176,7 @@
 			$('#filtros').show();
 		});
 
-		$("#alta").on("click","#modificar",function(){
+		/*$("#alta").on("click","#modificar",function(){
 
 			var curso = $(this).data('id');
 			var data = $('#alta form').serialize();
@@ -140,7 +204,7 @@
 			})
 
 
-		});	
+		});	*/
 
 		$('#abm').on('click','.expand',function () {
 			$('.container').addClass('col-md-12');

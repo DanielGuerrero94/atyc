@@ -3,7 +3,7 @@
 		<div class="box-header">Alta de profesor</div>
 		<div class="box-body">
 			<form id="form-alta">
-			{{ csrf_field() }}
+				{{ csrf_field() }}
 				<div class="row">
 					<div class="form-group col-sm-6">
 						<label for="nombres" class="control-label col-xs-4">Nombres:</label>
@@ -23,7 +23,7 @@
 							<select class="form-control" id="tipo_doc" title="Documento nacional de identidad">
 								@foreach ($documentos as $documento)
 								
-								<option data-id="{{$documento->id}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>				 
+								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>				 
 								
 								@endforeach
 							</select>
@@ -70,8 +70,8 @@
 			</form>
 		</div>
 		<div class="box-footer">
-			<button class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</button>
-			<button type="submit" class="btn btn-success pull-right" id="crear" title="Alta"><i class="fa fa-plus" aria-hidden="true"></i>Alta</button>
+			<div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo"></i>Volver</div>
+			<button type="submit" class="btn btn-success pull-right" id="crear" title="Alta"><i class="fa fa-plus"></i>Alta</button>
 		</div>
 	</div> 
 </div>
@@ -123,7 +123,7 @@
 			var data = $('form').serialize();
 			data += '&id_tipo_doc='+$('#alta #tipo_doc :selected').data('id');
 
-			$.ajax({
+			/*$.ajax({
 				method : 'post',
 				url : 'profesores',
 				data : data,
@@ -134,67 +134,72 @@
 				error : function(data){
 					console.log("Error.");
 				}
-			})
+			})*/
 		});
 
+		$('#alta #form-alta').validate({
+			debug: true,
+			onfocusout: function () {
+				var form = $('#alta #form-alta');
+				var nro_doc = form.find('#nro_doc');
 
-		$("#alta").find("#form-alta").validate({
-			onfocusout: false,
-			onkeyup: false,
-			onclick: false,
-			onsubmit: true,
-			rules : {
-				nombres : {
-					required : true
-				},
-				apellidos : {
-					required : true
-				},
-				tipo_doc : {
-					required : true
-				},
-				nro_doc : {
-					required : true
-				},
-				nacionalidad : {
-					required : true
-				}
-			} ,
-			messages : {
-				nombres : {
-					required : 'Este campo es obligatorio'
-				},
-				apellidos : {
-					required : 'Este campo es obligatorio'
-				},
-				tipo_doc : {
-					required : 'Este campo es obligatorio'
-				},
-				nro_doc : {
-					required : 'Este campo es obligatorio'
-				},
-				nacionalidad : {
-					required : 'Este campo es obligatorio'
-				}
-			} ,
-			highlight: function(element) {
-				$(element).closest('.control-group').addClass('has-warning');
-			},
-			success: function(element) {
-				element.text('').addClass('valid')
-				.closest('.control-group').removeClass('has-warning').addClass('success');
-			},
-			submitHandler : function (form) {
-				console.log ("Formulario OK");
+				if( form.find('#tipo_doc').val() == 'DNI' 
+					&& nro_doc.val() != ''
+					&& !nro_doc.closest('.form-group').hasClass('has-success')){
 
-				console.log('Evento de click en crear');
-				console.log($("#form_agregar_memoria").serialize());
-				var dataUrl = $("#form_agregar_memoria").serialize();
-				console.log(dataUrl);            
-			} ,
-			invalidHandler : function (event , validator) {
-				console.log(validator);
+					$.ajax({
+						method : 'get',
+						url : 'alumnos/documentos/'+nro_doc.val(),
+						success : function(data){
+
+							if(data == "true"){
+								console.log("El documento ya esta registrado.");
+								nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
+								if(!nro_doc.parent().find('span').length){
+									nro_doc.parent().append("<span class=\"help-block\">El numero de documento ya esta registrado</span>");	
+								}						
+							}
+							else{
+								nro_doc.parent().find('span').remove();
+								nro_doc.closest('.form-group').removeClass('has-error').addClass('has-success');	
+							}
+						},
+						error : function(data){
+							console.log("Fallo la request ajax para validacion de documento.");
+						}
+					});
+			}	
+		},
+		rules : {
+			nombres : "required",
+			apellidos : "required",
+			nro_doc : {
+				required: true,
+				number: true
 			}
-		});
+		},
+		messages:{
+			nombres : "Campo obligatorio",
+			apellidos : "Campo obligatorio",
+			nro_doc : "Campo obligatorio"
+		},
+		highlight: function(element)
+		{
+			console.log("highlight");
+			console.log(element);
+			$(element).closest('.form-control').removeClass('has-success').addClass('has-error');
+		},
+		success: function(element)
+		{
+			console.log("validate success");
+			$(element).text('').addClass('valid')
+			.closest('.control-group').removeClass('has-error').addClass('has-success');
+		},
+		submitHandler : function(form){
+
+			console.log("validate submitHandler");
+			console.log($('form').serialize());
+		}	
+	});
 	});
 </script>

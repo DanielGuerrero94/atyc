@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use DB;
 
 class Curso extends Model
 {
@@ -23,6 +24,21 @@ class Curso extends Model
 	public function alumnos()
     {   
         return $this->belongsToMany('App\Alumno','cursos_alumnos','id_cursos','id_alumnos')->withTimestamps();
+    }
+
+	public function provincia()
+    {
+        return $this->hasOne('App\Provincia', 'id_provincia', 'id_provincia');
+    }
+
+	public function area_tematica()
+    {
+        return $this->hasOne('App\AreaTematica', 'id_area_tematica', 'id_area_tematica');
+    }
+
+	public function linea_estrategica()
+    {
+        return $this->hasOne('App\LineaEstrategica', 'id_linea_estrategica', 'id_linea_estrategica');
     }
 
 	public function crear(Request $r)
@@ -53,5 +69,17 @@ class Curso extends Model
 		$this->duracion = $r->duracion;
 		$this->save();
 		return $this;	
+	}
+
+	public static function getByCuie($cuie)
+	{
+		return DB::table('cursos.cursos')
+        ->join('cursos.cursos_alumnos','cursos.cursos_alumnos.id_cursos','=','cursos.cursos.id_curso')
+        ->join('alumnos.alumnos','alumnos.alumnos.id_alumno','=','cursos.cursos_alumnos.id_alumnos')
+        ->select('cursos.cursos.id_curso','cursos.cursos.nombre','cursos.cursos.fecha',DB::raw('count(*) as alumnos'))
+        ->where('alumnos.alumnos.establecimiento1','=',$cuie)
+        ->groupBy('cursos.cursos.id_curso','cursos.cursos.nombre','cursos.cursos.fecha')
+        ->orderBy('cursos.cursos.fecha','desc')
+        ->get();
 	}
 }
