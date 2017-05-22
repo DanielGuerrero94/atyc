@@ -16,7 +16,6 @@ class CreateFuncionesTable extends Migration
         Schema::create('alumnos.funciones', function (Blueprint $table) {
             $table->increments('id_funcion');
             $table->string('nombre');
-            $table->timestamps();
         });
     }
 

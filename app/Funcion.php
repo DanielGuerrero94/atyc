@@ -18,5 +18,12 @@ class Funcion extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'id_funcion';    
+    protected $primaryKey = 'id_funcion';
+
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;        
 }

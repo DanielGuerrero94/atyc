@@ -14,11 +14,9 @@ class PivotCursosAlumnos extends Migration
     public function up()
     {
         Schema::create('cursos.cursos_alumnos', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('id_cursos');
-            $table->integer('id_alumnos');
-            $table->softDeletes();
-            $table->timestamps();
+            $table->integer('id_cursos');//FK
+            $table->integer('id_alumnos');//FK
+            $table->timestamps();            
         });
 
     }

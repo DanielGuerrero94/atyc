@@ -9,7 +9,6 @@ use Log;
 
 class Profesor extends Model
 {
-
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];

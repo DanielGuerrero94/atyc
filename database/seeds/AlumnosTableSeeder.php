@@ -11,6 +11,14 @@ class AlumnosTableSeeder extends Seeder
     */
    public function run()
    {
+      /*
+      * Correr antes de migrar
+      * update g_plannacer.alumnos set trabaja_en = upper(trabaja_en)
+      * update g_plannacer.alumnos set funcion = upper(funcion)
+      * update g_plannacer.alumnos set tipo_convenio = upper(tipo_convenio)
+      * update g_plannacer.alumnos set tipo_convenio = '' where tipo_convenio is null
+      */
+
      \DB::statement("INSERT INTO alumnos.alumnos
        (id_alumno,nombres,apellidos,id_tipo_documento,nro_doc,email,cel,tel,localidad,id_trabajo,id_funcion,id_provincia,id_convenio,establecimiento1,establecimiento2,organismo1,organismo2)
        (SELECT
@@ -50,9 +58,11 @@ class AlumnosTableSeeder extends Seeder
        establecimiento1 character varying(300),
        establecimiento2 character varying(300),
        organismo1 character varying(50),
-       organismo2 character varying(300)) INNER JOIN sistema.tipos_documentos T ON lower(T.nombre) = lower(sub.tipo_doc) INNER JOIN
-       alumnos.trabajos TR ON lower(TR.nombre) = lower(sub.trabaja_en) INNER JOIN alumnos.funciones F ON lower(F.nombre) = lower(sub.funcion) INNER JOIN
-       alumnos.convenios C ON lower(C.nombre) = lower(sub.tipo_convenio))");
+       organismo2 character varying(300)) 
+       INNER JOIN sistema.tipos_documentos T ON T.nombre = sub.tipo_doc 
+       INNER JOIN alumnos.trabajos TR ON TR.nombre = sub.trabaja_en 
+       INNER JOIN alumnos.funciones F ON F.nombre = sub.funcion 
+       INNER JOIN alumnos.convenios C ON C.nombre = sub.tipo_convenio)");
   }
 }
 

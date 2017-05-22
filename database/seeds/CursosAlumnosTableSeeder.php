@@ -11,8 +11,8 @@ class CursosAlumnosTableSeeder extends Seeder
      */
     public function run()
     {
-        \DB::statement("INSERT INTO public.cursos_alumnos (id,id_cursos,id_alumnos,created_at)
-(SELECT sub.id,sub.curso,sub.alumno,sub.fecha_registro
+        \DB::statement("INSERT INTO cursos.cursos_alumnos (id,id_cursos,id_alumnos,created_at,updated_at)
+(SELECT sub.id,sub.curso,sub.alumno,sub.fecha_registro,sub.fecha_registro
 FROM dblink('dbname=elearning port=5432 host=192.6.0.66 user=postgres password=BernardoCafe008','SELECT * FROM g_plannacer.cursos_alumnos')
 AS sub(id integer,curso integer,alumno integer,fecha_registro timestamp(0) without time zone))");    
     }

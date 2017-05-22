@@ -11,17 +11,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-    	//Schema public
-        $this->call(UsersTableSeeder::class);
-
         //Schema sistema
         $this->call(PaisesTableSeeder::class);
         $this->call(PeriodosTableSeeder::class);
         $this->call(TiposDocumentosTableSeeder::class);
-        $this->call(ProfesoresTableSeeder::class);
         $this->call(ProvinciasTableSeeder::class);
+        $this->call(ProfesoresTableSeeder::class);
         $this->call(ReportesTableSeeder::class);
 
+    	//Schema public
+        $this->call(UsersTableSeeder::class);
+        
         //Schema alumnos
         $this->call(TrabajosTableSeeder::class);
         $this->call(ConveniosTableSeeder::class);
@@ -34,5 +34,10 @@ class DatabaseSeeder extends Seeder
         $this->call(CursosTableSeeder::class);
         $this->call(CursosAlumnosTableSeeder::class);
         $this->call(CursosProfesoresTableSeeder::class);
+
+        //Schema encuestas
+        $this->call(PreguntasTableSeeder::class);
+        $this->call(RespuestasTableSeeder::class);
+        $this->call(EncuestasTableSeeder::class);
     }
 }

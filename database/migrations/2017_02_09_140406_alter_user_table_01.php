@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterUserTableColumn001 extends Migration
+class AlterUserTable01 extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class AlterUserTableColumn001 extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('name')->unique()->change();
-            $table->integer('id_provincia')->nullable();
+            $table->integer('id_provincia')->nullable();//FK
             $table->string('title')->nullable();
         });
     }

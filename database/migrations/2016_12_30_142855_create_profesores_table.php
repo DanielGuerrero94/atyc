@@ -17,12 +17,12 @@ class CreateProfesoresTable extends Migration
             $table->increments('id_profesor');
             $table->string('nombres');
             $table->string('apellidos');
-            $table->integer('id_tipo_documento');
+            $table->integer('id_tipo_documento');//FK
             $table->string('nro_doc');
             $table->string('email')->nullable();
             $table->string('cel')->nullable();
             $table->string('tel')->nullable();
-            $table->integer('id_pais')->nullable();
+            $table->integer('id_pais')->nullable();//FK
             $table->timestamps();
             $table->softDeletes();
         });

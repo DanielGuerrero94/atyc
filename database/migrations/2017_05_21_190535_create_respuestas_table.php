@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class PivotCursosProfesores extends Migration
+class CreateRespuestasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class PivotCursosProfesores extends Migration
      */
     public function up()
     {
-        Schema::create('cursos.cursos_profesores', function (Blueprint $table) {
-            $table->integer('id_cursos');//FK
-            $table->integer('id_profesores');//FK
+        Schema::create('encuestas.respuestas', function (Blueprint $table) {
+            $table->increments('id_respuesta');
+            $table->string('descripcion');
             $table->timestamps();
         });
-
     }
 
     /**
@@ -28,6 +27,6 @@ class PivotCursosProfesores extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cursos.cursos_profesores');
+        Schema::dropIfExists('encuestas.respuestas');
     }
 }

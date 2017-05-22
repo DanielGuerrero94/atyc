@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class PivotCursosProfesores extends Migration
+class AlterUsersTable02 extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class PivotCursosProfesores extends Migration
      */
     public function up()
     {
-        Schema::create('cursos.cursos_profesores', function (Blueprint $table) {
-            $table->integer('id_cursos');//FK
-            $table->integer('id_profesores');//FK
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('id_provincia')->references('id_provincia')->on('sistema.provincias');
         });
-
     }
 
     /**
@@ -28,6 +25,8 @@ class PivotCursosProfesores extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cursos.cursos_profesores');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign('users_id_provincia_foreign');
+        });
     }
 }
