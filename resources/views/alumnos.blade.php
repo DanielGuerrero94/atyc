@@ -60,9 +60,9 @@
 			columns: [
 			{ data: 'nombres'},
 			{ data: 'apellidos'},
-			{ data: 'tipo_doc'},
+			{ data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
-			{ data: 'provincia'},
+			{ data: 'provincia.nombre'},
 			{ data: 'action'}
 			]
 		});			

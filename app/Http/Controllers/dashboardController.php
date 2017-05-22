@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use DB;
-use Datatables;
 
 class dashboardController extends Controller
 {
+	private $nombre_mes  = array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
+
 	//Para ahorrarme escribir siempre que connection usar
 	public function query($query)
 	{    	
@@ -17,23 +17,27 @@ class dashboardController extends Controller
 
 	public function get()
 	{
-		$alumnos = $this->getCountAlumnos();
-		$profesores = $this->getCountProfesores();
-		$cursos = $this->getCountCursos();
 
-		$counts = array('alumnos' => $alumnos,'cursos' => $cursos,'profesores' => $profesores);
+		$counts = array(
+			'alumnos' => $this->getCountAlumnos(),
+			'cursos' => $this->getCountCursos(),
+			'profesores' => $this->getCountProfesores());
 
-		$cursos_areas_temaricas = $this->getCountCursosPorAreaTematica();
-
-		$cursos_lineas_estrategicas = $this->getCountCursosPorLineaEstrategica();
-
-		$tortas = array('cursos_areas_temaricas' => $cursos_areas_temaricas,'cursos_lineas_estrategicas' => $cursos_lineas_estrategicas);
+		$tortas = array(		
+			'cursos_areas_tematicas' => $this->getCountCursosPorAreaTematica(),
+			'cursos_lineas_estrategicas' => $this->getCountCursosPorLineaEstrategica(),
+			'cursos_lineas_estrategicas_hc' => $this->to_highchart_pie(),
+			'cursos_por_provincia' => $this->getCountCursosPorProvincia());
 
 		$graficos = array(
-		'cursos2013' => $this->getCursosPorAnio('2013'),
-		'cursos2014' => $this->getCursosPorAnio('2014'),
-		'cursos2015' => $this->getCursosPorAnio('2015'),
-		'cursos2016' => $this->getCursosPorAnio('2016'));
+			'cursos2013' => $this->getCursosPorAnioYMes('2013'),
+			'cursos2014' => $this->getCursosPorAnioYMes('2014'),
+			'cursos2015' => $this->getCursosPorAnioYMes('2015'),
+			'cursos2016' => $this->getCursosPorAnioYMes('2016'),
+			'cursos_por_anio' => $this->getCursosPorAnio(),
+			'cursos_por_anio_hc' => $this->getCursosPorAnioHc(),
+			'cursos_por_anio_y_mes_hc' => $this->getCursosPorAnioYMesHc());
+
 
 		$returns = array_merge($counts,$tortas);
 		$returns = array_merge($returns,$graficos);
@@ -43,56 +47,198 @@ class dashboardController extends Controller
 	private function getCountTabla($tabla)
 	{
 		return DB::table($tabla)
-        ->whereNull('deleted_at')
-        ->get();
+		->whereNull('deleted_at')
+		->get();
 	}
 
 	private function getCountAlumnos()
 	{
-		return $this->getCountTabla("alumnos")->count();
+		return $this->getCountTabla("alumnos.alumnos")->count();
 	}
 
 	private function getCountCursos()
 	{
-		return $this->getCountTabla("cursos")
-		->groupBy('nombre')->count();
+		return $this->getCountTabla("cursos.cursos")
+		->groupBy('nombre')
+		->count();
 	}
 
 	private function getCountProfesores()
 	{
-		return $this->getCountTabla("profesors")->count();	
+		return $this->getCountTabla("sistema.profesores")->count();	
+	}
+
+	private function getCursos()
+	{
+		return DB::table('cursos.cursos')
+		->whereNull('cursos.cursos.deleted_at');
 	}
 
 	private function getCountCursosPorAreaTematica()
 	{
-		return DB::table('cursos')
-		->whereNull('cursos.deleted_at')
-		->join('area_tematicas','cursos.id_area_tematica','=','area_tematicas.id')        
-		->select('area_tematicas.nombre',DB::raw('count(*) as cantidad'))
-		->groupBy('area_tematicas.nombre')
-        ->get();	
+		return $this->getCursos()
+		->join('cursos.areas_tematicas','cursos.cursos.id_area_tematica','=','cursos.areas_tematicas.id_area_tematica')      
+		->select('cursos.areas_tematicas.nombre as label',DB::raw('count(*) as value'))
+		->groupBy('cursos.areas_tematicas.nombre')
+		->get();	
 	}
 
 	private function getCountCursosPorLineaEstrategica()
 	{
-		return DB::table('cursos')
-		->whereNull('cursos.deleted_at')
-		->join('linea_estrategicas','cursos.id_linea_estrategica','=','linea_estrategicas.id')        
-		->select('linea_estrategicas.nombre',DB::raw('count(*) as cantidad'))
-		->groupBy('linea_estrategicas.nombre')
-        ->get();
+		return $this->getCursos()
+		->join('cursos.lineas_estrategicas','cursos.id_linea_estrategica','=','cursos.lineas_estrategicas.id_linea_estrategica')        
+		->select(DB::raw('CONCAT(cursos.lineas_estrategicas.numero,\' - \',cursos.lineas_estrategicas.nombre) as label'),DB::raw('count(*) as value'))
+		->groupBy('cursos.lineas_estrategicas.nombre','cursos.lineas_estrategicas.numero')
+		->get();
 	}
 
-	private function getCursosPorAnio($anio)
+	private function getCursosPorAnioYMes($anio)
 	{
-		return DB::table('cursos')
-		->whereNull('cursos.deleted_at')      
-		->select(DB::raw('count(*) as cantidad'))
-		->whereYear('cursos.fecha',$anio)
-		->groupBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.fecha),EXTRACT(MONTH FROM cursos.fecha)'))
-		->orderBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.fecha),EXTRACT(MONTH FROM cursos.fecha)'))
-        ->get();	
+		return $this->getCursos()     
+		->select(DB::raw('count(*) as cantidad,EXTRACT(ISOYEAR FROM cursos.cursos.fecha) as anio,EXTRACT(MONTH FROM cursos.cursos.fecha) as mes'))
+		->whereYear('cursos.cursos.fecha',$anio)
+		->groupBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha),EXTRACT(MONTH FROM cursos.cursos.fecha)'))
+		->orderBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha),EXTRACT(MONTH FROM cursos.cursos.fecha)'))
+		->get();	
+	}
+
+	private function getCursosPorAnio()
+	{
+		return $this->getCursos()      
+		->select(DB::raw('count(*) as cantidad,EXTRACT(ISOYEAR FROM cursos.cursos.fecha) as anio'))
+		->where(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha)'),'>=','2013')
+		->groupBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha)'))
+		->orderBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha)'))
+		->get();	
+	}
+
+	private function getCursosTodosPorAnioYMes()
+	{
+		return $this->getCursos()     
+		->select(DB::raw('count(*) as cantidad,EXTRACT(ISOYEAR FROM cursos.cursos.fecha) as anio,EXTRACT(MONTH FROM cursos.cursos.fecha) as mes'))
+		->where(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha)'),'>=','2013')
+		->groupBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha),EXTRACT(MONTH FROM cursos.cursos.fecha)'))
+		->orderBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha),EXTRACT(MONTH FROM cursos.cursos.fecha)'))
+		->get();	
+	}
+
+	private function getCountCursosPorProvincia()
+	{
+		return $this->getCursos()
+		->join('sistema.provincias','cursos.id_provincia','=','sistema.provincias.id_provincia')        
+		->select('sistema.provincias.nombre as label',DB::raw('count(*) as value'))
+		->groupBy('sistema.provincias.id_provincia')
+		->get();
+	}
+
+	private function to_highchart_pie()
+	{
+		$cursos = $this->getCountCursosPorLineaEstrategica();
+		
+		$total = $cursos->reduce(function ($carry,$value){
+			return $carry + $value->value;
+		});
+
+		$data = array();
+
+		$cursos->each(function ($value,$item) use ($total,&$data){
+			$array = array('name' => $value->label,'y' => $value->value * 100 / $total);
+			array_push($data,$array);
+		});
+
+		$ret = array('name' => 'Lineas','data' => $data);
+
+		return array($ret);
+	}
+
+	public function getCursosPorAnioHc()
+	{
+		$cursos_por_anio = $this->getCursosPorAnio();
+		
+		$data = array();
+
+		$cursos_por_anio->each(function ($value,$item) use (&$data){
+			$array = array(
+				'name' => $value->anio,
+				'y' => $value->cantidad,
+				'drilldown' => $value->anio);
+			array_push($data,$array);
+		});
+
+		$series = array(
+			'name' => 'Cursos',
+			'colorByPoint' => true,
+			'data' => $data);
+
+		logger(json_encode($series));
+		return array($series);
+	}	
+
+	public function getCursosPorAnioYMesHc()
+	{
+		$cursos_por_anio = $this->getCursosPorAnio();
+		
+		$ret = array();
+
+		$cursos_por_anio->each(function ($value,$item) use (&$ret){
+
+			$cursos_del_anio = $this->getCursosPorAnioYMes($value->anio); 
+			$data = array();
+
+			$cursos_del_anio->each(function ($value,$key) use (&$data){
+				/*$mes = $this->$nombre_mes[(int)$value->mes];*/
+				array_push($data,array($value->mes,$value->cantidad));
+			});
+
+			$drilldown = array(
+				'name' => $value->anio,
+				'id' => $value->anio,
+				'data' => $data);
+			
+			array_push($ret,$drilldown);
+		});
+		logger(json_encode($ret));
+		return $ret;
 	}
 
 
+	/*
+	drilldown: {
+		series: [{
+			name: 'Microsoft Internet Explorer',
+			id: 'Microsoft Internet Explorer',
+			data: [
+			['v11.0',24.13],['v8.0',17.2],['v9.0',8.11],['v10.0',5.33],['v6.0',1.06],['v7.0',0.5]
+			]
+		}, {
+			name: 'Chrome',
+			id: 'Chrome',
+			data: [
+			['v40.0',5],['v41.0',4.32],['v42.0',3.68],['v39.0',2.96],['v36.0',2.53],['v43.0',1.45],['v31.0',1.24],['v35.0',0.85],['v38.0',0.6],['v32.0',0.55],['v37.0',0.38],['v33.0',0.19],['v34.0',0.14],['v30.0',0.14]
+			]
+		}, {
+			name: 'Firefox',
+			id: 'Firefox',
+			data: [
+			['v35',2.76],['v36',2.32],['v37',2.31],['v34',1.27],['v38',1.02],['v31',0.33],['v33',0.22],['v32',0.15]
+			]
+		}, {
+			name: 'Safari',
+			id: 'Safari',
+			data: [
+			['v8.0',2.56],['v7.1',0.77],['v5.1',0.42],['v5.0',0.3],['v6.1',0.29],['v7.0',0.26],['v6.2',0.17]
+			]
+		}, {
+			name: 'Opera',
+			id: 'Opera',
+			data: [
+			['v12.x',0.34],
+			['v28',0.24],
+			['v27',0.17],
+			['v29',0.16]
+			]
+		}]
+	}*/
 }
+
+

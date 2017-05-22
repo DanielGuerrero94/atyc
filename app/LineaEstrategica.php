@@ -10,6 +10,8 @@ class LineaEstrategica extends Model
 {
 	use SoftDeletes;
 
+	protected $table = 'cursos.lineas_estrategicas';
+
 	protected $dates = ['deleted_at'];
 
 	public static function table()

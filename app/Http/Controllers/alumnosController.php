@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use App\Provincia;
 use App\Pais;
 use App\Funcion;
-use App\Trabaja;
-use App\TipoDoc;
+use App\Trabajo;
+use App\TipoDocumento;
 use App\Alumno;
 use Auth;
 use DB;
@@ -63,31 +63,15 @@ class alumnosController extends Controller
         /*$query = "SELECT A.id,nombres,apellidos,tipo_doc,nro_doc,P.descripcion as \"provincia\" FROM alumnos A INNER JOIN provincias P ON P.id = provincia";
         $returns = $this->query($query);*/
 
-        $returns = DB::table('alumnos')
-        ->leftJoin('provincias','alumnos.id_provincia','=','provincias.id')
-        ->leftJoin('tipo_docs','alumnos.id_tipo_doc','=','tipo_docs.id')
-        ->select(
-            'alumnos.id','alumnos.nombres','alumnos.apellidos',
-            'tipo_docs.nombre as tipo_doc',
-            'alumnos.nro_doc',
-            'provincias.nombre as provincia')
-        ->whereNull('alumnos.deleted_at');
+        $returns = Alumno::select('id_alumno','nombres','apellidos','nro_doc','id_provincia','id_tipo_documento')
+        ->with([
+            'tipo_documento',
+            'provincia'
+        ]);        
 
-        $esProvincia = false;
-
-        $roles = Auth::user()->roles();
-        
-        foreach ($roles as $role) {
-            foreach ($role as $key => $value) {
-                if($key == 'name' && $value == 'provincia'){
-                    $esProvincia = true;  
-                }
-            }           
-        }       
-
-        if($esProvincia){           
+        if(Auth::user()->id_provincia == 25){           
             $id_provincia = Auth::user()->id_provincia;
-            $returns = $returns->where('id_provincia','=',$id_provincia);
+            $returns = $returns->where('alumnos.alumnos.id_provincia',$id_provincia);
         }
 
         $returns = collect($returns->get());
@@ -95,16 +79,16 @@ class alumnosController extends Controller
         //Tengo que pasarle una coleccion no un array al datatables
         return Datatables::of($returns)
         ->addColumn('action' , function($ret){
-            return '<button alumno-id="'.$ret->id.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button>'.'<button alumno-id="'.$ret->id.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
+            return '<button alumno-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button>'.'<button alumno-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
         })            
         ->make(true); 
     }
 
     public function getSelectOptions()
     {
-        $documentos = TipoDoc::all();        
+        $documentos = TipoDocumento::all();        
         $provincias = Provincia::orderBy('nombre')->get();
-        $trabajos = Trabaja::orderBy('nombre')->get();
+        $trabajos = Trabajo::orderBy('nombre')->get();
         $funciones = Funcion::orderBy('nombre')->get();        
         $organismos = Alumno::select('organismo1')->groupBy('organismo1')->orderBy('organismo1')->get();
 

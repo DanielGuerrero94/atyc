@@ -11,7 +11,7 @@
 					<i class="fa fa-info-circle btn text-primary pull-right" title="Solo consulta de los que tienen georeferenciamiento."></i></h2>
 				</div>
 				<div class="box-body">
-					<table id="abm-table" class="table table-hover">
+					<table class="table table-hover">
 						<thead>
 							<tr>
 								<th>Provincia</th>
@@ -23,6 +23,7 @@
 								<th>Localidad</th>
 								<th>Codigo postal</th>
 								<th>Ciudad</th>
+								<th></th>
 							</tr>
 						</thead>
 					</table>
@@ -38,7 +39,7 @@
 
 	$(document).ready(function(){	
 
-		$('#abm-table').DataTable({
+		$('.table').DataTable({
 			ajax : 'efectores/tabla',
 			columns: [
 			{ data: 'provincia'},
@@ -49,10 +50,11 @@
 			{ data: 'departamento'},
 			{ data: 'localidad'},
 			{ data: 'codigo_postal'},
-			{ data: 'ciudad'}
+			{ data: 'ciudad'},
+			{ data: 'acciones'}
 			]
 		});
-
+		
 	});
 	
 </script> 

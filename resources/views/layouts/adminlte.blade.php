@@ -128,6 +128,18 @@
     <!-- Scripts propios -->
     <script type="text/javascript" src="{{asset("/js/elearning.js")}}"></script> 
 
+    <!-- Highcharts -->
+    <script type="text/javascript" src="{{asset("/bower_components/highcharts/highcharts.js")}}"></script>
+
+    <!-- Modulos highcharts -->
+    <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/exporting.js")}}"></script>
+
+    <script type="text/javascript" src="{{asset("/bower_components/highcharts-export-csv/export-csv.js")}}"></script>
+
+    <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/data.js")}}"></script>
+
+    <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/drilldown.js")}}"></script>
+
   </head>
   <body class="skin-blue">
     <div class="wrapper" style="background-color: #f5f5f5;">
@@ -158,7 +170,6 @@
                 <li><a href='{{url("/reportes/2")}}'>Banco - Participaron de actividades de capacitacion con mas de 10 horas</a></li>
                 <li><a href='{{url("/reportes/3")}}'>Total de staff institucional que participo de alguna actividad de capacitacion</a></li>
                 <li><a href='{{url("/reportes/4")}}'>Porcentaje de establecimientos de salud capacitados por provincia</a></li>
-                <li><a href='{{url("/reportes/5")}}'>Grado de satisfaccion del usuario de las capacitaciones</a></li>
                 <li><a href={{url("/reportes/cursos")}}>Cantidad de alumnos por curso</a></li>
               </ul>
             </li> 
@@ -175,10 +186,40 @@
             @endif
             @endif
           </ul> 
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav navbar-right" style="width: 100px;">
             <!-- Authentication Links -->
             @if (Auth::guest())
-            <li style="margin-right: 10px"><a href="{{ url('/entrar') }}">Entrar</a></li>
+            <li class="dropdown user user-menu">            
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="login">
+                <span class="hidden-md"><b>Entrar</b></span>
+              </a>            
+              <ul class="dropdown-menu">
+                <li class="user-header">
+                  <form action="{{ url('/login') }}" method="post">
+                    {{ csrf_field() }}
+
+                    <!-- <div class="form-group has-feedback">
+                      <input id="email" type="email" class="form-control" name="email" placeholder="Email"  required autofocus>
+                      <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    </div> -->
+                    <div class="form-group has-feedback">
+                    <input id="name" type="text" name="name" class="form-control" placeholder="Nombre" required autofocus>
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                  </div>
+                    <div class="form-group has-feedback">
+                      <input id="password" type="password" class="form-control" placeholder="Contraseña" name="password" required>
+                      <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-4 col-xs-offset-4">
+                        <button type="submit" class="btn btn-default  ">Entrar</button>
+                      </div>
+                    </div> 
+                  </form>
+                </li>
+              </ul>
+
+            </li>
             @else
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -242,15 +283,13 @@
   $('.select2').select2();
   $(".js-example-basic-multiple").select2();
 
-  $(document).ready(function(){   
+  $(document).ready(function(){       
 
     /*Traduccion a español para DataTable*/
     $.extend( $.fn.dataTable.defaults, {
       processing: true,
-      scrollCollapse: true,
-      scrollY:"600px",
+      scrollY:"400px",
       serverSide: true,
-      stateSave: true,
       language: {
         emptyTable: "No se encontraron registros",
         info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
@@ -273,6 +312,11 @@
   });
 
 </script>
+<!-- <script>
+window.location.hash="no-back-button";
+window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
+window.onhashchange=function(){window.location.hash="no-back-button";}
+</script>  -->
 @yield('script')
 @stack('moreScripts')
 

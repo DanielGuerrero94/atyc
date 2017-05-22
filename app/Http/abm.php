@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\TipoDoc;
+use App\TipoDocumento;
 use DB;
 use Log;
 
@@ -68,7 +68,7 @@ class abmController extends Controller
 
     public function tiposDocumentos()
     {
-        return json_encode(TipoDoc::all());
+        return json_encode(TipoDocumento::all());
     }
 
     public function filtrar(Request $r)

@@ -38,12 +38,12 @@ class Alumno extends Model
         return $this->hasOne('App\Provincia', 'id_provincia', 'id_provincia');
     }
 
-    public function tipo_doc()
+    public function tipo_documento()
     {
         return $this->hasOne('App\TipoDocumento', 'id_tipo_documento', 'id_tipo_documento');
     }
 
-    public function trabaja_en()
+    public function trabajo()
     {
         return $this->hasOne('App\Trabajo', 'id_trabajo', 'id_trabajo');
     }

@@ -60,33 +60,63 @@
 		<div class="box box-danger">
 			<div class="box-header with-border">
 				<h3 class="box-title">Cursos por area tematica</h3>
+        <!-- <i class="fa fa-pie-chart btn text-primary pull-right">Ver más</i> -->
+      </div>
+      <div class="box-body">
+        <canvas id="pieAreas" class="pieChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 col-xs-6">
+    <div class="box box-danger">
+     <div class="box-header with-border">
+      <h3 class="box-title">Cursos por linea estrategica</h3>
+    </div>
+    <div class="box-body">
+      <canvas id="pieLineas" class="pieChart"></canvas>
+    </div>
+  </div>
+</div>
+<div class="col-lg-4 col-xs-6">
+  <div class="box box-danger">
+   <div class="box-header with-border">
+    <h3 class="box-title">Provincias con mas cursos dictados</h3>
+  </div>
+  <div class="box-body">
+    <canvas id="pieChart" class="pieChart"></canvas>
+  </div>
+</div>
+</div>
+</div>
+<div class="row" style="margin-right: 5px;margin-left: 5px;">
+  <!-- <div class="col-lg-4 col-xs-6">
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title">Cursos por area tematica</h3>
         <i class="fa fa-pie-chart btn text-primary pull-right">Ver más</i>
-			</div>
-			<div class="box-body">
-				<canvas id="pieAreas" class="pieChart"></canvas>
-			</div>
-		</div>
-	</div>
-	<div class="col-lg-4 col-xs-6">
-		<div class="box box-danger">
-			<div class="box-header with-border">
-				<h3 class="box-title">Cursos por linea estrategica</h3>
-			</div>
-			<div class="box-body">
-				<canvas id="pieLineas" class="pieChart"></canvas>
-			</div>
-		</div>
-	</div>
-	<div class="col-lg-4 col-xs-6">
-		<div class="box box-danger">
-			<div class="box-header with-border">
-				<h3 class="box-title">Cursos con mas ediciones</h3>
-			</div>
-			<div class="box-body">
-				<canvas id="pieChart" class="pieChart"></canvas>
-			</div>
-		</div>
-	</div>
+      </div>
+      <div class="box-body">
+      <canvas id="pieLineas" class="pieChart"></canvas>
+      </div>
+    </div>
+  </div> -->
+  <div class="col-lg-8 col-xs-12">
+    <div class="box box-danger">
+    <div class="box-body">
+      <div id="pieTestHighchart"></div>
+    </div>
+  </div>
+</div>
+<div class="col-lg-4 col-xs-6">
+  <div class="box box-danger">
+   <div class="box-header with-border">
+    <h3 class="box-title">Provincias con mas cursos dictados</h3>
+  </div>
+  <div class="box-body">
+    <div id="pieProvinciasHighchart"></div>
+  </div>
+</div>
+</div>
 </div>
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
 	<div class="col-lg-4 col-xs-6">
@@ -164,6 +194,13 @@
 		</div>
 	</div>
 </div>
+<div class="row" style="margin-right: 5px;margin-left: 5px;">
+  <div id="highchart"></div>  
+</div>
+<div class="row" style="margin-right: 5px;margin-left: 5px;">
+  <div id="columnDrilldown"></div>  
+</div>
+
 <!-- <div style="margin: 0px 5px 0px 5px;">
 				<div class="progress">
 					<div class="progress-bar" style="width: 50%"></div>
@@ -183,43 +220,316 @@
 	$(document).ready(function(){
 
 		/*variables que voy usar para cargar los datos*/
-		var alumnos,profesores,cursos,cursos_areas_tematicas,cursos_lineas_estrategicas,cursos2013,cursos2014,cursos2015,cursos2016;
+		var alumnos,profesores,cursos,cursos_areas_tematicas,cursos_lineas_estrategicas,cursos_por_provincia,cursos_por_anio,cursos2013,cursos2014,cursos2015,cursos2016;
 
-		$.blockUI({ 
-			css: {
-				border: 'none',
-				padding: '15px',
-				backgroundColor: '#000',
-				'-webkit-border-radius': '10px',
-				'-moz-border-radius': '10px',
-				opacity: .5,
-				color: '#fff'
-			},		
-			message: 'Cargando...', 
-		});
+    function data_to_pie_chart_highcharts() {
 
-		$.ajax ({
-			url: 'dashboard/datos',
-			method: 'get',
-			dataType: 'json',
-			success: function(data){
-				console.log(data);
-				alumnos = data.alumnos;
-				profesores = data.profesores;
-				cursos = data.cursos;
-				cursos_areas_tematicas = data.cursos_areas_tematicas;
-				cursos_lineas_estrategicas = data.cursos_lineas_estrategicas;
-				cursos2013 = $.map(data.cursos2013, function(el) { return el.cantidad });
-				cursos2014 = $.map(data.cursos2014, function(el) { return el.cantidad });
-				cursos2015 = $.map(data.cursos2015, function(el) { return el.cantidad });
-				cursos2016 = $.map(data.cursos2016, function(el) { return el.cantidad });
-				console.log(cursos2015);
+    };
 
-				/*Empiezo a hacer cosas*/
+    Highcharts.setOptions({
+      lang: {        
+        contextButtonTitle: "Menu exportar",
+        decimalPoint: ".",
+        downloadJPEG: "Descargar imagen JPEG",
+        downloadPDF: "Descargar documento PDF",
+        downloadPNG: "Descargar imagen PNG",
+        downloadSVG: "Descargar vector imagen SVG",
+        downloadCSV: 'Descargar CSV',
+        downloadXLS: 'Descargar XLS',
+        viewData: 'Ver data table',
+        drillUpText: "Volver a {series.name}",
+        loading: "Cargando...",
+        months: [ "Enero" , "Febrero" , "Marzo" , "Abril" , "Mayo" , "Junio" , "Julio" , "Agosto" , "Septiembre" , "Octubre" , "Noviembre" , "Diciembre"],
+        noData: "No hay datos para mostrar",
+        numericSymbolMagnitude: 1000,
+        numericSymbols: [ "k" , "M" , "G" , "T" , "P" , "E"],
+        printChart: "Imprimir Gráfico",
+        resetZoom: "Reiniciar zoom",
+        resetZoomTitle: "Reiniciar zoom 1:1",
+        shortMonths: [ "Ene" , "Feb" , "Mar" , "Abr" , "May" , "Jun" , "Jul" , "Ago" , "Sep" , "Oct" , "Nov" , "Dic"],
+        shortWeekdays: undefined,
+        thousandsSep: " ",
+        weekdays: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"]
+      }
+    });
 
-				$('#cursos').html(cursos);
-				$('#alumnos').html(alumnos);
-				$('#profesores').html(profesores);
+    Highcharts.chart('highchart', {
+
+      title: {
+        text: 'Solar Employment Growth by Sector, 2010-2016'
+      },
+
+      subtitle: {
+        text: 'Source: thesolarfoundation.com'
+      },
+
+      yAxis: {
+        title: {
+          text: 'Number of Employees'
+        }
+      },
+      legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+      },
+
+      plotOptions: {
+        series: {
+          pointStart: 2010
+        }
+      },
+
+      series: [{
+        name: 'Installation',
+        data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+      }, {
+        name: 'Manufacturing',
+        data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+      }, {
+        name: 'Sales & Distribution',
+        data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
+      }, {
+        name: 'Project Development',
+        data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
+      }, {
+        name: 'Other',
+        data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+      }]
+
+    });
+
+
+
+
+// Radialize the colors
+Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+  return {
+    radialGradient: {
+      cx: 0.5,
+      cy: 0.3,
+      r: 0.7
+    },
+    stops: [
+    [0, color],
+            [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+            ]
+          };
+        });
+
+
+
+// Make monochrome colors and set them as default for all pies
+Highcharts.getOptions().plotOptions.pie.colors = (function () {
+  var colors = [],
+  base = Highcharts.getOptions().colors[2],
+  i;
+
+  for (i = 0; i < 10; i += 1) {
+        // Start out with a darkened base color (negative brighten), and end
+        // up with a much brighter color
+        colors.push(Highcharts.Color(base).brighten((i - 3) / 7).get());
+      }
+      return colors;
+    }());
+
+// Build the chart
+Highcharts.chart('pieProvinciasHighchart', {
+  chart: {
+    plotBackgroundColor: null,
+    plotBorderWidth: null,
+    plotShadow: false,
+    type: 'pie'
+  },
+  title: {
+    text: 'Browser market shares at a specific website, 2014'
+  },
+  tooltip: {
+    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+  },
+  plotOptions: {
+    pie: {
+      allowPointSelect: true,
+      cursor: 'pointer',
+      dataLabels: {
+        enabled: false,
+        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+        style: {
+          color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+        }
+      }
+    }
+  },
+  series: [{
+    name: 'Brands',
+    data: [
+    { name: 'Microsoft Internet Explorer', y: 56.33 },
+    { name: 'Chrome', y: 24.03 },
+    { name: 'Firefox', y: 10.38 },
+    { name: 'Safari', y: 4.77 },
+    { name: 'Opera', y: 0.91 },
+    { name: 'Proprietary or Undetectable', y: 0.2 }
+    ]
+  }]
+});
+
+$.blockUI({ 
+ css: {
+  border: 'none',
+  padding: '15px',
+  backgroundColor: '#000',
+  '-webkit-border-radius': '10px',
+  '-moz-border-radius': '10px',
+  opacity: .5,
+  color: '#fff'
+},		
+message: 'Cargando...', 
+});
+
+function data_to_pie_chart(data,colors,highlights) {
+  var sorted = data.sort(function (a,b){ return b.value-a.value});
+  var sliced = sorted.slice(0,6);
+  var mapeado = $.map(sliced, function(elem) {
+    var item = {};
+    item ['label'] = elem.label.substring(0,24) + "...";
+    item ['value'] = elem.value;
+    item ['color'] = colors.shift();
+    item ['highlight'] = highlights.shift();
+    return item;
+  });
+  return mapeado; 
+}
+
+$.ajax ({
+ url: 'dashboard/datos',
+ method: 'get',
+ dataType: 'json',
+ success: function(data){
+  console.log(data);
+  alumnos = data.alumnos;
+  profesores = data.profesores;
+  cursos = data.cursos;
+  cursos_areas_tematicas = data.cursos_areas_tematicas;
+  cursos_lineas_estrategicas = data.cursos_lineas_estrategicas;
+  cursos_por_provincia = data.cursos_por_provincia;
+  cursos_por_anio = $.map(data.cursos_por_anio, function(el) { return el.cantidad });
+  cursos2013 = $.map(data.cursos2013, function(el) { return el.cantidad });
+  cursos2014 = $.map(data.cursos2014, function(el) { return el.cantidad });
+  cursos2015 = $.map(data.cursos2015, function(el) { return el.cantidad });
+  cursos2016 = $.map(data.cursos2016, function(el) { return el.cantidad });
+  cursos_lineas_estrategicas_hc = data.cursos_lineas_estrategicas_hc;
+  cursos_por_anio_hc = data.cursos_por_anio_hc;
+  cursos_por_anio_y_mes_hc = data.cursos_por_anio_y_mes_hc;
+
+  /*Empiezo a hacer cosas*/
+
+  $('#cursos').html(cursos);
+  $('#alumnos').html(alumnos);
+  $('#profesores').html(profesores);
+
+        //Todos los arrays con los colores son downgrades
+        var colores_pie_areas = ["#6591BC","#749cc2","#83a7c9","#93b2d0","#a2bdd6","#b2c8dd"];
+        var highlights_pie_areas = ["#83a7c9","#93b2d0","#a2bdd6","#b2c8dd","#c1d3e4","#d0deea"];
+
+        var colores_pie_lineas = ["#5f826e", "#6f8e7c", "#7e9b8b", "#8fa799", "#9fb4a8", "#afc0b6"];
+        var highlights_pie_lineas = ["#7e9b8b", "#8fa799", "#9fb4a8", "#afc0b6", "#bfcdc5", "#cfd9d3"];
+        
+        var colores_pie_por_provincia = ["#c1b989","#c7c094","#cdc7a0","#d3ceac","#d9d5b8","#e0dcc4"];
+        var highlights_pie_por_provincia = ["#cdc7a0","#d3ceac","#d9d5b8","#e0dcc4","#e6e3cf","#eceadb"];
+
+
+
+        //De los pie charts solo quiero un top 6 para llenarlo 
+        var data_pie_chart_areas = data_to_pie_chart(cursos_areas_tematicas,colores_pie_areas,highlights_pie_areas);
+        console.log(data_pie_chart_areas);
+
+        var data_pie_chart_lineas = data_to_pie_chart(cursos_lineas_estrategicas,colores_pie_lineas,highlights_pie_lineas);
+        console.log(data_pie_chart_lineas);
+
+        var data_pie_chart_provincias = data_to_pie_chart(cursos_por_provincia,colores_pie_por_provincia,highlights_pie_por_provincia);
+        console.log(data_pie_chart_provincias);        
+
+
+// Build the chart
+Highcharts.chart('pieTestHighchart', {
+  chart: {
+    plotBackgroundColor: null,
+    plotBorderWidth: null,
+    plotShadow: false,
+    type: 'pie'
+  },
+  title: {
+    text: 'Cursos por linea estrategica'
+  },
+  tooltip: {
+    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+  },
+  plotOptions: {
+    pie: {
+      allowPointSelect: true,
+      cursor: 'pointer',
+      dataLabels: {
+        enabled: true,
+        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+        style: {
+          color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+        },
+        connectorColor: 'silver'
+      },
+      size : 300
+    }
+  },
+  series: cursos_lineas_estrategicas_hc
+});
+
+// Create the chart
+Highcharts.chart('columnDrilldown', {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'Cursos dictados por año y desagregado por mes'
+  },
+  subtitle: {
+    text: 'Click en la columna año para ver detalle por mes'
+  },
+  xAxis: {
+    type: 'Año'
+  },
+  yAxis: {
+    title: {
+      text: 'Total cursos'
+    }
+
+  },
+  legend: {
+    enabled: false
+  },
+  drilldown: {
+
+  },
+  plotOptions: {
+    series: {
+      borderWidth: 0,
+      dataLabels: {
+        enabled: true
+      }
+    }
+  },
+  tooltip: {
+    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+  },
+
+  series: cursos_por_anio_hc,
+  drilldown: {
+    series: cursos_por_anio_y_mes_hc
+  }
+});
+
+
+
+
 				//--------------
     //- AREA CHART -
     //--------------
@@ -230,7 +540,7 @@
     var areaChartCursos = new Chart(areaChartCanvasCursos);
 
     var areaChartDataCursos = {
-    	labels: ["2013", "2014", "2015", "2016"],
+    	labels: ["2013", "2014", "2015", "2016", "2017"],
     	datasets: [
     	{
     		label: "Electronics",
@@ -240,7 +550,7 @@
     		pointStrokeColor: "rgba(60,141,188,1)",
     		pointHighlightFill: "#fff",
     		pointHighlightStroke: "rgba(60,141,188,1)",
-    		data: [1393, 1926, 2576, 1562]
+    		data: cursos_por_anio
     	}
     	]
     };
@@ -282,7 +592,7 @@
       maintainAspectRatio: true,
       //Boolean - whether to make the chart responsive to window resizing
       responsive: true
-  };
+    };
 
     //Create the line chart
     areaChartCursos.Line(areaChartDataCursos, areaChartOptions);
@@ -392,22 +702,12 @@
 
     var areaChartData = {
     	labels: labels_meses,
-    	datasets: [    	
-    	{
-    		label: "2015",
-    		fillColor: "#9BE18D",
-    		strokeColor: "rgba(210, 214, 222, 1)",
-    		pointColor: "rgba(210, 214, 222, 1)",
-    		pointStrokeColor: "#c1c7d1",
-    		pointHighlightFill: "#fff",
-    		pointHighlightStroke: "rgba(220,220,220,1)",
-    		data: cursos2015
-    	},
+    	datasets: [     	
     	{
     		label: "2013",
-    		fillColor: "#BBAAE8",
+    		fillColor: "#6591BC",
     		strokeColor: "rgba(210, 214, 222, 1)",
-    		pointColor: "rgba(210, 214, 222, 1)",
+    		pointColor: "#6591BC",
     		pointStrokeColor: "#c1c7d1",
     		pointHighlightFill: "#fff",
     		pointHighlightStroke: "rgba(220,220,220,1)",
@@ -415,25 +715,35 @@
     	},
     	{
     		label: "2014",
-    		fillColor: "rgba(60,141,188,0.9)",
+    		fillColor: "#749cc2",
     		strokeColor: "rgba(60,141,188,0.8)",
-    		pointColor: "#3b8bba",
+    		pointColor: "#749cc2",
     		pointStrokeColor: "rgba(60,141,188,1)",
     		pointHighlightFill: "#fff",
     		pointHighlightStroke: "rgba(60,141,188,1)",
     		data: cursos2014
     	},
-    	{
-    		label: "2016",
-    		fillColor: "#BCF3F4",
-    		strokeColor: "rgba(60,141,188,0.8)",
-    		pointColor: "#3b8bba",
-    		pointStrokeColor: "rgba(60,141,188,1)",
-    		pointHighlightFill: "#fff",
-    		pointHighlightStroke: "rgba(60,141,188,1)",
-    		data: cursos2016
-    	}
-    	]
+      {
+        label: "2015",
+        fillColor: "#83a7c9",
+        strokeColor: "#2ffc6d",
+        pointColor: "#83a7c9",
+        pointStrokeColor: "#aeefc2",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "rgba(220,220,220,1)",
+        data: cursos2015
+      },
+      {
+        label: "2016",
+        fillColor: "#93b2d0",
+        strokeColor: "rgba(60,141,188,0.8)",
+        pointColor: "#93b2d0",
+        pointStrokeColor: "rgba(60,141,188,1)",
+        pointHighlightFill: "#fff",
+        pointHighlightStroke: "rgba(60,141,188,1)",
+        data: cursos2016
+      }
+      ]
     };
 
     //Create the line chart
@@ -443,9 +753,6 @@
 	//-------------
     //- PIE CHART -
     //-------------
-    // Get context with jQuery - using jQuery's .get() method.
-    var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
-    var pieChart = new Chart(pieChartCanvas);
     var pieOptions = {
       //Boolean - Whether we should show a stroke on each segment
       segmentShowStroke: true,
@@ -469,141 +776,27 @@
       maintainAspectRatio: true,
       //String - A legend template
       legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-  };
-  var PieData = [
-  {
-  	value: 700,
-  	color: "#f56954",
-  	highlight: "#f56954",
-  	label: "Chrome"
-  },
-  {
-  	value: 500,
-  	color: "#00a65a",
-  	highlight: "#00a65a",
-  	label: "IE"
-  },
-  {
-  	value: 400,
-  	color: "#f39c12",
-  	highlight: "#f39c12",
-  	label: "FireFox"
-  },
-  {
-  	value: 600,
-  	color: "#00c0ef",
-  	highlight: "#73c1ef",
-  	label: "Safari"
-  },
-  {
-  	value: 300,
-  	color: "#3c8dbc",
-  	highlight: "#3c8def",
-  	label: "Opera"
-  },
-  {
-  	value: 100,
-  	color: "#d2d6de",
-  	highlight: "#d2d6de",
-  	label: "Navigator"
-  }
-  ];
+    };
 
-    //Create pie or douhnut chart
-    // You can switch between pie and douhnut using the method below.
-    pieChart.Doughnut(PieData, pieOptions);
+    //Pie provincias
+    // Get context with jQuery - using jQuery's .get() method.
+    var pieChartCanvas = $("#pieChart").get(0).getContext("2d");
+    var pieChart = new Chart(pieChartCanvas);
+    pieChart.Doughnut(data_pie_chart_provincias, pieOptions);
 
+    //Pie areas
     var pieChartCanvasAreas = $("#pieAreas").get(0).getContext("2d");
     var pieChartAreas = new Chart(pieChartCanvasAreas);
-    var PieAreas = [
-    {
-    	value: 2639,
-    	color: "#f56954",
-    	highlight: "#f56954",
-    	label: "Contenidos formativos en competencias de gestión en salud"
-    },
-    {
-    	value: 1832,
-    	color: "#00a65a",
-    	highlight: "#00a65a",
-    	label: "Contenidos formativos en competencias de habilidades y conducta"
-    },
-    {
-    	value: 1021,
-    	color: "#f39c12",
-    	highlight: "#f39c12",
-    	label: "Contenidos formativos en modelo de atención en salud"
-    },
-    {
-    	value: 625,
-    	color: "#00c0ef",
-    	highlight: "#73c1ef",
-    	label: "Ampliación Programa Sumar"
-    },
-    {
-    	value: 274,
-    	color: "#3c8dbc",
-    	highlight: "#3c8def",
-    	label: "Estrategia de Efectores Priorizados"
-    },
-    {
-    	value: 269,
-    	color: "#d2d6de",
-    	highlight: "#d2d6de",
-    	label: "Contenidos formativos en promoción y prevención de la salud y abordaje desde una perspectiva de derechos"
-    }
-    ];    
-    pieChartAreas.Doughnut(PieAreas, pieOptions);
+    pieChartAreas.Doughnut(data_pie_chart_areas, pieOptions);
 
+    //Pie lineas
     var pieChartCanvasLineas = $("#pieLineas").get(0).getContext("2d");
     var pieChartLineas = new Chart(pieChartCanvasLineas);
-    var PieLineas = [
-    {
-    	value: 3056,
-    	color: "#f56954",
-    	highlight: "#f56954",
-    	label: "AC DE APRENDISAJE Y FORMACIÓN/CURSOS PRESENCIALES"
-    },
-    {
-    	value: 1283,
-    	color: "#00a65a",
-    	highlight: "#00a65a",
-    	label: "AC DE ASISTENCIA TÉCNICA / PROYECTOS PEATYC"
-    },
-    {
-    	value: 1231,
-    	color: "#f39c12",
-    	highlight: "#f39c12",
-    	label: "AC DE ASISTENCIA TÉCNICA / TUTORÍA , ASIST TECNICA, VISITAS"
-    },
-    {
-    	value: 742,
-    	color: "#00c0ef",
-    	highlight: "#73c1ef",
-    	label: "AC DE APRENDISAJE Y FORMACIÓN/TALLERES"
-    },
-    {
-    	value: 230,
-    	color: "#3c8dbc",
-    	highlight: "#3c8def",
-    	label: "AC DE DESARROLLO DE CONTENIDOS"
-    },
-    {
-    	value: 230,
-    	color: "#d2d6de",
-    	highlight: "#d2d6de",
-    	label: "AC DE APRENDISAJE Y FORMACIÓN/BECAS"
-    }
-    ];    
-    pieChartLineas.Doughnut(PieLineas, pieOptions);
-
-
-
-
-},
-error: function() {
-	alert("No se pudo cargar la informacion.");
-}
+    pieChartLineas.Doughnut(data_pie_chart_lineas, pieOptions);
+  },
+  error: function() {
+   alert("No se pudo cargar la informacion.");
+ }
 });
 
 

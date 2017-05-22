@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use App\TipoDoc;
+use App\TipoDocumento;
 use App\Profesor;
 use App\Pais;
 use Validator;
@@ -49,23 +49,30 @@ class profesoresController extends Controller
 
     public function getProfesoresTabla()
     {
-        $returns = DB::table('profesors')
-        ->leftJoin('tipo_docs','profesors.id_tipo_doc','=','tipo_docs.id')
+        /*$returns = DB::table('sistema.profesores')
+        ->leftJoin('sistema.tipos_documentos','sistema.profesores.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
         ->select(
-            'profesors.id','profesors.nombres','profesors.apellidos',
-            'tipo_docs.nombre as tipo_doc',
-            'profesors.nro_doc')
-        ->whereNull('profesors.deleted_at')
-        ->get();
+            'sistema.profesores.id_profesor','sistema.profesores.nombres','sistema.profesores.apellidos',
+            'sistema.tipos_documentos.nombre as tipo_doc',
+            'sistema.profesores.nro_doc')
+        ->whereNull('sistema.profesores.deleted_at')
+        ->get();*/
+
+        $returns = Profesor::select(
+
+        )->with([
+            'tipo_documento'
+        ])->get();
+
         $returns = collect($returns);
         
         return Datatables::of($returns)
         ->addColumn('acciones' , function($ret){
             $accion = Input::get('botones');
 
-            $editarYEliminar = '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+            $editarYEliminar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
-            $agregar = '<button profesor-id="'.$ret->id.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+            $agregar = '<button profesor-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
             $botones = $editarYEliminar;
 
@@ -124,20 +131,20 @@ class profesoresController extends Controller
             }
             Log::info("Para el where: ".json_encode(DB::raw($reduced)));
 
-            $returns = DB::table('profesors')
+            $returns = DB::table('profesores')
             ->where(DB::raw($reduced))
-            ->leftJoin('tipo_docs','profesors.id_tipo_doc','=','tipo_docs.id')
+            ->leftJoin('tipo_docs','profesores.id_tipo_doc','=','tipo_docs.id')
             ->select(
-                'profesors.id','profesors.nombres','profesors.apellidos',
+                'profesores.id','profesores.nombres','profesores.apellidos',
                 'tipo_docs.nombre as tipo_doc',
-                'profesors.nro_doc')
-            ->whereNull('profesors.deleted_at')
+                'profesores.nro_doc')
+            ->whereNull('profesores.deleted_at')
             ->get();
 
             Log::info('Datos para la nueva table: '.json_encode($returns));    */
 
             //Otra forma puedo ir agregando clausulas where
-            $returns = DB::table('profesors');
+            $returns = DB::table('profesores');
             /*foreach ($filtered as $key => $value) {
 
                 $returns->where(mb_strtolower($key),'LIKE',"'%".$value."%'");          
@@ -145,12 +152,12 @@ class profesoresController extends Controller
             
             $aux = $returns
             ->where('nombres','=','ADRIAN')
-            ->leftJoin('tipo_docs','profesors.id_tipo_doc','=','tipo_docs.id')
+            ->leftJoin('tipo_docs','profesores.id_tipo_doc','=','tipo_docs.id')
             ->select(
-                'profesors.id','profesors.nombres','profesors.apellidos',
+                'profesores.id','profesores.nombres','profesores.apellidos',
                 'tipo_docs.nombre as tipo_doc',
-                'profesors.nro_doc')
-            ->whereNull('profesors.deleted_at')
+                'profesores.nro_doc')
+            ->whereNull('profesores.deleted_at')
             ->get();
 
             Log::info('Datos para la nueva table: '.json_encode($aux));  
@@ -168,7 +175,7 @@ class profesoresController extends Controller
 
     public function getSelectOptions()
     {
-        $tipoDocumentos = TipoDoc::all();
+        $tipoDocumentos = TipoDocumento::all();
 
         return array('documentos' => $tipoDocumentos);
     }
@@ -179,8 +186,8 @@ class profesoresController extends Controller
         if(!$v->fails()){
             //Si le setearon pais busco su id
             if($r->has('pais')){
-                $r->pais = Pais::select('id')->where('nombre','=',$r->pais)->get('id')->first(); 
-                $r->pais = $r->pais['id'];    
+                $r->pais = Pais::select('id_pais')->where('nombre','=',$r->pais)->get('id_pais')->first(); 
+                $r->pais = $r->pais['id_pais'];    
             }        
             $profesor = new Profesor();         
             $profesor->crear($r);

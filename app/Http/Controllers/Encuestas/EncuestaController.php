@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Encuestas\Encuesta;
 
 class EncuestaController extends Controller
 {
@@ -45,7 +46,7 @@ class EncuestaController extends Controller
      */
     public function show($id)
     {
-        //
+        return Encuesta::findOrFail($id);
     }
 
     /**
