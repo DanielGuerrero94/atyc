@@ -15,15 +15,21 @@ class Curso extends Model
 	protected $table = "cursos.cursos";
 
 	protected $dates = ['deleted_at'];
+	/**
+     * Primary key asociated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id_curso';
 
 	public function profesores()
 	{
-		return $this->belongsToMany('App\Profesor','cursos_profesores','id_cursos','id_profesores')->withTimestamps();
+		return $this->belongsToMany('App\Profesor','cursos.cursos_profesores','id_cursos','id_profesores')->withTimestamps();
 	}
 
 	public function alumnos()
     {   
-        return $this->belongsToMany('App\Alumno','cursos_alumnos','id_cursos','id_alumnos')->withTimestamps();
+        return $this->belongsToMany('App\Alumno','cursos.cursos_alumnos','id_cursos','id_alumnos')->withTimestamps();
     }
 
 	public function provincia()

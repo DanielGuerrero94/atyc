@@ -50,7 +50,7 @@ class cursosController extends Controller
 	//Para ahorrarme escribir siempre que connection usar
 	public function query($query)
 	{    	
-		return DB::connection('eLearning')->select($query);
+		return DB::connection('g_plannacer')->select($query);
 	}
 
 	public function get()
@@ -88,29 +88,19 @@ class cursosController extends Controller
 		->make(true); 	
 	}
 
+	//Cambiar esta funcion urgente
 	public function getAprobadosPorAlumno($alumno)	
 	{
-		$query = "SELECT C.nombre_curso as \"Nombre curso\",C.horas_duracion \"Horas duracion\",C.modalidad as \"Modalidad\",P.descripcion as \"Provincia organizadora\" FROM g_plannacer.cursos_alumnos CA
+		$query = "SELECT C.id as id,C.nombre_curso as nombre,C.horas_duracion as duracion,C.modalidad as modalidad,P.descripcion as provincia FROM g_plannacer.cursos_alumnos CA
 		INNER JOIN g_plannacer.alumnos A ON A.id = CA.alumno 
 		INNER JOIN g_plannacer.cursos C ON C.id = CA.curso
 		INNER JOIN g_plannacer.provincias P ON P.id = C.provincia_organizadora 
 		WHERE A.id =".$alumno;
-
-		/*$returns = DB::table('cursos_alumnos')
-		->join('alumnos','cursos_alumnos.alumno','=','alumnos.id')
-		->join('cursos','cursos_alumnos.curso','=','cursos.id')
-		->join('provincias','cursos.provincia_organizadora','=','provincias.id')
-		->select(
-			'cursos.nombre_curso as "Nombre curso"',
-			'cursos.horas_duracion "Horas duracion"',
-			'cursos.modalidad as "Modalidad"',
-			'provincias.descripcion as "Provincia organizadora"')	
-			->get();*/
-
-			$returns = collect($this->query($query));		
+		$returns = collect($this->query($query));
+					
 			return Datatables::of($returns)
 			->addColumn('acciones' , function($ret){
-				return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
+				return '<a href="'.url('cursos').'/'.$ret->id.'"><button class="btn btn-info btn-xs" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
 			})->make(true);
 		}
 
@@ -184,10 +174,10 @@ class cursosController extends Controller
 		try {
 			$curso = Curso::findOrFail($id)
 			->alumnos()		
-			->join('provincias','provincias.id','=','alumnos.id_provincia')
-			->join('tipo_docs','tipo_docs.id','=','alumnos.id_tipo_doc')
-			->select('alumnos.id','nombres','apellidos','tipo_docs.nombre as tipo_doc','nro_doc','provincias.nombre as provincia')
-			->get();	;	
+			->join('sistema.provincias','sistema.provincias.id_provincia','=','alumnos.id_provincia')
+			->join('sistema.tipos_documentos','sistema.tipos_documentos.id_tipo_documento','=','alumnos.alumnos.id_tipo_documento')
+			->select('alumnos.id_alumno','nombres','apellidos','sistema.tipos_documentos.nombre as tipo_doc','nro_doc','sistema.provincias.nombre as provincia')
+			->get();	
 		} catch (ModelNotFoundException $e) {
 			$curso = null;
 		}
@@ -196,7 +186,7 @@ class cursosController extends Controller
 			return array('id_alumno' => $item['id_alumno'],
 				'nombres' => $item['nombres'],
 				'apellidos' => $item['apellidos'],
-				'tipo_documento' => $item['tipo_documento'],
+				'tipo_doc' => $item['tipo_doc'],
 				'nro_doc' => $item['nro_doc'],
 				'provincia' => $item['provincia']);
 		});
@@ -210,12 +200,12 @@ class cursosController extends Controller
 
 	public function getCountAlumnos($id)
 	{
-		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as \"cantidad_alumnos\", CONCAT(LE.numero,'-',LE.nombre) as \"linea_estrategica\",AT.nombre as \"area_tematica\",P.nombre as \"provincia\",C.duracion from cursos C 
-		left join cursos_alumnos CA ON CA.id_cursos = C.id 
-		left join alumnos A ON CA.id_alumnos = A.id
-		inner join provincias P ON P.id = C.id_provincia
-		inner join area_tematicas AT ON AT.id = C.id_area_tematica 
-		inner join linea_estrategicas LE ON LE.id = C.id_linea_estrategica";
+		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as \"cantidad_alumnos\", CONCAT(LE.numero,'-',LE.nombre) as \"linea_estrategica\",AT.nombre as \"area_tematica\",P.nombre as \"provincia\",C.duracion from cursos.cursos C 
+		left join cursos.cursos_alumnos CA ON CA.id_cursos = C.id_curso 
+		left join alumnos.alumnos A ON CA.id_alumnos = A.id_alumno
+		inner join sistema.provincias P ON P.id_provincia = C.id_provincia
+		inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
+		inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica";
 
 		if($id !== '0'){
 			$query .= " WHERE C.id_provincia = '".$id."'";	
@@ -270,50 +260,50 @@ class cursosController extends Controller
 			return $value != "" && $value != "0";
 		});
 
-		$returns = DB::table('cursos');
+		$returns = DB::table('cursos.cursos');
 
 		$provincia = Auth::user()->id_provincia;
 		//Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
 		if ($provincia != 25) {
-			$returns = $returns->where('cursos.id_provincia','=',$provincia);
+			$returns = $returns->where('cursos.cursos.id_provincia','=',$provincia);
 		}
 
 		foreach ($filtered as $key => $value) {
 
 			if($key == 'nombre'){
-				$returns = $returns->where('cursos.'.$key,'ilike','%'.$value.'%');                           
+				$returns = $returns->where('cursos.cursos.'.$key,'ilike','%'.$value.'%');                           
 			}elseif ($key == 'desde') {
-				$returns = $returns->where('cursos.fecha','>',$value);
+				$returns = $returns->where('cursos.cursos.fecha','>',$value);
 			}elseif ($key == 'hasta') {
-				$returns = $returns->where('cursos.fecha','<',$value);
+				$returns = $returns->where('cursos.cursos.fecha','<',$value);
 			}elseif($key == 'id_periodo'){
 				
-				$datos_periodo = collect(DB::table('periodos')
-					->select('periodos.desde','periodos.hasta')
-					->where('periodos.id','=',$value)
+				$datos_periodo = collect(DB::table('sistema.periodos')
+					->select('sistema.periodos.desde','sistema.periodos.hasta')
+					->where('sistema.periodos.id_periodo','=',$value)
 					->first());
 
 				$desde = $datos_periodo->get('desde');
 				$hasta = $datos_periodo->get('hasta');
 
-				$returns = $returns->where('cursos.fecha','>',$desde);
-				$returns = $returns->where('cursos.fecha','<',$hasta);
+				$returns = $returns->where('cursos.cursos.fecha','>',$desde);
+				$returns = $returns->where('cursos.cursos.fecha','<',$hasta);
 			}else{
-				$returns = $returns->where('cursos.'.$key,'=',$value);                           
+				$returns = $returns->where('cursos.cursos.'.$key,'=',$value);                           
 			}
 		}
 
 		$returns = $returns
-		->leftJoin('area_tematicas','cursos.id_area_tematica','=','area_tematicas.id')
-		->leftJoin('linea_estrategicas','cursos.id_linea_estrategica','=','linea_estrategicas.id')
-		->leftJoin('provincias','cursos.id_provincia','=','provincias.id')
+		->leftJoin('cursos.areas_tematicas','cursos.cursos.id_area_tematica','=','cursos.areas_tematicas.id_area_tematica')
+		->leftJoin('cursos.lineas_estrategicas','cursos.cursos.id_linea_estrategica','=','cursos.lineas_estrategicas.id_linea_estrategica')
+		->leftJoin('sistema.provincias','cursos.cursos.id_provincia','=','sistema.provincias.id_provincia')
 		->select(
-			'cursos.id','cursos.nombre','cursos.fecha',
-			'cursos.edicion','cursos.duracion',
-			'area_tematicas.nombre as area_tematica',
-			'linea_estrategicas.nombre as linea_estrategica',
-			'provincias.nombre as provincia')		
-		->whereNull('cursos.deleted_at');
+			'cursos.cursos.id_curso','cursos.cursos.nombre','cursos.cursos.fecha',
+			'cursos.cursos.edicion','cursos.cursos.duracion',
+			'cursos.areas_tematicas.nombre as area_tematica',
+			'cursos.lineas_estrategicas.nombre as linea_estrategica',
+			'sistema.provincias.nombre as provincia')		
+		->whereNull('cursos.cursos.deleted_at');
 
 		return collect($returns->get());
 	}
@@ -332,9 +322,9 @@ class cursosController extends Controller
 
 				$accion = Input::get('botones');
 
-				$editarYEliminar = '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+				$editarYEliminar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_curso.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
-				$agregar = '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+				$agregar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
 				$botones = $editarYEliminar;
 
@@ -402,24 +392,22 @@ class cursosController extends Controller
 
 	public function getData($id)
 	{		
-		$curso = Curso::find($id)
-		->with([
-			'provincia',
-			'area_tematica',
-			'linea_estrategica'
-		]);		
+		try{
+		$curso = Curso::findOrFail($id);
+		} catch (ModelNotFoundException $e) {
+			$curso = null;
+		}	
 
-		/*$area = AreaTematica::find($curso->id_area_tematica)->nombre;
+		$area = AreaTematica::find($curso->id_area_tematica)->nombre;
 		$linea = LineaEstrategica::find($curso->id_linea_estrategica)->nombre;
-		$provincia = Provincia::find($curso->id_provincia)->nombre;*/
-
+		$provincia = Provincia::find($curso->id_provincia)->nombre;
 		//De la base de datos me viene con '-' y en el orden opuesto
 		//Lo pongo con '/'
 		$f = explode("-",$curso->fecha);
 		$curso->fecha = $f[2].'/'.$f[1].'/'.$f[0];
 
-		//$return = array('curso' => $curso,'area' => $area,'linea' => $linea,'provincia' => $provincia);
-		$return = array('curso' => $curso);
+		$return = array('curso' => $curso,'area' => $area,'linea' => $linea,'provincia' => $provincia);
+		//$return = array('curso' => $curso);
 		$ret = array_merge($return,$this->getSelectOptions());
 
 		return view('cursos/modificar',$ret);

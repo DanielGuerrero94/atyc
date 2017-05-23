@@ -51,7 +51,7 @@ class profesoresController extends Controller
         $returns = Profesor::select('id_profesor','nombres','apellidos','nro_doc','id_tipo_documento')
         ->with('tipo_documento');
 
-        $returns = collect($returns);
+        $returns = collect($returns->get());
         
         return Datatables::of($returns)
         ->addColumn('acciones' , function($ret) use ($r){

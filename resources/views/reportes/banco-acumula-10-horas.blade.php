@@ -24,7 +24,7 @@
 								<option data-id="0" title="Todas las provincias">Todas las provincias</option>
 									@foreach ($provincias as $provincia)
 
-									<option data-id="{{$provincia->id}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
+									<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
 									@endforeach
 								</select>
 							</div>
@@ -40,7 +40,7 @@
 									<option data-id="0" title="Todos los períodos">Todos los períodos</option>
 									@foreach ($periodos as $periodo)
 
-									<option data-id="{{$periodo->id}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>									
+									<option data-id="{{$periodo->id_periodo}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>									
 									@endforeach
 								</select>
 							</div>
@@ -80,7 +80,7 @@
 			</form>
 		</div>
 	</div>
-	<div id="reporte" data-id-provincia="{{$provincia_usuario->id}}">
+	<div id="reporte" data-id-provincia="{{$provincia_usuario->id}}" style="display: none;">
 		{{ csrf_field() }}
 		<div class="col-md-12">
 			<div class="box box-info ">
@@ -114,23 +114,10 @@
 @section('script')
 <script type="text/javascript">		
 
+	$.unblockUI();
+
 	$(document).ready(function(){
 		var table;
-
-		table = $('#reporte-table').DataTable({			
-			ajax : {
-				url: 'query',
-				data: {
-					id_reporte : 2,
-					id_periodo : 0
-				}
-			},			
-			columns: [
-			{ data: 'periodo'},
-			{ data: 'provincia'},
-			{ data: 'cantidad_alumnos'}
-			]
-		});
 
 		$('#toggle-fecha').on('click',function () {
 
@@ -142,24 +129,95 @@
 			var fecha = $('.fa-calendar').closest('.row');			
 			
 			showCalendarInputs(periodo,fecha);
-		});
+		});		
 
-		$('#filtrar').on('click',function () {
-
-			var data = "provincia_id=";
-			var provincia_id = $('#filtros #provincia :selected').data('id');
-			data += provincia_id + "&";
-			var periodo_id;
+		function getFiltrosJson() {
+			var id_provincia = $('#filtros #provincia :selected').data('id');
+			var id_periodo,desde,hasta;
 
 			if($('#toggle-fecha i').hasClass('fa-toggle-off')){
-				periodo_id = $('#filtros #periodo :selected').data('id');
-				data += "periodo_id=" + periodo_id;
+				id_periodo = $('#filtros #periodo :selected').data('id');
 			}else{
-				data += "desde=" + $('#filtros #desde').val() + "&";
-				data += "hasta=" + $('#filtros #hasta').val();
+				desde = $('#filtros #desde').val();
+				hasta = $('#filtros #hasta').val();
 			}
 
-			console.log(data);		
+			var data = {id_provincia: id_provincia,id_periodo: id_periodo,desde: desde,hasta: hasta};
+			return data;
+		};
+
+		$('#filtrar').on('click',function () {
+			var filtrosJson = getFiltrosJson();			
+			console.log(filtrosJson);
+
+			$('#reporte').show();
+
+			table = $('#reporte-table').DataTable({	
+			destroy: true,		
+			ajax : {
+				url: 'query',
+				data: {
+					id_reporte : 2,
+					filtros: filtrosJson
+				}
+			},
+			columns: [
+			{ data: 'periodo'},
+			{ data: 'provincia'},
+			{ data: 'cantidad_alumnos'}
+			]
+		});
+	
+		});
+
+		$('.excel').on('click',function () {
+
+			var filtros = getFiltrosJson();
+			console.log(filtros);
+			var order_by = $('#reporte-table').DataTable().order();
+			console.log(order_by);
+
+			$.ajax({
+				url: 'excel',
+				data: {
+					id_reporte: 1,
+					filtros: filtros,
+					order_by: order_by
+				},
+				success: function(data){
+					alert('Se descargara pronto.');
+					console.log(data);
+					window.location="descargar/excel/"+data;
+				},
+				error: function (data) {
+					alert('No se pudo crear el archivo.');
+					console.log(data);
+				}
+			});
+		});
+
+		$('.pdf').on('click',function () {
+
+			var filtros = getFiltrosJson();
+			var order_by = $('#reporte-table').DataTable().order();			
+
+			$.ajax({
+				url: 'pdf',
+				data: {
+					id_reporte : 1, 
+					filtros: filtros,
+					order_by : order_by					
+				},
+				success: function(data){
+					alert('Se descargara pronto.');
+					console.log(data);
+					window.location="descargar/pdf/"+data;
+				},
+				error: function (data) {
+					alert('No se pudo crear el archivo.');
+					console.log(data);
+				}
+			});			
 		});
 
 	});

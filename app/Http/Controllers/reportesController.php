@@ -69,6 +69,9 @@ class reportesController extends Controller
 		//Esta parte me quedo horrible voy a tener que reeverlo porque tengo demasiados if
 		//En el caso que no sea un periodo de los que hay en la tabla le concateno las fechas que me pasaron para la columna periodo
 		$id_provincia = $r->filtros['id_provincia']?$r->filtros['id_provincia']:Auth::user()->id_provincia;
+		if($id_provincia == 25){
+			$id_provincia = 0;
+		}
 
 		if (array_key_exists('desde',$r->filtros) && array_key_exists('hasta',$r->filtros)) {
 			$query = "SELECT CONCAT('".$r->filtros['desde']."'::date,'/','".$r->filtros['hasta']."'::date) as periodo,* FROM reporte_".$r->id_reporte."('".$id_provincia."','".$r->filtros['desde']."','".$r->filtros['hasta']."')";
@@ -78,7 +81,7 @@ class reportesController extends Controller
 		elseif ($r->filtros['id_periodo'] == '0') {
 			$query = "SELECT P.nombre as periodo ,R.provincia,R.cantidad_alumnos FROM sistema.periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R";
 		}else {
-			$query = "SELECT P.nombre as periodo ,R.provincia,R.cantidad_alumnos FROM sistema.periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R where P.id = ".$r->filtros['id_periodo'];
+			$query = "SELECT P.nombre as periodo ,R.provincia,R.cantidad_alumnos FROM sistema.periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R where P.id_periodo = ".$r->filtros['id_periodo'];
 		}
 
 		return $query;
@@ -96,20 +99,16 @@ class reportesController extends Controller
 
 	public function getExcel()
 	{
-		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos C 
-		left join cursos_alumnos CA ON CA.id_cursos = C.id 
-		left join alumnos A ON CA.id_alumnos = A.id
-		inner join provincias P ON P.id = C.id_provincia
-		inner join area_tematicas AT ON AT.id = C.id_area_tematica 
-		inner join linea_estrategicas LE ON LE.id = C.id_linea_estrategica group by C.id,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre
+		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos.cursos C 
+		left join cursos.cursos_alumnos CA ON CA.id_cursos = C.id_curso 
+		left join alumnos.alumnos A ON CA.id_alumnos = A.id_alumno
+		inner join sistema.provincias P ON P.id_provincia = C.id_provincia
+		inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
+		inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre
 		order by C.nombre,C.edicion";
 
 		$data = DB::select($query);
 		$datos = ['cursos' => $data];
-
-		/*Log::info("Con datatables como formato:");
-		$datatable = Datatables::of($data)->make(true);
-		Log::info($datatable);*/
 		Log::info($datos);
 
 		Excel::create('Cursos' , function ($excel) use ($datos){

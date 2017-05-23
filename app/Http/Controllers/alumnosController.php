@@ -11,7 +11,7 @@ use App\TipoDocumento;
 use App\Alumno;
 use Auth;
 use DB;
-use Validation;
+use Validator;
 use Datatables;
 use Log;
 
@@ -139,7 +139,7 @@ class alumnosController extends Controller
         $returns = $this->query($query);*/
 
         $alumno = Alumno::find($id);
-        $id_tipo_doc = $alumno->id_tipo_doc;
+        $id_tipo_doc = $alumno->id_tipo_documento;
         $nombre_pais = null;
         if($id_tipo_doc === 6 || $id_tipo_doc === 5){
             $pais = Pais::find($alumno->id_pais);    
@@ -172,18 +172,12 @@ class alumnosController extends Controller
         Log::info('Se da de baja el alumno con id:'.$id);
     }
 
-    public function datosJoineados()
+  /*  public function datosJoineados()
     {        
-        /*$alumnos = Alumno::with([
-            'provincia',
-            'tipo_doc'
-            ])->get();
-
-            return json_encode($alumnos);*/
 
             $alumnos = DB::table('alumnos')
             ->leftJoin('provincias','alumnos.id_provincia','=','provincias.id')
-            ->leftJoin('tipo_docs','alumnos.id_tipo_doc','=','tipo_docs.id')
+            ->leftJoin('tipo_docs','alumnos.id_tipo_documento','=','tipo_docs.id')
             ->leftJoin('trabajas','alumnos.id_trabaja_en','=','trabajas.id')
             ->leftJoin('funcions','alumnos.id_funcion','=','funcions.id')
             ->select(
@@ -195,17 +189,7 @@ class alumnosController extends Controller
                 'funcions.nombre as funcions')
             ->get();
             return json_encode($alumnos);
-
-        /*$alumnoConProvincia = Alumno::chunk('10',function ($alumnos){
-                foreach ($alumnos as $alumno) {
-                        $alumno->provincia;
-                        $alumno->tipo_doc;
-                        $alumno->trabaja_en;
-                        $alumno->funcion;
-                        echo json_encode($alumno);             
-                      }      
-                  });*/
-              }
+              }*/
 
               public function modificar(Request $r,$id)
               {
@@ -291,32 +275,34 @@ class alumnosController extends Controller
             return $value != "" && $value != "0";
         });
 
-        $returns = DB::table('alumnos');
+        $returns = DB::table('alumnos.alumnos');
 
         $provincia = Auth::user()->id_provincia;
         //Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
         if ($provincia != 25) {
-            $returns = $returns->where('alumnos.id_provincia','=',$provincia);
+            $returns = $returns->where('alumnos.alumnos..id_provincia','=',$provincia);
         }
 
         foreach ($filtered as $key => $value) {
 
             if($key == 'nombres' || $key == 'apellidos' || $key == 'localidad' || $key == 'email'){
-                $returns = $returns->where('alumnos.'.$key,'ilike','%'.$value.'%');                           
+                $returns = $returns->where('alumnos.alumnos.'.$key,'ilike','%'.$value.'%');                           
+            }elseif($key == 'tipo_doc'){
+                $returns = $returns->where('alumnos.alumnos.id_tipo_documento =',$value);                           
             }else{
-                $returns = $returns->where('alumnos.'.$key,'=',$value);                           
+                $returns = $returns->where('alumnos.alumnos.'.$key,'=',$value);                           
             }
         }
 
         $returns = $returns
-        ->leftJoin('provincias','alumnos.id_provincia','=','provincias.id')
-        ->leftJoin('tipo_docs','alumnos.id_tipo_doc','=','tipo_docs.id')
+        ->leftJoin('sistema.provincias','alumnos.alumnos.id_provincia','=','sistema.provincias.id_provincia')
+        ->leftJoin('sistema.tipos_documentos','alumnos.alumnos.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
         ->select(
-            'alumnos.id','alumnos.nombres','alumnos.apellidos',
-            'tipo_docs.nombre as tipo_doc',
-            'alumnos.nro_doc',
-            'provincias.nombre as provincia')
-        ->whereNull('alumnos.deleted_at');
+            'alumnos.alumnos.id_alumno','alumnos.alumnos.nombres','alumnos.alumnos.apellidos',
+            'sistema.tipos_documentos.nombre as tipo_doc',
+            'alumnos.alumnos.nro_doc',
+            'sistema.provincias.nombre as provincia')
+        ->whereNull('alumnos.alumnos.deleted_at');
 
         return collect($returns->get());
     }
@@ -335,9 +321,9 @@ class alumnosController extends Controller
 
                 $accion = Input::get('botones');
 
-                $editarYEliminar = '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+                $editarYEliminar = '<button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
-                $agregar = '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+                $agregar = '<button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
                 $botones = $editarYEliminar;
 

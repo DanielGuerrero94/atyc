@@ -127,7 +127,7 @@ class PDF extends FPDF
         Fpdf::Cell(array_sum($w),0,'','T');
 
         $nombre = 'file-'.date("Y-m-d-H:s");
-        $path = Storage::disk('local')->getDriver()->getAdapter()->applyPathPrefix($nombre.'.pdf');
+        $path = __DIR__.'/../storage/exports/'.$nombre.'.pdf';
         Fpdf::Output($path,'F');    
         return $nombre;
     }
@@ -170,7 +170,7 @@ class PDF extends FPDF
         Fpdf::Cell(array_sum($w),0,'','T');
 
         $nombre = 'file-'.date("Y-m-d-H:s");
-        $path = Storage::disk('local')->getDriver()->getAdapter()->applyPathPrefix($nombre.'.pdf');
+        $path = __DIR__.'/../storage/exports/'.$nombre.'.pdf';
         Fpdf::Output($path,'F');    
         return $nombre;
     }

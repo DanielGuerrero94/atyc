@@ -132,9 +132,9 @@
 				{ data: 'fecha'},
 				{ data: 'edicion'},
 				{ data: 'duracion'},
-				{ data: 'area_tematica.nombre'},
-				{ data: 'linea_estrategica.nombre'},
-				{ data: 'provincia.nombre'},
+				{ data: 'area_tematica'},
+				{ data: 'linea_estrategica'},
+				{ data: 'provincia'},
 				{ data: 'acciones'}
 				]
 			});

@@ -67,22 +67,22 @@ Route::get('dashboard/data','alumnosController@getActivos');
 Route::group(['middleware' => 'logueado'], function () {
 	//Descarga
 	Route::get('reportes/descargar/excel/{nombre_reporte}', function($nombre_reporte) {
-	    return response()->download('/var/www/html/eLearning/storage/exports/'.$nombre_reporte.'.xls');
+		return response()->download(__DIR__.'/../storage/exports/'.$nombre_reporte.'.xls');	
 	});
 	Route::get('reportes/descargar/pdf/{nombre_reporte}', function($nombre_reporte) {
-	    return response()->download('/var/www/html/eLearning/public/'.$nombre_reporte.'.pdf');
+	    return response()->download(__DIR__.'/../public/'.$nombre_reporte.'.pdf');
 	});
 	Route::get('alumnos/descargar/excel/{nombre_archivo}', function($nombre_archivo) {
-		return response()->download('/var/www/html/eLearning/storage/exports/'.$nombre_archivo.'.xls');
+		return response()->download(__DIR__.'/../storage/exports/'.$nombre_archivo.'.xls');
 	});
 	Route::get('alumnos/descargar/pdf/{nombre_archivo}', function($nombre_archivo) {
-		return response()->download('/var/www/html/eLearning/storage/app/'.$nombre_archivo.'.pdf');
+		return response()->download(__DIR__.'/../storage/app/'.$nombre_archivo.'.pdf');
 	});
 	Route::get('descargar/excel/{nombre_archivo}', function($nombre_archivo) {
-		return response()->download('/var/www/html/eLearning/storage/exports/'.$nombre_archivo.'.xls');
+		return response()->download(__DIR__.'/../storage/exports/'.$nombre_archivo.'.xls');
 	});
 	Route::get('descargar/pdf/{nombre_archivo}', function($nombre_archivo) {
-		return response()->download('/var/www/html/eLearning/storage/app/'.$nombre_archivo.'.pdf');
+		return response()->download(__DIR__.'/../storage/app/'.$nombre_archivo.'.pdf');
 	});	
 
 	//Alumnos

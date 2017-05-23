@@ -351,10 +351,10 @@
 		$('.container').find('#cursos-table').DataTable({
 			ajax : $('#cursos-table').data('url') + '/' + alumno,
 			columns: [
-			{ data: 'Nombre curso'},
-			{ data: 'Horas duracion'},
-			{ data: 'Modalidad'},				
-			{ data: 'Provincia organizadora'},
+			{ data: 'nombre'},
+			{ data: 'duracion'},
+			{ data: 'modalidad'},
+			{ data: 'provincia'},
 			{ data: 'acciones'}
 			]
 		});

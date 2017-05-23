@@ -24,7 +24,7 @@
 								<option data-id="0" title="Todas las provincias">Todas las provincias</option>
 									@foreach ($provincias as $provincia)
 
-									<option data-id="{{$provincia->id}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
+									<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
 									@endforeach
 								</select>
 							</div>
@@ -39,7 +39,7 @@
 									<option data-id="0" title="Todos los períodos">Todos los períodos</option>
 									@foreach ($periodos as $periodo)
 
-									<option data-id="{{$periodo->id}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>									
+									<option data-id="{{$periodo->id_periodo}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>									
 									@endforeach
 								</select>
 							</div>

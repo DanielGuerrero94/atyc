@@ -26,7 +26,7 @@
 						<div class="col-sm-8">
 							<select class="form-control" id="provincia" name="provincia">
 
-								<option data-id="{{$curso->id_provincia}}">{{$curso->provincia->nombre}}</option>
+								<option data-id="{{$curso->id_provincia}}">{{$provincia}}</option>
 
 								@foreach ($provincias as $provincia)
 
@@ -41,7 +41,7 @@
 						<div class="col-sm-8">
 							<select class="form-control" id="area_tematica" name="area_tematica">
 
-								<option data-id="{{$curso->id_area_tematica}}">{{$curso->area_tematica->nombre}}</option>
+								<option data-id="{{$curso->id_area_tematica}}">{{$area}}</option>
 
 								@foreach ($areas_tematicas as $area)
 
@@ -56,7 +56,7 @@
 						<div class="col-sm-8">
 							<select class="form-control" id="linea_estrategica" name="linea_estrategica">
 
-								<option data-id="{{$curso->id_linea_estrategica}}">{{$curso->linea_estrategica->nombre}}</option>
+								<option data-id="{{$curso->id_linea_estrategica}}">{{$linea}}</option>
 
 								@foreach ($lineas_estrategicas as $linea)
 
@@ -196,9 +196,9 @@
    	columns: [
    	{ data: 'nombres'},
    	{ data: 'apellidos'},
-   	{ data: 'tipo_documento.nombre'},
+   	{ data: 'tipo_doc'},
    	{ data: 'nro_doc'},
-   	{ data: 'provincia.nombre'},
+   	{ data: 'provincia'},
    	{ data: 'acciones'}
    	]
    }); 

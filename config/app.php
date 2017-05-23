@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'eLearning',
+    'name' => 'elearning',
 
     /*
     |--------------------------------------------------------------------------
@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/eLearning/public/'),
+    'url' => env('APP_URL', 'http://localhost/elearning/public/'),
 
     /*
     |--------------------------------------------------------------------------

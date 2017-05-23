@@ -14,6 +14,13 @@ class LineaEstrategica extends Model
 
 	protected $dates = ['deleted_at'];
 
+	/**
+     * Primary key asociated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id_linea_estrategica';
+
 	public static function table()
 	{
 		return LineaEstrategica::all();

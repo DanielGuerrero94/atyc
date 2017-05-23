@@ -14,6 +14,13 @@ class AreaTematica extends Model
 
     protected $dates = ['deleted_at'];
 
+    /**
+     * Primary key asociated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id_area_tematica';
+
     public static function table()
     {
     	return AreaTematica::all();
