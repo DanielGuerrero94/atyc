@@ -121,7 +121,7 @@
 		$('#alta').on('click','#crear',function() {
 			
 			var data = $('form').serialize();
-			data += '&id_tipo_doc='+$('#alta #tipo_doc :selected').data('id');
+			data += '&id_tipo_documento='+$('#alta #tipo_doc :selected').data('id');
 
 			/*$.ajax({
 				method : 'post',

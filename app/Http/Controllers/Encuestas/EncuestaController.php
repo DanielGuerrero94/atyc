@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Encuestas;
 
 use Illuminate\Http\Request;
 use App\Models\Encuestas\Encuesta;
+use App\Http\Controllers\Controller;
 
 class EncuestaController extends Controller
 {

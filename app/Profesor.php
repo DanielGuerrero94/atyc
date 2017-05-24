@@ -30,7 +30,7 @@ class Profesor extends Model
 
     public function cursos()
     { 
-        return $this->belongsToMany('App\Curso', 'cursos_profesores', 'id_cursos', 'id_profesores')->withTimestamps();
+        return $this->belongsToMany('App\Curso', 'cursos.cursos_profesores', 'id_cursos', 'id_profesores')->withTimestamps();
     }
 
     public function tipo_documento()

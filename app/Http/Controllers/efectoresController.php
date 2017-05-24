@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Curso;
 use DB;
-use Log;
 use Auth;
 use Datatables;
 
@@ -65,15 +64,13 @@ class efectoresController extends Controller
 
     public function getNombres()
     {   
-        $id_provincia = Auth::user()->id_provincia;
-
         $query = $this->query()
         ->table('efectores')
         ->join('datos_geograficos','efectores.id_efector','=','datos_geograficos.id_efector')
         ->select('efectores.nombre');
 
-        if($id_provincia != 25){
-            $query = $query->where('datos_geograficos.id_provincia','=',$id_provincia);
+        if(Auth::user()->id_provincia != 25){
+            $query = $query->where('datos_geograficos.id_provincia','=',Auth::user()->id_provincia);
         }
 
         return $query->orderBy('efectores.nombre')
@@ -85,14 +82,12 @@ class efectoresController extends Controller
 
     public function getCuies()
     {  
-        $id_provincia = Auth::user()->id_provincia;
-
         $query = $this->query()
         ->table('efectores')
         ->select('cuie');
 
-        if($id_provincia != 25){
-            $query = $query->where('datos_geograficos.id_provincia','=',$id_provincia);
+        if(Auth::user()->id_provincia != 25){
+            $query = $query->where('datos_geograficos.id_provincia','=',Auth::user()->id_provincia);
         }
 
         return $query->orderBy('cuie')
@@ -119,11 +114,10 @@ class efectoresController extends Controller
     public function historialCursos($cuie)
     {   
         $efector = $this->queryLogica();
-        $id_provincia = Auth::user()->id_provincia;
 
-        if($id_provincia != 25){
+        if(Auth::user()->id_provincia != 25){
             $efector = $efector
-            ->where('datos_geograficos.id_provincia','=',$id_provincia);
+            ->where('datos_geograficos.id_provincia','=',Auth::user()->id_provincia);
         }
         
         $efector = $efector
@@ -133,7 +127,6 @@ class efectoresController extends Controller
         $cursos = Curso::getByCuie($cuie);
 
         $array = array('efector' => $efector,'cursos' => $cursos);
-        Log::info(json_encode($array));
         return view('efectores/historial_cursos',$array);
     }    
 }

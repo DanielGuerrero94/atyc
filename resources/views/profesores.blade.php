@@ -53,7 +53,7 @@
 			return data = {
 				nombres: nombres,
 				apellidos: apellidos,
-				id_tipo_doc: id_tipo_doc,
+				id_tipo_documento: id_tipo_doc,
 				id_pais: id_pais,
 				nro_doc: nro_doc,
 				email: email,

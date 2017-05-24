@@ -207,7 +207,6 @@
 					<tr>
 							<th>Nombre curso</th>
 							<th>Horas duracion</th>
-							<th>Modalidad</th>
 							<th>Provincia organizadora</th>
 							<th>Acciones</th>
 							</tr>
@@ -353,8 +352,7 @@
 			columns: [
 			{ data: 'nombre'},
 			{ data: 'duracion'},
-			{ data: 'modalidad'},
-			{ data: 'provincia'},
+			{ data: 'provincia.nombre'},
 			{ data: 'acciones'}
 			]
 		});

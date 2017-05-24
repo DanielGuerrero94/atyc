@@ -32,7 +32,6 @@ class Alumno extends Model
         return $this->belongsToMany('App\Curso','cursos_alumnos','id_cursos','id_alumnos')->withTimestamps();
     }
 
-
     public function provincia()
     {
         return $this->hasOne('App\Provincia', 'id_provincia', 'id_provincia');
@@ -41,6 +40,11 @@ class Alumno extends Model
     public function tipo_documento()
     {
         return $this->hasOne('App\TipoDocumento', 'id_tipo_documento', 'id_tipo_documento');
+    }
+
+    public function pais()
+    {
+        return $this->hasOne('App\Pais', 'id_pais', 'id_pais');
     }
 
     public function trabajo()

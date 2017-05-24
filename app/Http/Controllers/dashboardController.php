@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Curso;
 use DB;
 
 class dashboardController extends Controller
@@ -70,8 +71,7 @@ class dashboardController extends Controller
 
 	private function getCursos()
 	{
-		return DB::table('cursos.cursos')
-		->whereNull('cursos.cursos.deleted_at');
+		return Curso::query();
 	}
 
 	private function getCountCursosPorAreaTematica()

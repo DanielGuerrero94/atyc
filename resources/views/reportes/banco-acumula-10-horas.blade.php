@@ -23,13 +23,11 @@
 								<select class="form-control" id="provincia">
 								<option data-id="0" title="Todas las provincias">Todas las provincias</option>
 									@foreach ($provincias as $provincia)
-
 									<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
 									@endforeach
 								</select>
 							</div>
-						</div>
-						
+						</div>						
 					</div>
 					@endif
 					<div class="row">
@@ -39,13 +37,11 @@
 								<select class="form-control" id="periodo">
 									<option data-id="0" title="Todos los períodos">Todos los períodos</option>
 									@foreach ($periodos as $periodo)
-
 									<option data-id="{{$periodo->id_periodo}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>									
 									@endforeach
 								</select>
 							</div>
-						</div>
-						
+						</div>						
 					</div>
 					<div class="row" id="toggle-fecha">
 						<div class="form-group col-sm-6">
@@ -105,9 +101,7 @@
 				</div>
 			</div>
 		</div>
-
 	</div>	
-	<div id="alta" style="display: none;"></div>
 </div>
 @endsection
 
@@ -147,8 +141,8 @@
 		};
 
 		$('#filtrar').on('click',function () {
-			var filtrosJson = getFiltrosJson();			
-			console.log(filtrosJson);
+			var filtros = getFiltrosJson();			
+			console.log(filtros);
 
 			$('#reporte').show();
 
@@ -158,7 +152,7 @@
 				url: 'query',
 				data: {
 					id_reporte : 2,
-					filtros: filtrosJson
+					filtros: filtros
 				}
 			},
 			columns: [
@@ -180,7 +174,7 @@
 			$.ajax({
 				url: 'excel',
 				data: {
-					id_reporte: 1,
+					id_reporte: 2,
 					filtros: filtros,
 					order_by: order_by
 				},
@@ -204,7 +198,7 @@
 			$.ajax({
 				url: 'pdf',
 				data: {
-					id_reporte : 1, 
+					id_reporte : 2, 
 					filtros: filtros,
 					order_by : order_by					
 				},

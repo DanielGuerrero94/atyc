@@ -59,15 +59,18 @@
 
 			$('#filtros').on('click','#filtrar',function () {
 
-				var filtrosJson = getFiltrosJson();
-				console.log(filtrosJson);
+				var filtros = getFiltrosJson();
+				console.log(filtros);
+				var order_by = $('#abm-table').DataTable().order();
+			console.log(order_by);
 
 				$('#abm-table').DataTable({
 					destroy: true,
 					ajax: {
 						url: 'alumnos/filtrado',
 						data: {
-							filtros: filtrosJson 
+							filtros: filtros,
+							order_by: order_by 
 						}
 					},
 					columns: [

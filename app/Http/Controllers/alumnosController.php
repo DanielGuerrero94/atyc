@@ -74,12 +74,11 @@ class alumnosController extends Controller
         $returns = Alumno::select('id_alumno','nombres','apellidos','nro_doc','id_provincia','id_tipo_documento')
         ->with([
             'tipo_documento',
-            'provincia'                                                         
-        ]);        
+            'provincia'                                       
+        ]);     
 
-        if(Auth::user()->id_provincia == 25){           
-            $id_provincia = Auth::user()->id_provincia;
-            $returns = $returns->where('alumnos.alumnos.id_provincia',$id_provincia);
+        if(Auth::user()->id_provincia != 25){           
+            $returns = $returns->where('id_provincia',Auth::user()->id_provincia);
         }
 
         $returns = collect($returns->get());
@@ -135,13 +134,10 @@ class alumnosController extends Controller
 
     public function getData($id)
     {
-        /*$query = "SELECT * FROM alumnos WHERE id = ".$id;
-        $returns = $this->query($query);*/
-
         $alumno = Alumno::find($id);
-        $id_tipo_doc = $alumno->id_tipo_documento;
+        $id_tipo_documento = $alumno->id_tipo_documento;
         $nombre_pais = null;
-        if($id_tipo_doc === 6 || $id_tipo_doc === 5){
+        if($id_tipo_documento === 6 || $id_tipo_documento === 5){
             $pais = Pais::find($alumno->id_pais);    
             $nombre_pais = $pais->nombre;
         }
@@ -169,33 +165,15 @@ class alumnosController extends Controller
     {
         $alumno = Alumno::find($id);
         $alumno->delete();
+        Log::info(Auth::ip());
         Log::info('Se da de baja el alumno con id:'.$id);
     }
 
-  /*  public function datosJoineados()
-    {        
-
-            $alumnos = DB::table('alumnos')
-            ->leftJoin('provincias','alumnos.id_provincia','=','provincias.id')
-            ->leftJoin('tipo_docs','alumnos.id_tipo_documento','=','tipo_docs.id')
-            ->leftJoin('trabajas','alumnos.id_trabaja_en','=','trabajas.id')
-            ->leftJoin('funcions','alumnos.id_funcion','=','funcions.id')
-            ->select(
-                'alumnos.*',
-                'provincias.nombre as provincia',
-                'tipo_docs.nombre as tipo_docs',
-                'tipo_docs.titulo as tipo_docs_titulo',
-                'trabajas.nombre as trabajas',
-                'funcions.nombre as funcions')
-            ->get();
-            return json_encode($alumnos);
-              }*/
-
-              public function modificar(Request $r,$id)
-              {
-                $alumno = Alumno::find($id);
-                $alumno->modificar();
-            } 
+    public function modificar(Request $r,$id)
+    {
+        $alumno = Alumno::find($id);
+        $alumno->modificar();
+    } 
 
             /*funciones para typeahead*/    
 
@@ -221,15 +199,15 @@ class alumnosController extends Controller
         return json_encode($ret);
     }*/
 
-    //Metodos para typeahead
+    /* Metodos Typeahead */
 
     public function getNombreOrganismo()
     {
-        $nombresOrganismos = Alumno::select('organismo2')->groupBy('organismo2')->orderBy('organismo2')->get();
-        $nombresOrganismos = collect($nombresOrganismos);
-
-        $arrayMapeado = $nombresOrganismos->map(function($item,$key)
-        {
+        $organismos = Alumno::select('organismo2')
+        ->groupBy('organismo2')
+        ->orderBy('organismo2')
+        ->get()
+        ->map(function($item,$key){
             return $item->organismo2;
         });
 
@@ -237,7 +215,7 @@ class alumnosController extends Controller
             'status' => true,
             'error' => null,
             'data' => array(
-                'info' => $arrayMapeado
+                'info' => $organismos
                 )
             );
 
@@ -246,11 +224,11 @@ class alumnosController extends Controller
 
     public function getEstablecimientos()
     {
-        $establecimiento = Alumno::select('establecimiento2')->groupBy('establecimiento2')->orderBy('establecimiento2')->get();
-        $establecimiento = collect($establecimiento);
-
-        $arrayMapeado = $establecimiento->map(function($item,$key)
-        {
+        $establecimientos = Alumno::select('establecimiento2')
+        ->groupBy('establecimiento2')
+        ->orderBy('establecimiento2')
+        ->get()
+        ->map(function($item,$key){
             return $item->establecimiento2;
         });
 
@@ -258,16 +236,16 @@ class alumnosController extends Controller
             'status' => true,
             'error' => null,
             'data' => array(
-                'info' => $arrayMapeado
+                'info' => $establecimientos
                 )
             );
 
         return json_encode($ret);
     }
+    /* Metodos Typeahead */
 
-    private function queryLogica(Request $r,$filtros)
+    private function queryLogica(Request $r,$filtros,$order_by)
     {
-        Log::info(json_encode($filtros));
         //Filtros las que estan vacias si es que me las pasaron
         //Estas funciones para filtrar podrian estar en un middleware
         $filtered = $filtros->filter(function ($value,$key)
@@ -304,6 +282,9 @@ class alumnosController extends Controller
             'sistema.provincias.nombre as provincia')
         ->whereNull('alumnos.alumnos.deleted_at');
 
+        $returns = $returns
+        ->orderBy($order_by);
+
         return collect($returns->get());
     }
 
@@ -311,29 +292,25 @@ class alumnosController extends Controller
         $filtros = collect($r->only('filtros'));
         $filtros = collect($filtros->get('filtros'));
 
+        $order_by = $r->has('order_by')?$r->get('order_by'):null;
+
         $v = Validator::make($filtros->all(),$this->_filters);
         if(!$v->fails()){
 
-            $aux = $this->queryLogica($r,$filtros);  
+            $aux = $this->queryLogica($r,$filtros,$order_by);  
 
             $tabla = Datatables::of($aux)
-            ->addColumn('acciones' , function($ret){
+            ->addColumn('acciones' , function($ret) use ($r){
 
-                $accion = Input::get('botones');
+                $accion = $r->has('botones')?$r->botones:null;
 
-                $editarYEliminar = '<button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+                $editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_alumno.'"><button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
 
                 $agregar = '<button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
-
-                $botones = $editarYEliminar;
-
-                if($accion == 'agregar'){
-                    $botones = $agregar;
-                }           
-                return $botones;
+                
+                return $accion == 'agregar'?$agregar:$editarYEliminar;;
             })            
             ->make(true);
-
 
             return $tabla;
         }else{
@@ -345,10 +322,12 @@ class alumnosController extends Controller
     {       
         $filtros = collect($r->only('filtros'));
         $filtros = collect($filtros->get('filtros'));
+        $order_by = $r->order_by;
 
-        $data = $this->queryLogica($r,$filtros);
+        $data = $this->queryLogica($r,$filtros,$order_by);
         $datos = ['alumnos' => $data];
         $path = "alumnos_filtrados_".date("Y-m-d_H:i:s");
+        
 
         Excel::create($path, function ($excel) use ($datos){
             $excel->sheet('Reporte', function ($sheet) use ($datos){

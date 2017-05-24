@@ -15,7 +15,6 @@
 				</div>
 			</div>
 			<div class="box-body">
-
 				<form id="form-filtros">
 					<div class="row">
 						<div class="form-group col-sm-6">
@@ -24,13 +23,11 @@
 								<select class="form-control" id="provincia">
 								<option data-id="0" title="Todas las provincias">Todas las provincias</option>
 									@foreach ($provincias as $provincia)
-
-									<option data-id="{{$provincia->id}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
+									<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
 									@endforeach
 								</select>
 							</div>
-						</div>						
-
+						</div>	
 					</div>
 				</div>
 				<div class="box-footer">	
@@ -52,8 +49,7 @@
 							<button type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></button>
 						</div>	
 						</h2>								
-				</div>
-				
+				</div>				
 				<div class="box-body">
 					<table id="reporte-table" class="table table-hover">
 						<thead>
@@ -72,7 +68,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>	
 	<div id="alta" style="display: none;"></div>
 </div>

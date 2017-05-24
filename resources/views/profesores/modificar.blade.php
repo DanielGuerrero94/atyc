@@ -166,7 +166,7 @@
 			var data = $('#alta form').serialize();
 			data += '&_token='+$('#alta input').val();
 			data += '&_method='+$('#alta input:nth-child(2)').val();
-			data += '&id_tipo_doc='+$('#alta #tipo_doc').val();
+			data += '&id_tipo_documento='+$('#alta #tipo_doc').val();
 
 			console.log(data);
 
@@ -193,7 +193,7 @@
 			columns: [
 			{ data: 'nombre'},
 			{ data: 'fecha'},
-			{ data: 'provincia'},				
+			{ data: 'provincia.nombre'},				
 			{ data: 'acciones'}
 			]
 		});

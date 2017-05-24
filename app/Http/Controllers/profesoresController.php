@@ -36,6 +36,8 @@ class profesoresController extends Controller
     'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
     'nro_doc' => 'numeric'];
 
+    private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
+
     public function query($query)
     {
     	return DB::connection('eLearning')->select($query);
@@ -55,9 +57,12 @@ class profesoresController extends Controller
         
         return Datatables::of($returns)
         ->addColumn('acciones' , function($ret) use ($r){
+
             $accion = $r->has('botones')?$r->botones:null;
 
-            $editarYEliminar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+            //$editarYEliminar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+
+            $editarYEliminar = '<a href="'.url('profesores').'/'.$ret->id_profesor.'"><button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
 
             $agregar = '<button profesor-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
@@ -126,11 +131,11 @@ class profesoresController extends Controller
                 $aux = $this->queryLogica($r,$filtros);        
 
                 $reto = Datatables::of($aux)
-                ->addColumn('acciones' , function($ret){
+                ->addColumn('acciones' , function($ret) use ($r){
 
-                    $accion = Input::get('botones');
+                    $accion = $r->has('botones')?$r->botones:null;
 
-                    $editarYEliminar = '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+                    $editarYEliminar = '<a href="'.url('profesores').'/'.$ret->id_profesor.'"><button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
 
                     $agregar = '<button profesor-id="'.$ret->id.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
@@ -220,8 +225,8 @@ class profesoresController extends Controller
     {
         $profesor = Profesor::find($id);
         $nombre_pais = null;
-        $id_tipo_doc = $profesor->id_tipo_doc;
-        if($id_tipo_doc === 6 || $id_tipo_doc === 5){
+        $id_tipo_documento = $profesor->id_tipo_documento;
+        if($id_tipo_documento === 6 || $id_tipo_documento === 5){
             $pais = Pais::find($profesor->id_pais);    
             $nombre_pais = $pais->nombre;
         }        

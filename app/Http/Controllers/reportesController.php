@@ -42,21 +42,17 @@ class reportesController extends Controller
 
 		$provincias = Provincia::all();
 		$periodos = Periodo::all();
-		$id_provincia = Auth::user()->id_provincia;
-		$provincia_usuario = Provincia::find($id_provincia);
+		$provincia_usuario = Provincia::find(Auth::user()->id_provincia);
 
 		return view('reportes.'.$reporte->view,['provincias' => $provincias,'periodos' => $periodos,'reporte' => $reporte,'provincia_usuario' => $provincia_usuario]);
 	}
 
 	public function queryReporte(Request $r)
-	{
-		
+	{		
 		$query = $this->queryLogica($r);
 
 		$returns = DB::select($query);
 		$returns = collect($returns);
-
-		Log::info($returns);
 
 		return Datatables::of($returns)->make(true);	
 	}

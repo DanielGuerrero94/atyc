@@ -40,6 +40,7 @@ class cursosController extends Controller
 	'desde' => 'string',
 	'hasta' => 'string'];
 
+	private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
 
 	//Lo tengo aca pero lo podria tener en otra clase porque lo pueden llegar a usar todas las tablas porque estan en latin1 pero lo muestro en utf-8
 
@@ -72,12 +73,11 @@ class cursosController extends Controller
 			'area_tematica',
 			'linea_estrategica',
 			'provincia'
-		]);
+		]);				
 
-		if(Auth::user()->id_provincia == 25){			
-			$id_provincia = Auth::user()->id_provincia;
-			$returns = $returns->where('id_provincia',$id_provincia);
-		}					
+		if(Auth::user()->id_provincia != 25){           
+            $returns = $returns->where('id_provincia',Auth::user()->id_provincia);
+        }
 
 		$returns = collect($returns->get());
 
@@ -91,28 +91,28 @@ class cursosController extends Controller
 	//Cambiar esta funcion urgente
 	public function getAprobadosPorAlumno($alumno)	
 	{
-		$query = "SELECT C.id as id,C.nombre_curso as nombre,C.horas_duracion as duracion,C.modalidad as modalidad,P.descripcion as provincia FROM g_plannacer.cursos_alumnos CA
-		INNER JOIN g_plannacer.alumnos A ON A.id = CA.alumno 
-		INNER JOIN g_plannacer.cursos C ON C.id = CA.curso
-		INNER JOIN g_plannacer.provincias P ON P.id = C.provincia_organizadora 
-		WHERE A.id =".$alumno;
-		$returns = collect($this->query($query));
-					
-			return Datatables::of($returns)
+		$returns = Curso::whereHas('alumnos',function ($query) use ($alumno)
+		{
+			$query->where('id_alumno',$alumno);
+		})
+		->select('id_curso','nombre','duracion','id_provincia')
+		->with('provincia')
+		->get();
+
+		return Datatables::of($returns)
 			->addColumn('acciones' , function($ret){
-				return '<a href="'.url('cursos').'/'.$ret->id.'"><button class="btn btn-info btn-xs" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
+				return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
 			})->make(true);
 		}
 
 		public function getDictadosPorProfesor($profesor)
 		{
-
-			$returns = DB::table('cursos')
-			->join('cursos_profesores','cursos_profesores.id_cursos','=','cursos.id')
-			->join('profesors','profesors.id','=','cursos_profesores.id_profesores')
-			->join('provincias','provincias.id','=','cursos.id_provincia')
-			->select('cursos.id as id_curso','cursos.nombre','cursos.fecha','provincias.nombre as provincia')
-			->where('profesors.id','=',$profesor)
+			$returns = Curso::whereHas('profesores',function ($query) use ($profesor)
+			{
+				$query->where('id_profesor',$profesor);
+			})			
+			->select('id_curso','nombre','fecha','id_provincia')			
+			->with('provincia')
 			->get();
 
 			return Datatables::of($returns)
@@ -126,13 +126,14 @@ class cursosController extends Controller
 			return view('cursos/alta',$this->getSelectOptions());
 		}
 
+		//Typeahead
 		public function getNombres()
 		{	
-			$nombres = Curso::select('nombre')->groupBy('nombre')->orderBy('nombre')->get();
-			$nombres = collect($nombres);
-
-			$arrayMapeado = $nombres->map(function($item,$key)
-			{
+			$nombres = Curso::select('nombre')
+			->groupBy('nombre')
+			->orderBy('nombre')
+			->get()
+			->map(function($item,$key){
 				return $item->nombre;
 			});
 
@@ -140,7 +141,7 @@ class cursosController extends Controller
 				'status' => true,
 				'error' => null,
 				'data' => array(
-					'info' => $arrayMapeado
+					'info' => $nombres
 					)
 				);
 
@@ -177,7 +178,7 @@ class cursosController extends Controller
 			->join('sistema.provincias','sistema.provincias.id_provincia','=','alumnos.id_provincia')
 			->join('sistema.tipos_documentos','sistema.tipos_documentos.id_tipo_documento','=','alumnos.alumnos.id_tipo_documento')
 			->select('alumnos.id_alumno','nombres','apellidos','sistema.tipos_documentos.nombre as tipo_doc','nro_doc','sistema.provincias.nombre as provincia')
-			->get();	
+			->get();
 		} catch (ModelNotFoundException $e) {
 			$curso = null;
 		}
@@ -253,7 +254,6 @@ class cursosController extends Controller
 
 	private function queryLogica(Request $r,$filtros)
 	{
-		Log::info(json_encode($filtros));
 		//Filtros las que estan vacias si es que me las pasaron
 		$filtered = $filtros->filter(function ($value,$key)
 		{
@@ -262,14 +262,12 @@ class cursosController extends Controller
 
 		$returns = DB::table('cursos.cursos');
 
-		$provincia = Auth::user()->id_provincia;
 		//Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
-		if ($provincia != 25) {
-			$returns = $returns->where('cursos.cursos.id_provincia','=',$provincia);
+		if (Auth::user()->id_provincia != 25) {
+			$returns = $returns->where('cursos.cursos.id_provincia','=',Auth::user()->id_provincia);
 		}
 
 		foreach ($filtered as $key => $value) {
-
 			if($key == 'nombre'){
 				$returns = $returns->where('cursos.cursos.'.$key,'ilike','%'.$value.'%');                           
 			}elseif ($key == 'desde') {
@@ -277,17 +275,9 @@ class cursosController extends Controller
 			}elseif ($key == 'hasta') {
 				$returns = $returns->where('cursos.cursos.fecha','<',$value);
 			}elseif($key == 'id_periodo'){
-				
-				$datos_periodo = collect(DB::table('sistema.periodos')
-					->select('sistema.periodos.desde','sistema.periodos.hasta')
-					->where('sistema.periodos.id_periodo','=',$value)
-					->first());
-
-				$desde = $datos_periodo->get('desde');
-				$hasta = $datos_periodo->get('hasta');
-
-				$returns = $returns->where('cursos.cursos.fecha','>',$desde);
-				$returns = $returns->where('cursos.cursos.fecha','<',$hasta);
+				$periodo = Periodo::find($value);
+				$returns = $returns->where('cursos.cursos.fecha','>',$periodo->desde);
+				$returns = $returns->where('cursos.cursos.fecha','<',$periodo->hasta);
 			}else{
 				$returns = $returns->where('cursos.cursos.'.$key,'=',$value);                           
 			}
@@ -318,11 +308,11 @@ class cursosController extends Controller
 			$aux = $this->queryLogica($r,$filtros);  
 
 			$tabla = Datatables::of($aux)
-			->addColumn('acciones' , function($ret){
+			->addColumn('acciones' , function($ret) use ($r){
 
-				$accion = Input::get('botones');
+				$accion = $r->has('botones')?$r->botones:null;
 
-				$editarYEliminar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_curso.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+				$editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_curso.'"><button alumno-id="'.$ret->id_curso.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button alumno-id="'.$ret->id_curso.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
 
 				$agregar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
@@ -335,7 +325,6 @@ class cursosController extends Controller
 			})            
 			->make(true);
 
-
 			return $tabla;
 		}else{
 			return json_encode($v->errors());
@@ -347,7 +336,10 @@ class cursosController extends Controller
 		$filtros = collect($r->only('filtros'));
 		$filtros = collect($filtros->get('filtros'));
 
-		$data = $this->queryLogica($r,$filtros);
+		$order_by = collect($r->only('order_by'));
+		logger(json_encode($order_by));
+
+		$data = $this->queryLogica($r,$filtros,$order_by);
 		$datos = ['cursos' => $data];
 		$path = "cursos_filtrados_".date("Y-m-d_H:i:s");
 
@@ -368,9 +360,9 @@ class cursosController extends Controller
 		$filtros = collect($filtros->get('filtros'));
 
 		$data = $this->queryLogica($r,$filtros);
+
 		$header = array('Nombre','Fecha','Edicion','Duracion','Area Tematica','Linea Estrategica','Provincia');
 		$column_size =  array(80,25,15,17,60,60,20);
-
 
 		$mapped = $data->map(function ($item,$key){
 			$curso = array();
@@ -390,25 +382,30 @@ class cursosController extends Controller
 		return $path;*/
 	}
 
-	public function getData($id)
+	/**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+	public function show($id)
 	{		
-		try{
-		$curso = Curso::findOrFail($id);
-		} catch (ModelNotFoundException $e) {
-			$curso = null;
-		}	
+		$curso = Curso::select('id_curso','nombre','edicion','duracion','fecha','id_area_tematica','id_linea_estrategica','id_provincia')
+		->with([
+			'area_tematica',
+			'linea_estrategica',
+			'provincia'
+		])
+		->where('id_curso',$id)
+		->first();
 
-		$area = AreaTematica::find($curso->id_area_tematica)->nombre;
-		$linea = LineaEstrategica::find($curso->id_linea_estrategica)->nombre;
-		$provincia = Provincia::find($curso->id_provincia)->nombre;
 		//De la base de datos me viene con '-' y en el orden opuesto
 		//Lo pongo con '/'
 		$f = explode("-",$curso->fecha);
 		$curso->fecha = $f[2].'/'.$f[1].'/'.$f[0];
 
-		$return = array('curso' => $curso,'area' => $area,'linea' => $linea,'provincia' => $provincia);
-		//$return = array('curso' => $curso);
-		$ret = array_merge($return,$this->getSelectOptions());
+		$curso = array('curso' => $curso);
+		$ret = array_merge($this->getSelectOptions(),$curso);
 
 		return view('cursos/modificar',$ret);
 	}

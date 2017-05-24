@@ -23,7 +23,6 @@
 								<select class="form-control" id="provincia">
 								<option data-id="0" title="Todas las provincias">Todas las provincias</option>
 									@foreach ($provincias as $provincia)
-
 									<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
 									@endforeach
 								</select>
@@ -38,7 +37,6 @@
 								<select class="form-control" id="periodo">
 									<option data-id="0" title="Todos los períodos">Todos los períodos</option>
 									@foreach ($periodos as $periodo)
-
 									<option data-id="{{$periodo->id_periodo}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>									
 									@endforeach
 								</select>
@@ -103,7 +101,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>	
 </div>
 @endsection
@@ -143,7 +140,7 @@
 		};
 
 		$('#filtrar').on('click',function () {
-			var filtrosJson = getFiltrosJson();			
+			var filtros = getFiltrosJson();			
 			console.log(filtrosJson);
 
 			$('#reporte').show();
@@ -154,7 +151,7 @@
 				url: 'query',
 				data: {
 					id_reporte : 1,
-					filtros: filtrosJson
+					filtros: filtros
 				}
 			},
 			columns: [

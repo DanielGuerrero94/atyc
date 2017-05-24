@@ -38,10 +38,5 @@ class LineaEstrategica extends Model
 		$this->nombre = $r->nombre;
 		$this->numero = $r->numero;
 		$this->save();		
-	}
-
-	public function darBaja(Request $r)
-	{
-		
 	}	
 }

@@ -132,7 +132,7 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('cursos/profesor/{id}','cursosController@getDictadosPorProfesor');
 	Route::get('cursos/provincias/{id}','cursosController@getAlumnosDeCursosPorProvincia');
 	Route::get('cursos/{id}/alumnos','cursosController@getAlumnos');
-	Route::get('cursos/{id}','cursosController@getData');
+	Route::get('cursos/{id}','cursosController@show');
 
 	Route::post('cursos','cursosController@set');
 
@@ -145,7 +145,7 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('users/{id}/alumnos', 'cursosController@getAlumnos');
 
 	//Encuestas
-	Route::resource('encuestas', 'EncuestaController');
+	Route::resource('encuestas', 'Encuestas\EncuestaController');
 
 //Filtros para todas las abms
 	Route::get('filtros/{tabla}','abmController@filtros');
