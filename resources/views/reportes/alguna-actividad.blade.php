@@ -145,7 +145,7 @@
 
 		$('#filtrar').on('click',function () {
 			var filtros = getFiltrosJson();			
-			console.log(filtrosJson);
+			console.log(filtros);
 
 			$('#reporte').show();
 

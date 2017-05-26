@@ -201,7 +201,7 @@ class cursosController extends Controller
 
 	public function getCountAlumnos($id)
 	{
-		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as \"cantidad_alumnos\", CONCAT(LE.numero,'-',LE.nombre) as \"linea_estrategica\",AT.nombre as \"area_tematica\",P.nombre as \"provincia\",C.duracion from cursos.cursos C 
+		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as \"linea_estrategica\",AT.nombre as \"area_tematica\",P.nombre as \"provincia\",C.duracion from cursos.cursos C 
 		left join cursos.cursos_alumnos CA ON CA.id_cursos = C.id_curso 
 		left join alumnos.alumnos A ON CA.id_alumnos = A.id_alumno
 		inner join sistema.provincias P ON P.id_provincia = C.id_provincia
@@ -212,7 +212,7 @@ class cursosController extends Controller
 			$query .= " WHERE C.id_provincia = '".$id."'";	
 		}
 
-		$query .= " group by C.id,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre
+		$query .= " group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre
 		order by C.nombre,C.edicion
 		";
 

@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-	@if($provincia_usuario->id == 25)
+	@if($provincia_usuario->id_provincia == 25)
 	<div id="filtros" class="col-xs-12">
 		<div class="box box-info">
 			<div class="box-header with-border">
@@ -38,7 +38,7 @@
 		</div>
 	</div>
 	@endif
-	<div id="reporte" data-id-provincia="{{$provincia_usuario->id}}">
+	<div id="reporte" data-id="{{$provincia_usuario->id_provincia}}">
 		{{ csrf_field() }}
 		<div class="col-md-12">
 			<div class="box box-info ">
@@ -78,7 +78,7 @@
 
 	$(document).ready(function(){
 
-		var id_provincia = $('#abm').data('id-provincia');
+		var id_provincia = $('#abm').data('id');
 
 		$('#reporte-table').DataTable({			
 			ajax : 'cursos/provincias/'+id_provincia+'/count',

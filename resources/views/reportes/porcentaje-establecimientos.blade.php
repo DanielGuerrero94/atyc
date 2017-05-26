@@ -23,13 +23,11 @@
 								<select class="form-control" id="provincia">
 								<option data-id="0" title="Todas las provincias">Todas las provincias</option>
 									@foreach ($provincias as $provincia)
-
-									<option data-id="{{$provincia->id}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
+									<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
 									@endforeach
 								</select>
 							</div>
-						</div>
-						
+						</div>						
 					</div>
 					@endif
 					<div class="row">
@@ -39,13 +37,11 @@
 								<select class="form-control" id="periodo">
 								<option data-id="0" title="Todos los períodos">Todos los períodos</option>
 									@foreach ($periodos as $periodo)
-
-									<option data-id="{{$periodo->id}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>									
+									<option data-id="{{$periodo->id_periodo}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>									
 									@endforeach
 								</select>
 							</div>
-						</div>
-						
+						</div>						
 					</div>
 					<div class="row" id="toggle-fecha">
 						<div class="form-group col-sm-6">
@@ -80,7 +76,7 @@
 			</form>
 		</div>
 	</div>
-	<div id="reporte" data-id-provincia="{{$provincia_usuario->id}}">
+	<div id="reporte" data-id-provincia="{{$provincia_usuario->id}}" style="display:none;">
 		{{ csrf_field() }}
 		<div class="col-md-12">
 			<div class="box box-info ">
@@ -107,7 +103,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>	
 	<div id="alta" style="display: none;"></div>
 </div>
@@ -116,25 +111,10 @@
 @section('script')
 <script type="text/javascript">		
 
-	$(document).ready(function(){
-		var table;
+	$.unblockUI();
 
-		table = $('#reporte-table').DataTable({			
-			ajax : {
-				url: 'query',
-				data: {
-					id_reporte : 4,
-					id_periodo : 1
-				}
-			},			
-			columns: [
-			{ data: 'periodo'},
-			{ data: 'provincia'},
-			{ data: 'capacitados'},
-			{ data: 'total'},
-			{ data: 'porcentaje'}
-			]
-		});
+	$(document).ready(function(){
+		var table;			
 
 		$('#toggle-fecha').on('click',function () {
 
@@ -146,27 +126,99 @@
 			var fecha = $('.fa-calendar').closest('.row');			
 			
 			showCalendarInputs(periodo,fecha);
-		});
+		});		
 
-		$('#filtrar').on('click',function () {
-
-			var data = "provincia_id=";
-			var provincia_id = $('#filtros #provincia :selected').data('id');
-			data += provincia_id + "&";
-			var periodo_id;
+		function getFiltrosJson() {
+			var id_provincia = $('#filtros #provincia :selected').data('id');
+			var id_periodo,desde,hasta;
 
 			if($('#toggle-fecha i').hasClass('fa-toggle-off')){
-				periodo_id = $('#filtros #periodo :selected').data('id');
-				data += "periodo_id=" + periodo_id;
+				id_periodo = $('#filtros #periodo :selected').data('id');
 			}else{
-				data += "desde=" + $('#filtros #desde').val() + "&";
-				data += "hasta=" + $('#filtros #hasta').val();
+				desde = $('#filtros #desde').val();
+				hasta = $('#filtros #hasta').val();
 			}
 
-			console.log(data);		
+			var data = {id_provincia: id_provincia,id_periodo: id_periodo,desde: desde,hasta: hasta};
+			return data;
+		};
+
+		$('#filtrar').on('click',function () {
+			var filtros = getFiltrosJson();			
+			console.log(filtros);
+
+			$('#reporte').show();
+
+			table = $('#reporte-table').DataTable({	
+			destroy: true,		
+			ajax : {
+				url: 'query',
+				data: {
+					id_reporte : 4,
+					filtros: filtros
+				}
+			},
+			columns: [
+			{ data: 'periodo'},
+			{ data: 'provincia'},
+			{ data: 'capacitados'},
+			{ data: 'total'},
+			{ data: 'porcentaje'}
+			]
+		});
+	
 		});
 
-	});
+		$('.excel').on('click',function () {
+
+			var filtros = getFiltrosJson();
+			console.log(filtros);
+			var order_by = $('#reporte-table').DataTable().order();
+			console.log(order_by);
+
+			$.ajax({
+				url: 'excel',
+				data: {
+					id_reporte: 4,
+					filtros: filtros,
+					order_by: order_by
+				},
+				success: function(data){
+					alert('Se descargara pronto.');
+					console.log(data);
+					window.location="descargar/excel/"+data;
+				},
+				error: function (data) {
+					alert('No se pudo crear el archivo.');
+					console.log(data);
+				}
+			});
+		});
+
+		$('.pdf').on('click',function () {
+
+			var filtros = getFiltrosJson();
+			var order_by = $('#reporte-table').DataTable().order();			
+
+			$.ajax({
+				url: 'pdf',
+				data: {
+					id_reporte : 4, 
+					filtros: filtros,
+					order_by : order_by					
+				},
+				success: function(data){
+					alert('Se descargara pronto.');
+					console.log(data);
+					window.location="descargar/pdf/"+data;
+				},
+				error: function (data) {
+					alert('No se pudo crear el archivo.');
+					console.log(data);
+				}
+			});			
+		});
+	});		
 </script> 
 @endsection
 
