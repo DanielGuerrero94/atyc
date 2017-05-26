@@ -18,9 +18,9 @@
 						</div>
 					</div>
 					<div class="form-group col-sm-6">
-						<label class="control-label col-xs-4" for="tipo_doc">Tipo de Documento:</label>
+						<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento:</label>
 						<div class="col-xs-8">
-							<select class="form-control" id="tipo_doc" title="Documento nacional de identidad">
+							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
 								@foreach ($documentos as $documento)
 								
 								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>				 
@@ -98,9 +98,9 @@
 			}
 		});
 		
-		$('#alta').on("click","#tipo_doc",function () {
+		$('#alta').on("click","#id_tipo_documento",function () {
 			console.log($(this).find(":selected").attr("title"));
-			console.log($('#alta').find("#tipo_doc").attr("title"));
+			console.log($('#alta').find("#id_tipo_documento").attr("title"));
 			$(this).attr("title",$(this).find(":selected").attr("title"));
 			var nacionalidad = $('#alta').find('#nacionalidad');
 			if ($(this).val() == 'DEX' || $(this).val() == 'PAS' ) {
@@ -121,7 +121,7 @@
 		$('#alta').on('click','#crear',function() {
 			
 			var data = $('form').serialize();
-			data += '&id_tipo_documento='+$('#alta #tipo_doc :selected').data('id');
+			data += '&id_tipo_documento='+$('#alta #id_tipo_documento :selected').data('id');
 
 			/*$.ajax({
 				method : 'post',
@@ -143,7 +143,7 @@
 				var form = $('#alta #form-alta');
 				var nro_doc = form.find('#nro_doc');
 
-				if( form.find('#tipo_doc').val() == 'DNI' 
+				if( form.find('#id_tipo_documento').val() == 'DNI' 
 					&& nro_doc.val() != ''
 					&& !nro_doc.closest('.form-group').hasClass('has-success')){
 

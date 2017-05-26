@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\AreaTematica;
 use App\LineaEstrategica;
@@ -12,6 +10,7 @@ use App\Provincia;
 use App\Periodo;
 use App\Curso;
 use DB;
+use Log;
 use Auth;
 use Validator;
 use Datatables;
@@ -54,18 +53,121 @@ class cursosController extends Controller
 		return DB::connection('g_plannacer')->select($query);
 	}
 
-	public function get()
+	/**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function index()
 	{
-		return view('cursos',$this->getSelectOptions());
+		return json_encode(Curso::all());
 	}
 
-	public function getJoined()
-	{
-    	//Me traigo L.f_virtual no tengo idea pra que sirve(preguntar);
-		$query = "SELECT C.id,C.nombre_curso,date(C.fecha_curso) as \"fecha_curso\",C.edicion,C.horas_duracion,A.area_tematica as \"area_tematica\",C.modalidad,P.descripcion as \"provincia_organizadora\",C.f_c,L.lineas_estrategicas as \"linea_estrategica\",L.f_virtual  FROM cursos C INNER JOIN areas_tematicas A ON A.id = C.area_tematica INNER JOIN lineas_estrategicas L ON L.id = C.linea_estrategica INNER JOIN provincias P ON P.id = C.provincia_organizadora";
-		return $this->query($query);
-	}
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+    	return view('cursos/alta',$this->getSelectOptions());
+    }   
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+    	$v = Validator::make($r->all(),$this->_rules);
+    	if(!$v->fails()){
+    		$curso = new Curso();
+    		$curso->crear($r);
+    		Log::info(json_encode($curso));
+    	}else{
+    		Log::info('El curso no paso la verificacion.'); 
+    	}
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+    	$curso = Curso::select('id_curso','nombre','edicion','duracion','fecha','id_area_tematica','id_linea_estrategica','id_provincia')
+    	->with([
+    		'area_tematica',
+    		'linea_estrategica',
+    		'provincia'
+    		])
+    	->where('id_curso',$id)
+    	->first();
+
+		//De la base de datos me viene con '-' y en el orden opuesto
+		//Lo pongo con '/'
+    	$f = explode("-",$curso->fecha);
+    	$curso->fecha = $f[2].'/'.$f[1].'/'.$f[0];
+
+    	$curso = array('curso' => $curso);
+    	return array_merge($this->getSelectOptions(),$curso);		
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+    	return view('cursos/modificar',$this->show($id));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+    	return Curso::findOrFail($id)->modificar($request);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {    	
+    	return Curso::findOrFail($id)->delete();
+    }
+
+    /**
+     * View para abm.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function get()
+    {
+    	return view('cursos',$this->getSelectOptions());
+    }
+
+	/**
+     * Devuelve la informacion para abm.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $request['botones']
+     * @return \Illuminate\Http\Response
+     */
 	public function getTabla()
 	{
 		$returns = Curso::select('id_curso','nombre','fecha','edicion','duracion','id_area_tematica','id_linea_estrategica','id_provincia')	
@@ -73,22 +175,17 @@ class cursosController extends Controller
 			'area_tematica',
 			'linea_estrategica',
 			'provincia'
-		]);				
+			]);				
 
 		if(Auth::user()->id_provincia != 25){           
-            $returns = $returns->where('id_provincia',Auth::user()->id_provincia);
-        }
+			$returns = $returns->where('id_provincia',Auth::user()->id_provincia);
+		}
 
-		$returns = collect($returns->get());
+		$resultados = collect($returns->get());
 
-		return Datatables::of($returns)
-		->addColumn('acciones' , function($ret){
-			return '<a href="cursos/'.$ret->id_curso.'"><button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_curso.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
-		})            
-		->make(true); 	
+		return $this->toDatatable($r,$resultados); 	
 	}
 
-	//Cambiar esta funcion urgente
 	public function getAprobadosPorAlumno($alumno)	
 	{
 		$returns = Curso::whereHas('alumnos',function ($query) use ($alumno)
@@ -100,71 +197,55 @@ class cursosController extends Controller
 		->get();
 
 		return Datatables::of($returns)
-			->addColumn('acciones' , function($ret){
-				return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
-			})->make(true);
-		}
+		->addColumn('acciones' , function($ret){
+			return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
+		})->make(true);
+	}
 
-		public function getDictadosPorProfesor($profesor)
+	public function getDictadosPorProfesor($profesor)
+	{
+		$returns = Curso::whereHas('profesores',function ($query) use ($profesor)
 		{
-			$returns = Curso::whereHas('profesores',function ($query) use ($profesor)
-			{
-				$query->where('id_profesor',$profesor);
-			})			
-			->select('id_curso','nombre','fecha','id_provincia')			
-			->with('provincia')
-			->get();
+			$query->where('id_profesor',$profesor);
+		})			
+		->select('id_curso','nombre','fecha','id_provincia')			
+		->with('provincia')
+		->get();
 
-			return Datatables::of($returns)
-			->addColumn('acciones' , function($ret){
-				return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
-			})->make(true);
-		}
+		return Datatables::of($returns)
+		->addColumn('acciones' , function($ret){
+			return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
+		})->make(true);
+	}
 
-		public function getAlta()
-		{		
-			return view('cursos/alta',$this->getSelectOptions());
-		}
+	/**
+     * Nombres de establecimientos para typeahead.
+     *
+     * @return \Illuminate\Http\Response
+     */
+	public function getNombres()
+	{	
+		$nombres = Curso::select('nombre')
+		->groupBy('nombre')
+		->orderBy('nombre')
+		->get()
+		->map(function($item,$key){
+			return $item->nombre;
+		});
 
-		//Typeahead
-		public function getNombres()
-		{	
-			$nombres = Curso::select('nombre')
-			->groupBy('nombre')
-			->orderBy('nombre')
-			->get()
-			->map(function($item,$key){
-				return $item->nombre;
-			});
+		$ret = array(
+			'status' => true,
+			'error' => null,
+			'data' => array(
+				'info' => $nombres
+				)
+			);
 
-			$ret = array(
-				'status' => true,
-				'error' => null,
-				'data' => array(
-					'info' => $nombres
-					)
-				);
+		return json_encode($ret);
+	}
 
-			return json_encode($ret);
-		}
-
-		public function set(Request $r)
-		{
-			$v = Validator::make($r->all(),$this->_rules);
-			if(!$v->fails()){
-				$curso = new Curso();
-				$curso->crear($r);
-				Log::info(json_encode($curso));
-			}else{
-				Log::info('El curso no paso la verificacion.'); 
-			}
-		}
-
-		public function getProfesores()
-		{
-		/*$curso = Curso::find('40');
-		$curso->profesores()->attach('207');*/
-
+	public function getProfesores()
+	{
 		$curso = Curso::find('300')->profesores()->get();
 		Log::info(json_encode($curso));
 		return json_encode($curso);
@@ -172,16 +253,12 @@ class cursosController extends Controller
 
 	public function getAlumnos($id)
 	{
-		try {
 			$curso = Curso::findOrFail($id)
 			->alumnos()		
 			->join('sistema.provincias','sistema.provincias.id_provincia','=','alumnos.id_provincia')
 			->join('sistema.tipos_documentos','sistema.tipos_documentos.id_tipo_documento','=','alumnos.alumnos.id_tipo_documento')
 			->select('alumnos.id_alumno','nombres','apellidos','sistema.tipos_documentos.nombre as tipo_doc','nro_doc','sistema.provincias.nombre as provincia')
 			->get();
-		} catch (ModelNotFoundException $e) {
-			$curso = null;
-		}
 
 		$returns = collect($curso)->map(function ($item,$key){
 			return array('id_alumno' => $item['id_alumno'],
@@ -238,6 +315,11 @@ class cursosController extends Controller
 		return $cursos;
 	}
 
+	/**
+     * Opciones para los selects del front end.
+     *
+     * @return \Illuminate\Http\Response
+     */
 	public function getSelectOptions()
 	{
 		$areas = AreaTematica::orderBy('nombre')->get();
@@ -305,32 +387,48 @@ class cursosController extends Controller
 		$v = Validator::make($filtros->all(),$this->_filters);
 		if(!$v->fails()){
 
-			$aux = $this->queryLogica($r,$filtros);  
+			$resultados = $this->queryLogica($r,$filtros);  
 
-			$tabla = Datatables::of($aux)
-			->addColumn('acciones' , function($ret) use ($r){
-
-				$accion = $r->has('botones')?$r->botones:null;
-
-				$editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_curso.'"><button alumno-id="'.$ret->id_curso.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button alumno-id="'.$ret->id_curso.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
-
-				$agregar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
-
-				$botones = $editarYEliminar;
-
-				if($accion == 'agregar'){
-					$botones = $agregar;
-				}           
-				return $botones;
-			})            
-			->make(true);
-
-			return $tabla;
+			return $this->toDatatable($r,$resultados);
 		}else{
 			return json_encode($v->errors());
 		}	
 	}
 
+	/**
+     * Devuelve en DataTable los resultados con sus correspondientes acciones.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $request['botones']
+     * @param  Collection  $resultados
+     * @return \Illuminate\Http\Response
+     */
+	public function toDatatable(Request $r,$resultados)
+	{
+		return Datatables::of($resultados)
+		->addColumn('acciones' , function($ret) use ($r){
+
+			$accion = $r->has('botones')?$r->botones:null;
+
+			$editarYEliminar = '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_curso.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
+
+			$agregar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+
+			return $accion == 'agregar'?$agregar:$editarYEliminar;
+		})            
+		->make(true);
+	}
+
+	/**
+     * Corre la query segun filtros y order_by
+     * Guarda el resultado en un .xls
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array filtros
+     * @param  array order_by
+     * @return \Illuminate\Http\Response
+     * @return string path al archivo generado
+     */
 	public function getExcel(Request $r)
 	{		
 		$filtros = collect($r->only('filtros'));
@@ -354,6 +452,16 @@ class cursosController extends Controller
 		return $path;
 	}
 
+	/**
+     * Corre la query segun filtros y order_by
+     * Guarda el resultado en un .pdf
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array filtros
+     * @param  array order_by
+     * @return \Illuminate\Http\Response
+     * @return string path al archivo generado
+     */
 	public function getPDF(Request $r)
 	{
 		$filtros = collect($r->only('filtros'));
@@ -377,48 +485,5 @@ class cursosController extends Controller
 		});
 
 		return PDF::save($header,$column_size,10,$mapped);
-
-		/*$pdf = PDF::loadView('excel.cursos',$datos)->save($path.".pdf");
-		return $path;*/
-	}
-
-	/**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-	public function show($id)
-	{		
-		$curso = Curso::select('id_curso','nombre','edicion','duracion','fecha','id_area_tematica','id_linea_estrategica','id_provincia')
-		->with([
-			'area_tematica',
-			'linea_estrategica',
-			'provincia'
-		])
-		->where('id_curso',$id)
-		->first();
-
-		//De la base de datos me viene con '-' y en el orden opuesto
-		//Lo pongo con '/'
-		$f = explode("-",$curso->fecha);
-		$curso->fecha = $f[2].'/'.$f[1].'/'.$f[0];
-
-		$curso = array('curso' => $curso);
-		$ret = array_merge($this->getSelectOptions(),$curso);
-
-		return view('cursos/modificar',$ret);
-	}
-
-	public function modificar(Request $r,$id)
-	{
-		$curso = Curso::find($id);
-		$curso->modificar($r);
-	}
-
-	public function borrar(Request $r,$id)
-	{
-		$curso = Curso::find($id);
-		$curso->delete();
 	}
 }

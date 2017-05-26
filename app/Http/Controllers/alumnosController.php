@@ -15,23 +15,23 @@ use Validator;
 use Datatables;
 use Log;
 
-class alumnosController extends Controller 
+class alumnosController extends Controller
 {
     private 
     $_rules = [
     'nombres' => 'required|string',
     'apellidos' => 'required|string',
-    'id_tipo_doc' => 'required|numeric',
-    'pais' => 'required_if:id_tipo_doc,5,6',
+    'id_tipo_documento' => 'required|numeric',
+    'pais' => 'required_if:id_tipo_documento,5,6',
     'nro_doc' => 'required|numeric',
     'localidad' => 'required|string',
     'id_provincia' => 'required|numeric',
-    'id_trabaja_en' => 'required|numeric',
-    'id_funcion' => 'required_if:id_trabaja_en,2,3|numeric',
-    'establecimiento' => 'required_if:id_trabaja_en,2|string',
-    'efector' => 'required_if:id_trabaja_en,2|string',
-    'tipo_organismo' => 'required_if:id_trabaja_en,3|string',
-    'nombre_organismo' => 'required_if:id_trabaja_en,3|string',
+    'id_trabajo' => 'required|numeric',
+    'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
+    'establecimiento' => 'required_if:id_trabajo,2|string',
+    'efector' => 'required_if:id_trabajo,2|string',
+    'tipo_organismo' => 'required_if:id_trabajo,3|string',
+    'nombre_organismo' => 'required_if:id_trabajo,3|string',
     'email' => 'nullable|email',
     'tel' => 'nullable',
     'cel' => 'nullable'
@@ -41,7 +41,7 @@ class alumnosController extends Controller
     $_filters = [
     'nombres' => 'string',
     'apellidos' => 'string',
-    'id_tipo_doc' => 'numeric',
+    'id_tipo_documento' => 'numeric',
     'id_provincia' => 'numeric',
     'cel' => 'string',
     'tel' => 'string',
@@ -49,7 +49,7 @@ class alumnosController extends Controller
     'localidad' => 'string',
     'nro_doc' => 'numeric'];
 
-    private $campos = ["nombres","apellidos","tipo_doc","nro_doc","provincia","acciones"];
+    private $campos = ["nombres","apellidos","tipo_documento","nro_doc","provincia","acciones"];
     private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
 
     public function query($query)
@@ -57,52 +57,139 @@ class alumnosController extends Controller
         return DB::connection('eLearning')->select($query);
     }	
 
+    /**
+     * View para abm.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function get()
     {
     	return view('alumnos',$this->getSelectOptions());
     }
 
-    public function getJoined()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-    	$query = "SELECT * FROM alumnos A INNER JOIN provincias P ON A.provincia = P.id";
-    	$ret =  $this->query($query);
-        return view('alumnos',['alumnos' => json_encode($ret)]);   
-    }    
+        return json_encode(Alumno::all());
+    }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('alumnos/alta',$this->getSelectOptions());
+    }   
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $v = Validator::make($r->all(),$this->_rules);
+
+        if(!$v->fails()){
+            if($r->has('pais')){
+                $r->pais = Pais::select('id_pais')->where('nombre','=',$r->pais)->get('id_pais')->first(); 
+                $r->pais = $r->pais['id_pais'];    
+            }
+            return Alumno::crear($r);
+        }else{
+            return json_encode($v->errors());
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $alumno = Alumno::findOrFail($id);
+        $id_tipo_documento = $alumno->id_tipo_documento;
+        $nombre_pais = null;
+        if($id_tipo_documento === 6 || $id_tipo_documento === 5){
+            $pais = Pais::find($alumno->id_pais);    
+            $nombre_pais = $pais->nombre;
+        }
+        $array = array('alumno' => $alumno,'pais' => $nombre_pais);
+        return array_merge($array,$this->getSelectOptions());
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        return view('alumnos/modificar',$this->show($id));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        return Alumno::findOrFail($id)->modificar($request);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        return Alumno::findOrFail($id)->delete();
+    }   
+
+    /**
+     * Devuelve la informacion para abm.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $request['botones']
+     * @return \Illuminate\Http\Response
+     */
     public function getTabla(Request $r)
     {
         $returns = Alumno::select('id_alumno','nombres','apellidos','nro_doc','id_provincia','id_tipo_documento')
         ->with([
             'tipo_documento',
             'provincia'                                       
-        ]);     
+            ]);     
 
         if(Auth::user()->id_provincia != 25){           
             $returns = $returns->where('id_provincia',Auth::user()->id_provincia);
         }
 
-        $returns = collect($returns->get());
+        $resultados = collect($returns->get());
 
-         //Tengo que pasarle una coleccion                                                                                                                                                                                                                                      no un array al datatables
-        return Datatables::of($returns)
-        ->addColumn('acciones' , function($ret) use($r){
-
-            $accion = $r->has('botones')?$r->botones:null;
-
-            $editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_alumno.'"><button alumno-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button alumno-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
-
-            $agregar = '<button profesor-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
-
-            $botones = $editarYEliminar;
-
-            if($accion == 'agregar'){
-                $botones = $agregar;
-            }           
-            return $botones;
-        })            
-        ->make(true); 
+        return  $this->toDatatable($r,$resultados);
     }
 
+    /**
+     * Opciones para los selects del front end.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getSelectOptions()
     {
         $documentos = TipoDocumento::all();        
@@ -117,90 +204,15 @@ class alumnosController extends Controller
             'trabajos' => $trabajos,
             'funciones' => $funciones,
             'organismos' => $organismos);
-    }
-
-    public function getAlta()
-    {
-        return view('alumnos/alta',$this->getSelectOptions());
-    }
-
-    public function getActivos()
-    {
-        $query = "SELECT count(*) as activos FROM g_plannacer.alumnos A INNER JOIN g_plannacer.cursos_alumnos CA ON CA.alumno = A.id WHERE EXTRACT(YEAR FROM CA.fecha_acreditacion) = EXTRACT(YEAR FROM CURRENT_DATE)";
-        $returns = $this->query($query);
-        $returns = collect($returns)->first();
-        return json_encode($returns);
-    }
-
-    public function getData($id)
-    {
-        $alumno = Alumno::find($id);
-        $id_tipo_documento = $alumno->id_tipo_documento;
-        $nombre_pais = null;
-        if($id_tipo_documento === 6 || $id_tipo_documento === 5){
-            $pais = Pais::find($alumno->id_pais);    
-            $nombre_pais = $pais->nombre;
-        }
-        $array = array('alumno' => $alumno,'pais' => $nombre_pais);
-        $ret = array_merge($array,$this->getSelectOptions());
-        return view('alumnos/modificar',$ret);
-    }
-
-    public function set(Request $r)
-    {
-        $v = Validator::make($r->all(),$this->_rules);
-
-        if(!$v->fails()){
-            if($r->has('pais')){
-                $r->pais = Pais::select('id')->where('nombre','=',$r->pais)->get('id')->first(); 
-                $r->pais = $r->pais['id'];    
-            }
-            $alumno = Alumno::crear($r);
-        }else{
-            return json_encode($v->errors());
-        }
-    }    
-
-    public function borrar(Request $r,$id)
-    {
-        $alumno = Alumno::find($id);
-        $alumno->delete();
-        Log::info(Auth::ip());
-        Log::info('Se da de baja el alumno con id:'.$id);
-    }
-
-    public function modificar(Request $r,$id)
-    {
-        $alumno = Alumno::find($id);
-        $alumno->modificar();
-    } 
-
-            /*funciones para typeahead*/    
-
-            /*para tener de ejemplo*/
-    /*public function getNombres()
-    {   
-        $nombres = Curso::select('nombre')->groupBy('nombre')->orderBy('nombre')->get();
-        $nombres = collect($nombres);
-
-        $arrayMapeado = $nombres->map(function($item,$key)
-        {
-            return $item->nombre;
-        });
-
-        $ret = array(
-            'status' => true,
-            'error' => null,
-            'data' => array(
-                'info' => $arrayMapeado
-                )
-            );
-
-        return json_encode($ret);
-    }*/
+    }      
 
     /* Metodos Typeahead */
 
+    /**
+     * Nombres de organismos para typeahead.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getNombreOrganismo()
     {
         $organismos = Alumno::select('organismo2')
@@ -222,6 +234,11 @@ class alumnosController extends Controller
         return json_encode($ret);
     }
 
+    /**
+     * Nombres de establecimientos para typeahead.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getEstablecimientos()
     {
         $establecimientos = Alumno::select('establecimiento2')
@@ -255,17 +272,16 @@ class alumnosController extends Controller
 
         $returns = DB::table('alumnos.alumnos');
 
-        $provincia = Auth::user()->id_provincia;
         //Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
-        if ($provincia != 25) {
-            $returns = $returns->where('alumnos.alumnos..id_provincia','=',$provincia);
+        if (Auth::user()->id_provincia != 25) {
+            $returns = $returns->where('alumnos.alumnos..id_provincia','=',Auth::user()->id_provincia);
         }
 
         foreach ($filtered as $key => $value) {
 
             if($key == 'nombres' || $key == 'apellidos' || $key == 'localidad' || $key == 'email'){
                 $returns = $returns->where('alumnos.alumnos.'.$key,'ilike','%'.$value.'%');                           
-            }elseif($key == 'tipo_doc'){
+            }elseif($key == 'id_tipo_documento'){
                 $returns = $returns->where('alumnos.alumnos.id_tipo_documento =',$value);                           
             }else{
                 $returns = $returns->where('alumnos.alumnos.'.$key,'=',$value);                           
@@ -277,7 +293,7 @@ class alumnosController extends Controller
         ->leftJoin('sistema.tipos_documentos','alumnos.alumnos.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
         ->select(
             'alumnos.alumnos.id_alumno','alumnos.alumnos.nombres','alumnos.alumnos.apellidos',
-            'sistema.tipos_documentos.nombre as tipo_doc',
+            'sistema.tipos_documentos.nombre as id_tipo_documento',
             'alumnos.alumnos.nro_doc',
             'sistema.provincias.nombre as provincia')
         ->whereNull('alumnos.alumnos.deleted_at');
@@ -297,27 +313,48 @@ class alumnosController extends Controller
         $v = Validator::make($filtros->all(),$this->_filters);
         if(!$v->fails()){
 
-            $aux = $this->queryLogica($r,$filtros,$order_by);  
+            $resultados = $this->queryLogica($r,$filtros,$order_by);             
 
-            $tabla = Datatables::of($aux)
-            ->addColumn('acciones' , function($ret) use ($r){
-
-                $accion = $r->has('botones')?$r->botones:null;
-
-                $editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_alumno.'"><button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
-
-                $agregar = '<button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
-                
-                return $accion == 'agregar'?$agregar:$editarYEliminar;;
-            })            
-            ->make(true);
-
-            return $tabla;
+            return $this->toDatatable($r,$resultados);
         }else{
             return json_encode($v->errors());
         }   
     }
 
+    /**
+     * Devuelve en DataTable los resultados con sus correspondientes acciones.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $request['botones']
+     * @param  Collection  $resultados
+     * @return \Illuminate\Http\Response
+     */
+    public function toDatatable(Request $r,$resultados)
+    {
+        return Datatables::of($resultados)
+        ->addColumn('acciones' , function($ret) use ($r){
+
+            $accion = $r->has('botones')?$r->botones:null;
+
+            $editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_alumno.'"><button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
+
+            $agregar = '<button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+
+            return $accion == 'agregar'?$agregar:$editarYEliminar;;
+        })            
+        ->make(true);
+    }
+
+    /**
+     * Corre la query segun filtros y order_by
+     * Guarda el resultado en un .xls
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array filtros
+     * @param  array order_by
+     * @return \Illuminate\Http\Response
+     * @return string path al archivo generado
+     */
     public function getExcel(Request $r)
     {       
         $filtros = collect($r->only('filtros'));
@@ -340,33 +377,45 @@ class alumnosController extends Controller
         return $path;
     }
 
+    /**
+     * Corre la query segun filtros y order_by
+     * Guarda el resultado en un .pdf
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array filtros
+     * @param  array order_by
+     * @return \Illuminate\Http\Response
+     * @return string path al archivo generado
+     */
     public function getPdf(Request $r)
     {
         $filtros = collect($r->only('filtros'));
         $filtros = collect($filtros->get('filtros'));
 
         $data = $this->queryLogica($r,$filtros);
-        /*$datos = ['alumnos' => $data];
-        $path = "alumnos_filtrados_".date("Y-m-d_H:i:s");
-
-        $pdf = PDF::loadView('excel.alumnos',$datos)->save($path.".pdf");*/
 
         $header = array('Nombres','Apellidos','Tipo Doc','Nro Doc','Provincia');
         $column_size = array(56,56,20,30,33);
 
         $mapped = $data->map(function ($item,$key){
-                $alumno = array();
-                array_push($alumno, $item->nombres);
-                array_push($alumno, $item->apellidos);
-                array_push($alumno, $item->tipo_doc);
-                array_push($alumno, $item->nro_doc);
-                array_push($alumno, $item->provincia);
-                return $alumno;
-            });
+            $alumno = array();
+            array_push($alumno, $item->nombres);
+            array_push($alumno, $item->apellidos);
+            array_push($alumno, $item->id_tipo_documento);
+            array_push($alumno, $item->nro_doc);
+            array_push($alumno, $item->provincia);
+            return $alumno;
+        });
 
         return PDF::save($header,$column_size,13,$mapped);
     }
 
+    /**
+     * Verifica si el numero de documento existe.
+     *
+     * @param  string  $documento
+     * @return \Illuminate\Http\Response
+     */
     public function checkDocumentos($documento)
     {
         $ret = Alumno::where('nro_doc','=',$documento)

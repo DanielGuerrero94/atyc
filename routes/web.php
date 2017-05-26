@@ -87,37 +87,37 @@ Route::group(['middleware' => 'logueado'], function () {
 
 	//Alumnos
 	Route::get('alumnos','alumnosController@get');
-	Route::get('alumnos/joined','alumnosController@getJoined');
 	Route::get('alumnos/tabla','alumnosController@getTabla');
-	Route::get('alumnos/alta','alumnosController@getAlta');
+	Route::get('alumnos/alta','alumnosController@create');
 	Route::get('alumnos/establecimientos','alumnosController@getEstablecimientos');
 	Route::get('alumnos/nombre_organismo','alumnosController@getNombreOrganismo');
 	Route::get('alumnos/excel','alumnosController@getExcel');
 	Route::get('alumnos/pdf','alumnosController@getPdf');
 	Route::get('alumnos/filtrado','alumnosController@getFiltrado');
 	Route::get('alumnos/documentos/{documento}','alumnosController@checkDocumentos');
-	Route::get('alumnos/{id}','alumnosController@getData');
+	Route::get('alumnos/{id}','alumnosController@show');
 
-	Route::post('alumnos','alumnosController@set');
 
-	Route::put('alumnos/{id}','alumnosController@modificar');
+	Route::post('alumnos','alumnosController@store');
 
-	Route::delete('alumnos/{id}','alumnosController@borrar');
+	Route::put('alumnos/{id}','alumnosController@update');
+
+	Route::delete('alumnos/{id}','alumnosController@destroy');
 
 	//Profesores
 	Route::get('profesores','profesoresController@get');
 	Route::get('profesores/tabla','profesoresController@getTabla');
-	Route::get('profesores/alta','profesoresController@getAlta');
+	Route::get('profesores/alta','profesoresController@create');
 	Route::get('profesores/filtrado','profesoresController@getFiltrado');
 	Route::get('profesores/excel','profesoresController@getExcel');
 	Route::get('profesores/pdf','profesoresController@getPdf');
-	Route::get('profesores/{id}','profesoresController@getData');
+	Route::get('profesores/{id}','profesoresController@edit');
 
-	Route::post('profesores','profesoresController@set');
+	Route::post('profesores','profesoresController@store');
 
-	Route::put('profesores/{id}','profesoresController@modificar');
+	Route::put('profesores/{id}','profesoresController@update');
 
-	Route::delete('profesores/{id}','profesoresController@borrar');
+	Route::delete('profesores/{id}','profesoresController@destroy');
 
 //Cursos
 	Route::get('cursos','cursosController@get');
@@ -170,28 +170,28 @@ Route::group(['middleware' => 'logueado'], function () {
 //ADMIN
 //Areas tematicas
 		Route::get('areasTematicas','areasTematicasController@getTodos');
-		Route::get('areasTematicas/alta','areasTematicasController@getAlta');
+		Route::get('areasTematicas/alta','areasTematicasController@create');
 		Route::get('areasTematicasTabla','areasTematicasController@getTabla');
-		Route::get('areasTematicas/{id}','areasTematicasController@get');
+		Route::get('areasTematicas/{id}','areasTematicasController@edit');
 
-		Route::post('areasTematicas/set','areasTematicasController@set');
+		Route::post('areasTematicas/set','areasTematicasController@store');
 
-		Route::put('areasTematicas/{id}','areasTematicasController@modificar');
+		Route::put('areasTematicas/{id}','areasTematicasController@update');
 
-		Route::delete('areasTematicas/{id}','areasTematicasController@borrar');
+		Route::delete('areasTematicas/{id}','areasTematicasController@destroy');
 
 
 //Lineas estrategicas
 		Route::get('lineasEstrategicas','lineasEstrategicasController@getTodos');
 		Route::get('lineasEstrategicasTabla','lineasEstrategicasController@getTabla');
-		Route::get('lineasEstrategicas/alta','lineasEstrategicasController@getAlta');
-		Route::get('lineasEstrategicas/{id}','lineasEstrategicasController@get');
+		Route::get('lineasEstrategicas/alta','lineasEstrategicasController@create');
+		Route::get('lineasEstrategicas/{id}','lineasEstrategicasController@edit');
 
-		Route::post('lineasEstrategicas','lineasEstrategicasController@set');
+		Route::post('lineasEstrategicas','lineasEstrategicasController@store');
 
-		Route::put('lineasEstrategicas/{id}','lineasEstrategicasController@modificar');
+		Route::put('lineasEstrategicas/{id}','lineasEstrategicasController@update');
 
-		Route::delete('lineasEstrategicas/{id}','lineasEstrategicasController@borrar');
+		Route::delete('lineasEstrategicas/{id}','lineasEstrategicasController@destroy');
 
 	//Gestores
 		Route::get('gestores/tabla','gestoresController@getTabla');
@@ -203,10 +203,8 @@ Route::group(['middleware' => 'logueado'], function () {
 		Route::get('paises/nombres','paisesController@getNombres');
 
 //Provincias
-		Route::get('provincias','provinciasController@getAll');
-		Route::get('provincias/{id}','provinciasController@get');
-
-		Route::post('provincias','provinciasController@set');
+		Route::get('provincias','provinciasController@index');
+		Route::get('provincias/{id}','provinciasController@show');
 
 //Efectores
 		Route::get('efectores','efectoresController@get');

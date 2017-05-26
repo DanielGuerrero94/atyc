@@ -10,7 +10,6 @@ class paisesController extends Controller
 {
     public function getNombres()
     {
-    	//No hay repetidos asi que no tengo que hacer un distinct
     	$paises = collect(Pais::all());
 
     	$arrayMapeado = $paises->map(function($item,$key)

@@ -23,7 +23,7 @@
 								<select class="form-control" id="provincia">
 								<option data-id="0" title="Todas las provincias">Todas las provincias</option>
 									@foreach ($provincias as $provincia)
-									<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
+									<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>							
 									@endforeach
 								</select>
 							</div>
@@ -69,7 +69,6 @@
 			</div>
 		</div>
 	</div>	
-	<div id="alta" style="display: none;"></div>
 </div>
 @endsection
 

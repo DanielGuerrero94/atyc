@@ -22,9 +22,9 @@
 							</div>
 						</div>
 						<div class="form-group col-sm-6">
-							<label class="control-label col-xs-4" for="tipo_doc">Tipo de Documento:</label>
+							<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento:</label>
 							<div class="col-xs-8">
-								<select class="form-control" id="tipo_doc" title="Documento nacional de identidad" value="{{$profesor->id_tipo_documento}}">
+								<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" value="{{$profesor->id_tipo_documento}}">
 									@foreach ($documentos as $documento)
 
 									<option value="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>										
@@ -129,9 +129,9 @@
 			}
 		});
 
-		$('#alta').on("click","#tipo_doc",function () {
+		$('#alta').on("click","#id_tipo_documento",function () {
 			console.log($(this).find(":selected").attr("title"));
-			console.log($('#alta').find("#tipo_doc").attr("title"));
+			console.log($('#alta').find("#id_tipo_documento").attr("title"));
 			$(this).attr("title",$(this).find(":selected").attr("title"));
 			var nacionalidad = $('#alta').find('#nacionalidad');
 			if ($(this).val() == '6' || $(this).val() == '5' ) {
@@ -144,11 +144,11 @@
 
 		//Para setear como seleccionado lo que ya tiene seteado
 
-		$('#alta #tipo_doc').val($('#alta #tipo_doc').attr('value'));
+		$('#alta #id_tipo_documento').val($('#alta #id_tipo_documento').attr('value'));
 
 		//Si es un documento extranjero lo que tiene seteado muestro el pais del que corresponde
-		var tipo_doc = $('#alta #tipo_doc').attr('value');
-		if(tipo_doc == '6' || tipo_doc == '5'){
+		var id_tipo_documento = $('#alta #id_tipo_documento').attr('value');
+		if(id_tipo_documento == '6' || id_tipo_documento == '5'){
 			
 			$('#alta #pais').parent().parent().parent().parent().show();
 		}
@@ -166,7 +166,7 @@
 			var data = $('#alta form').serialize();
 			data += '&_token='+$('#alta input').val();
 			data += '&_method='+$('#alta input:nth-child(2)').val();
-			data += '&id_tipo_documento='+$('#alta #tipo_doc').val();
+			data += '&id_tipo_documento='+$('#alta #id_tipo_documento').val();
 
 			console.log(data);
 

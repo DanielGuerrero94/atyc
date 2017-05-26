@@ -15,7 +15,7 @@ class EncuestaController extends Controller
      */
     public function index()
     {
-        //
+        return json_encode(Encuesta::all());
     }
 
     /**
@@ -36,7 +36,7 @@ class EncuestaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
     }
 
     /**
@@ -58,7 +58,7 @@ class EncuestaController extends Controller
      */
     public function edit($id)
     {
-        //
+        view('encuestas.modificar',$this->show($id));
     }
 
     /**
@@ -70,7 +70,7 @@ class EncuestaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return Encuesta::findOrFail($id)->update($request);
     }
 
     /**
@@ -81,6 +81,6 @@ class EncuestaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return Encuesta::findOrFail($id)->delete();
     }
 }

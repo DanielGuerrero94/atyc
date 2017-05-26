@@ -31,9 +31,9 @@
 					</div>	
 					<div class="row">
 						<div class="form-group col-sm-6">
-							<label class="control-label col-sm-5" for="tipo_doc">Tipo de Documento:</label>
+							<label class="control-label col-sm-5" for="id_tipo_documento">Tipo de Documento:</label>
 							<div class="col-sm-7">
-								<select class="form-control" id="tipo_doc" title="Documento nacional de identidad" value="{{$alumno->id_tipo_documento}}">
+								<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" value="{{$alumno->id_tipo_documento}}">
 									@foreach ($documentos as $documento)
 
 									<option value="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>
@@ -313,9 +313,9 @@
 
 	$(document).ready(function () {
 
-		$('.container').on("click","#tipo_doc",function () {
+		$('.container').on("click","#id_tipo_documento",function () {
 			console.log($(this).find(":selected").attr("title"));
-			console.log($('.container').find("#tipo_doc").attr("title"));
+			console.log($('.container').find("#id_tipo_documento").attr("title"));
 			$(this).attr("title",$(this).find(":selected").attr("title"));
 			var nacionalidad = $('.container').find('#nacionalidad');
 			if ($(this).val() == '6' || $(this).val() == '5' ) {
@@ -328,16 +328,16 @@
 
 		//Para setear como seleccionado lo que ya tiene seteado
 
-		$('.container #tipo_doc').val($('.container #tipo_doc').attr('value'));
+		$('.container #id_tipo_documento').val($('.container #id_tipo_documento').attr('value'));
 
 		//Si es un documento extranjero lo que tiene seteado muestro el pais del que corresponde
-		var tipo_doc = $('.container #tipo_doc').attr('value');
-		if(tipo_doc == '6' || tipo_doc == '5'){
+		var id_tipo_documento = $('.container #id_tipo_documento').attr('value');
+		if(id_tipo_documento == '6' || id_tipo_documento == '5'){
 			
 			$('.container #pais').parent().parent().parent().parent().show();
 		}
 		
-		$('#tipo_doc').val($('#tipo_doc').attr('value'));
+		$('#id_tipo_documento').val($('#id_tipo_documento').attr('value'));
 
 		$('#provincia').val($('#provincia').attr('value'));
 		

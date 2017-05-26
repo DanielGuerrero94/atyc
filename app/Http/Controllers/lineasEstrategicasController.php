@@ -4,23 +4,104 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\LineaEstrategica;
-use Log;
-use Validator;
 use Datatables;
 
 class lineasEstrategicasController extends Controller
 {
-    private 
-    $_rules = [
-    'numero' => 'required|numeric',
-    'nombre' => 'required|string'
-    ];
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return json_encode(LineaEstrategica::all());
+    }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('lineasEstrategicas/alta');
+    }   
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $r)
+    {
+        $linea = new LineaEstrategica();
+        $linea->crear($r);    
+    }    
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $linea = LineaEstrategica::find($id);
+        return array('linea' => $linea);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        return view('lineasEstrategicas/modificar',$this->show($id));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $linea = LineaEstrategica::find($id);
+    $linea->modificar($r);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        LineaEstrategica::find($id)->delete();
+    }
+
+    /**
+     * View para abm.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getTodos()
     {
       return view('lineasEstrategicas');    	
   }
 
+  /**
+     * Devuelve la informacion para abm.
+     *
+     * @return \Illuminate\Http\Response
+     */
   public function getTabla()
   {
     $returns = LineaEstrategica::table();       
@@ -30,39 +111,4 @@ class lineasEstrategicasController extends Controller
     })            
     ->make(true); 
 }
-
-public function getAlta()
-{
-    return view('lineasEstrategicas/alta');
-}
-
-public function set(Request $r)
-{
-    $v = Validator::make($r->all(),$this->_rules);
-    if(!$v->fails()){
-        $linea = new LineaEstrategica();
-        $linea->crear($r);    
-    }else{
-        Log::info('La linea estrategica no paso la verificacion.'); 
-    }
-}
-
-public function modificar(Request $r)
-{
-    $linea = LineaEstrategica::find($r->id);
-    $linea->modificar($r);
-}
-
-public function get(Request $r,$id)    
-{
-    $linea = LineaEstrategica::find($id);
-    return view('lineasEstrategicas/modificar',['linea' => $linea]);
-}
-
-    //Puedo pedir que en el request me manden una razon para la baja
-public function borrar(Request $r,$id)
-{
-    LineaEstrategica::find($id)->delete();
-}
-
 }

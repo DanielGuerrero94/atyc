@@ -20,9 +20,9 @@
 				</div>
 				<div class="row">
 					<div class="form-group col-sm-6">
-						<label class="control-label col-xs-4" for="tipo_doc">Tipo de Documento:</label>
+						<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento:</label>
 						<div class="col-xs-6">
-							<select class="form-control" id="tipo_doc" title="Documento nacional de identidad" name="tipo_doc">
+							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" name="id_tipo_documento">
 								@foreach ($documentos as $documento)
 								
 								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>
@@ -288,21 +288,6 @@
 						}
 					}
 				},
-				/*siisa: {
-					ajax: {
-						url: "efectores/typeahead",
-						path: "data.siisas",
-						success: function(data){
-							console.log("ajax success");
-							console.log(data);							
-						},
-						error: function(data){
-							console.log("ajax error");
-							console.log(data);
-						}
-					}
-				},*/
-
 			},
 			callback: {
 				onInit: function (node) {
@@ -387,7 +372,7 @@
 
 		});					
 
-		$('#alta').on("click","#tipo_doc",function () {
+		$('#alta').on("click","#id_tipo_documento",function () {
 			$(this).attr("title",$(this).find(":selected").attr("title"));
 			var nacionalidad = $('#alta').find('#nacionalidad');
 			if ($(this).val() == 'DEX' || $(this).val() == 'PAS' ) {
@@ -403,7 +388,7 @@
 		$('#alta').on("click","#crear",function () {
 			
 			var form = $('#alta #form-alta');
-			var tipo_doc = form.find('#tipo_doc :selected').data('id');
+			var id_tipo_documento = form.find('#id_tipo_documento :selected').data('id');
 			var provincia = form.find('#provincia :selected').data('id');
 			var trabaja_en = form.find('#trabaja_en :selected').data('id');
 			var funcion = form.find('#funcion :selected').data('id');
@@ -411,7 +396,7 @@
 
 			var serializado = $('#alta :input').not(':hidden').serialize();
 
-			serializado += '&id_tipo_doc='+tipo_doc;
+			serializado += '&id_tipo_doc='+id_tipo_documento;
 			serializado += '&id_provincia='+provincia;
 			serializado += '&id_trabaja_en='+trabaja_en;
 			serializado += '&funcion='+funcion;
@@ -448,7 +433,7 @@
 				var form = $('#alta form');
 				var nro_doc = form.find('#nro_doc');
 
-				if( form.find('#tipo_doc').val() == 'DNI' 
+				if( form.find('#id_tipo_documento').val() == 'DNI' 
 					&& nro_doc.val() != ''
 					&& esNumero.test(nro_doc.val()) 					
 					&& !nro_doc.closest('.form-group').hasClass('has-success')){

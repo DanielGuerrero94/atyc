@@ -43,42 +43,132 @@ class profesoresController extends Controller
     	return DB::connection('eLearning')->select($query);
     }
 
+    /**
+     * View para abm.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function get()
     {
         return view('profesores',$this->getSelectOptions());
     }    
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return json_encode(Profesor::all());
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('profesores/alta',$this->getSelectOptions());
+    }   
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $v = Validator::make($r->all(),$this->_rules);
+        if(!$v->fails()){
+            //Si le setearon pais busco su id
+            if($r->has('pais')){
+                $r->pais = Pais::select('id_pais')->where('nombre','=',$r->pais)->get('id_pais')->first(); 
+                $r->pais = $r->pais['id_pais'];    
+            }        
+            $profesor = new Profesor();         
+            $profesor->crear($r);
+        }else{
+            Log::info('El profesor no paso la verificacion.'); 
+        }   
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $profesor = Profesor::find($id);
+        $nombre_pais = null;
+        $id_tipo_documento = $profesor->id_tipo_documento;
+        if($id_tipo_documento === 6 || $id_tipo_documento === 5){
+            $pais = Pais::find($profesor->id_pais);    
+            $nombre_pais = $pais->nombre;
+        }        
+        $profesor = array('profesor' => $profesor,'pais' => $nombre_pais);
+        return array_merge($profesor,$this->getSelectOptions());
+    }       
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        return view('profesores/modificar',$this->show($id));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $profesor = Profesor::find($id);
+
+        if($r->id_tipo_doc === '6' || $r->id_tipo_doc === '5'){
+            $r->pais = Pais::select('id')->where('nombre','=',$r->pais)->get('id')->first(); 
+            $r->pais = $r->pais['id'];
+        }
+
+        $profesor->modificar($r); 
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $profesor = Profesor::find($id);
+        $profesor->delete();
+    }   
+    
+    /**
+     * Devuelve la informacion para abm.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getTabla(Request $r)
     {
         $returns = Profesor::select('id_profesor','nombres','apellidos','nro_doc','id_tipo_documento')
         ->with('tipo_documento');
 
-        $returns = collect($returns->get());
+        $resultados = collect($returns->get());
         
-        return Datatables::of($returns)
-        ->addColumn('acciones' , function($ret) use ($r){
-
-            $accion = $r->has('botones')?$r->botones:null;
-
-            //$editarYEliminar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
-
-            $editarYEliminar = '<a href="'.url('profesores').'/'.$ret->id_profesor.'"><button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
-
-            $agregar = '<button profesor-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
-
-            $botones = $editarYEliminar;
-
-            if($accion == 'agregar'){
-                $botones = $agregar;
-            }           
-            return $botones;
-        })            
-        ->make(true); 
-    }
-
-    public function getAlta()
-    {
-        return view('profesores/alta',$this->getSelectOptions());
+        return $this->toDatatable($r,$resultados);
     }
 
     private function queryLogica(Request $r,$filtros)
@@ -128,35 +218,45 @@ class profesoresController extends Controller
             $v = Validator::make($filtros->all(),$this->_filters);
             if(!$v->fails()){
 
-                $aux = $this->queryLogica($r,$filtros);        
+                $resultados = $this->queryLogica($r,$filtros);               
 
-                $reto = Datatables::of($aux)
-                ->addColumn('acciones' , function($ret) use ($r){
-
-                    $accion = $r->has('botones')?$r->botones:null;
-
-                    $editarYEliminar = '<a href="'.url('profesores').'/'.$ret->id_profesor.'"><button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
-
-                    $agregar = '<button profesor-id="'.$ret->id.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
-
-                    $botones = $editarYEliminar;
-
-                    if($accion == 'agregar'){
-                        $botones = $agregar;
-                    }           
-                    return $botones;
-                })            
-                ->make(true);
-
-
-                return $reto;
-            }else{
+                return $this->toDatatable($r,$resultados);
+            }else{ 
                 Log::info('No paso');
                 Log::info($v->errors());
                 return json_encode($v->errors());
             }        
         }
 
+        /**
+     * Devuelve en DataTable los resultados con sus correspondientes acciones.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  $request['botones']
+     * @param  Collection  $resultados
+     * @return \Illuminate\Http\Response
+     */
+        public function toDatatable(Request $r,$resultados)
+        {
+            return Datatables::of($resultados)
+                ->addColumn('acciones' , function($ret) use ($r){
+
+                    $accion = $r->has('botones')?$r->botones:null;
+
+                    $editarYEliminar = '<a href="'.url('profesores').'/'.$ret->id_profesor.'"><button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
+
+                    $agregar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+
+                    return $accion == 'agregar'?$agregar:$editarYEliminar;
+                })            
+                ->make(true);
+        }
+
+        /**
+     * Opciones para los selects del front end.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getSelectOptions()
     {
         $tipoDocumentos = TipoDocumento::all();
@@ -164,22 +264,16 @@ class profesoresController extends Controller
         return array('documentos' => $tipoDocumentos);
     }
 
-    public function set(Request $r)
-    {
-        $v = Validator::make($r->all(),$this->_rules);
-        if(!$v->fails()){
-            //Si le setearon pais busco su id
-            if($r->has('pais')){
-                $r->pais = Pais::select('id_pais')->where('nombre','=',$r->pais)->get('id_pais')->first(); 
-                $r->pais = $r->pais['id_pais'];    
-            }        
-            $profesor = new Profesor();         
-            $profesor->crear($r);
-        }else{
-            Log::info('El profesor no paso la verificacion.'); 
-        }
-    }
-
+    /**
+     * Corre la query segun filtros y order_by
+     * Guarda el resultado en un .xls
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array filtros
+     * @param  array order_by
+     * @return \Illuminate\Http\Response
+     * @return string path al archivo generado
+     */
     public function getExcel(Request $r)
         {       
             $filtros = collect($r->only('filtros'));
@@ -200,6 +294,16 @@ class profesoresController extends Controller
             return $path;
         }
 
+        /**
+     * Corre la query segun filtros y order_by
+     * Guarda el resultado en un .pdf
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array filtros
+     * @param  array order_by
+     * @return \Illuminate\Http\Response
+     * @return string path al archivo generado
+     */
         public function getPDF(Request $r)
         {
             $filtros = collect($r->only('filtros'));
@@ -220,40 +324,4 @@ class profesoresController extends Controller
 
             return PDF::save($header,$column_size,14,$mapped);
         }
-
-    public function getData(Request $r,$id)
-    {
-        $profesor = Profesor::find($id);
-        $nombre_pais = null;
-        $id_tipo_documento = $profesor->id_tipo_documento;
-        if($id_tipo_documento === 6 || $id_tipo_documento === 5){
-            $pais = Pais::find($profesor->id_pais);    
-            $nombre_pais = $pais->nombre;
-        }        
-        $profesor = array('profesor' => $profesor,'pais' => $nombre_pais);
-        $ret = array_merge($profesor,$this->getSelectOptions());
-        return view('profesores/modificar',$ret);
-    }
-
-    public function modificar(Request $r,$id)
-    {
-        $profesor = Profesor::find($id);
-        Log::info(json_encode($profesor));
-        Log::info(json_encode($r->id_tipo_doc));
-
-        if($r->id_tipo_doc === '6' || $r->id_tipo_doc === '5'){
-            Log::info('Busca el id del pais');
-            $r->pais = Pais::select('id')->where('nombre','=',$r->pais)->get('id')->first(); 
-            $r->pais = $r->pais['id'];
-            Log::info(json_encode($r->pais));
-        }
-
-        $profesor->modificar($r);    
-    }
-
-    public function borrar(Request $r,$id)
-    {
-        $profesor = Profesor::find($id);
-        $profesor->delete();
-    }
 }
