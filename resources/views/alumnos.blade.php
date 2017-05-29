@@ -77,9 +77,9 @@
 				columns: [
 				{ data: 'nombres'},
 				{ data: 'apellidos'},
-				{ data: 'tipo_documento.nombre'},
+				{ data: 'id_tipo_documento'},
 				{ data: 'nro_doc'},
-				{ data: 'provincia.nombre'},
+				{ data: 'provincia'},
 				{ data: 'acciones'}
 				]
 			});

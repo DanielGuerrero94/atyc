@@ -34,10 +34,10 @@ class lineasEstrategicasController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $r)
+    public function store(Request $request)
     {
         $linea = new LineaEstrategica();
-        $linea->crear($r);    
+        $linea->crear($request);    
     }    
 
     /**
@@ -73,7 +73,7 @@ class lineasEstrategicasController extends Controller
     public function update(Request $request, $id)
     {
         $linea = LineaEstrategica::find($id);
-    $linea->modificar($r);
+    $linea->modificar($request);
     }
 
     /**

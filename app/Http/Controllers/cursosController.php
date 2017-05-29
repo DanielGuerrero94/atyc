@@ -14,6 +14,8 @@ use Log;
 use Auth;
 use Validator;
 use Datatables;
+use Excel;
+use PDF;
 
 class cursosController extends Controller
 {
@@ -186,7 +188,7 @@ class cursosController extends Controller
      * @param  $request['botones']
      * @return \Illuminate\Http\Response
      */
-	public function getTabla()
+	public function getTabla(Request $request)
 	{
 		$returns = Curso::select('id_curso','nombre','fecha','edicion','duracion','id_area_tematica','id_linea_estrategica','id_provincia')	
 		->with([
@@ -201,7 +203,7 @@ class cursosController extends Controller
 
 		$resultados = collect($returns->get());
 
-		return $this->toDatatable($r,$resultados); 	
+		return $this->toDatatable($request,$resultados); 	
 	}
 
 	public function getAprobadosPorAlumno($alumno)	
@@ -282,7 +284,7 @@ class cursosController extends Controller
 			return array('id_alumno' => $item['id_alumno'],
 				'nombres' => $item['nombres'],
 				'apellidos' => $item['apellidos'],
-				'id_tipo_documento' => $item['id_tipo_documento'],
+				'id_tipo_documento' => $item['tipo_doc'],
 				'nro_doc' => $item['nro_doc'],
 				'provincia' => $item['provincia']);
 		});
@@ -352,7 +354,7 @@ class cursosController extends Controller
 			'periodos' => $periodos);
 	}
 
-	private function queryLogica(Request $r,$filtros)
+	private function queryLogica(Request $r,$filtros,$orderBy)
 	{
 		//Filtros las que estan vacias si es que me las pasaron
 		$filtered = $filtros->filter(function ($value,$key)
@@ -360,7 +362,15 @@ class cursosController extends Controller
 			return $value != "" && $value != "0";
 		});
 
-		$returns = DB::table('cursos.cursos');
+		$returns = Curso::leftJoin('cursos.areas_tematicas','cursos.cursos.id_area_tematica','=','cursos.areas_tematicas.id_area_tematica')
+		->leftJoin('cursos.lineas_estrategicas','cursos.cursos.id_linea_estrategica','=','cursos.lineas_estrategicas.id_linea_estrategica')
+		->leftJoin('sistema.provincias','cursos.cursos.id_provincia','=','sistema.provincias.id_provincia')
+		->select(
+			'cursos.cursos.id_curso','cursos.cursos.nombre','cursos.cursos.fecha',
+			'cursos.cursos.edicion','cursos.cursos.duracion',
+			'cursos.areas_tematicas.nombre as area_tematica',
+			'cursos.lineas_estrategicas.nombre as linea_estrategica',
+			'sistema.provincias.nombre as provincia');
 
 		//Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
 		if (Auth::user()->id_provincia != 25) {
@@ -383,18 +393,6 @@ class cursosController extends Controller
 			}
 		}
 
-		$returns = $returns
-		->leftJoin('cursos.areas_tematicas','cursos.cursos.id_area_tematica','=','cursos.areas_tematicas.id_area_tematica')
-		->leftJoin('cursos.lineas_estrategicas','cursos.cursos.id_linea_estrategica','=','cursos.lineas_estrategicas.id_linea_estrategica')
-		->leftJoin('sistema.provincias','cursos.cursos.id_provincia','=','sistema.provincias.id_provincia')
-		->select(
-			'cursos.cursos.id_curso','cursos.cursos.nombre','cursos.cursos.fecha',
-			'cursos.cursos.edicion','cursos.cursos.duracion',
-			'cursos.areas_tematicas.nombre as area_tematica',
-			'cursos.lineas_estrategicas.nombre as linea_estrategica',
-			'sistema.provincias.nombre as provincia')		
-		->whereNull('cursos.cursos.deleted_at');
-
 		return collect($returns->get());
 	}
 
@@ -405,7 +403,7 @@ class cursosController extends Controller
 		$v = Validator::make($filtros->all(),$this->_filters);
 		if(!$v->fails()){
 
-			$resultados = $this->queryLogica($r,$filtros);  
+			$resultados = $this->queryLogica($r,$filtros,null);  
 
 			return $this->toDatatable($r,$resultados);
 		}else{
@@ -485,7 +483,7 @@ class cursosController extends Controller
 		$filtros = collect($r->only('filtros'));
 		$filtros = collect($filtros->get('filtros'));
 
-		$data = $this->queryLogica($r,$filtros);
+		$data = $this->queryLogica($r,$filtros,null);
 
 		$header = array('Nombre','Fecha','Edicion','Duracion','Area Tematica','Linea Estrategica','Provincia');
 		$column_size =  array(80,25,15,17,60,60,20);

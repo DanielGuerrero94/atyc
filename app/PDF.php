@@ -5,7 +5,7 @@ namespace App;
 use Fpdf;
 use Storage;
 
-class PDF extends FPDF
+class PDF extends Fpdf
 {
 // Load data
     function LoadData($file)
@@ -94,10 +94,10 @@ class PDF extends FPDF
         $w = $column_size;
         $fill = false;
         $cantidad = 0;
-
+        Fpdf::AddPage();
         foreach($data as $row)
         {
-            if($cantidad%40 == 0){                
+            if($cantidad%40 == 0){               
                 Fpdf::Cell(array_sum($w),0,'','T');
                 Fpdf::SetFont('Arial','',$font_size);
                 Fpdf::AddPage();

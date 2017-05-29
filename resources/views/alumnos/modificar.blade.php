@@ -192,7 +192,7 @@
 		</div> 
 	</div>
 	<div class="col-sm-12">
-		<div class="box box-info collapsed-box">
+		<div class="box box-info">
 			<div class="box-header with-border">
 				<h2 class="box-title">Cursos aprobados por el alumno</h2>
 				<div class="box-tools pull-right">

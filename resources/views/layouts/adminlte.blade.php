@@ -85,7 +85,7 @@
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/slimScroll/jquery.slimscroll.min.js")}}"></script>    
 
     <!-- js validate-->
-    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.15.0/jquery.validate.min.js" ></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js" ></script>
 
     <!-- js dialog -->
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/fullcalendar/moment.js")}}"></script>
@@ -139,6 +139,13 @@
     <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/data.js")}}"></script>
 
     <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/drilldown.js")}}"></script>
+
+    <!-- Inputmask -->
+    <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/input-mask/jquery.inputmask.js")}}"></script>
+
+    <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/input-mask/jquery.inputmask.extensions.js")}}"></script>
+
+    <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/input-mask/jquery.inputmask.date.extensions.js")}}"></script>
 
   </head>
   <body class="skin-blue">

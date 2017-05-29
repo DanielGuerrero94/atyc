@@ -16,21 +16,21 @@
 					<div class="form-group col-sm-4">  		  		
 						<label for="Nombres" class="control-label col-xs-5">Nombres</label>
 						<div class="col-xs-7">
-							<input class="form-control" id="nombres" name="Nombres">
+							<input class="form-control" id="nombres" name="nombres">
 						</div>
 					</div>						
 
 					<div class="form-group col-sm-4">  		  		
 						<label for="Apellidos" class="control-label col-xs-5">Apellidos</label>
 						<div class="col-xs-7">
-							<input class="form-control" id="apellidos" name="Apellidos">
+							<input class="form-control" id="apellidos" name="apellidos">
 						</div>
 					</div>						
 
 					<div class="form-group col-sm-4">
 						<label class="control-label col-xs-5" for="id_tipo_documento">Tipo de Documento:</label>
 						<div class="col-xs-7">
-							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
+							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" name="id_tipo_documento">
 								@foreach ($documentos as $documento)
 								
 								<option value="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>										
@@ -44,21 +44,21 @@
 					<div class="form-group col-sm-4">  		  		
 						<label for="Nro doc" class="control-label col-xs-5">Nro doc</label>
 						<div class="col-xs-7">
-							<input class="form-control" id="nro_doc" name="Nro doc">
+							<input class="form-control" id="nro_doc" name="nro_doc">
 						</div>
 					</div>						
 
 					<div class="form-group col-sm-4">  		  		
 						<label for="Email" class="control-label col-xs-5">Email</label>
 						<div class="col-xs-7">
-							<input class="form-control" id="email" name="Email">
+							<input class="form-control" id="email" name="email">
 						</div>
 					</div>						
 
 					<div class="form-group col-sm-4">  		  		
 						<label for="Cel" class="control-label col-xs-5">Cel</label>
 						<div class="col-xs-7">
-							<input class="form-control" id="cel" name="Cel">
+							<input class="form-control" id="cel" name="cel">
 						</div>
 					</div>
 				</div>
@@ -67,7 +67,7 @@
 					<div class="form-group col-sm-4">  		  		
 						<label for="Tel" class="control-label col-xs-5">Tel</label>
 						<div class="col-xs-7">
-							<input class="form-control" id="tel" name="Tel">
+							<input class="form-control" id="tel" name="tel">
 						</div>
 					</div>							
 				</div>

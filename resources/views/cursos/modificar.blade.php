@@ -196,12 +196,31 @@
    	columns: [
    	{ data: 'nombres'},
    	{ data: 'apellidos'},
-   	{ data: 'tipo_doc'},
+   	{ data: 'id_tipo_documento'},
    	{ data: 'nro_doc'},
    	{ data: 'provincia'},
    	{ data: 'acciones'}
    	]
-   }); 
+   });
+
+   /*jQuery.ajax({
+      url: $('#modificar').data('id')+'/alumnos',
+      complete: function(xhr, textStatus) {
+        console.log(xhr);
+        console.log(textStatus);
+      },
+      success: function(data, textStatus, xhr) {
+        console.log(data);
+        console.log(textStatus);
+        console.log(xhr);
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        console.log(xhr);
+        console.log(textStatus);
+        console.log(errorThrown);
+      }
+    });*/
+     
 
 });
 </script>

@@ -11,7 +11,8 @@
         "phenx/php-font-lib": "0.4",
         "dompdf/dompdf": "v0.7.0",
         "barryvdh/laravel-dompdf": "v0.7.1",
-        "maatwebsite/excel": "~2.1.0"
+        "maatwebsite/excel": "~2.1.0",
+        "codedge/laravel-fpdf": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

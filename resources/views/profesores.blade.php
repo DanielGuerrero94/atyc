@@ -43,7 +43,7 @@
 		function getFiltrosJson() {
 			var nombres = $('#nombres')	.val();
 			var apellidos = $('#apellidos').val();
-			var id_tipo_doc = $('#tipo_doc option:selected').val()
+			var id_tipo_documento = $('#tipo_doc option:selected').val()
 			var id_pais = $('#nacionalidad').val();
 			var nro_doc = $('#nro_doc').val();
 			var email = $('#email').val();
@@ -53,7 +53,7 @@
 			return data = {
 				nombres: nombres,
 				apellidos: apellidos,
-				id_tipo_documento: id_tipo_doc,
+				id_tipo_documento: id_tipo_documento,
 				id_pais: id_pais,
 				nro_doc: nro_doc,
 				email: email,
@@ -77,7 +77,7 @@
 					columns: [
 					{ data: 'nombres'},
 					{ data: 'apellidos'},
-					{ data: 'tipo_documento.nombre'},
+					{ data: 'tipo_doc'},
 					{ data: 'nro_doc'},
 					{ data: 'acciones'}
 					]

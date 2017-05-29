@@ -63,8 +63,8 @@
 		$('.excel').on('click',function () {
 
 			var filtros = getFiltrosJson();
-			console.log(filtros);
 			var order_by = $('#abm-table').DataTable().order();
+			console.log(filtros);
 			console.log(order_by);
 
 			$.ajax({

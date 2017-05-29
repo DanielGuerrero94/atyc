@@ -37,7 +37,7 @@ class areasTematicasController extends Controller
     public function store(Request $request)
     {
         $area = new AreaTematica();
-        $area->crear($r);    
+        $area->crear($request);    
     }
 
     /**
@@ -73,7 +73,7 @@ class areasTematicasController extends Controller
     public function update(Request $request, $id)
     {
         $area = AreaTematica::find($id);
-        $area->modificar($r);
+        $area->modificar($request);
     }
 
     /**

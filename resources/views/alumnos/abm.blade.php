@@ -1,6 +1,6 @@
 {{ csrf_field() }}
 <div class="col-md-12">
-	<div class="box box-info ">
+	<div class="box box-info">
 		<div class="box-header">
 			<h2 class="box-tittle">Alumnos
 				<div class="btn-group pull-right" role="group" aria-label="...">

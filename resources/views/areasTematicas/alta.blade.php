@@ -46,7 +46,7 @@
 
 			$.ajax({
 				method : 'post',
-				url : 'areasTematicas/set',
+				url : 'areasTematicas',
 				data : $('form').serialize(),
 				success : function(data){
 					console.log("Success.");

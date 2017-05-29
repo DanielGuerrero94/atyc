@@ -82,7 +82,7 @@ Route::group(['middleware' => 'logueado'], function () {
 		return response()->download(__DIR__.'/../storage/exports/'.$nombre_archivo.'.xls');
 	});
 	Route::get('descargar/pdf/{nombre_archivo}', function($nombre_archivo) {
-		return response()->download(__DIR__.'/../storage/app/'.$nombre_archivo.'.pdf');
+		return response()->download(__DIR__.'/../storage/exports/'.$nombre_archivo.'.pdf');
 	});	
 
 	//Alumnos
@@ -95,7 +95,7 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('alumnos/pdf','alumnosController@getPdf');
 	Route::get('alumnos/filtrado','alumnosController@getFiltrado');
 	Route::get('alumnos/documentos/{documento}','alumnosController@checkDocumentos');
-	Route::get('alumnos/{id}','alumnosController@show');
+	Route::get('alumnos/{id}','alumnosController@edit');
 
 
 	Route::post('alumnos','alumnosController@store');
@@ -111,6 +111,7 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('profesores/filtrado','profesoresController@getFiltrado');
 	Route::get('profesores/excel','profesoresController@getExcel');
 	Route::get('profesores/pdf','profesoresController@getPdf');
+	Route::get('profesores/documentos/{documento}','profesoresController@checkDocumentos');
 	Route::get('profesores/{id}','profesoresController@edit');
 
 	Route::post('profesores','profesoresController@store');
@@ -123,7 +124,7 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('cursos','cursosController@get');
 	Route::get('cursos/tabla','cursosController@getTabla');
 	Route::get('cursos/joined','cursosController@getJoined');
-	Route::get('cursos/alta','cursosController@getAlta');
+	Route::get('cursos/alta','cursosController@create');
 	Route::get('cursos/nombres','cursosController@getNombres');
 	Route::get('cursos/excel','cursosController@getExcel');
 	Route::get('cursos/pdf','cursosController@getPdf');
@@ -132,13 +133,13 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('cursos/profesor/{id}','cursosController@getDictadosPorProfesor');
 	Route::get('cursos/provincias/{id}','cursosController@getAlumnosDeCursosPorProvincia');
 	Route::get('cursos/{id}/alumnos','cursosController@getAlumnos');
-	Route::get('cursos/{id}','cursosController@show');
+	Route::get('cursos/{id}','cursosController@edit');
 
-	Route::post('cursos','cursosController@set');
+	Route::post('cursos','cursosController@store');
 
-	Route::put('cursos/{id}','cursosController@modificar');
+	Route::put('cursos/{id}','cursosController@update');
 
-	Route::delete('cursos/{id}','cursosController@borrar');
+	Route::delete('cursos/{id}','cursosController@destroy');
 
 //Relaciones de cursos con alumnos y profesores
 	Route::get('curso/{id}','cursosController@getByID');
@@ -174,7 +175,7 @@ Route::group(['middleware' => 'logueado'], function () {
 		Route::get('areasTematicasTabla','areasTematicasController@getTabla');
 		Route::get('areasTematicas/{id}','areasTematicasController@edit');
 
-		Route::post('areasTematicas/set','areasTematicasController@store');
+		Route::post('areasTematicas','areasTematicasController@store');
 
 		Route::put('areasTematicas/{id}','areasTematicasController@update');
 

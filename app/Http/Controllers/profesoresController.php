@@ -11,15 +11,17 @@ use Validator;
 use DB;
 use Log;
 use Datatables;
+use Excel;
+use App\PDF as Pdf;
 
 class profesoresController extends Controller
-{
+{    
     private 
     $_rules = [
     'nombres' => 'required|string',
     'apellidos' => 'required|string',
-    'id_tipo_doc' => 'required|numeric',
-    'pais' => 'required_if:id_tipo_doc,5,6',
+    'id_tipo_documento' => 'required|numeric',
+    'pais' => 'required_if:id_tipo_documento,5,6',
     'nro_doc' => 'required|numeric',
     'email' => 'nullable|email',
     'tel' => 'nullable',
@@ -81,15 +83,16 @@ class profesoresController extends Controller
      */
     public function store(Request $request)
     {
-        $v = Validator::make($r->all(),$this->_rules);
+        logger($request);
+        $v = Validator::make($request->all(),$this->_rules);
         if(!$v->fails()){
             //Si le setearon pais busco su id
-            if($r->has('pais')){
-                $r->pais = Pais::select('id_pais')->where('nombre','=',$r->pais)->get('id_pais')->first(); 
-                $r->pais = $r->pais['id_pais'];    
-            }        
+            /*if($request->has('pais')){
+                $request->pais = Pais::select('id_pais')->where('nombre','=',$request->pais)->get('id_pais')->first(); 
+                $request->pais = $request->pais['id_pais'];    
+            } */       
             $profesor = new Profesor();         
-            $profesor->crear($r);
+            $profesor->crear($request);
         }else{
             Log::info('El profesor no paso la verificacion.'); 
         }   
@@ -187,23 +190,20 @@ class profesoresController extends Controller
         });
 
             //Otra forma puedo ir agregando clausulas where
-            $returns = Profesor::table();
+            $returns = Profesor::leftJoin('sistema.tipos_documentos','sistema.profesores.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
+            ->select(
+                'sistema.profesores.id_profesor','sistema.profesores.nombres','sistema.profesores.apellidos',
+                'sistema.tipos_documentos.nombre as tipo_doc',
+                'sistema.profesores.nro_doc');
+
             foreach ($filtered as $key => $value) {
 
                 if($key == 'nombres' || $key == 'apellidos' || $key == 'email'){
-                    $returns = $returns->where('profesores.'.$key,'ilike','%'.$value.'%');                           
+                    $returns = $returns->where('sistema.profesores.'.$key,'ilike','%'.$value.'%');                           
                 }else{
-                    $returns = $returns->where('profesores.'.$key,'=',$value);                           
+                    $returns = $returns->where('sistema.profesores.'.$key,'=',$value);                           
                 }
-            }
-
-            $returns = $returns
-            ->leftJoin('tipo_docs','profesors.id_tipo_doc','=','tipo_docs.id')
-            ->select(
-                'profesors.id','profesors.nombres','profesors.apellidos',
-                'tipo_docs.nombre as tipo_doc',
-                'profesors.nro_doc')
-            ->whereNull('profesors.deleted_at');
+            }            
 
             return collect($returns->get()); 
         }
@@ -322,6 +322,19 @@ class profesoresController extends Controller
                 return $profesor;
             });
 
-            return PDF::save($header,$column_size,14,$mapped);
+            return Pdf::save($header,$column_size,14,$mapped);
         }
+
+    /**
+     * Verifica si el numero de documento existe.
+     *
+     * @param  string  $documento
+     * @return \Illuminate\Http\Response
+     */
+    public function checkDocumentos($documento)
+    {
+        $ret = Profesor::where('nro_doc','=',$documento)
+        ->get();
+        return count($ret) != 0?'true':'false';
+    }
 }

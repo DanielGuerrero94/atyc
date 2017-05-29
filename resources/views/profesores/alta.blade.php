@@ -41,7 +41,7 @@
 						<div class="typeahead__container col-xs-10">
 							<div class="typeahead__field ">         
 								<span class="typeahead__query ">
-									<input class="pais_typeahead form-control" name="pais" type="search" placeholder="Buscar..." autocomplete="off" id="pais">
+									<input class="pais_typeahead form-control" name="pais" type="search" placeholder="Buscar..." autocomplete="off" id="pais" disabled>
 								</span>
 							</div>
 						</div>
@@ -51,13 +51,13 @@
 					<div class="form-group col-sm-6">
 						<label class="control-label col-xs-4" for="email">Email:</label>
 						<div class="col-xs-8">
-							<input name="email" type="text" class="form-control" id="email">
+							<input name="email" type="email" class="form-control" id="email">
 						</div>
 					</div>
 					<div class="form-group col-sm-6">
 						<label class="control-label col-xs-4" for="telefono">Telefono:</label>
 						<div class="col-xs-8">
-							<input name="tel" type="text" class="form-control" id="telefono">
+							<input name="tel" type="text" class="form-control" id="tel">
 						</div>
 					</div>
 					<div class="form-group col-sm-6">
@@ -99,15 +99,15 @@
 		});
 		
 		$('#alta').on("click","#id_tipo_documento",function () {
-			console.log($(this).find(":selected").attr("title"));
-			console.log($('#alta').find("#id_tipo_documento").attr("title"));
 			$(this).attr("title",$(this).find(":selected").attr("title"));
 			var nacionalidad = $('#alta').find('#nacionalidad');
 			if ($(this).val() == 'DEX' || $(this).val() == 'PAS' ) {
 				nacionalidad.show();
+				$('#alta #pais').attr('disabled',false);
 			}
 			else {
 				nacionalidad.hide();
+				$('#alta #pais').attr('disabled',true);
 			}			
 		});
 
@@ -120,86 +120,147 @@
 
 		$('#alta').on('click','#crear',function() {
 			
-			var data = $('form').serialize();
-			data += '&id_tipo_documento='+$('#alta #id_tipo_documento :selected').data('id');
-
-			/*$.ajax({
-				method : 'post',
-				url : 'profesores',
-				data : data,
-				success : function(data){
-					console.log("Success.");
-					location.reload();	
-				},
-				error : function(data){
-					console.log("Error.");
-				}
-			})*/
-		});
-
-		$('#alta #form-alta').validate({
-			debug: true,
-			onfocusout: function () {
-				var form = $('#alta #form-alta');
-				var nro_doc = form.find('#nro_doc');
-
-				if( form.find('#id_tipo_documento').val() == 'DNI' 
-					&& nro_doc.val() != ''
-					&& !nro_doc.closest('.form-group').hasClass('has-success')){
-
-					$.ajax({
-						method : 'get',
-						url : 'alumnos/documentos/'+nro_doc.val(),
-						success : function(data){
-
-							if(data == "true"){
-								console.log("El documento ya esta registrado.");
-								nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
-								if(!nro_doc.parent().find('span').length){
-									nro_doc.parent().append("<span class=\"help-block\">El numero de documento ya esta registrado</span>");	
-								}						
-							}
-							else{
-								nro_doc.parent().find('span').remove();
-								nro_doc.closest('.form-group').removeClass('has-error').addClass('has-success');	
-							}
+				/*var validator = $('#alta #form-alta').validate({
+					rules:{
+						nombre: {
+							required: true,
 						},
-						error : function(data){
-							console.log("Fallo la request ajax para validacion de documento.");
+						numero: {
+							required: true,
+							digits: true
 						}
-					});
-			}	
-		},
-		rules : {
-			nombres : "required",
-			apellidos : "required",
-			nro_doc : {
-				required: true,
-				number: true
-			}
-		},
-		messages:{
-			nombres : "Campo obligatorio",
-			apellidos : "Campo obligatorio",
-			nro_doc : "Campo obligatorio"
-		},
-		highlight: function(element)
-		{
-			console.log("highlight");
-			console.log(element);
-			$(element).closest('.form-control').removeClass('has-success').addClass('has-error');
-		},
-		success: function(element)
-		{
-			console.log("validate success");
-			$(element).text('').addClass('valid')
-			.closest('.control-group').removeClass('has-error').addClass('has-success');
-		},
-		submitHandler : function(form){
+					},
+					messages:{
+						nombre : "Campo obligatorio",
+						numero : "Tiene que ser un numero"
+					},
+					highlight: function(element)
+					{
+						console.log("highlight");
+						console.log(element);
+						$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+					},				
+					success: function(element)
+					{
+						console.log("validate success");
+						$(element).text('').addClass('valid')
+						.closest('.form-group').removeClass('has-error').addClass('has-success');
+					},
+					submitHandler : function(form){
+						$.ajax({
+							method : 'post',
+							url : 'lineasEstrategicas',
+							data : $('form').serialize(),
+							success : function(data){
+								console.log("Success.");
+								alert('Se creo la linea estrategica.');
+								location.reload();	
+							},
+							error : function(data){
+								console.log("Error.");
+							}
+						});
+					}
+				});*/
 
-			console.log("validate submitHandler");
-			console.log($('form').serialize());
-		}	
-	});
+				function getSelected() {
+					var id_tipo_documento = $('#form-alta #id_tipo_documento :selected').data('id');
+					return [{
+						name: 'id_tipo_documento',
+						value: id_tipo_documento
+					}];
+				}
+
+				function getInput() {					
+					return $.merge($('#form-alta').serializeArray(),getSelected());
+				}
+
+				var validator = $('#alta #form-alta').validate({
+					debug: true,				
+					rules : {
+						nombres : {
+							required: true
+						},
+						apellidos : {
+							required: true
+						},
+						nro_doc : {
+							required: true,
+							number: true
+						},
+						tel : {
+							number: true
+						},
+						cel : {
+							number: true
+						},
+					},
+					messages:{
+						nombres : "Campo obligatorio",
+						apellidos : "Campo obligatorio",
+						nro_doc : "Tiene que ser un numero",
+						telefono : "Tiene que ser un numero",
+						cel : "Tiene que ser un numero"
+					},
+					highlight: function(element)
+					{
+						$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+					},				
+					success: function(element)
+					{
+						$(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
+					},
+					onfocusout: function () {
+						var form = $('#alta #form-alta');
+						var nro_doc = form.find('#nro_doc');
+
+						if( form.find('#id_tipo_documento').val() == 'DNI' 
+							&& nro_doc.val() != ''
+							&& !nro_doc.closest('.form-group').hasClass('has-success')){
+
+							$.ajax({
+								method : 'get',
+								url : 'profesores/documentos/'+nro_doc.val(),
+								success : function(data){
+									if(data == "true"){
+										console.log("El documento ya esta registrado.");
+										nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
+										if(!nro_doc.parent().find('span').length){
+											nro_doc.parent().append("<span class=\"help-block\">El numero de documento ya esta registrado</span>");	
+										}						
+									}
+									else{
+										nro_doc.parent().find('span').remove();
+										nro_doc.closest('.form-group').removeClass('has-error').addClass('has-success');	
+									}
+								},
+								error : function(data){
+									console.log("Fallo la request ajax para validacion de documento.");
+								}
+							});
+					}	
+				},
+				submitHandler : function(form){
+					$.ajax({
+						url: 'profesores',
+						type: 'POST',						
+						data: getInput(),
+						complete: function(xhr, textStatus) {
+					   		console.log('ajax complete');
+					   	},
+					   	success: function(data, textStatus, xhr) {
+					    	console.log('Se creo');
+					    },
+					    error: function(xhr, textStatus, errorThrown) {
+					    	console.log('Fallo');
+					    }
+					});
+				}	
+			});
+				if(validator.valid()){
+					$('#alta #form-alta').submit();	
+				}
+			});
+		
 	});
 </script>

@@ -14,6 +14,8 @@ use DB;
 use Validator;
 use Datatables;
 use Log;
+use Excel;
+use App\PDF as Pdf;
 
 class alumnosController extends Controller
 {
@@ -270,11 +272,17 @@ class alumnosController extends Controller
             return $value != "" && $value != "0";
         });
 
-        $returns = DB::table('alumnos.alumnos');
+        $returns = Alumno::leftJoin('sistema.provincias','alumnos.id_provincia','=','sistema.provincias.id_provincia')
+        ->leftJoin('sistema.tipos_documentos','alumnos.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
+        ->select(
+            'id_alumno','nombres','apellidos',
+            'sistema.tipos_documentos.nombre as id_tipo_documento',
+            'nro_doc',
+            'sistema.provincias.nombre as provincia');
 
         //Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
         if (Auth::user()->id_provincia != 25) {
-            $returns = $returns->where('alumnos.alumnos..id_provincia','=',Auth::user()->id_provincia);
+            $returns = $returns->where('alumnos.alumnos.id_provincia','=',Auth::user()->id_provincia);
         }
 
         foreach ($filtered as $key => $value) {
@@ -282,24 +290,11 @@ class alumnosController extends Controller
             if($key == 'nombres' || $key == 'apellidos' || $key == 'localidad' || $key == 'email'){
                 $returns = $returns->where('alumnos.alumnos.'.$key,'ilike','%'.$value.'%');                           
             }elseif($key == 'id_tipo_documento'){
-                $returns = $returns->where('alumnos.alumnos.id_tipo_documento =',$value);                           
+                $returns = $returns->where('alumnos.id_tipo_documento',$value);                           
             }else{
-                $returns = $returns->where('alumnos.alumnos.'.$key,'=',$value);                           
+                $returns = $returns->where('alumnos.'.$key,$value);                           
             }
         }
-
-        $returns = $returns
-        ->leftJoin('sistema.provincias','alumnos.alumnos.id_provincia','=','sistema.provincias.id_provincia')
-        ->leftJoin('sistema.tipos_documentos','alumnos.alumnos.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
-        ->select(
-            'alumnos.alumnos.id_alumno','alumnos.alumnos.nombres','alumnos.alumnos.apellidos',
-            'sistema.tipos_documentos.nombre as id_tipo_documento',
-            'alumnos.alumnos.nro_doc',
-            'sistema.provincias.nombre as provincia')
-        ->whereNull('alumnos.alumnos.deleted_at');
-
-        $returns = $returns
-        ->orderBy($order_by);
 
         return collect($returns->get());
     }
@@ -392,7 +387,7 @@ class alumnosController extends Controller
         $filtros = collect($r->only('filtros'));
         $filtros = collect($filtros->get('filtros'));
 
-        $data = $this->queryLogica($r,$filtros);
+        $data = $this->queryLogica($r,$filtros,null);
 
         $header = array('Nombres','Apellidos','Tipo Doc','Nro Doc','Provincia');
         $column_size = array(56,56,20,30,33);
@@ -407,7 +402,7 @@ class alumnosController extends Controller
             return $alumno;
         });
 
-        return PDF::save($header,$column_size,13,$mapped);
+        return Pdf::save($header,$column_size,13,$mapped);
     }
 
     /**
