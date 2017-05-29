@@ -385,8 +385,17 @@
 
 		/*funciones abm*/
 
-		$('#alta').on("click","#crear",function () {
-			
+		function getCreateJson() {
+			var nombres = $('#nombres')	.val();
+			var apellidos = $('#apellidos').val();
+			var id_tipo_documento = $('#id_tipo_documento option:selected').data('id');
+			var nro_doc = $('#nro_doc').val();
+			var email = $('#email').val();
+			var cel = $('#cel').val();
+			var tel = $('#tel').val();
+			var localidad = $('#localidad').val();
+			var id_provincia = $('#provincia option:selected').data('id');
+
 			var form = $('#alta #form-alta');
 			var id_tipo_documento = form.find('#id_tipo_documento :selected').data('id');
 			var provincia = form.find('#provincia :selected').data('id');
@@ -402,6 +411,23 @@
 			serializado += '&funcion='+funcion;
 			serializado += '&_token='+token;
 			console.log(serializado);
+
+			return data = {
+				nombres: nombres,
+				apellidos: apellidos,
+				id_tipo_documento: id_tipo_documento,
+				nro_doc: nro_doc,
+				email: email,
+				cel: cel,
+				tel: tel,
+				localidad: localidad,
+				id_provincia: id_provincia
+			};
+		};
+
+		$('#alta').on("click","#crear",function () {
+			
+			
 
 			$.ajax({
 				method : 'post',

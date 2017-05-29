@@ -205,7 +205,7 @@
       columns: [
       { data: 'nombres'},
       { data: 'apellidos'},
-      { data: 'tipo_doc'},
+      { data: 'id_tipo_documento'},
       { data: 'nro_doc'},
       { data: 'provincia'},
       { data: 'acciones'}
@@ -218,7 +218,7 @@
       columns: [
       { data: 'nombres'},
       { data: 'apellidos'},
-      { data: 'tipo_doc'},
+      { data: 'id_tipo_documento'},
       { data: 'nro_doc'},
       { data: 'provincia'},
       { data: 'acciones'}
@@ -237,7 +237,7 @@
       columns: [
       { data: 'nombres'},
       { data: 'apellidos'},
-      { data: 'tipo_doc'},
+      { data: 'id_tipo_documento'},
       { data: 'nro_doc'},
       { data: 'acciones'}
       ]
@@ -249,7 +249,7 @@
       columns: [
       { data: 'nombres'},
       { data: 'apellidos'},
-      { data: 'tipo_doc'},
+      { data: 'id_tipo_documento'},
       { data: 'nro_doc'},
       { data: 'acciones'}
       ]
@@ -269,14 +269,14 @@
       var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>'
       fila.find('td:last').remove();
       fila.append(botonQuitar);
-      fila.attr('data-id-profesor',$(this).attr('profesor_id'));
+      fila.data('id',$(this).attr('profesor_id'));
 
       var nodo = $('#tabla-profesores').DataTable().row(fila).node();
 
       console.log(nodo);
 
       $('#tabla-profesores-curso tbody tr').each(function () {
-        if($(this).attr('data-id-profesor') == $('#tabla-profesores-curso tbody tr').attr('data-id-profesor') ){
+        if($(this).attr('data-id-profesor') == $('#tabla-profesores-curso tbody tr').data('id') ){
           console.log('Ya existe.');
         }
       });

@@ -68,7 +68,7 @@ class Alumno extends Model
     	$alumno->email = $r->email;
     	$alumno->tel = $r->tel;
     	$alumno->cel = $r->cel;
-    	$alumno->id_tipo_documento = $r->tipo_doc;
+    	$alumno->id_tipo_documento = $r->id_tipo_documento;
     	$alumno->id_provincia = $r->provincia;
     	$alumno->id_trabajo = $r->trabaja_en;
     	$alumno->id_funcion = $r->funcion;      

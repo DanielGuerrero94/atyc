@@ -81,11 +81,19 @@ class cursosController extends Controller
      */
     public function store(Request $request)
     {
-    	$v = Validator::make($r->all(),$this->_rules);
+    	$v = Validator::make($request->all(),$this->_rules);
     	if(!$v->fails()){
     		$curso = new Curso();
-    		$curso->crear($r);
-    		Log::info(json_encode($curso));
+
+    		if($request->has('alumnos')){
+    			$curso->alumnos()->attach($request->get('alumnos'));
+    		}
+
+    		if($request->has('profesores')){
+    			$curso->profesores()->attach($request->get('profesores'));				
+    		}
+
+    		$curso->crear($request);
     	}else{
     		Log::info('El curso no paso la verificacion.'); 
     	}
@@ -137,7 +145,17 @@ class cursosController extends Controller
      */
     public function update(Request $request, $id)
     {
-    	return Curso::findOrFail($id)->modificar($request);
+    	$curso = Curso::findOrFail($id);
+
+    	if($request->has('alumnos')){
+    		$curso->alumnos()->sync($request->get('alumnos'));
+    	}
+
+    	if($request->has('profesores')){
+    		$curso->profesores()->sync($request->get('profesores'));
+    	}
+    	
+    	$curso->modificar($request);
     }
 
     /**
@@ -253,18 +271,18 @@ class cursosController extends Controller
 
 	public function getAlumnos($id)
 	{
-			$curso = Curso::findOrFail($id)
-			->alumnos()		
-			->join('sistema.provincias','sistema.provincias.id_provincia','=','alumnos.id_provincia')
-			->join('sistema.tipos_documentos','sistema.tipos_documentos.id_tipo_documento','=','alumnos.alumnos.id_tipo_documento')
-			->select('alumnos.id_alumno','nombres','apellidos','sistema.tipos_documentos.nombre as tipo_doc','nro_doc','sistema.provincias.nombre as provincia')
-			->get();
+		$curso = Curso::findOrFail($id)
+		->alumnos()		
+		->join('sistema.provincias','sistema.provincias.id_provincia','=','alumnos.id_provincia')
+		->join('sistema.tipos_documentos','sistema.tipos_documentos.id_tipo_documento','=','alumnos.alumnos.id_tipo_documento')
+		->select('alumnos.id_alumno','nombres','apellidos','sistema.tipos_documentos.nombre as tipo_doc','nro_doc','sistema.provincias.nombre as provincia')
+		->get();
 
 		$returns = collect($curso)->map(function ($item,$key){
 			return array('id_alumno' => $item['id_alumno'],
 				'nombres' => $item['nombres'],
 				'apellidos' => $item['apellidos'],
-				'tipo_doc' => $item['tipo_doc'],
+				'id_tipo_documento' => $item['id_tipo_documento'],
 				'nro_doc' => $item['nro_doc'],
 				'provincia' => $item['provincia']);
 		});

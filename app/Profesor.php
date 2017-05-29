@@ -43,11 +43,11 @@ class Profesor extends Model
         $this->nombres = $r->nombres;
         $this->apellidos = $r->apellidos;
 
-        $id_tipo_doc = $r->id_tipo_doc;
+        $id_tipo_documento = $r->id_tipo_documento;
 
-        $this->id_tipo_doc = $id_tipo_doc;
+        $this->id_tipo_documento = $id_tipo_documento;
 
-        if ($id_tipo_doc === '6' || $id_tipo_doc === '5') {
+        if ($id_tipo_documento === '6' || $id_tipo_documento === '5') {
             $this->id_pais = $r->pais;
         }
 
@@ -64,11 +64,11 @@ class Profesor extends Model
         $this->nombres = $r->nombres;
         $this->apellidos = $r->apellidos;
 
-        $id_tipo_doc = $r->id_tipo_doc;
+        $id_tipo_documento = $r->id_tipo_documento;
 
-        $this->id_tipo_doc = $id_tipo_doc;
+        $this->id_tipo_documento = $id_tipo_documento;
 
-        if ($id_tipo_doc === '6' || $id_tipo_doc === '5') {
+        if ($id_tipo_documento === '6' || $id_tipo_documento === '5') {
             $this->id_pais = $r->pais;
         }
 
