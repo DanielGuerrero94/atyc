@@ -118,149 +118,106 @@
 			$("#abm").show();
 		});
 
-		$('#alta').on('click','#crear',function() {
-			
-				/*var validator = $('#alta #form-alta').validate({
-					rules:{
-						nombre: {
-							required: true,
-						},
-						numero: {
-							required: true,
-							digits: true
-						}
-					},
-					messages:{
-						nombre : "Campo obligatorio",
-						numero : "Tiene que ser un numero"
-					},
-					highlight: function(element)
-					{
-						console.log("highlight");
-						console.log(element);
-						$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-					},				
-					success: function(element)
-					{
-						console.log("validate success");
-						$(element).text('').addClass('valid')
-						.closest('.form-group').removeClass('has-error').addClass('has-success');
-					},
-					submitHandler : function(form){
-						$.ajax({
-							method : 'post',
-							url : 'lineasEstrategicas',
-							data : $('form').serialize(),
-							success : function(data){
-								console.log("Success.");
-								alert('Se creo la linea estrategica.');
-								location.reload();	
-							},
-							error : function(data){
-								console.log("Error.");
-							}
-						});
-					}
-				});*/
+		function getSelected() {
+			var id_tipo_documento = $('#form-alta #id_tipo_documento :selected').data('id');
+			return [{
+				name: 'id_tipo_documento',
+				value: id_tipo_documento
+			}];
+		}
 
-				function getSelected() {
-					var id_tipo_documento = $('#form-alta #id_tipo_documento :selected').data('id');
-					return [{
-						name: 'id_tipo_documento',
-						value: id_tipo_documento
-					}];
-				}
+		function getInput() {					
+			return $.merge($('#form-alta').serializeArray(),getSelected());
+		}
 
-				function getInput() {					
-					return $.merge($('#form-alta').serializeArray(),getSelected());
-				}
-
-				var validator = $('#alta #form-alta').validate({
-					debug: true,				
-					rules : {
-						nombres : {
-							required: true
-						},
-						apellidos : {
-							required: true
-						},
-						nro_doc : {
-							required: true,
-							number: true
-						},
-						tel : {
-							number: true
-						},
-						cel : {
-							number: true
-						},
-					},
-					messages:{
-						nombres : "Campo obligatorio",
-						apellidos : "Campo obligatorio",
-						nro_doc : "Tiene que ser un numero",
-						telefono : "Tiene que ser un numero",
-						cel : "Tiene que ser un numero"
-					},
-					highlight: function(element)
-					{
-						$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-					},				
-					success: function(element)
-					{
-						$(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
-					},
-					onfocusout: function () {
-						var form = $('#alta #form-alta');
-						var nro_doc = form.find('#nro_doc');
-
-						if( form.find('#id_tipo_documento').val() == 'DNI' 
-							&& nro_doc.val() != ''
-							&& !nro_doc.closest('.form-group').hasClass('has-success')){
-
-							$.ajax({
-								method : 'get',
-								url : 'profesores/documentos/'+nro_doc.val(),
-								success : function(data){
-									if(data == "true"){
-										console.log("El documento ya esta registrado.");
-										nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
-										if(!nro_doc.parent().find('span').length){
-											nro_doc.parent().append("<span class=\"help-block\">El numero de documento ya esta registrado</span>");	
-										}						
-									}
-									else{
-										nro_doc.parent().find('span').remove();
-										nro_doc.closest('.form-group').removeClass('has-error').addClass('has-success');	
-									}
-								},
-								error : function(data){
-									console.log("Fallo la request ajax para validacion de documento.");
-								}
-							});
-					}	
+		var validator = $('#alta #form-alta').validate({
+			debug: true,				
+			rules : {
+				nombres : {
+					required: true
 				},
-				submitHandler : function(form){
+				apellidos : {
+					required: true
+				},
+				nro_doc : {
+					required: true,
+					number: true
+				},
+				tel : {
+					number: true
+				},
+				cel : {
+					number: true
+				},
+			},
+			messages:{
+				nombres : "Campo obligatorio",
+				apellidos : "Campo obligatorio",
+				nro_doc : "Tiene que ser un numero",
+				tel : "Tiene que ser un numero",
+				cel : "Tiene que ser un numero"
+			},
+			highlight: function(element)
+			{
+				$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+			},				
+			success: function(element)
+			{
+				$(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
+			},
+			onfocusout: function () {
+				var form = $('#alta #form-alta');
+				var nro_doc = form.find('#nro_doc');
+
+				if( form.find('#id_tipo_documento').val() == 'DNI' 
+					&& nro_doc.val() != ''
+					&& !nro_doc.closest('.form-group').hasClass('has-success')){
+
 					$.ajax({
-						url: 'profesores',
-						type: 'POST',						
-						data: getInput(),
-						complete: function(xhr, textStatus) {
-					   		console.log('ajax complete');
-					   	},
-					   	success: function(data, textStatus, xhr) {
-					    	console.log('Se creo');
-					    },
-					    error: function(xhr, textStatus, errorThrown) {
-					    	console.log('Fallo');
-					    }
+						method : 'get',
+						url : 'profesores/documentos/'+nro_doc.val(),
+						success : function(data){
+							if(data == "true"){
+								console.log("El documento ya esta registrado.");
+								nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
+								if(!nro_doc.parent().find('span').length){
+									nro_doc.parent().append("<span class=\"help-block\">El numero de documento ya esta registrado</span>");	
+								}						
+							}
+							else{
+								nro_doc.parent().find('span').remove();
+								nro_doc.closest('.form-group').removeClass('has-error').addClass('has-success');	
+							}
+						},
+						error : function(data){
+							console.log("Fallo la request ajax para validacion de documento.");
+						}
 					});
 				}	
-			});
-				if(validator.valid()){
-					$('#alta #form-alta').submit();	
-				}
-			});
+			},
+			submitHandler : function(form){
+				$.ajax({
+					url: 'profesores',
+					type: 'POST',						
+					data: getInput(),
+					complete: function(xhr, textStatus) {
+						console.log('ajax complete');
+					},
+					success: function(data, textStatus, xhr) {
+						console.log('Se creo');
+					},
+					error: function(xhr, textStatus, errorThrown) {
+						console.log('Fallo');
+					}
+				});
+			}	
+		});
+
+		$('#alta').on('click','#crear',function() {			
+			if(validator.valid()){
+				$('#alta #form-alta').submit();	
+			}
+		});
 		
 	});
 </script>

@@ -397,7 +397,6 @@
 			var id_provincia = $('#provincia option:selected').data('id');
 
 			var form = $('#alta #form-alta');
-			var id_tipo_documento = form.find('#id_tipo_documento :selected').data('id');
 			var provincia = form.find('#provincia :selected').data('id');
 			var trabaja_en = form.find('#trabaja_en :selected').data('id');
 			var funcion = form.find('#funcion :selected').data('id');
@@ -425,27 +424,34 @@
 			};
 		};
 
-		$('#alta').on("click","#crear",function () {
-			
-			
+		function getSelected() {
+			var id_tipo_documento = $('#form-alta #id_tipo_documento :selected').data('id');
+			var id_provincia = form.find('#provincia :selected').data('id');
+			var id_trabajo = form.find('#trabaja_en :selected').data('id');
+			var id_funcion = form.find('#funcion :selected').data('id');
 
-			$.ajax({
-				method : 'post',
-				url : 'alumnos',
-				data : serializado,
-				success : function(data){
-					console.log(jQuery.parseJSON(data));
-					console.log(jQuery.parseJSON(data).nro_doc);
-					/*location.reload();	*/
-				},
-				error : function(data){
-					alert("El alumno no se pudo dar de alta.");
-					console.log("Ajax Error.");
-					console.log(data);
-				}
-			});
+			return [
+			{	
+				name: 'id_tipo_documento',
+				value: id_tipo_documento
+			},
+			{	
+				name: 'id_provincia',
+				value: id_provincia
+			},
+			{	
+				name: 'id_trabajo',
+				value: id_trabajo
+			},
+			{	
+				name: 'id_funcion',
+				value: id_funcion
+			}];
+		}
 
-		});		
+		function getInput() {					
+			return $.merge($('#form-alta').serializeArray(),getSelected());
+		}						
 
 		jQuery.validator.addMethod("selecciono", function(value, element) {
 			return $(element).find(':selected').val() !== "Seleccionar";
@@ -453,7 +459,7 @@
 
 		var esNumero = new RegExp(/^[1-9]\d*$/i);
 
-		$('#alta form').validate({
+		var validator = $('#alta form').validate({
 			debug: true,
 			onfocusout: function () {
 				var form = $('#alta form');
@@ -500,6 +506,16 @@
 			establecimiento : "required",
 			efectores : "required",
 			nombre_organismo : "required",
+			nro_doc : {
+				required: true,
+				number: true
+			},
+			tel : {
+				number: true
+			},
+			cel : {
+				number: true
+			},
 			funcion: { selecciono : true},
 			tipo_organismo: { selecciono : true}
 		},
@@ -509,7 +525,10 @@
 			localidad : "Campo obligatorio",
 			establecimiento : "Campo obligatorio",
 			efectores : "Campo obligatorio",
-			nombre_organismo : "Campo obligatorio"
+			nombre_organismo : "Campo obligatorio",
+			nro_doc : "Tiene que ser un numero",
+			tel : "Tiene que ser un numero",
+			cel : "Tiene que ser un numero"
 		},
 		highlight: function(element)
 		{
@@ -517,12 +536,50 @@
 		},
 		success: function(element)
 		{
-			$(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+			$(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
 		},
 		submitHandler : function(form){
 			console.log("submitHandler");
+			$.ajax({
+				url: 'alumnos',
+				type: 'POST',						
+				data: getInput(),
+				complete: function(xhr, textStatus) {
+					console.log('ajax complete');
+				},
+				success: function(data, textStatus, xhr) {
+					console.log('Se creo');
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					console.log('Fallo');
+				}
+			});
 		}	
 	});
+
+		$('#alta').on('click','#crear',function() {			
+			if(validator.valid()){
+				$('#alta #form-alta').submit();	
+			}
+		});
+
+		/*$('#alta').on("click","#crear",function () {
+			$.ajax({
+				method : 'post',
+				url : 'alumnos',
+				data : serializado,
+				success : function(data){
+					console.log(jQuery.parseJSON(data));
+					console.log(jQuery.parseJSON(data).nro_doc);
+					location.reload();
+				},
+				error : function(data){
+					alert("El alumno no se pudo dar de alta.");
+					console.log("Ajax Error.");
+					console.log(data);
+				}
+			});
+		});*/
 	});
 </script> 
 

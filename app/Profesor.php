@@ -72,7 +72,7 @@ class Profesor extends Model
 
         $this->id_tipo_documento = $id_tipo_documento;
 
-        if ($id_tipo_documento === '6' || $id_tipo_documento === '5') {
+        if ($this->esExtranjero($r)) {
             $this->id_pais = $r->pais;
         }
 

@@ -308,7 +308,31 @@
       }
     });
 
-    $('#form-alta').validate({
+    function getSelected() {
+      var id_linea_estrategica = $('#linea_estrategica option:selected').data('id');
+      var id_area_tematica = $('#area_tematica option:selected').data('id');
+      var id_provincia = $('#provincia option:selected').data('id');
+
+      return [
+      { 
+        name: 'id_linea_estrategica',
+        value: id_linea_estrategica
+      },
+      { 
+        name: 'id_area_tematica',
+        value: id_area_tematica
+      },
+      { 
+        name: 'id_provincia',
+        value: id_provincia
+      }];
+    }
+
+    function getInput() {         
+      return $.merge($('#form-alta').serializeArray(),getSelected());
+    }
+
+    var validator = $('#form-alta').validate({
       rules : {
         nombre : "required",
         duracion : {
@@ -341,18 +365,10 @@
         .closest('.control-group').removeClass('error').addClass('success');
       },
       submitHandler : function(form){
-
-        console.log($('form').serialize());
-
-        var datos = $('.form-alta').serialize();
-        datos += '&id_linea_estrategica=' + $('#linea_estrategica option:selected').data('id');
-        datos += '&id_area_tematica=' + $('#area_tematica option:selected').data('id');
-        datos += '&id_provincia=' + $('#provincia option:selected').data('id');
-
         $.ajax({
           method : 'post',
           url : 'cursos',
-          data : datos,
+          data : getInput(),
           success : function(data){
             console.log("Success.");
             alert("Se crea el curso.");
