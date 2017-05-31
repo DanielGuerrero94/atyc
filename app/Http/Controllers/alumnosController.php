@@ -30,8 +30,9 @@ class alumnosController extends Controller
     'id_provincia' => 'required|numeric',
     'id_trabajo' => 'required|numeric',
     'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
-    'establecimiento' => 'required_if:id_trabajo,2|string',
-    'efector' => 'required_if:id_trabajo,2|string',
+    //'establecimiento' => 'required_if:id_trabajo,2|required_if:id_trabajo,2|string',
+    'tipo_convenio' => 'nullable',
+    'efector' => 'required_with:tipo_convenio|string',
     'tipo_organismo' => 'required_if:id_trabajo,3|string',
     'nombre_organismo' => 'required_if:id_trabajo,3|string',
     'email' => 'nullable|email',
@@ -97,16 +98,16 @@ class alumnosController extends Controller
      */
     public function store(Request $request)
     {
-        $v = Validator::make($r->all(),$this->_rules);
+        $v = Validator::make($request->all(),$this->_rules);
 
         if(!$v->fails()){
-            if($r->has('pais')){
-                $r->pais = Pais::select('id_pais')->where('nombre','=',$r->pais)->get('id_pais')->first(); 
-                $r->pais = $r->pais['id_pais'];    
+            if($request->has('pais')){
+                $request->pais = Pais::select('id_pais')->where('nombre','=',$request->pais)->get('id_pais')->first(); 
+                $request->pais = $request->pais['id_pais'];    
             }
-            return Alumno::crear($r);
+            return Alumno::crear($request);
         }else{
-            return json_encode($v->errors());
+            logger(json_encode($v->errors()));
         }
     }
 
@@ -160,7 +161,7 @@ class alumnosController extends Controller
      */
     public function destroy($id)
     {
-        return Alumno::findOrFail($id)->delete();
+        Alumno::findOrFail($id)->delete();
     }   
 
     /**

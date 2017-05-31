@@ -39,7 +39,7 @@
             </div>
             <div class="form-group">          
               <label class="col-xs-2">Areas Tematicas:</label>
-              <select class="js-example-basic-single col-xs-8" style="width: 400px" id="area_tematica">
+              <select class="form-control" style="width: 400px" id="area_tematica" name="area_tematica">
                 <option>Seleccionar</option>
                 @foreach ($areas_tematicas as $area)
                 <option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
@@ -48,7 +48,7 @@
             </div>
             <div class="form-group">          
               <label class="col-xs-2">Lineas estrategicas:</label>
-              <select class="js-example-basic-single col-xs-8" style="width: 400px" id="linea_estrategica">
+              <select class="form-control" style="width: 400px" id="linea_estrategica" name="linea_estrategica">
                 <option>Seleccionar</option>
                 @foreach ($lineas_estrategicas as $linea)
                 <option data-id="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
@@ -56,8 +56,8 @@
               </select>          
             </div>
             <div class="form-group">          
-              <label class="col-xs-2">Provincia:</label>
-              <select class="js-example-basic-single col-xs-8" style="width: 400px" id="provincia">
+              <label for="provincia" class="control-label col-xs-2">Provincia:</label>
+              <select class="form-control" style="width: 400px" id="provincia" name="provincia">
                 <option>Seleccionar</option>
                 @foreach ($provincias as $provincia)
                 <option data-id="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>
@@ -66,8 +66,8 @@
             </div>
           </form>
         </div>
-        <div class="tab-pane" id="alumnos" style="display: none;">
-          <div id="alumnos_en_el_curso">
+        <div class="tab-pane" id="alumnos">
+          <div id="alumnos-curso">
             <div class="box box-info collapsed-box">
               <div class="box-header with-border">
                 <h2 class="box-title">Alumnos en el curso</h2>
@@ -77,7 +77,7 @@
                   </button>
                 </div>
               </div>
-              <div class="box-body" style="display: none;">
+              <div class="box-body"">
                 <table id="tabla-alumnos-curso" class="table table-hover">
                   <thead>
                     <tr>
@@ -120,8 +120,8 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane" id="profesores" style="display: none;">
-          <div id="profesores_del_curso">
+        <div class="tab-pane" id="profesores">
+          <div id="profesores-curso">
             <div class="box box-info collapsed-box">
               <div class="box-header with-border">
                 <h2 class="box-title">Profesor/es del curso</h2>
@@ -205,22 +205,23 @@
       columns: [
       { data: 'nombres'},
       { data: 'apellidos'},
-      { data: 'id_tipo_documento'},
+      { data: 'tipo_documento.nombre'},
       { data: 'nro_doc'},
-      { data: 'provincia'},
+      { data: 'provincia.nombre'},
       { data: 'acciones'}
       ]
     });
 
     $('#tabla-alumnos-cursos').DataTable({
+      destroy: true,
       scrollY:"200px",
       scrollCollapse: true,
       columns: [
       { data: 'nombres'},
       { data: 'apellidos'},
-      { data: 'id_tipo_documento'},
+      { data: 'tipo_documento.nombre'},
       { data: 'nro_doc'},
-      { data: 'provincia'},
+      { data: 'provincia.nombre'},
       { data: 'acciones'}
       ]
     });
@@ -237,25 +238,54 @@
       columns: [
       { data: 'nombres'},
       { data: 'apellidos'},
-      { data: 'id_tipo_documento'},
+      { data: 'tipo_documento.nombre'},
       { data: 'nro_doc'},
       { data: 'acciones'}
       ]
     });
 
     $('#tabla-profesores-cursos').DataTable({
+      destroy: true,
       scrollY:"200px",
       scrollCollapse: true,
       columns: [
       { data: 'nombres'},
       { data: 'apellidos'},
-      { data: 'id_tipo_documento'},
+      { data: 'tipo_documento.nombre'},
       { data: 'nro_doc'},
       { data: 'acciones'}
       ]
     });
 
-    $('#alta').on('click','.agregar',function () {
+    var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
+
+    $('#alta #tabla-alumnos').on('click','.agregar',function () {
+      console.log("Se agrea al curso el alumno con id:");
+      var fila = $(this).parent().parent();
+      var id = $(this).data('id');
+
+      //fila.hide();      
+      fila.find('td:last').remove();
+      console.log(id);
+      fila.append(botonQuitar).attr('data-id',id);
+
+      var nodo = $('#tabla-alumnos').DataTable().row(fila).node();
+
+      console.log(nodo);
+
+      
+
+      $('#tabla-alumnos-curso').DataTable().row.add(nodo).draw();
+
+      /*$('#tabla-alumnos-curso tbody tr').each(function () {
+        if(id == $('#tabla-alumnos-curso tbody tr').data('id') ){
+          console.log('Ya existe.');
+        }
+      });*/
+      //$('#tabla-alumnos-curso tbody tr').show(); 
+    });
+
+    /*$('#alta #tabla-alumnos-curso').on('click','.agregar',function () {
       console.log("Se agrea al curso el alumno con id:");
       var fila = $(this).parent().parent();
       console.log(fila);
@@ -264,12 +294,10 @@
 
       console.log(aBuscar);
 
-      fila.hide();
-      /*Agrego el boton para quitar de los elegidos*/ 
-      var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>'
+      fila.hide();      
       fila.find('td:last').remove();
       fila.append(botonQuitar);
-      fila.data('id',$(this).attr('profesor_id'));
+      fila.data('id',$(this).data('id'));
 
       var nodo = $('#tabla-profesores').DataTable().row(fila).node();
 
@@ -283,7 +311,7 @@
 
       $('#tabla-profesores-curso').DataTable().row.add(nodo).draw();
       $('#tabla-profesores-curso tbody tr').show(); 
-    });
+    });*/
 
     $('#alta').on('click','.quitar',function () {
       $(this).parent().parent().remove();
@@ -308,11 +336,27 @@
       }
     });
 
-    function getSelected() {
-      var id_linea_estrategica = $('#linea_estrategica option:selected').data('id');
-      var id_area_tematica = $('#area_tematica option:selected').data('id');
-      var id_provincia = $('#provincia option:selected').data('id');
+    function getAlumnosSelected() {
+      $('#tabla-alumnos-curso .agregar').map(function(index, val) {
+        return $(val).data('id');
+      });
+    }
 
+    function getProfesoresSelected() {
+      $('#tabla-profesores-curso .agregar').map(function(index, val) {
+        return $(val).data('id');
+      });
+    }
+
+    function getSelected() {
+      var id_linea_estrategica = $('#form-alta #linea_estrategica option:selected').data('id');
+      var id_area_tematica = $('#form-alta #area_tematica option:selected').data('id');
+      var id_provincia = $('#form-alta #provincia option:selected').data('id');
+
+      var alumnos = getAlumnosSelected();
+      //var alumnos = [49641,4119,33030,3831];
+      var profesores = getProfesoresSelected();
+      //var profesores = [207,396,397,399];
       return [
       { 
         name: 'id_linea_estrategica',
@@ -325,12 +369,24 @@
       { 
         name: 'id_provincia',
         value: id_provincia
+      },
+      { 
+        name: 'alumnos',
+        value: alumnos
+      },
+      { 
+        name: 'profesores',
+        value: profesores
       }];
     }
 
     function getInput() {         
       return $.merge($('#form-alta').serializeArray(),getSelected());
     }
+
+    jQuery.validator.addMethod("selecciono", function(value, element) {
+      return $(element).find(':selected').val() !== "Seleccionar";
+    }, "Debe seleccionar alguna opcion");
 
     var validator = $('#form-alta').validate({
       rules : {
@@ -343,11 +399,14 @@
           required: true,
           date: true
         },
-        funcion: {
+        /*funcion: {
           depends: function (element) {
             return $('#alta form #funcion :selected').val() !== "Seleccionar";
           }
-        } 
+        }*/ 
+        area_tematica: { selecciono : true},
+        linea_estrategica: { selecciono : true},
+        provincia: { selecciono : true},
       },
       messages:{
         nombre : "Campo obligatorio",
@@ -356,15 +415,14 @@
       },
       highlight: function(element)
       {
-        console.log(element);
-        $(element).closest('.form-control').removeClass('success').addClass('error');
+        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
       },
       success: function(element)
       {
-        $(element).text('').addClass('valid')
-        .closest('.control-group').removeClass('error').addClass('success');
+        $(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
       },
       submitHandler : function(form){
+        console.log('asd');
         $.ajax({
           method : 'post',
           url : 'cursos',
@@ -372,7 +430,7 @@
           success : function(data){
             console.log("Success.");
             alert("Se crea el curso.");
-            location.reload();  
+            //location.reload();  
           },
           error : function(data){
             console.log("Error.");

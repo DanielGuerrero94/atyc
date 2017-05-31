@@ -69,9 +69,9 @@ class Alumno extends Model
     	$alumno->tel = $r->tel;
     	$alumno->cel = $r->cel;
     	$alumno->id_tipo_documento = $r->id_tipo_documento;
-    	$alumno->id_provincia = $r->provincia;
-    	$alumno->id_trabajo = $r->trabaja_en;
-    	$alumno->id_funcion = $r->funcion;      
+    	$alumno->id_provincia = $r->id_provincia;
+    	$alumno->id_trabajo = $r->id_trabajo;
+    	$alumno->id_funcion = $r->id_funcion;      
           
         $alumno->id_pais = $r->has('pais')?$r->pais:null;
         $alumno->organismo1 = $r->has('tipo_organismo')?$r->tipo_organismo:null;

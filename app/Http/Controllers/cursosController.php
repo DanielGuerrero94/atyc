@@ -23,7 +23,7 @@ class cursosController extends Controller
 	$_rules = [
 	'nombre' => 'required|string',
 	'duracion' => 'required|numeric',
-	'fecha' => 'required',
+	'fecha' => 'required|date',
 	'id_area_tematica' => 'required|numeric',
 	'id_linea_estrategica' => 'required|numeric',
 	'id_provincia' => 'required|numeric'
@@ -86,18 +86,20 @@ class cursosController extends Controller
     	$v = Validator::make($request->all(),$this->_rules);
     	if(!$v->fails()){
     		$curso = new Curso();
+    		$curso->crear($request);
 
     		if($request->has('alumnos')){
-    			$curso->alumnos()->attach($request->get('alumnos'));
+    			$alumnos = explode(',',$request->get('alumnos'));
+    			$curso->alumnos()->attach($alumnos);
     		}
 
     		if($request->has('profesores')){
-    			$curso->profesores()->attach($request->get('profesores'));				
+    			$profesores = explode(',',$request->get('profesores'));
+    			$curso->profesores()->attach($profesores);				
     		}
 
-    		$curso->crear($request);
     	}else{
-    		Log::info('El curso no paso la verificacion.'); 
+    		logger('El curso no paso la verificacion.'); 
     	}
     }
 
@@ -168,7 +170,7 @@ class cursosController extends Controller
      */
     public function destroy($id)
     {    	
-    	return Curso::findOrFail($id)->delete();
+    	Curso::findOrFail($id)->delete();
     }
 
     /**
@@ -247,7 +249,13 @@ class cursosController extends Controller
 	{	
 		$nombres = Curso::select('nombre')
 		->groupBy('nombre')
-		->orderBy('nombre')
+		->orderBy('nombre');
+
+		if(Auth::user()->id_provincia != 25){
+			$nombres = $nombres->where('id_provincia',Auth::user()->id_provincia);
+		}
+
+		$nombres = $nombres
 		->get()
 		->map(function($item,$key){
 			return $item->nombre;

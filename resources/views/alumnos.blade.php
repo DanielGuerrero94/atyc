@@ -140,7 +140,7 @@
 		});			
 
 		$('#abm').on("click",".eliminar",function(){
-			var alumno = $(this).attr("alumno-id");
+			var alumno = $(this).data("id");
 			jQuery('<div/>', {
 				id: 'dialogABM',
 				text: ''

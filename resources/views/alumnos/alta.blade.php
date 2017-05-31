@@ -22,7 +22,7 @@
 					<div class="form-group col-sm-6">
 						<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento:</label>
 						<div class="col-xs-6">
-							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" name="id_tipo_documento">
+							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
 								@foreach ($documentos as $documento)
 								
 								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>
@@ -42,7 +42,7 @@
 						<div class="typeahead__container col-xs-10">
 							<div class="typeahead__field ">         
 								<span class="typeahead__query ">
-									<input class="pais_typeahead form-control" name="pais" type="search" placeholder="Buscar..." autocomplete="off" id="pais">
+									<input class="pais_typeahead form-control" name="pais" type="search" placeholder="Buscar..." autocomplete="off" id="pais" disabled>
 								</span>
 							</div>
 						</div>
@@ -59,7 +59,7 @@
 						<label for="provincia" class="control-label col-xs-2">Provincia:</label>
 						<div class="col-xs-6">
 							@if(Auth::user()->id_provincia == 25)
-							<select class="form-control" id="provincia" name="provincia">
+							<select class="form-control" id="provincia">
 								@foreach ($provincias as $provincia)
 								
 								<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
@@ -96,7 +96,7 @@
 					<div class="form-group" style="display: none;">
 						<label for="tipo_organismo" class="control-label col-xs-2">Organismo:</label>
 						<div class="col-xs-6">
-							<select class="form-control" name="tipo_organismo" id="tipo_organismo">
+							<select class="form-control" id="tipo_organismo" name="organismo">
 
 								<option>Seleccionar</option>
 
@@ -116,7 +116,7 @@
 						<div class="typeahead__container col-xs-6">
 							<div class="typeahead__field ">         
 								<span class="typeahead__query ">
-									<input class="nombre_organismo_typeahead form-control" name="nombre_organismo" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="nombre_organismo">
+									<input class="nombre_organismo_typeahead form-control" name="nombre_organismo" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="nombre_organismo" disabled>
 								</span>
 							</div>
 						</div>
@@ -137,7 +137,7 @@
 						<div class="typeahead__container col-xs-6">
 							<div class="typeahead__field ">         
 								<span class="typeahead__query ">
-									<input class="efectores_typeahead form-control" name="efectores" type="search" placeholder="Buscar..." autocomplete="off" id="efectores">
+									<input class="efectores_typeahead form-control" name="efector" type="search" placeholder="Buscar..." autocomplete="off" id="efectores" disabled>
 								</span>
 							</div>
 						</div>
@@ -149,7 +149,7 @@
 						<div class="typeahead__container col-xs-6">
 							<div class="typeahead__field ">             
 								<span class="typeahead__query ">
-									<input class="establecimiento_typeahead form-control" name="establecimiento" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="establecimiento">
+									<input class="establecimiento_typeahead form-control" name="establecimiento" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="establecimiento" disabled>
 								</span>
 							</div>
 						</div>
@@ -335,17 +335,22 @@
 			if ($(this).val() == 'ORGANISMO GUBERNAMENTAL') {
 				tipo_organismo.show();
 				nombre_organismo.show();
+				$('#nombre_organismo').attr('disabled',false);
 				funcion.show();
 				tipo_convenio.hide();
 				$('#alta').find('#tipo_convenio').prop('checked',false);
 				establecimiento.hide();
+				$('#establecimiento').attr('disabled',true);
 				efectores.hide();
+				$('#efectores').attr('disabled',true);
 			}
 			else if($(this).val() == 'ESTABLECIMIENTO DE SALUD'){
 				tipo_convenio.show();				
 				establecimiento.show();
+				$('#establecimiento').attr('disabled',false);
 				tipo_organismo.hide();
 				nombre_organismo.hide();
+				$('#nombre_organismo').attr('disabled',true);
 				funcion.show();
 			}
 			else {
@@ -355,7 +360,9 @@
 				nombre_organismo.hide();
 				funcion.hide();
 				establecimiento.hide();
+				$('#establecimiento').attr('disabled',true);
 				efectores.hide();
+				$('#efectores').attr('disabled',true);
 			}			
 		});
 
@@ -364,10 +371,14 @@
 			if(efectores.is(':hidden')){
 				efectores.show();
 				establecimiento.hide();
+				$('#efectores').attr('disabled',false);
+				$('#establecimiento').attr('disabled',true);
 			}
 			else{
-				efectores.hide();
 				establecimiento.show();	
+				efectores.hide();
+				$('#establecimiento').attr('disabled',false);
+				$('#efectores').attr('disabled',true);
 			}
 
 		});					
@@ -377,9 +388,11 @@
 			var nacionalidad = $('#alta').find('#nacionalidad');
 			if ($(this).val() == 'DEX' || $(this).val() == 'PAS' ) {
 				nacionalidad.show();
+				$('#pais').attr('disabled',false);
 			}
 			else {
 				nacionalidad.hide();
+				$('#pais').attr('disabled',true);
 			}			
 		});
 
@@ -426,9 +439,9 @@
 
 		function getSelected() {
 			var id_tipo_documento = $('#form-alta #id_tipo_documento :selected').data('id');
-			var id_provincia = form.find('#provincia :selected').data('id');
-			var id_trabajo = form.find('#trabaja_en :selected').data('id');
-			var id_funcion = form.find('#funcion :selected').data('id');
+			var id_provincia = $('#form-alta #provincia :selected').data('id');
+			var id_trabajo = $('#form-alta #trabaja_en :selected').data('id');
+			var id_funcion = $('#form-alta #funcion :selected').data('id');
 
 			return [
 			{	
@@ -459,10 +472,10 @@
 
 		var esNumero = new RegExp(/^[1-9]\d*$/i);
 
-		var validator = $('#alta form').validate({
+		var validator = $('#alta #form-alta').validate({
 			debug: true,
 			onfocusout: function () {
-				var form = $('#alta form');
+				var form = $('#alta #form-alta');
 				var nro_doc = form.find('#nro_doc');
 
 				if( form.find('#id_tipo_documento').val() == 'DNI' 
@@ -504,7 +517,7 @@
 			apellidos : "required",
 			localidad : "required",
 			establecimiento : "required",
-			efectores : "required",
+			efector : "required",
 			nombre_organismo : "required",
 			nro_doc : {
 				required: true,
@@ -517,14 +530,16 @@
 				number: true
 			},
 			funcion: { selecciono : true},
-			tipo_organismo: { selecciono : true}
+			organismo: { selecciono : true},
+			tipo_organismo: { selecciono : true},
+			trabaja_en: { selecciono : true},
 		},
 		messages:{
 			nombres : "Campo obligatorio",
 			apellidos : "Campo obligatorio",
 			localidad : "Campo obligatorio",
 			establecimiento : "Campo obligatorio",
-			efectores : "Campo obligatorio",
+			efector : "Campo obligatorio",
 			nombre_organismo : "Campo obligatorio",
 			nro_doc : "Tiene que ser un numero",
 			tel : "Tiene que ser un numero",
@@ -549,6 +564,8 @@
 				},
 				success: function(data, textStatus, xhr) {
 					console.log('Se creo');
+					console.log(data);
+					location.reload();
 				},
 				error: function(xhr, textStatus, errorThrown) {
 					console.log('Fallo');
