@@ -39,5 +39,16 @@ class DatabaseSeeder extends Seeder
         $this->call(PreguntasTableSeeder::class);
         $this->call(RespuestasTableSeeder::class);
         $this->call(EncuestasTableSeeder::class);
+
+        //Schema Pac
+        $this->call(ModalidadesTableSeeder::class);
+        $this->call(ProfundizacionesTableSeeder::class);
+        $this->call(AlcancesTableSeeder::class);
+        $this->call(DestinatariosTableSeeder::class);
     }
+
+    /*public function run()
+    {
+        $this->call(FakerTableSeeder::class);
+    }*/
 }
