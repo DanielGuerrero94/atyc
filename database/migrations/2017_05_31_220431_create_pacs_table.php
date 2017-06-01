@@ -15,10 +15,10 @@ class CreatePacsTable extends Migration
     {
         Schema::create('pac.pacs', function (Blueprint $table) {
             $table->increments('id_pac');
-            $table->integer('id_alcance'):
-            $table->integer('id_modalidad'):
-            $table->integer('id_profundizacion'):
-            $table->integer('id_destinatario'):
+            $table->integer('id_alcance');
+            $table->integer('id_modalidad');
+            $table->integer('id_profundizacion');
+            $table->integer('id_destinatario');
             $table->timestamps();
         });
     }

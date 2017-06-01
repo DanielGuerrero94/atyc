@@ -68,7 +68,8 @@
     <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/bootstrap/js/bootstrap.min.js") }}" ></script>
 
     <!-- DataTable -->    
-    <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/datatables/jquery.dataTables.min.js") }}" ></script>
+    <!-- <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/datatables/jquery.dataTables.min.js") }}" ></script> -->
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js" ></script>
 
     <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/datatables/dataTables.bootstrap.min.js") }}" ></script>
     
@@ -153,7 +154,7 @@
       <header class="main-header fixed">
         <!-- Branding Image -->
         <a class="logo" href="{{ url('/dashboard') }}">
-          <span class="logo-lg"><b>E</b>learning</span>
+          <span class="logo-lg"><b>C</b>apacitacion</span>
         </a>      
         <nav class="navbar navbar-static-top" role="navigation">
           <ul class="nav navbar-nav">
@@ -184,7 +185,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href={{url("/areasTematicas")}} >Areas Tematicas</a></li>
+                <li><a href={{url("/areasTematicas")}} >Tipologias de accion</a></li>
                 <li><a href={{url("/lineasEstrategicas")}} >Lineas Estrategicas</a></li>
                 <li><a href="{{url("/gestores")}}">Gestores</a></li>
                 <li><a href="{{url("/efectores")}}">Efectores</a></li>
@@ -230,9 +231,8 @@
             @else
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                {{ Auth::user()->name }} <span class="caret"></span>
+                {{ Auth::user()->title }} <span class="caret"></span>
               </a>
-
               <ul class="dropdown-menu" role="menu">
                 <li>
                   <a href="{{ url('/elearning') }}"

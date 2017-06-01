@@ -64,7 +64,9 @@ class reportesController extends Controller
 		Log::info("Order By: ".json_encode($r->order_by));
 		//Esta parte me quedo horrible voy a tener que reeverlo porque tengo demasiados if
 		//En el caso que no sea un periodo de los que hay en la tabla le concateno las fechas que me pasaron para la columna periodo
-		$id_provincia = $r->filtros['id_provincia']?$r->filtros['id_provincia']:Auth::user()->id_provincia;
+		logger($r->filtros);
+
+		$id_provincia = in_array('id_provincia',$r->filtros)?$r->filtros['id_provincia']:Auth::user()->id_provincia;
 		if($id_provincia == 25){
 			$id_provincia = 0;
 		}

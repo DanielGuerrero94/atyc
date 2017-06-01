@@ -574,12 +574,7 @@
 		}	
 	});
 
-		$('#alta').on('click','#crear',function() {			
-			if(validator.valid()){
-				$('#alta #form-alta').submit();	
-			}
-		});
-
+		
 		/*$('#alta').on("click","#crear",function () {
 			$.ajax({
 				method : 'post',

@@ -23,61 +23,81 @@
             <br>
             <br> 
             <br>
+            <div class="row">
             <div class="form-group">          
-              <label class="col-xs-2">Duración:</label>
-              <input type="text" name="duracion" id="horas" class="col-xs-8" style="width: 400px" placeholder="Duración en horas">          
+              <label for="horas" class="control-label col-xs-2">Duración:</label>
+              <div class="col-xs-6">
+              <input type="text" name="duracion" id="horas" placeholder="Duración en horas"> 
+              </div>
+            </div>
             </div>
             <br>
+            <div class="row">
             <div class="form-group">            
-              <label class="col-xs-2">Fecha:</label>
-              <div class="input-group date col-xs-8" style="width: 400px">
+              <label for="fecha" class="control-label col-xs-2">Fecha:</label>
+              <div class="input-group date col-xs-8">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input type="text" name="fecha" class="form-control pull-right datepicker">
+                <input type="text" name="fecha" id="fecha" class="form-control pull-right datepicker">
               </div>
             </div>
-            <div class="form-group">          
-              <label class="col-xs-2">Areas Tematicas:</label>
-              <select class="form-control" style="width: 400px" id="area_tematica" name="area_tematica">
+            </div>
+            <div class="row">
+              <div class="form-group">          
+              <label for="area_tematica" class="control-label col-xs-2">Areas Tematicas:</label>
+              <div class="col-xs-6">
+              <select class="form-control" id="area_tematica" name="area_tematica">
                 <option>Seleccionar</option>
                 @foreach ($areas_tematicas as $area)
                 <option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
                 @endforeach
               </select>          
+              </div>
             </div>
+            </div>
+            <br>
+            <div class="row">
             <div class="form-group">          
-              <label class="col-xs-2">Lineas estrategicas:</label>
-              <select class="form-control" style="width: 400px" id="linea_estrategica" name="linea_estrategica">
+              <label for="linea_estrategica" class="control-label col-xs-2">Lineas estrategicas:</label>
+              <div class="col-xs-6">
+              <select class="form-control" id="linea_estrategica" name="linea_estrategica">
                 <option>Seleccionar</option>
                 @foreach ($lineas_estrategicas as $linea)
                 <option data-id="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
                 @endforeach
-              </select>          
+              </select>
+              </div>          
             </div>
+            </div>
+            <br>
+            <div class="row">
             <div class="form-group">          
               <label for="provincia" class="control-label col-xs-2">Provincia:</label>
-              <select class="form-control" style="width: 400px" id="provincia" name="provincia">
+              <div class="col-xs-6">
+              <select class="form-control" id="provincia" name="provincia">
                 <option>Seleccionar</option>
                 @foreach ($provincias as $provincia)
                 <option data-id="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>
                 @endforeach
-              </select>          
+              </select>  
+              </div>        
             </div>
-          </form>
+            </div>          
         </div>
         <div class="tab-pane" id="alumnos">
+          
           <div id="alumnos-curso">
-            <div class="box box-info collapsed-box">
+            <div class="box box-info">
               <div class="box-header with-border">
                 <h2 class="box-title">Alumnos en el curso</h2>
                 <div class="box-tools pull-right">
                   <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-plus"></i>
+                    <i class="fa fa-minus"></i>
                   </button>
                 </div>
               </div>
-              <div class="box-body"">
+              <div class="box-body">
                 <table id="tabla-alumnos-curso" class="table table-hover">
                   <thead>
                     <tr>
@@ -86,10 +106,11 @@
                       <th>Tipo Doc</th>
                       <th>Nro Doc</th>
                       <th>Provincia</th>
-                      <th>Acciones</th>   
+                      <th>Acciones</th>               
                     </tr>
                   </thead>
-                </table>    
+                  <tbody></tbody>
+                </table>
               </div>
             </div>
           </div>          
@@ -142,7 +163,7 @@
                       <th>Acciones</th>               
                     </tr>
                   </thead>
-                </table>    
+                </table>                   
               </div>
             </div>
           </div>          
@@ -171,11 +192,12 @@
               </div>
             </div>
           </div>
-        </div>    
+        </div>  
+        </form>  
       </div>
     </div>
     <div class="box-body">
-      <button class="btn btn-success pull-right guardar" type="submit">Guardar</button>
+      <button class="btn btn-success pull-right crear" type="submit">Guardar</button>
     </div>
   </div>
 </form>
@@ -196,6 +218,7 @@
     $('#tabla-alumnos').DataTable({
       scrollY:"200px",
       scrollCollapse: true,
+      serverSide: false,
       ajax : {
         "url": 'alumnos/tabla',
         "data": {
@@ -210,12 +233,15 @@
       { data: 'provincia.nombre'},
       { data: 'acciones'}
       ]
-    });
+    });  
 
-    $('#tabla-alumnos-cursos').DataTable({
+    $('#tabla-alumnos-curso').DataTable({
       destroy: true,
       scrollY:"200px",
       scrollCollapse: true,
+      filter: false,
+      paging: false,
+      serverSide: false,
       columns: [
       { data: 'nombres'},
       { data: 'apellidos'},
@@ -229,6 +255,7 @@
     $('#tabla-profesores').DataTable({
       scrollY:"200px",
       scrollCollapse: true,
+      serverSide: false,
       ajax : {
         "url": 'profesores/tabla',
         "data": {
@@ -244,10 +271,12 @@
       ]
     });
 
-    $('#tabla-profesores-cursos').DataTable({
-      destroy: true,
+    $('#tabla-profesores-curso').DataTable({
       scrollY:"200px",
       scrollCollapse: true,
+      filter: false,
+      paging: false,
+      serverSide: false,
       columns: [
       { data: 'nombres'},
       { data: 'apellidos'},
@@ -267,54 +296,40 @@
       //fila.hide();      
       fila.find('td:last').remove();
       console.log(id);
-      fila.append(botonQuitar).attr('data-id',id);
+      fila.append(botonQuitar);
+      console.log(fila);
 
-      var nodo = $('#tabla-alumnos').DataTable().row(fila).node();
+      var data = $('#tabla-alumnos').DataTable().row(fila).data();      
 
-      console.log(nodo);
-
-      
-
-      $('#tabla-alumnos-curso').DataTable().row.add(nodo).draw();
-
-      /*$('#tabla-alumnos-curso tbody tr').each(function () {
-        if(id == $('#tabla-alumnos-curso tbody tr').data('id') ){
-          console.log('Ya existe.');
-        }
-      });*/
-      //$('#tabla-alumnos-curso tbody tr').show(); 
+      console.log(data);   
+      $('#tabla-alumnos').DataTable().row(fila).remove().draw(false);
+      var nueva_fila = $('#tabla-alumnos-curso').DataTable().row.add(data).draw(false).row().node();
+      console.log(nueva_fila);
+      $(nueva_fila).find('td:last').remove();
+      $(nueva_fila).append(botonQuitar); 
+      $(nueva_fila).find('td:last button').attr('data-id',id);
     });
 
-    /*$('#alta #tabla-alumnos-curso').on('click','.agregar',function () {
+    $('#alta #tabla-profesores').on('click','.agregar',function () {
       console.log("Se agrea al curso el alumno con id:");
       var fila = $(this).parent().parent();
-      console.log(fila);
-      
-      var aBuscar = '#tabla-profesores-curso tbody tr #profesor_id';
+      var id = $(this).data('id');
 
-      console.log(aBuscar);
-
-      fila.hide();      
+      //fila.hide();      
       fila.find('td:last').remove();
+      console.log(id);
       fila.append(botonQuitar);
-      fila.data('id',$(this).data('id'));
+      console.log(fila);
 
-      var nodo = $('#tabla-profesores').DataTable().row(fila).node();
+      var data = $('#tabla-profesores').DataTable().row(fila).data();      
 
-      console.log(nodo);
-
-      $('#tabla-profesores-curso tbody tr').each(function () {
-        if($(this).attr('data-id-profesor') == $('#tabla-profesores-curso tbody tr').data('id') ){
-          console.log('Ya existe.');
-        }
-      });
-
-      $('#tabla-profesores-curso').DataTable().row.add(nodo).draw();
-      $('#tabla-profesores-curso tbody tr').show(); 
-    });*/
-
-    $('#alta').on('click','.quitar',function () {
-      $(this).parent().parent().remove();
+      console.log(data);   
+      $('#tabla-profesores').DataTable().row(fila).remove().draw(false);
+      var nueva_fila = $('#tabla-profesores-curso').DataTable().row.add(data).draw(false).row().node();
+      console.log(nueva_fila);
+      $(nueva_fila).find('td:last').remove();
+      $(nueva_fila).append(botonQuitar); 
+      $(nueva_fila).find('td:last button').attr('data-id',id);
     });
 
     $.typeahead({
@@ -337,13 +352,13 @@
     });
 
     function getAlumnosSelected() {
-      $('#tabla-alumnos-curso .agregar').map(function(index, val) {
+      $('#tabla-alumnos-curso .quitar').map(function(index, val) {
         return $(val).data('id');
       });
     }
 
     function getProfesoresSelected() {
-      $('#tabla-profesores-curso .agregar').map(function(index, val) {
+      $('#tabla-profesores-curso .quitar').map(function(index, val) {
         return $(val).data('id');
       });
     }
@@ -437,6 +452,12 @@
             alert("No se pudo crear el curso.");
           }
         });
+      }
+    });
+
+    $('#alta').on('click','#crear',function() {     
+      if(validator.valid()){
+        $('#alta #form-alta').submit(); 
       }
     });
   });

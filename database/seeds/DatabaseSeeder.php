@@ -11,40 +11,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        //Schema sistema
-        $this->call(PaisesTableSeeder::class);
-        $this->call(PeriodosTableSeeder::class);
-        $this->call(TiposDocumentosTableSeeder::class);
-        $this->call(ProvinciasTableSeeder::class);
-        $this->call(ProfesoresTableSeeder::class);
-        $this->call(ReportesTableSeeder::class);
-
-    	//Schema public
-        $this->call(UsersTableSeeder::class);
-        
-        //Schema alumnos
-        $this->call(TrabajosTableSeeder::class);
-        $this->call(ConveniosTableSeeder::class);
-        $this->call(FuncionesTableSeeder::class);
-        $this->call(AlumnosTableSeeder::class);
-
-        //Schema cursos
-        $this->call(AreasTematicasTableSeeder::class);
-        $this->call(LineasEstrategicasTableSeeder::class);
-        $this->call(CursosTableSeeder::class);
-        $this->call(CursosAlumnosTableSeeder::class);
-        $this->call(CursosProfesoresTableSeeder::class);
-
-        //Schema encuestas
-        $this->call(PreguntasTableSeeder::class);
-        $this->call(RespuestasTableSeeder::class);
-        $this->call(EncuestasTableSeeder::class);
-
-        //Schema Pac
-        $this->call(ModalidadesTableSeeder::class);
-        $this->call(ProfundizacionesTableSeeder::class);
-        $this->call(AlcancesTableSeeder::class);
-        $this->call(DestinatariosTableSeeder::class);
+        $this->call(SistemaSchemaSeeder::class);
+        $this->call(PublicSchemaSeeder::class);
+        $this->call(AlumnosSchemaSeeder::class);
+        $this->call(CursosSchemaSeeder::class);
+        $this->call(EncuestasSchemaSeeder::class);
+        //$this->call(PacSchemaSeeder::class);
     }
 
     /*public function run()

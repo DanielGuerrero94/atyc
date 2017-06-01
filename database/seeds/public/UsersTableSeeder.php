@@ -38,6 +38,7 @@ class UsersTableSeeder extends Seeder
             ('Río Negro','rionegro',22,'rionegro@rionegro.com','".bcrypt('rionegro001')."',now(),now()),
             ('Santa Cruz','santacruz',23,'santacruz@santacruz.com','".bcrypt('santacruz001')."',now(),now()),
             ('Tierra del Fuego','tierradelfuego',24,'tierradelfuego@tierradelfuego.com','".bcrypt('tierradelfuego001')."',now(),now()),
-            ('UEC','uec',25,'uec@uec.com','".bcrypt('uec001')."',now(),now())");
+            ('UEC','uec',25,'uec@uec.com','".bcrypt('uec001')."',now(),now()),
+            ('Paola','paola',25,'paola@paola.com','".bcrypt('paola007')."',now(),now())");
     }
 }

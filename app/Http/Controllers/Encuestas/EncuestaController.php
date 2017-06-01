@@ -83,4 +83,9 @@ class EncuestaController extends Controller
     {
         return Encuesta::findOrFail($id)->delete();
     }
+
+    public function ($value='')
+    {
+        # code...
+    }
 }

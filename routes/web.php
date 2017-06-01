@@ -58,8 +58,6 @@ Route::get('/dashboard', function() {
 	return view('dashboard');
 });
 
-
-
 //Dashboard
 Route::get('dashboard/datos','dashboardController@get');
 Route::get('dashboard/data','alumnosController@getActivos');

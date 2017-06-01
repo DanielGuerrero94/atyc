@@ -59,7 +59,7 @@
 	<div class="col-lg-4 col-xs-6">
 		<div class="box box-danger">
 			<div class="box-header with-border">
-				<h3 class="box-title">Cursos por area tematica</h3>
+				<h3 class="box-title">Cursos por tipologia de accion</h3>
         <!-- <i class="fa fa-pie-chart btn text-primary pull-right">Ver más</i> -->
       </div>
       <div class="box-body">
@@ -793,6 +793,7 @@ Highcharts.chart('columnDrilldown', {
     var pieChartCanvasLineas = $("#pieLineas").get(0).getContext("2d");
     var pieChartLineas = new Chart(pieChartCanvasLineas);
     pieChartLineas.Doughnut(data_pie_chart_lineas, pieOptions);
+
   },
   error: function() {
    alert("No se pudo cargar la informacion.");
