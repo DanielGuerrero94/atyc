@@ -180,40 +180,96 @@
                 <li><a href='{{url("/reportes/4")}}'>Porcentaje de establecimientos de salud capacitados por provincia</a></li>
                 <li><a href={{url("/reportes/cursos")}}>Cantidad de alumnos por curso</a></li>
               </ul>
-            </li> 
+            </li>             
             @if(Auth::user()->id_provincia == 25)
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pac<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li><a href={{url("/areasTematicas")}} >Tipologias de accion</a></li>
-                <li><a href={{url("/lineasEstrategicas")}} >Lineas Estrategicas</a></li>
-                <li><a href="{{url("/gestores")}}">Gestores</a></li>
-                <li><a href="{{url("/efectores")}}">Efectores</a></li>
-              </ul>
-            </li>             
-            @endif
-            @endif
-          </ul> 
-          <ul class="nav navbar-nav navbar-right" style="width: 100px;">
-            <!-- Authentication Links -->
-            @if (Auth::guest())
-            <li class="dropdown user user-menu">            
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="login">
-                <span class="hidden-md"><b>Entrar</b></span>
-              </a>            
-              <ul class="dropdown-menu">
-                <li class="user-header">
-                  <form action="{{ url('/login') }}" method="post">
-                    {{ csrf_field() }}
+               <li>
+                 <a href="#">
+                  <span class="pull-right-container">
+                  <small class="badge bg-aqua">pendiente</small>
+                  </span>
+                </a>
+              </li>              
+              <li><a href="#">Pautas</a></li>
+              <li><a href="#">Ficha tecnica</a></li>
+              <li><a href="#">Matriz</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">ABM<span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+                  <li><a href="#">Alcances</a></li>
+                  <li><a href="#">Destinatarios</a></li>
+                  <li><a href="#">Modalidades</a></li>
+                  <li><a href="#">Profundizaciones</a></li>
+                  <li><a href="#">Pautas</a></li>
+                  <li><a href="#">Insumos</a></li>
+                  <li><a href="#">ABM</a></li>
+                </ul>
+              </li>
+            </ul>
+          </li>             
+          @endif
+          @if(Auth::user()->id_provincia == 25)
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Encuestas<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="#">
+                  <span class="pull-right-container">
+                    <small class="badge pull-right bg-green">test</small>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="{{url("/encuestas/g_plannacer")}}">g_plannacer
+                </a>
+              </li>
+              <li>
+                <a href="{{url("/encuestas/google_form")}}">google form
+                </a>
+              </li>
+              <li>
+                <a href="{{url("/encuestas/survey")}}">survey
+                </a>
+              </li>
+              <li><a href="{{url("/encuestas/grafico")}}">grafico migrando</a></li>
+            </ul>
+          </li>             
+          @endif
+          @if(Auth::user()->id_provincia == 25)
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="{{url("/areasTematicas")}}">Tipologias de accion</a></li>
+              <li><a href="{{url("/lineasEstrategicas")}}">Lineas Estrategicas</a></li>
+              <li><a href="{{url("/gestores")}}">Gestores</a></li>
+              <li><a href="{{url("/efectores")}}">Efectores</a></li>
+            </ul>
+          </li>             
+          @endif
+          @endif
+        </ul> 
+        <ul class="nav navbar-nav navbar-right" style="width: 100px;">
+          <!-- Authentication Links -->
+          @if (Auth::guest())
+          <li class="dropdown user user-menu">            
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="login">
+              <span class="hidden-md"><b>Entrar</b></span>
+            </a>            
+            <ul class="dropdown-menu">
+              <li class="user-header">
+                <form action="{{ url('/login') }}" method="post">
+                  {{ csrf_field() }}
 
                     <!-- <div class="form-group has-feedback">
                       <input id="email" type="email" class="form-control" name="email" placeholder="Email"  required autofocus>
                       <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     </div> -->
                     <div class="form-group has-feedback">
-                    <input id="name" type="text" name="name" class="form-control" placeholder="Nombre" required autofocus>
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                  </div>
+                      <input id="name" type="text" name="name" class="form-control" placeholder="Nombre" required autofocus>
+                      <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    </div>
                     <div class="form-group has-feedback">
                       <input id="password" type="password" class="form-control" placeholder="Contraseña" name="password" required>
                       <span class="glyphicon glyphicon-lock form-control-feedback"></span>

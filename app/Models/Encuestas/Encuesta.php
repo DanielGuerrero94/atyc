@@ -3,6 +3,7 @@
 namespace App\Models\Encuestas;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Encuesta extends Model
 {

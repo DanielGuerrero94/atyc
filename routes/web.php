@@ -141,10 +141,7 @@ Route::group(['middleware' => 'logueado'], function () {
 
 //Relaciones de cursos con alumnos y profesores
 	Route::get('curso/{id}','cursosController@getByID');
-	Route::get('users/{id}/alumnos', 'cursosController@getAlumnos');
-
-	//Encuestas
-	Route::resource('encuestas', 'Encuestas\EncuestaController');
+	Route::get('users/{id}/alumnos', 'cursosController@getAlumnos');	
 
 //Filtros para todas las abms
 	Route::get('filtros/{tabla}','abmController@filtros');
@@ -162,6 +159,14 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('reportes/query','reportesController@queryReporte');
 	Route::get('reportes/query/test','reportesController@queryTest');
 	Route::get('reportes/{id_reporte}','reportesController@reporte');
+
+	//Encuestas
+	Route::get('encuestas/g_plannacer', 'Encuestas\EncuestaController@g_plannacer');
+	Route::get('encuestas/g_plannacer/datos', 'Encuestas\EncuestaController@g_plannacerDatos');
+	Route::get('encuestas/google_form', 'Encuestas\EncuestaController@google_form');
+	Route::get('encuestas/survey', 'Encuestas\EncuestaController@survey');
+	Route::get('encuestas/grafico', 'Encuestas\EncuestaController@grafico');
+	Route::resource('encuestas', 'Encuestas\EncuestaController');
 
 
 	Route::group(['middleware' => 'admin'], function () {

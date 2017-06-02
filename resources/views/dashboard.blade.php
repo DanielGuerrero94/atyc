@@ -102,20 +102,20 @@
   </div> -->
   <div class="col-lg-8 col-xs-12">
     <div class="box box-danger">
-    <div class="box-body">
-      <div id="pieTestHighchart"></div>
+      <div class="box-body">
+        <div id="pieTestHighchart"></div>
+      </div>
     </div>
   </div>
-</div>
-<div class="col-lg-4 col-xs-6">
-  <div class="box box-danger">
-   <div class="box-header with-border">
-    <h3 class="box-title">Provincias con mas cursos dictados</h3>
+  <div class="col-lg-4 col-xs-6">
+    <div class="box box-danger">
+     <div class="box-header with-border">
+      <h3 class="box-title">Provincias con mas cursos dictados</h3>
+    </div>
+    <div class="box-body">
+      <div id="pieProvinciasHighchart"></div>
+    </div>
   </div>
-  <div class="box-body">
-    <div id="pieProvinciasHighchart"></div>
-  </div>
-</div>
 </div>
 </div>
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
