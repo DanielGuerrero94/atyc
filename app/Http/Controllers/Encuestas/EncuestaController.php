@@ -181,4 +181,14 @@ class EncuestaController extends Controller
 
         return json_encode($r);
     }
+
+    public function subida(Request $r)
+    {
+        
+    }
+
+    private function procesarArchivo()
+    {
+        
+    }
 }

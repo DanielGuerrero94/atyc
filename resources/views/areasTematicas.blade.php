@@ -4,7 +4,7 @@
 <div class="container">
 	<div id="abm">
 		{{csrf_field()}}
-		<div class="col-xs-8 col-xs-offset-2">
+		<div class="col-xs-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
 					<h2 class="box-tittle">Areas Tematicas</h2>

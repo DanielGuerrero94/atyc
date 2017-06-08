@@ -10,9 +10,12 @@
         <div class="active tab-pane" id="inicial">
           <form class="form-alta">
             {{ csrf_field() }}
-            <div class="form-group">          
-              <label class="col-xs-2">Nombre:</label>
-              <div class="typeahead__container col-xs-4">
+            <div class="form-group">
+            <<div class="col-xs- col-sm- col-md- col-lg-">
+              
+            </div>          
+              <label class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Nombre:</label>
+              <div class="typeahead__container col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <div class="typeahead__field ">             
                   <span class="typeahead__query ">
                     <input class="nombre_typeahead " name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
@@ -85,113 +88,11 @@
             </div>
             </div>          
         </div>
-        <div class="tab-pane" id="alumnos">
-          
-          <div id="alumnos-curso">
-            <div class="box box-info">
-              <div class="box-header with-border">
-                <h2 class="box-title">Alumnos en el curso</h2>
-                <div class="box-tools pull-right">
-                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="box-body">
-                <table id="tabla-alumnos-curso" class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>Nombres</th>
-                      <th>Apellidos</th>
-                      <th>Tipo Doc</th>
-                      <th>Nro Doc</th>
-                      <th>Provincia</th>
-                      <th>Acciones</th>               
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
-            </div>
-          </div>          
-          <div id="alumnos">
-            <div class="box box-info">
-              <div class="box-header with-border">
-                <h2 class="box-title">Alumnos</h2>
-                <div class="box-tools pull-right">
-                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="box-body">
-                <table id="tabla-alumnos" class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>Nombres</th>
-                      <th>Apellidos</th>
-                      <th>Tipo Doc</th>
-                      <th>Nro Doc</th>
-                      <th>Provincia</th>
-                      <th>Acciones</th>               
-                    </tr>
-                  </thead>
-                </table>
-              </div>
-            </div>
-          </div>
+        <div class="tab-pane" id="alumnos">   
+        @include('alumnos.asignacionAlternativa')            
         </div>
         <div class="tab-pane" id="profesores">
-          <div id="profesores-curso">
-            <div class="box box-info collapsed-box">
-              <div class="box-header with-border">
-                <h2 class="box-title">Profesor/es del curso</h2>
-                <div class="box-tools pull-right">
-                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-plus"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="box-body" style="display: none;">
-                <table id="tabla-profesores-curso" class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>Nombres</th>
-                      <th>Apellidos</th>
-                      <th>Tipo Doc</th>
-                      <th>Nro Doc</th>
-                      <th>Acciones</th>               
-                    </tr>
-                  </thead>
-                </table>                   
-              </div>
-            </div>
-          </div>          
-          <div id="profesores">
-            <div class="box box-info">
-              <div class="box-header with-border">
-                <h2 class="box-title">Profesores</h2>
-                <div class="box-tools pull-right">
-                  <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="box-body">
-                <table id="tabla-profesores" class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>Nombres</th>
-                      <th>Apellidos</th>
-                      <th>Tipo Doc</th>
-                      <th>Nro Doc</th>
-                      <th>Acciones</th>               
-                    </tr>
-                  </thead>
-                </table>
-              </div>
-            </div>
-          </div>
+        @include('profesores.asignacion')         
         </div>  
         </form>  
       </div>

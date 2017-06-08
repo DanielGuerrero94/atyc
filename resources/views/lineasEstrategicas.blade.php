@@ -7,7 +7,7 @@
 		<div class="col-xs-8 col-xs-offset-2">
 			<div class="box box-info">
 				<div class="box-header with-border">
-					<h2 class="box-tittle">Lineas Estrategicas</h2>
+					<h2 class="box-tittle">Tipologias de accion</h2>
 					<div class="box-tools pull-right">
 						<button type="button" class="btn btn-box-tool" data-widget="collapse">
 							<i class="fa fa-minus"></i>
@@ -26,7 +26,7 @@
 					</table>
 				</div>
 				<div class="box-footer">
-					<button class="btn btn-success pull-right" id="nueva_linea_estrategica"><i class="fa fa-plus" aria-hidden="true"></i>Nueva linea estrategica</button>
+					<button class="btn btn-success pull-right" id="nueva_linea_estrategica"><i class="fa fa-plus" aria-hidden="true"></i>Nueva tipologia de accion</button>
 				</div>
 			</div>
 		</div>

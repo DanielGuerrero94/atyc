@@ -95,6 +95,9 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('alumnos/documentos/{documento}','alumnosController@checkDocumentos');
 	Route::get('alumnos/{id}','alumnosController@edit');
 
+	Route::get('alumnos/typeahead/nombres','alumnosController@getNombres');
+	Route::get('alumnos/typeahead/apellidos','alumnosController@getApellidos');
+	Route::get('alumnos/typeahead/documentos','alumnosController@getDocumentos');
 
 	Route::post('alumnos','alumnosController@store');
 

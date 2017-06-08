@@ -218,23 +218,7 @@ class alumnosController extends Controller
      */
     public function getNombreOrganismo()
     {
-        $organismos = Alumno::select('organismo2')
-        ->groupBy('organismo2')
-        ->orderBy('organismo2')
-        ->get()
-        ->map(function($item,$key){
-            return $item->organismo2;
-        });
-
-        $ret = array(
-            'status' => true,
-            'error' => null,
-            'data' => array(
-                'info' => $organismos
-                )
-            );
-
-        return json_encode($ret);
+        return $this->typeahead('organismo2');
     }
 
     /**
@@ -244,22 +228,79 @@ class alumnosController extends Controller
      */
     public function getEstablecimientos()
     {
-        $establecimientos = Alumno::select('establecimiento2')
-        ->groupBy('establecimiento2')
-        ->orderBy('establecimiento2')
-        ->get()
-        ->map(function($item,$key){
-            return $item->establecimiento2;
-        });
+        return $this->typeahead('establecimiento2');
+    }
 
+    /**
+     * Nombres de los alumnos para el typeahead.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getNombres()
+    {
+        return $this->typeahead('nombres');
+    }
+
+    /**
+     * Apellidos de los alumnos para el typeahead.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getApellidos()
+    {
+        return $this->typeahead('apellidos');
+    }
+
+    /**
+     * Numero de documento de los alumnos para el typeahead.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getDocumentos()
+    {
+        return $this->typeahead('nro_doc');
+    }
+
+    /**
+     * Consigue typeahead de la columna.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    private function typeahead($columna)
+    {
+        return $this->typeaheadResponse($this->queryOneColumn($columna));
+    }
+
+    /**
+     * Consulta una sola columna.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    private function queryOneColumn($columna)
+    {
+        return Alumno::select($columna)
+        ->groupBy($columna)
+        ->orderBy($columna)
+        ->get()
+        ->map(function($item,$key) use($columna){
+            return $item->$columna;
+        });
+    }
+
+    /**
+     * Respuesta al typeahead.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    private function typeaheadResponse($info)
+    {
         $ret = array(
             'status' => true,
             'error' => null,
             'data' => array(
-                'info' => $establecimientos
+                'info' => $info
                 )
             );
-
         return json_encode($ret);
     }
     /* Metodos Typeahead */

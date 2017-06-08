@@ -149,165 +149,316 @@
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/input-mask/jquery.inputmask.date.extensions.js")}}"></script>
 
   </head>
-  <body class="skin-blue">
-    <div class="wrapper" style="background-color: #f5f5f5;">
-      <header class="main-header fixed">
+  <body class="skin-blue sidebar-mini" style="height: auto; min-height: 100%;">
+    <div class="wrapper" style="height: auto; min-height: 100%;background-color: #f5f5f5;">
+      <header class="main-header">
         <!-- Branding Image -->
         <a class="logo" href="{{ url('/dashboard') }}">
           <span class="logo-lg"><b>C</b>apacitacion</span>
         </a>      
         <nav class="navbar navbar-static-top" role="navigation">
-          <ul class="nav navbar-nav">
-            @if (!Auth::guest())            
-            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Usuarios <span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href={{url("/alumnos")}} >Gestión de Alumnos</a></li>
-                <li><a href={{url("/profesores")}} >Gestión de Profesores</a></li>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cursos<span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href={{url("/cursos")}} >Gestión de Cursos</a></li>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reportes<span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-                <li><a href='{{url("/reportes/1")}}'>Total de staff que participo de actividades de capacitacion con mas de 10 horas</a></li>
-                <li><a href='{{url("/reportes/2")}}'>Banco - Participaron de actividades de capacitacion con mas de 10 horas</a></li>
-                <li><a href='{{url("/reportes/3")}}'>Total de staff institucional que participo de alguna actividad de capacitacion</a></li>
-                <li><a href='{{url("/reportes/4")}}'>Porcentaje de establecimientos de salud capacitados por provincia</a></li>
-                <li><a href={{url("/reportes/cursos")}}>Cantidad de alumnos por curso</a></li>
-              </ul>
-            </li>             
-            @if(Auth::user()->id_provincia == 25)
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pac<span class="caret"></span></a>
-              <ul class="dropdown-menu" role="menu">
-               <li>
-                 <a href="#">
-                  <span class="pull-right-container">
-                  <small class="badge bg-aqua">pendiente</small>
-                  </span>
+          
+          <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" onclick="fixsidebar()">
+            <span class="sr-only">Toggle navigation</span>
+          </a> 
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!-- Messages: style can be found in dropdown.less-->
+              @if (!Auth::guest()) 
+              <li class="dropdown messages-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-envelope-o"></i>
+                  <span class="label label-success">4</span>
                 </a>
-              </li>              
-              <li><a href="#">Pautas</a></li>
-              <li><a href="#">Ficha tecnica</a></li>
-              <li><a href="#">Matriz</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">ABM<span class="caret"></span></a>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">Alcances</a></li>
-                  <li><a href="#">Destinatarios</a></li>
-                  <li><a href="#">Modalidades</a></li>
-                  <li><a href="#">Profundizaciones</a></li>
-                  <li><a href="#">Pautas</a></li>
-                  <li><a href="#">Insumos</a></li>
-                  <li><a href="#">ABM</a></li>
+                <ul class="dropdown-menu">
+                  <li class="header">You have 4 messages</li>
+                  <li>
+                    <!-- inner menu: contains the actual data -->
+                    <ul class="menu">
+                      <li><!-- start message -->
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                          </div>
+                          <h4>
+                            Support Team
+                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
+                          </h4>
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>
+                      <!-- end message -->
+                      <li>
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                          </div>
+                          <h4>
+                            AdminLTE Design Team
+                            <small><i class="fa fa-clock-o"></i> 2 hours</small>
+                          </h4>
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+                          </div>
+                          <h4>
+                            Developers
+                            <small><i class="fa fa-clock-o"></i> Today</small>
+                          </h4>
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="dist/img/user3-128x128.jpg" class="img-circle" alt="User Image">
+                          </div>
+                          <h4>
+                            Sales Department
+                            <small><i class="fa fa-clock-o"></i> Yesterday</small>
+                          </h4>
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <div class="pull-left">
+                            <img src="dist/img/user4-128x128.jpg" class="img-circle" alt="User Image">
+                          </div>
+                          <h4>
+                            Reviewers
+                            <small><i class="fa fa-clock-o"></i> 2 days</small>
+                          </h4>
+                          <p>Why not buy a new awesome theme?</p>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="footer"><a href="#">See All Messages</a></li>
                 </ul>
               </li>
-            </ul>
-          </li>             
-          @endif
-          @if(Auth::user()->id_provincia == 25)
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Encuestas<span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li>
-                <a href="#">
-                  <span class="pull-right-container">
-                    <small class="badge pull-right bg-green">test</small>
-                  </span>
+              <!-- Notifications: style can be found in dropdown.less -->
+              <li class="dropdown notifications-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-bell-o"></i>
+                  <span class="label label-warning">10</span>
                 </a>
+                <ul class="dropdown-menu">
+                  <li class="header">You have 10 notifications</li>
+                  <li>
+                    <!-- inner menu: contains the actual data -->
+                    <ul class="menu">
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
+                          page and may cause design problems
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-users text-red"></i> 5 new members joined
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#">
+                          <i class="fa fa-user text-red"></i> You changed your username
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="footer"><a href="#">View all</a></li>
+                </ul>
               </li>
-              <li>
-                <a href="{{url("/encuestas/g_plannacer")}}">g_plannacer
+              <!-- Tasks: style can be found in dropdown.less -->
+              <li class="dropdown tasks-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <i class="fa fa-flag-o"></i>
+                  <span class="label label-danger">9</span>
                 </a>
+                <ul class="dropdown-menu">
+                  <li class="header">You have 9 tasks</li>
+                  <li>
+                    <!-- inner menu: contains the actual data -->
+                    <ul class="menu">
+                      <li><!-- Task item -->
+                        <a href="#">
+                          <h3>
+                            Design some buttons
+                            <small class="pull-right">20%</small>
+                          </h3>
+                          <div class="progress xs">
+                            <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">20% Complete</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                      <!-- end task item -->
+                      <li><!-- Task item -->
+                        <a href="#">
+                          <h3>
+                            Create a nice theme
+                            <small class="pull-right">40%</small>
+                          </h3>
+                          <div class="progress xs">
+                            <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">40% Complete</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                      <!-- end task item -->
+                      <li><!-- Task item -->
+                        <a href="#">
+                          <h3>
+                            Some task I need to do
+                            <small class="pull-right">60%</small>
+                          </h3>
+                          <div class="progress xs">
+                            <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">60% Complete</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                      <!-- end task item -->
+                      <li><!-- Task item -->
+                        <a href="#">
+                          <h3>
+                            Make beautiful transitions
+                            <small class="pull-right">80%</small>
+                          </h3>
+                          <div class="progress xs">
+                            <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                              <span class="sr-only">80% Complete</span>
+                            </div>
+                          </div>
+                        </a>
+                      </li>
+                      <!-- end task item -->
+                    </ul>
+                  </li>
+                  <li class="footer">
+                    <a href="#">View all tasks</a>
+                  </li>
+                </ul>
               </li>
-              <li>
-                <a href="{{url("/encuestas/google_form")}}">google form
+              
+              <!-- User Account: style can be found in dropdown.less -->
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <span class="hidden-xs">{{ Auth::user()->title }}</span>
                 </a>
-              </li>
-              <li>
-                <a href="{{url("/encuestas/survey")}}">survey
-                </a>
-              </li>
-              <li><a href="{{url("/encuestas/grafico")}}">grafico migrando</a></li>
-            </ul>
-          </li>             
-          @endif
-          @if(Auth::user()->id_provincia == 25)
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin<span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="{{url("/areasTematicas")}}">Tipologias de accion</a></li>
-              <li><a href="{{url("/lineasEstrategicas")}}">Lineas Estrategicas</a></li>
-              <li><a href="{{url("/gestores")}}">Gestores</a></li>
-              <li><a href="{{url("/efectores")}}">Efectores</a></li>
-            </ul>
-          </li>             
-          @endif
-          @endif
-        </ul> 
-        <ul class="nav navbar-nav navbar-right" style="width: 100px;">
-          <!-- Authentication Links -->
-          @if (Auth::guest())
-          <li class="dropdown user user-menu">            
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="login">
-              <span class="hidden-md"><b>Entrar</b></span>
-            </a>            
-            <ul class="dropdown-menu">
-              <li class="user-header">
-                <form action="{{ url('/login') }}" method="post">
-                  {{ csrf_field() }}
+                <ul class="dropdown-menu">
+                  <!-- User image -->
+                  <li class="user-header">
+                    <img src="" class="img-circle" alt="User Image">
 
-                    <!-- <div class="form-group has-feedback">
-                      <input id="email" type="email" class="form-control" name="email" placeholder="Email"  required autofocus>
-                      <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                    </div> -->
-                    <div class="form-group has-feedback">
-                      <input id="name" type="text" name="name" class="form-control" placeholder="Nombre" required autofocus>
-                      <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                    </div>
-                    <div class="form-group has-feedback">
-                      <input id="password" type="password" class="form-control" placeholder="Contraseña" name="password" required>
-                      <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                    </div>
+                    <p>
+                      {{ Auth::user()->title }}
+                      <small>Member since Nov. 2012</small>
+                    </p>
+                  </li>
+                  <!-- Menu Body -->
+                  <li class="user-body">
                     <div class="row">
-                      <div class="col-xs-4 col-xs-offset-4">
-                        <button type="submit" class="btn btn-default  ">Entrar</button>
+                      <div class="col-xs-4 text-center">
+                        <a href="#">Followers</a>
                       </div>
-                    </div> 
-                  </form>
+                      <div class="col-xs-4 text-center">
+                        <a href="#">Sales</a>
+                      </div>
+                      <div class="col-xs-4 text-center">
+                        <a href="#">Friends</a>
+                      </div>
+                    </div>
+                    <!-- /.row -->
+                  </li>
+                  <!-- Menu Footer-->
+                  <li class="user-footer">
+                    <div class="pull-left">
+                      <a href="#" class="btn btn-default btn-flat">Profile</a>
+                    </div>
+                    <div class="pull-right">
+                      <a href="{{ url('/logout') }}" class="btn btn-default btn-flat"
+                      onclick="event.preventDefault();
+                      document.getElementById('logout-form').submit();">
+                      Salir
+                    </a>
+
+                    <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+                      {{ csrf_field() }}
+                    </form>
+                  </div>
                 </li>
               </ul>
-
             </li>
             @else
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                {{ Auth::user()->title }} <span class="caret"></span>
+            <li class="dropdown user user-menu">
+              <a href="{{url('/entrar')}}" class="dropdown-toggle" data-toggle="dropdown">
+                <span class="hidden-xs">Entrar</span>
               </a>
-              <ul class="dropdown-menu" role="menu">
-                <li>
-                  <a href="{{ url('/elearning') }}"
-                  onclick="event.preventDefault();
-                  document.getElementById('logout-form').submit();">
-                  Salir
-                </a>
-                <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
-                  {{ csrf_field() }}
-                </form>
-              </li>
-            </ul>
-          </li>
-          @endif
-        </ul> 
+              <ul class="dropdown-menu">
+                <!-- User image -->
+                <li class="user-header">
+
+                  <p>
+                    <small>Member since Nov. 2012</small>
+                  </p>
+                </li>
+                <!-- Menu Body -->
+                <li class="user-body">
+                  <div class="row">
+                    <div class="col-xs-4 text-center">
+                      <a href="#">Followers</a>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                      <a href="#">Sales</a>
+                    </div>
+                    <div class="col-xs-4 text-center">
+                      <a href="#">Friends</a>
+                    </div>
+                  </div>
+                  <!-- /.row -->
+                </li>
+                <!-- Menu Footer-->
+                <li class="user-footer">
+                  <div class="pull-left">
+                    <a href="{{url("/entrar")}}" class="btn btn-primary btn-flat">Entrar</a>
+                  </div>
+                  <div class="pull-right">
+                    <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            @endif
+          </ul>
+        </div>
+        
       </nav> 
     </header>
-    <div class="content-wraper">
-      @yield('content')
+    <aside class="main-sidebar">
+      @include('layouts.sidebar')
+    </aside>
+    <div class="content-wrapper" style="min-height: 298px;"> 
+      <section class="content">
+        @yield('content')
+      </section>
     </div>
   </div>  
 </body>
@@ -374,6 +525,24 @@
 
   });
 
+</script>
+<script type="text/javascript">
+ function fixsidebar() { 
+  if ($(window).width() > 767) {
+   if ($("body").hasClass('sidebar-collapse')) {
+     $("body").removeClass('sidebar-collapse').trigger('expanded.pushMenu');
+   } else {
+     $("body").addClass('sidebar-collapse').trigger('collapsed.pushMenu');
+   }
+ }
+ else {
+   if ($("body").hasClass('sidebar-open')) {
+     $("body").removeClass('sidebar-open').removeClass('sidebar-collapse').trigger('collapsed.pushMenu');
+   } else {
+     $("body").addClass('sidebar-open').trigger('expanded.pushMenu');
+   }
+ }
+};
 </script>
 <!-- <script>
 window.location.hash="no-back-button";

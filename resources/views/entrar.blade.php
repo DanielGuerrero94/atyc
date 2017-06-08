@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>CUS-SUMAR-Elearning</title>
+  <title>CUS-SUMAR-Capacitacion</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap -->
@@ -30,7 +30,7 @@
 <body class="hold-transition login-page">
   <div class="login-box panel panel-primary">
     <div class="login-logo">
-      <a href="../../index2.html"><b>E</b>learning</a>
+      <a href="../../index2.html"><b>C</b>apacitación</a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
