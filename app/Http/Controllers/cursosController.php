@@ -88,6 +88,8 @@ class cursosController extends Controller
     		$curso = new Curso();
     		$curso->crear($request);
 
+    		logger(json_encode($request->all()));
+
     		if($request->has('alumnos')){
     			logger(json_encode($request->get('alumnos')));
     			/*$alumnos = explode(',',$request->get('alumnos'));

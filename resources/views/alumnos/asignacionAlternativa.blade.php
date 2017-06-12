@@ -46,61 +46,6 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function() {
-		/*$('button').on('click',function(event) {
-			event.preventDefault();
-			var row = '<tr><td>Testing</td><td>Test</td><td>Mock</td></tr>';
-			$('#alumnos-del-curso tbody').append(row);
-		});*/
-
-		$('#buscar-alumno').on('click', function(event) {
-			event.preventDefault();
-			//Agarro un dato que me ayude a buscarlo
-			search = $('.alumnos_typeahead').val();
-			//Traigo los datos para poner en la tabla
-			$.ajax({
-				url: 'alumnos/buscar/'+search,
-				type: 'get',
-				data: {param1: 'value1'},
-				complete: function(xhr, textStatus) {
-			    //called when complete
-			},
-			success: function(data, textStatus, xhr) {
-				//Caso contrario aparece el boton agregar y se agrega a la tabla de abajo
-
-				//Guardo en el boton de info el id
-				//alumnos = data;
-				alumno = '<tr>'+
-				'<td>Daniel</td>'+
-				'<td>Guerrero</td>'+
-				'<td>38324239</td>'+
-				'<td>'+
-				'<span><i class="fa fa-search bg-aqua" data-id="12"></i></span>'+
-				'<span><i class="fa fa-minus bg-red"></i></span>'+
-				'</td>'+
-				'</tr>';
-				$('#alumnos-del-curso tbody').append(alumno);
-			},
-			error: function(xhr, textStatus, errorThrown) {
-			    //called when there is an error
-			}
-		});
-			
-			//Si no hay nada muestro el boton de crear alumno y lo tiro en un dialog
-		});
-
-		alumno = '<tr>'+
-		'<td>Daniel</td>'+
-		'<td>Guerrero</td>'+
-		'<td>38324239</td>'+
-		'<td>'+
-		'<span class="pull-right-container">'+
-		'<button class="btn btn-xs btn-danger pull-right"><i class="fa fa-minus"></i></button>'+
-		'<button class="btn btn-xs btn-info pull-right"><i class="fa fa-search" data-id="12"></i></button>'+
-		'</span>'+
-		'</td>'+
-		'</tr>';
-		$('#alumnos-del-curso tbody').append(alumno);
-
 		$.typeahead({
 			input: '.alumnos_typeahead',
 			maxItem: 10,
@@ -111,26 +56,24 @@
 				"background-color": "#fff"
 			},
 			template: function (query, item) {
-				console.log(query);
 				console.log(item);
-				return '<span class="row">'+
-				'<p>'+item.display+'</p>'+
-				'</span>'
+				return '<tr>'+				
+				'<td>'+
+				item.nombres+
+				' '+
+				item.apellidos+
+				' '+				
+				item.documentos+
+				'</td>'+
+				'</tr>';
 			},
 			dropdownFilter: "Filtro",
-			emptyTemplate: 'No hay resultados',
+			emptyTemplate: function(){
+				return '<tr><td><span>No hay resultados</span></td><br><td><i class="fa fa-plus text-green"></i><span>Crear alumno</span></td></tr>';
+			},
 			source: {
 				Nombres: {
-					ajax: {
-						url: "alumnos/typeahead/nombres",
-						path: "data.info",
-						error: function(data){
-							console.log("ajax error");
-							console.log(data);
-						}
-					}
-				},
-				Apellidos: {
+					display: 'nombres',
 					ajax: {
 						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
@@ -140,9 +83,10 @@
 						}
 					}
 				},
-				Documento: {
+				Apellidos: {
+					display: 'apellidos',
 					ajax: {
-						url: "alumnos/typeahead/documentos",
+						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
 						error: function(data){
 							console.log("ajax error");
@@ -150,17 +94,54 @@
 						}
 					}
 				},
+				Documentos: {
+					display: 'documentos',
+					ajax: {
+						url: "alumnos/typeahead/apellidos",
+						path: "data.info",
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
+					}
+				}
 			},
 			callback: {
 				onInit: function (node) {
 					console.log('Typeahead Initiated on ' + node.selector);
 				},
 				onClick: function (node,  a, item, event) {
-					alert(JSON.strigify(item));
+					alumno = '<tr>'+
+					'<td>'+item.nombres+'</td>'+
+					'<td>'+item.apellidos+'</td>'+
+					'<td>'+item.documentos+'</td>'+
+					'<td>'+
+					'<span class="pull-right-container">'+
+					'<div class="btn btn-xs btn-danger pull-right quitar"><i class="fa fa-minus"></i></div>'+
+					'<div class="btn btn-xs btn-info pull-right"><a href="alumnos/'+item.id+'"><i class="fa fa-search" data-id="'+item.id+'"></i></a></div>'+
+					'</span>'+
+					'</td>'+
+					'</tr>';
+					existe = false;
+					$.each($('#alumnos-del-curso tbody tr .fa-search'),function(k,v){
+						if($(v).data('id') == item.id){
+							existe = true;
+						}
+					});
+
+					if(!existe){
+						$('#alumnos-del-curso tbody').append(alumno);			
+					}
+					$('#alumnos .alumnos_typeahead').val('');
 				}
 			},
 			debug: true
 		});
 
+		$('#alumnos-del-curso').on('click','.quitar', function(event) {
+			this.closest('tr').remove();  
+		});
+
 	});
+
 </script>

@@ -248,7 +248,13 @@ class alumnosController extends Controller
      */
     public function getApellidos()
     {
-        return $this->typeahead('apellidos');
+        /*return $this->typeahead('apellidos');*/
+        $alumno = Alumno::select('id_alumno','nombres','apellidos','nro_doc')
+        ->get()
+        ->map(function($item,$key){
+            return array('id' => $item->id_alumno,'nombres' => $item->nombres,'apellidos' => $item->apellidos,'documentos' => $item->nro_doc);
+        });
+        return $this->typeaheadResponse($alumno);
     }
 
     /**

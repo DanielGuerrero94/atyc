@@ -10,10 +10,7 @@
         <div class="active tab-pane" id="inicial">
           <form class="form-alta">
             {{ csrf_field() }}
-            <div class="form-group">
-            <<div class="col-xs- col-sm- col-md- col-lg-">
-              
-            </div>          
+            <div class="form-group">       
               <label class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Nombre:</label>
               <div class="typeahead__container col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <div class="typeahead__field ">             
@@ -189,7 +186,7 @@
 
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
 
-    $('#alta #tabla-alumnos').on('click','.agregar',function () {
+    /*$('#alta #tabla-alumnos').on('click','.agregar',function () {
       console.log("Se agrea al curso el alumno con id:");
       var fila = $(this).parent().parent();
       var id = $(this).data('id');
@@ -209,7 +206,7 @@
       $(nueva_fila).find('td:last').remove();
       $(nueva_fila).append(botonQuitar); 
       $(nueva_fila).find('td:last button').attr('data-id',id);
-    });
+    });*/
 
     $('#alta #tabla-profesores').on('click','.agregar',function () {
       console.log("Se agrea al curso el alumno con id:");
@@ -252,14 +249,26 @@
       }
     });
 
-    function getAlumnosSelected() {
+    /*function getAlumnosSelected() {
       $('#tabla-alumnos-curso .quitar').map(function(index, val) {
+        return $(val).data('id');
+      });
+    }*/
+
+    function getAlumnosSelected() {
+      $('#alumnos-del-curso .fa-search').map(function(index, val) {
         return $(val).data('id');
       });
     }
 
-    function getProfesoresSelected() {
+    /*function getProfesoresSelected() {
       $('#tabla-profesores-curso .quitar').map(function(index, val) {
+        return $(val).data('id');
+      });
+    }*/
+
+    function getProfesoresSelected() {
+      $('#profesores-del-curso .fa-search').map(function(index, val) {
         return $(val).data('id');
       });
     }
@@ -288,7 +297,7 @@
       },
       { 
         name: 'alumnos',
-        value: alumnos
+        value: alumnos.slice(0,alumnos.length - 3)
       },
       { 
         name: 'profesores',
@@ -302,7 +311,7 @@
 
     jQuery.validator.addMethod("selecciono", function(value, element) {
       return $(element).find(':selected').val() !== "Seleccionar";
-    }, "Debe seleccionar alguna opcion");
+    }, "Debe seleccionar alguna opcion");    
 
     var validator = $('#form-alta').validate({
       rules : {
@@ -315,11 +324,6 @@
           required: true,
           date: true
         },
-        /*funcion: {
-          depends: function (element) {
-            return $('#alta form #funcion :selected').val() !== "Seleccionar";
-          }
-        }*/ 
         area_tematica: { selecciono : true},
         linea_estrategica: { selecciono : true},
         provincia: { selecciono : true},
@@ -338,7 +342,8 @@
         $(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
       },
       submitHandler : function(form){
-        console.log('asd');
+        console.log('Alta del form validado');
+        console.log(getInput());
         $.ajax({
           method : 'post',
           url : 'cursos',
