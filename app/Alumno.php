@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Log;
+use Auth;
 
 class Alumno extends Model
 {
@@ -64,14 +65,14 @@ class Alumno extends Model
     	$alumno->nombres = $r->nombres;
     	$alumno->apellidos = $r->apellidos;
     	$alumno->nro_doc = $r->nro_doc;
-    	$alumno->localidad = $r->localidad;            	
+    	$alumno->localidad = $r->localidad;
     	$alumno->email = $r->email;
     	$alumno->tel = $r->tel;
     	$alumno->cel = $r->cel;
     	$alumno->id_tipo_documento = $r->id_tipo_documento;
     	$alumno->id_provincia = $r->id_provincia;
     	$alumno->id_trabajo = $r->id_trabajo;
-    	$alumno->id_funcion = $r->id_funcion;      
+    	$alumno->id_funcion = $r->id_funcion;
           
         $alumno->id_pais = $r->has('pais')?$r->pais:null;
         $alumno->organismo1 = $r->has('tipo_organismo')?$r->tipo_organismo:null;
@@ -80,5 +81,12 @@ class Alumno extends Model
         $alumno->establecimiento2 = $r->has('establecimiento')?$r->establecimiento:null;
 
     	$alumno->save();
+    }
+
+    public function scopeSegunProvincia($query)
+    {
+        if(Auth::user()->id_provincia != 25){           
+            return $query->where('id_provincia',Auth::user()->id_provincia);
+        }
     }
 }

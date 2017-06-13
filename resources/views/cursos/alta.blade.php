@@ -95,7 +95,7 @@
       </div>
     </div>
     <div class="box-body">
-      <button class="btn btn-success pull-right crear" type="submit">Guardar</button>
+      <div class="btn btn-success pull-right store">Guardar</div>
     </div>
   </div>
 </form>
@@ -256,7 +256,7 @@
     }*/
 
     function getAlumnosSelected() {
-      $('#alumnos-del-curso .fa-search').map(function(index, val) {
+      return $('#form-alta #alumnos-del-curso .fa-search').map(function(index, val) {
         return $(val).data('id');
       });
     }
@@ -268,7 +268,7 @@
     }*/
 
     function getProfesoresSelected() {
-      $('#profesores-del-curso .fa-search').map(function(index, val) {
+      return $('#profesores-del-curso .fa-search').map(function(index, val) {
         return $(val).data('id');
       });
     }
@@ -279,6 +279,7 @@
       var id_provincia = $('#form-alta #provincia option:selected').data('id');
 
       var alumnos = getAlumnosSelected();
+      console.log(alumnos);
       //var alumnos = [49641,4119,33030,3831];
       var profesores = getProfesoresSelected();
       //var profesores = [207,396,397,399];
@@ -297,11 +298,11 @@
       },
       { 
         name: 'alumnos',
-        value: alumnos.slice(0,alumnos.length - 3)
+        value: alumnos.toArray()
       },
       { 
         name: 'profesores',
-        value: profesores
+        value: profesores.toArray()
       }];
     }
 
@@ -314,6 +315,7 @@
     }, "Debe seleccionar alguna opcion");    
 
     var validator = $('#form-alta').validate({
+      ignore: [],
       rules : {
         nombre : "required",
         duracion : {
@@ -321,8 +323,7 @@
           number: true
         },
         fecha : {
-          required: true,
-          date: true
+          required: true
         },
         area_tematica: { selecciono : true},
         linea_estrategica: { selecciono : true},
@@ -351,7 +352,6 @@
           success : function(data){
             console.log("Success.");
             alert("Se crea el curso.");
-            //location.reload();  
           },
           error : function(data){
             console.log("Error.");
@@ -361,9 +361,11 @@
       }
     });
 
-    $('#alta').on('click','#crear',function() {     
+    $('#alta').on('click','.store',function() {     
       if(validator.valid()){
         $('#alta #form-alta').submit(); 
+      }else{
+        alert('Hay campos que no cumplen con la validacion.');
       }
     });
   });

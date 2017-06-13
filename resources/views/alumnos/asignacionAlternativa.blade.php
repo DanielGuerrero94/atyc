@@ -73,10 +73,13 @@
 			},
 			source: {
 				Nombres: {
-					display: 'nombres',
-					ajax: {
+					display: 'apellidos',
+					ajax:{
 						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
+						data: function(query){
+							q: query;
+						},
 						error: function(data){
 							console.log("ajax error");
 							console.log(data);
@@ -88,6 +91,9 @@
 					ajax: {
 						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
+						data: function(query){
+							q: query;
+						},
 						error: function(data){
 							console.log("ajax error");
 							console.log(data);
@@ -96,9 +102,12 @@
 				},
 				Documentos: {
 					display: 'documentos',
-					ajax: {
+					ajax:{
 						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
+						data: function(query){
+							q: query;
+						},
 						error: function(data){
 							console.log("ajax error");
 							console.log(data);

@@ -83,12 +83,13 @@ class cursosController extends Controller
      */
     public function store(Request $request)
     {
+    	logger(json_encode($request->all()));
     	$v = Validator::make($request->all(),$this->_rules);
     	if(!$v->fails()){
     		$curso = new Curso();
     		$curso->crear($request);
 
-    		logger(json_encode($request->all()));
+
 
     		if($request->has('alumnos')){
     			logger(json_encode($request->get('alumnos')));
@@ -102,6 +103,7 @@ class cursosController extends Controller
     		}
 
     	}else{
+    		logger($v->errors());
     		logger('El curso no paso la verificacion.'); 
     	}
     }

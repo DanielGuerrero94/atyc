@@ -177,11 +177,8 @@ class alumnosController extends Controller
         ->with([
             'tipo_documento',
             'provincia'                                       
-            ]);     
-
-        if(Auth::user()->id_provincia != 25){           
-            $returns = $returns->where('id_provincia',Auth::user()->id_provincia);
-        }
+            ])
+        ->segunProvincia(); 
 
         $resultados = collect($returns->get());
 
@@ -246,10 +243,12 @@ class alumnosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getApellidos()
+    public function getApellidos(Request $r)
     {
         /*return $this->typeahead('apellidos');*/
+        logger($r->all());
         $alumno = Alumno::select('id_alumno','nombres','apellidos','nro_doc')
+        ->segunProvincia()
         ->get()
         ->map(function($item,$key){
             return array('id' => $item->id_alumno,'nombres' => $item->nombres,'apellidos' => $item->apellidos,'documentos' => $item->nro_doc);
@@ -285,6 +284,7 @@ class alumnosController extends Controller
     private function queryOneColumn($columna)
     {
         return Alumno::select($columna)
+        ->segunProvincia()
         ->groupBy($columna)
         ->orderBy($columna)
         ->get()
