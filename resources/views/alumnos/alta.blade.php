@@ -1,27 +1,28 @@
 <div class="col-xs-12">
-	<div class="box box-success ">
+	<div class="box box-success">
 		<div class="box-header">Alta de alumno</div>
 		<div class="box-body">
 			<form id="form-alta">
 				{{ csrf_field() }}
 				<div class="row">
-					<div class="form-group col-sm-6">
-						<label for="nombres" class="control-label col-xs-4">Nombres:</label>
-						<div class="col-xs-6">
+					<div class="form-group col-xs-12 col-sm-6">
+						<label for="nombres" class="control-label col-xs-4">Nombres: </label>
+						<div class="col-xs-8">
 							<input name="nombres" type="text" class="form-control" id="nombres">
 						</div>
 					</div>
-					<div class="form-group col-sm-6">
-						<label for="apellidos" class="control-label col-xs-2">Apellidos:</label>
-						<div class="col-xs-6">
+					<div class="form-group cols-xs col-sm-6">
+						<label for="apellidos" class="control-label col-xs-4">Apellidos: </label>
+						<div class="col-xs-8">
 							<input name="apellidos" type="text" class="form-control" id="apellidos">
 						</div>
 					</div>
 				</div>
+				<br>
 				<div class="row">
-					<div class="form-group col-sm-6">
-						<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento:</label>
-						<div class="col-xs-6">
+					<div class="form-group col-xs-12 col-sm-6">
+						<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento: </label>
+						<div class="col-xs-8">
 							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
 								@foreach ($documentos as $documento)
 								
@@ -31,15 +32,15 @@
 							</select>
 						</div>
 					</div>
-					<div class="form-group col-sm-6">
-						<label for="nro_doc" class="control-label col-xs-2">Nro doc:</label>
-						<div class="col-xs-6">
+					<div class="form-group col-xs-12 col-sm-6">
+						<label for="nro_doc" class="control-label col-xs-4">Nro doc:</label>
+						<div class="col-xs-8">
 							<input name="nro_doc" type="text" class="form-control" id="nro_doc">
 						</div>
 					</div>
-					<div class="form-group col-sm-6" id="nacionalidad" style="display: none">          
-						<label class="control-label col-xs-2" for="pais">Pais:</label>
-						<div class="typeahead__container col-xs-10">
+					<div class="form-group col-xs-12 col-sm-6" id="nacionalidad" style="display: none">          
+						<label class="control-label col-xs-4" for="pais">Pais:</label>
+						<div class="typeahead__container col-xs-8">
 							<div class="typeahead__field ">         
 								<span class="typeahead__query ">
 									<input class="pais_typeahead form-control" name="pais" type="search" placeholder="Buscar..." autocomplete="off" id="pais" disabled>
@@ -49,15 +50,15 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="form-group col-sm-6">
+					<div class="form-group col-xs-12 col-sm-6">
 						<label for="localidad" class="control-label col-xs-4">Localidad:</label>
-						<div class="col-xs-6">
+						<div class="col-xs-8">
 							<input name="localidad" type="text" class="form-control" id="localidad">
 						</div>
 					</div>					
-					<div class="form-group col-sm-6">
-						<label for="provincia" class="control-label col-xs-2">Provincia:</label>
-						<div class="col-xs-6">
+					<div class="form-group col-xs-12 col-sm-6">
+						<label for="provincia" class="control-label col-xs-4">Provincia:</label>
+						<div class="col-xs-8">
 							@if(Auth::user()->id_provincia == 25)
 							<select class="form-control" id="provincia">
 								@foreach ($provincias as $provincia)
@@ -75,9 +76,9 @@
 				</div>	
 				<hr>
 				<div class="row">
-					<div class="form-group">
-						<label for="trabaja_en" class="control-label col-xs-2">Trabaja en:</label>
-						<div class="col-xs-6">
+					<div class="form-group col-xs-12 col-sm-6">
+						<label for="trabaja_en" class="control-label col-xs-4">Trabaja en:</label>
+						<div class="col-xs-8">
 							<select class="form-control" id="trabaja_en" name="trabaja_en">
 
 								<option data-id="0">Seleccionar</option>
@@ -176,21 +177,21 @@
 				</div>					
 				<hr>
 				<div class="row">
-					<div class="form-group col-sm-4">
-						<label for="email" class="control-label col-xs-2">Email:</label>
-						<div class="col-xs-7">
+					<div class="form-group col-xs-12 col-sm-4">
+						<label for="email" class="control-label col-xs-4">Email:</label>
+						<div class="col-xs-8">
 							<input name="email" type="text" class="form-control" id="email">
 						</div>
 					</div>
-					<div class="form-group col-sm-4">
-						<label for="tel" class="control-label col-xs-2">Tel:</label>
-						<div class="col-xs-7">
+					<div class="form-group col-xs-12 col-sm-4">
+						<label for="tel" class="control-label col-xs-4">Tel:</label>
+						<div class="col-xs-8">
 							<input name="tel" type="text" class="form-control" id="tel">
 						</div>
 					</div>
-					<div class="form-group col-sm-4">
-						<label for="cel" class="control-label col-xs-2">Cel:</label>
-						<div class="col-xs-7">
+					<div class="form-group col-xs-12 col-sm-4">
+						<label for="cel" class="control-label col-xs-4">Cel:</label>
+						<div class="col-xs-8">
 							<input name="cel" type="text" class="form-control" id="cel">
 						</div>
 					</div>

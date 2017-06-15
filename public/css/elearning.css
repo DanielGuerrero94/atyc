@@ -1,6 +1,5 @@
 .content-wraper {
 	margin-top: 10px;
-	min-height: 1166px;
 }
 
 .separador {
@@ -28,4 +27,9 @@
   /* Set the fixed height of the footer here */
   height: 60px;
   background: #5e779e;
+}
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
 }

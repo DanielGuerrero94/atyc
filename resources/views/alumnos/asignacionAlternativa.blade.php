@@ -13,10 +13,6 @@
 					</div>
 				</div>
 			</div>
-			<!-- <div class="btn-group pull-right">				
-				<button type="button" class="btn btn-default" id="crear-alumno" disabled>Crear</button>
-				<button type="submit" class="btn btn-info" id="buscar-alumno">Buscar</button>
-			</div> -->
 		</form>
 	</div>	
 </div>

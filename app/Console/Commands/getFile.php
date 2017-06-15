@@ -37,7 +37,6 @@ class getFile extends Command
      */
     public function handle()
     {
-        Sub
         system('sshpass -p \''.env('SSH_PASS').'\' sftp administrador@192.6.0.224 << EOF 
             get /var/www/html/sirge3/storage/uploads/prestaciones/59382d6275518.txt');
     }

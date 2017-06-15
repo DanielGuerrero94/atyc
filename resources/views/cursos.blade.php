@@ -1,14 +1,22 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="container">
-	<div id="filtros">
-		@include('cursos.filtros')
+<div class="container col-xs-12 col-sm-6 col-md-12 col-lg-12">
+	<div class="row">
+		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
+			@include('cursos.filtros')
+		</div>	
 	</div>	
-	<div id="abm">
-		@include('cursos.abm')			
+	<div class="row">
+		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
+			@include('cursos.abm')			
+		</div>	
 	</div>
-	<div id="alta" style="display: none;"></div>				
+	<div class="row">
+		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2" style="display: none;">
+
+		</div>				
+	</div>
 </div>
 @endsection
 @section('script')
@@ -32,7 +40,11 @@
 			{ data: 'linea_estrategica.nombre'},
 			{ data: 'provincia.nombre'},
 			{ data: 'acciones'}
-			]
+			],			
+			rowReorder: {
+				selector: 'td:nth-child(2)'
+			},
+			responsive: true
 		});
 
 		function getFiltrosJson() {
@@ -61,7 +73,6 @@
 		};
 
 		$('.excel').on('click',function () {
-
 			var filtros = getFiltrosJson();
 			var order_by = $('#abm-table').DataTable().order();
 			console.log(filtros);
@@ -88,7 +99,6 @@
 		});
 
 		$('.pdf').on('click',function () {
-
 			var filtros = getFiltrosJson();
 			console.log(filtros);
 			var order_by = $('#abm-table').DataTable().order();
@@ -114,8 +124,7 @@
 			});			
 		});
 
-		$('#filtros').on('click','#filtrar',function () {			
-
+		$('#filtros').on('click','#filtrar',function () {
 			var filtrosJson = getFiltrosJson();
 			console.log(filtrosJson);
 
@@ -136,7 +145,11 @@
 				{ data: 'linea_estrategica'},
 				{ data: 'provincia'},
 				{ data: 'acciones'}
-				]
+				],			
+				rowReorder: {
+					selector: 'td:nth-child(2)'
+				},
+				responsive: true
 			});
 		});
 

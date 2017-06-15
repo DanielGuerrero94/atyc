@@ -1,14 +1,23 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="container">
-	<div id="filtros">
-		@include('alumnos.filtros')
+
+<div class="container col-xs-12 col-sm-6 col-md-12 col-lg-12">
+	<div class="row ">
+		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
+			@include('alumnos.filtros')
+		</div>
 	</div>
-	<div id="abm">
-		@include('alumnos.abm')
+	<div class="row">
+		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
+			@include('alumnos.abm')
+		</div>  
 	</div>	
-	<div id="alta" style="display: none;"></div>
+	<div class="row">
+		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2" style="display: none;">
+			
+		</div>
+	</div>
 </div>
 @endsection
 
@@ -31,7 +40,8 @@
 			{ data: 'nro_doc'},
 			{ data: 'provincia.nombre'},
 			{ data: 'acciones'}
-			]
+			],
+			pagingType: 'simple' 
 		});
 
 		function getFiltrosJson() {
@@ -81,7 +91,11 @@
 				{ data: 'nro_doc'},
 				{ data: 'provincia'},
 				{ data: 'acciones'}
-				]
+				],			
+				rowReorder: {
+					selector: 'td:nth-child(2)'
+				},
+				responsive: true
 			});
 		});
 

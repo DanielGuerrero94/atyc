@@ -12,9 +12,9 @@
 		<form id="form-filtros">
 			@if(Auth::user()->id_provincia == 25)
 			<div class="row">
-				<div class="form-group col-sm-6">
-					<label for="provincia" class="control-label col-xs-2">Provincia:</label>
-					<div class="col-xs-6">
+				<div class="form-group col-xs-12 col-sm-6">
+					<label for="provincia" class="control-label col-xs-4 col-sm-2">Provincia:</label>
+					<div class="col-xs-8 col-sm-6">
 						<select class="form-control" id="provincia">
 							<option data-id="0" title="Todas las provincias">Todas las provincias</option>
 							@foreach ($provincias as $provincia)
@@ -26,9 +26,9 @@
 			</div>
 			@endif
 			<div class="row">
-				<div class="form-group col-sm-6">
-					<label for="periodo" class="control-label col-xs-2">Período:</label>
-					<div class="col-xs-6">
+				<div class="form-group col-xs-12 col-sm-6">
+					<label for="periodo" class="control-label col-xs-4 col-sm-2">Período:</label>
+					<div class="col-xs-8 col-sm-6">
 						<select class="form-control" id="periodo">
 							<option data-id="0" title="Todos los períodos">Todos los períodos</option>
 							@foreach ($periodos as $periodo)
@@ -44,18 +44,18 @@
 				</div>
 			</div>
 			<div class="row" style="display: none;">
-				<div class="form-group col-sm-6">
-					<label class="col-xs-2">Desde:</label>
-					<div class="input-group date col-xs-8" style="width: 400px">
+				<div class="form-group col-xs-12 col-sm-6">
+					<label class="col-xs-4 col-sm-2">Desde:</label>
+					<div class="input-group date col-xs-8 col-sm-8">
 						<div class="input-group-addon">
 							<i class="fa fa-calendar"></i>
 						</div>
 						<input type="text" name="desde" id="desde" class="form-control pull-right datepicker">
 					</div>
 				</div>
-				<div class="form-group col-sm-6">
-					<label class="col-xs-2">Hasta:</label>
-					<div class="input-group date col-xs-8" style="width: 400px">
+				<div class="form-group col-xs-12 col-sm-6">
+					<label class="col-xs-4 col-sm-2">Hasta:</label>
+					<div class="input-group date col-xs-8 col-sm-8">
 						<div class="input-group-addon">
 							<i class="fa fa-calendar"></i>
 						</div>

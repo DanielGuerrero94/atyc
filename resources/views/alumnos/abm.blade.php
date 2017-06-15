@@ -1,5 +1,4 @@
 {{ csrf_field() }}
-<div class="col-md-12">
 	<div class="box box-info">
 		<div class="box-header">
 			<h2 class="box-tittle">Alumnos
@@ -30,4 +29,3 @@
 			<button class="btn btn-success pull-right" id="alta_alumno"><i class="fa fa-plus" aria-hidden="true"></i>Alta Alumno</button>
 		</div>
 	</div>
-</div>

@@ -89,12 +89,10 @@ class cursosController extends Controller
     		$curso = new Curso();
     		$curso->crear($request);
 
-
-
     		if($request->has('alumnos')){
-    			logger(json_encode($request->get('alumnos')));
-    			/*$alumnos = explode(',',$request->get('alumnos'));
-    			$curso->alumnos()->attach($alumnos);*/
+    			$alumnos = explode(',',$request->get('alumnos'));
+    			logger(json_encode($alumnos));
+    			$curso->alumnos()->attach($alumnos);
     		}
 
     		if($request->has('profesores')){

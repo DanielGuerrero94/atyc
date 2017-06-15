@@ -50,6 +50,11 @@
   <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+  <!-- datatable reorder -->
+<link href="https://cdn.datatables.net/rowreorder/1.2.0/css/rowReorder.dataTables.min.css" rel="stylesheet" />
+  
+  <!-- datatable responsive -->
+  <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.dataTables.min.css" rel="stylesheet" />
 
   <!-- Scripts -->
   <script>
@@ -148,37 +153,45 @@
 
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/input-mask/jquery.inputmask.date.extensions.js")}}"></script>
 
+
+    <!-- datatable reorder -->
+    <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.0/js/dataTables.rowReorder.min.js"></script>
+
+    <!-- datatable responsive -->
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+    
+
   </head>
   <body class="skin-blue sidebar-mini" style="height: auto; min-height: 100%;">
     <div class="wrapper" style="height: auto; min-height: 100%;background-color: #f5f5f5;">
       <header class="main-header">
         <!-- Branding Image -->
         <a class="logo" href="{{ url('/dashboard') }}">
-        <span class="logo-mini"><b>A</b>tyc</span>
+          <span class="logo-mini"><b>A</b>tyc</span>
           <span class="logo-lg"><b>A</b>tyc</span>
         </a>      
         <nav class="navbar navbar-static-top" role="navigation">
-        @include('layouts.navbar')
+          @include('layouts.navbar')
 
-      </nav> 
-    </header>
-    <aside class="main-sidebar">
-      @include('layouts.sidebar')
-    </aside>
-    <div class="content-wrapper" style="min-height: 298px;"> 
-      <section class="content">
-        @yield('content')
-      </section>
-    </div>
-  </div>  
-</body>
-</html>
+        </nav> 
+      </header>
+      <aside class="main-sidebar">
+        @include('layouts.sidebar')
+      </aside>            
+      <div class="content-wrapper">      
+        <section class="content">
+          @yield('content')
+        </section>
+      </div>
+    </div>  
+  </body>
+  </html>
 
-<script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/datepicker/bootstrap-datepicker.js")}}"></script>
+  <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/datepicker/bootstrap-datepicker.js")}}"></script>
 
-<script src="{{asset("/bower_components/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.es.js")}}" charset="UTF-8"></script>
+  <script src="{{asset("/bower_components/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.es.js")}}" charset="UTF-8"></script>
 
-<script type="text/javascript" src="{{ asset ("/dist/js/jquery.validate.min.js") }}"></script>
+  <script type="text/javascript" src="{{ asset ("/dist/js/jquery.validate.min.js") }}"></script>
 
 <script type="text/javascript">
 
@@ -214,9 +227,13 @@
       processing: true,
       scrollY:"400px",
       serverSide: true,
+      rowReorder: {
+        selector: 'td:nth-child(2)'
+      },
+      responsive: true,
       language: {
         emptyTable: "No se encontraron registros",
-        info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+        info: "Mostrando registros del _START_ al _END_ de _TOTAL_ registros",
         infoEmpty: "No hay registros disponibles",
         infoFiltered: "(filtrados de un total de _MAX_ registros)",
         lengthMenu: "Mostrar _MENU_ registros",

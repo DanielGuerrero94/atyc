@@ -1,14 +1,22 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="container">
-	<div id="filtros">
-		@include('profesores.filtros')
+<div class="container col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	<div class="row">
+		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
+			@include('profesores.filtros')
+		</div>		
 	</div>
-	<div id="abm">
-		@include('profesores.abm')
+	<div class="row">
+		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
+			@include('profesores.abm')
+		</div>
 	</div>	
-	<div id="alta" style="display: none;"></div>				
+	<div class="row">
+		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2" style="display: none;">
+			
+		</div>		
+	</div>			
 </div>
 @endsection
 @section('script')
@@ -37,7 +45,11 @@
 			{ data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
 			{ data: 'acciones'}
-			]
+			],			
+			rowReorder: {
+				selector: 'td:nth-child(2)'
+			},
+			responsive: true
 		});
 
 		function getFiltrosJson() {
@@ -80,7 +92,11 @@
 					{ data: 'tipo_doc'},
 					{ data: 'nro_doc'},
 					{ data: 'acciones'}
-					]
+					],			
+					rowReorder: {
+						selector: 'td:nth-child(2)'
+					},
+					responsive: true
 				});
 			});
 
@@ -151,77 +167,77 @@
 				})
 			});
 
-		$('#abm').on("click",".eliminar",function(){
-			var profesor = $(this).data('id');
-			jQuery('<div/>', {
-				id: 'dialogABM',
-				text: ''
-			}).appendTo('.container');
+			$('#abm').on("click",".eliminar",function(){
+				var profesor = $(this).data('id');
+				jQuery('<div/>', {
+					id: 'dialogABM',
+					text: ''
+				}).appendTo('.container');
 
-			$("#dialogABM").dialog({
-				title: "Verificacion",
-				show: {
-					effect: "fold"
-				},
-				hide: {
-					effect: "fade"
-				},
-				modal: true,
-				width : 360,
-				height : 220,
-				closeOnEscape: true,
-				resizable: false,
-				dialogClass: "alert",
-				open: function () {
-					jQuery('<p/>', {
-						id: 'dialogABM',
-						text: '¿Esta seguro que quiere dar de baja al profesor?'
-					}).appendTo('#dialogABM');
-				},
-				buttons :
-				{
-					"Aceptar" : function () {
-						$(this).dialog("destroy");
-						$("#dialogABM").html("");
-						var data = '_token='+$('#abm input').first().val();
-						console.log(profesor);
-
-						$.ajax ({
-							url: 'profesores/'+profesor,
-							method: 'delete',
-							data: data,
-							success: function(data){
-								console.log('Se borro el profesor.');
-							},
-							error: function (data) {
-								console.log('Hubo un error.');
-								console.log(data);
-							}
-						});
-
-						location.reload("true");
-
+				$("#dialogABM").dialog({
+					title: "Verificacion",
+					show: {
+						effect: "fold"
 					},
-					"Cancelar" : function () {
-						$(this).dialog("destroy");
-						$("#dialogABM").html("");
-						location.reload("true");
+					hide: {
+						effect: "fade"
+					},
+					modal: true,
+					width : 360,
+					height : 220,
+					closeOnEscape: true,
+					resizable: false,
+					dialogClass: "alert",
+					open: function () {
+						jQuery('<p/>', {
+							id: 'dialogABM',
+							text: '¿Esta seguro que quiere dar de baja al profesor?'
+						}).appendTo('#dialogABM');
+					},
+					buttons :
+					{
+						"Aceptar" : function () {
+							$(this).dialog("destroy");
+							$("#dialogABM").html("");
+							var data = '_token='+$('#abm input').first().val();
+							console.log(profesor);
+
+							$.ajax ({
+								url: 'profesores/'+profesor,
+								method: 'delete',
+								data: data,
+								success: function(data){
+									console.log('Se borro el profesor.');
+								},
+								error: function (data) {
+									console.log('Hubo un error.');
+									console.log(data);
+								}
+							});
+
+							location.reload("true");
+
+						},
+						"Cancelar" : function () {
+							$(this).dialog("destroy");
+							$("#dialogABM").html("");
+							location.reload("true");
+						}
 					}
-				}
+				});
 			});
-		});
 
-		$('#abm').on('click','.expand',function () {
-			$('.container').addClass('col-md-12');
-			$('.compress').show();	
-			$(this).hide();
-		});
+			$('#abm').on('click','.expand',function () {
+				$('.container').addClass('col-md-12');
+				$('.compress').show();	
+				$(this).hide();
+			});
 
-		$('#abm').on('click','.compress',function () {
-			$('.container').removeClass('col-md-12');
-			$('.expand').show();	
-			$(this).hide();	
-		});	
-	});
-</script> 
-@endsection
+			$('#abm').on('click','.compress',function () {
+				$('.container').removeClass('col-md-12');
+				$('.expand').show();	
+				$(this).hide();	
+			});	
+		});
+	</script> 
+	@endsection

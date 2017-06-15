@@ -10,9 +10,10 @@
         <div class="active tab-pane" id="inicial">
           <form class="form-alta">
             {{ csrf_field() }}
-            <div class="form-group">       
-              <label class="col-xs-2 col-sm-2 col-md-2 col-lg-2">Nombre:</label>
-              <div class="typeahead__container col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="row">
+            <div class="form-group col-xs-12 col-md-6">       
+              <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
+              <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
                 <div class="typeahead__field ">             
                   <span class="typeahead__query ">
                     <input class="nombre_typeahead " name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
@@ -20,22 +21,21 @@
                 </div>
               </div>
             </div>
-            <br>
-            <br> 
+            </div>
             <br>
             <div class="row">
-            <div class="form-group">          
-              <label for="horas" class="control-label col-xs-2">Duración:</label>
-              <div class="col-xs-6">
-              <input type="text" name="duracion" id="horas" placeholder="Duración en horas"> 
+            <div class="form-group col-xs-12 col-md-6">          
+              <label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
+              <div class="col-md-8 col-xs-9">
+              <input type="number" name="duracion" id="horas" placeholder="Duración en horas"> 
               </div>
             </div>
             </div>
             <br>
             <div class="row">
-            <div class="form-group">            
-              <label for="fecha" class="control-label col-xs-2">Fecha:</label>
-              <div class="input-group date col-xs-8">
+            <div class="form-group col-xs-12 col-md-6">            
+              <label for="fecha" class="control-label col-md-4 col-xs-4">Fecha:</label>
+              <div class="input-group date col-md-8 col-xs-6">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
@@ -44,9 +44,9 @@
             </div>
             </div>
             <div class="row">
-              <div class="form-group">          
-              <label for="area_tematica" class="control-label col-xs-2">Areas Tematicas:</label>
-              <div class="col-xs-6">
+              <div class="form-group col-xs-12 col-md-6">          
+              <label for="area_tematica" class="control-label col-md-4 col-xs-3">Areas Tematicas:</label>
+              <div class="col-md-8 col-xs-9">
               <select class="form-control" id="area_tematica" name="area_tematica">
                 <option>Seleccionar</option>
                 @foreach ($areas_tematicas as $area)
@@ -58,9 +58,9 @@
             </div>
             <br>
             <div class="row">
-            <div class="form-group">          
-              <label for="linea_estrategica" class="control-label col-xs-2">Lineas estrategicas:</label>
-              <div class="col-xs-6">
+            <div class="form-group col-xs-12 col-md-6">          
+              <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Lineas estrategicas:</label>
+              <div class="col-md-8 col-xs-9">
               <select class="form-control" id="linea_estrategica" name="linea_estrategica">
                 <option>Seleccionar</option>
                 @foreach ($lineas_estrategicas as $linea)
@@ -72,9 +72,9 @@
             </div>
             <br>
             <div class="row">
-            <div class="form-group">          
-              <label for="provincia" class="control-label col-xs-2">Provincia:</label>
-              <div class="col-xs-6">
+            <div class="form-group col-xs-12 col-md-6">          
+              <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
+              <div class="col-md-8 col-xs-9">
               <select class="form-control" id="provincia" name="provincia">
                 <option>Seleccionar</option>
                 @foreach ($provincias as $provincia)
@@ -323,7 +323,8 @@
           number: true
         },
         fecha : {
-          required: true
+          required: true,
+          date: true
         },
         area_tematica: { selecciono : true},
         linea_estrategica: { selecciono : true},
