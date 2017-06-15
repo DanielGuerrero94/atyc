@@ -94,9 +94,8 @@ class gestoresController extends Controller
 
     public function getTabla()
     {        
-        $returns = User::select('id','name as nombre','email')->get();
-        Log::info(json_encode($returns));
-        return Datatables::of($returns)
+        $query = User::select('id','name as nombre','email');
+        return Datatables::of($query)
         ->addColumn('acciones' , function($ret){
             return '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id.'" class="btn btn-danger btn-xs eliminar" title="Eliminar" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Some content"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 

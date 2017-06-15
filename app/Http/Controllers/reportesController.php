@@ -51,10 +51,11 @@ class reportesController extends Controller
 	{		
 		$query = $this->queryLogica($r);
 
-		$returns = DB::select($query);
-		$returns = collect($returns);
+		logger($query);
 
-		return Datatables::of($returns)->make(true);	
+		$returns = DB::select($query);
+
+		return Datatables::of(collect($returns))->make(true);	
 	}
 
 	private function queryLogica(Request $r)
@@ -64,7 +65,7 @@ class reportesController extends Controller
 		Log::info("Order By: ".json_encode($r->order_by));
 		//Esta parte me quedo horrible voy a tener que reeverlo porque tengo demasiados if
 		//En el caso que no sea un periodo de los que hay en la tabla le concateno las fechas que me pasaron para la columna periodo
-		logger($r->filtros);
+		
 
 		$id_provincia = in_array('id_provincia',$r->filtros)?$r->filtros['id_provincia']:Auth::user()->id_provincia;
 		if($id_provincia == 25){
@@ -90,7 +91,6 @@ class reportesController extends Controller
 		$query = "SELECT * FROM reporte_".$r->id_reporte."('".Auth::user()->id_provincia."','".$r->desde."','".$r->hasta."')";
 
 		$returns = DB::select($query);
-		$returns = collect($returns);
 
 		return Datatables::of($returns)->make(true);		
 	}

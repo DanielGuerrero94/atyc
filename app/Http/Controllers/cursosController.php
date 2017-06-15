@@ -195,7 +195,7 @@ class cursosController extends Controller
      */
 	public function getTabla(Request $request)
 	{
-		$returns = Curso::select('id_curso','nombre','fecha','edicion','duracion','id_area_tematica','id_linea_estrategica','id_provincia')	
+		$query = Curso::select('id_curso','nombre','fecha','edicion','duracion','id_area_tematica','id_linea_estrategica','id_provincia')	
 		->with([
 			'area_tematica',
 			'linea_estrategica',
@@ -203,12 +203,10 @@ class cursosController extends Controller
 			]);				
 
 		if(Auth::user()->id_provincia != 25){           
-			$returns = $returns->where('id_provincia',Auth::user()->id_provincia);
+			$query = $query->where('id_provincia',Auth::user()->id_provincia);
 		}
 
-		$resultados = collect($returns->get());
-
-		return $this->toDatatable($request,$resultados); 	
+		return $this->toDatatable($request,$query); 	
 	}
 
 	public function getAprobadosPorAlumno($alumno)	
@@ -218,8 +216,7 @@ class cursosController extends Controller
 			$query->where('id_alumno',$alumno);
 		})
 		->select('id_curso','nombre','duracion','id_provincia')
-		->with('provincia')
-		->get();
+		->with('provincia');
 
 		return Datatables::of($returns)
 		->addColumn('acciones' , function($ret){
@@ -234,8 +231,7 @@ class cursosController extends Controller
 			$query->where('id_profesor',$profesor);
 		})			
 		->select('id_curso','nombre','fecha','id_provincia')			
-		->with('provincia')
-		->get();
+		->with('provincia');
 
 		return Datatables::of($returns)
 		->addColumn('acciones' , function($ret){
@@ -278,7 +274,6 @@ class cursosController extends Controller
 	public function getProfesores()
 	{
 		$curso = Curso::find('300')->profesores()->get();
-		Log::info(json_encode($curso));
 		return json_encode($curso);
 	}
 
@@ -334,15 +329,12 @@ class cursosController extends Controller
 	public function getAlumnosDeCursosPorProvincia($id)
 	{
 		if($id == 0){
-			$cursos = Curso::where('id_provincia','=',$id)
-			->alumnos()
-			->get();
+			$cursos = Curso::where('id_provincia',$id);
 		}else{
-			$cursos = Curso::whereNull('deleted_at')
-			->alumnos()
-			->get();
+			$cursos = Curso::whereNull('deleted_at');
 		}
 
+		$cursos = $cursos->alumnos()->get();
 		return $cursos;
 	}
 
@@ -373,7 +365,7 @@ class cursosController extends Controller
 			return $value != "" && $value != "0";
 		});
 
-		$returns = Curso::leftJoin('cursos.areas_tematicas','cursos.cursos.id_area_tematica','=','cursos.areas_tematicas.id_area_tematica')
+		$query = Curso::leftJoin('cursos.areas_tematicas','cursos.cursos.id_area_tematica','=','cursos.areas_tematicas.id_area_tematica')
 		->leftJoin('cursos.lineas_estrategicas','cursos.cursos.id_linea_estrategica','=','cursos.lineas_estrategicas.id_linea_estrategica')
 		->leftJoin('sistema.provincias','cursos.cursos.id_provincia','=','sistema.provincias.id_provincia')
 		->select(
@@ -385,26 +377,26 @@ class cursosController extends Controller
 
 		//Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
 		if (Auth::user()->id_provincia != 25) {
-			$returns = $returns->where('cursos.cursos.id_provincia','=',Auth::user()->id_provincia);
+			$query = $query->where('cursos.cursos.id_provincia','=',Auth::user()->id_provincia);
 		}
 
 		foreach ($filtered as $key => $value) {
 			if($key == 'nombre'){
-				$returns = $returns->where('cursos.cursos.'.$key,'ilike','%'.$value.'%');                           
+				$query = $query->where('cursos.cursos.'.$key,'ilike','%'.$value.'%');                           
 			}elseif ($key == 'desde') {
-				$returns = $returns->where('cursos.cursos.fecha','>',$value);
+				$query = $query->where('cursos.cursos.fecha','>',$value);
 			}elseif ($key == 'hasta') {
-				$returns = $returns->where('cursos.cursos.fecha','<',$value);
+				$query = $query->where('cursos.cursos.fecha','<',$value);
 			}elseif($key == 'id_periodo'){
 				$periodo = Periodo::find($value);
-				$returns = $returns->where('cursos.cursos.fecha','>',$periodo->desde);
-				$returns = $returns->where('cursos.cursos.fecha','<',$periodo->hasta);
+				$query = $query->where('cursos.cursos.fecha','>',$periodo->desde);
+				$query = $query->where('cursos.cursos.fecha','<',$periodo->hasta);
 			}else{
-				$returns = $returns->where('cursos.cursos.'.$key,'=',$value);                           
+				$query = $query->where('cursos.cursos.'.$key,'=',$value);                           
 			}
 		}
 
-		return collect($returns->get());
+		return $query;
 	}
 
 	public function getFiltrado(Request $r){
@@ -414,9 +406,9 @@ class cursosController extends Controller
 		$v = Validator::make($filtros->all(),$this->_filters);
 		if(!$v->fails()){
 
-			$resultados = $this->queryLogica($r,$filtros,null);  
+			$query = $this->queryLogica($r,$filtros,null);  
 
-			return $this->toDatatable($r,$resultados);
+			return $this->toDatatable($r,$query);
 		}else{
 			return json_encode($v->errors());
 		}	
@@ -494,7 +486,7 @@ class cursosController extends Controller
 		$filtros = collect($r->only('filtros'));
 		$filtros = collect($filtros->get('filtros'));
 
-		$data = $this->queryLogica($r,$filtros,null);
+		$data = $this->queryLogica($r,$filtros,null)->get();
 
 		$header = array('Nombre','Fecha','Edicion','Duracion','Area Tematica','Linea Estrategica','Provincia');
 		$column_size =  array(80,25,15,17,60,60,20);

@@ -170,7 +170,6 @@ class dashboardController extends Controller
 			'colorByPoint' => true,
 			'data' => $data);
 
-		logger(json_encode($series));
 		return array($series);
 	}	
 
@@ -197,7 +196,6 @@ class dashboardController extends Controller
 			
 			array_push($ret,$drilldown);
 		});
-		logger(json_encode($ret));
 		return $ret;
 	}
 }

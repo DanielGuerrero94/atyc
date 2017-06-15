@@ -180,9 +180,7 @@ class alumnosController extends Controller
             ])
         ->segunProvincia(); 
 
-        $resultados = collect($returns->get());
-
-        return  $this->toDatatable($r,$resultados);
+        return  $this->toDatatable($r,$returns);
     }
 
     /**
@@ -245,8 +243,6 @@ class alumnosController extends Controller
      */
     public function getApellidos(Request $r)
     {
-        /*return $this->typeahead('apellidos');*/
-        logger($r->all());
         $alumno = Alumno::select('id_alumno','nombres','apellidos','nro_doc')
         ->segunProvincia()
         ->get()
@@ -320,7 +316,7 @@ class alumnosController extends Controller
             return $value != "" && $value != "0";
         });
 
-        $returns = Alumno::leftJoin('sistema.provincias','alumnos.id_provincia','=','sistema.provincias.id_provincia')
+        $query = Alumno::leftJoin('sistema.provincias','alumnos.id_provincia','=','sistema.provincias.id_provincia')
         ->leftJoin('sistema.tipos_documentos','alumnos.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
         ->select(
             'id_alumno','nombres','apellidos',
@@ -330,21 +326,21 @@ class alumnosController extends Controller
 
         //Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
         if (Auth::user()->id_provincia != 25) {
-            $returns = $returns->where('alumnos.alumnos.id_provincia','=',Auth::user()->id_provincia);
+            $query = $query->where('alumnos.alumnos.id_provincia','=',Auth::user()->id_provincia);
         }
 
         foreach ($filtered as $key => $value) {
 
             if($key == 'nombres' || $key == 'apellidos' || $key == 'localidad' || $key == 'email'){
-                $returns = $returns->where('alumnos.alumnos.'.$key,'ilike','%'.$value.'%');                           
+                $query = $query->where('alumnos.alumnos.'.$key,'ilike','%'.$value.'%');                           
             }elseif($key == 'id_tipo_documento'){
-                $returns = $returns->where('alumnos.id_tipo_documento',$value);                           
+                $query = $query->where('alumnos.id_tipo_documento',$value);                           
             }else{
-                $returns = $returns->where('alumnos.'.$key,$value);                           
+                $query = $query->where('alumnos.'.$key,$value);                           
             }
         }
 
-        return collect($returns->get());
+        return $query;
     }
 
     public function getFiltrado(Request $r){
@@ -356,9 +352,9 @@ class alumnosController extends Controller
         $v = Validator::make($filtros->all(),$this->_filters);
         if(!$v->fails()){
 
-            $resultados = $this->queryLogica($r,$filtros,$order_by);             
+            $query = $this->queryLogica($r,$filtros,$order_by);             
 
-            return $this->toDatatable($r,$resultados);
+            return $this->toDatatable($r,$query);
         }else{
             return json_encode($v->errors());
         }   
@@ -435,7 +431,7 @@ class alumnosController extends Controller
         $filtros = collect($r->only('filtros'));
         $filtros = collect($filtros->get('filtros'));
 
-        $data = $this->queryLogica($r,$filtros,null);
+        $data = $this->queryLogica($r,$filtros,null)->get();
 
         $header = array('Nombres','Apellidos','Tipo Doc','Nro Doc','Provincia');
         $column_size = array(56,56,20,30,33);

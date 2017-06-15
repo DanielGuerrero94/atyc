@@ -166,12 +166,10 @@ class profesoresController extends Controller
      */
     public function getTabla(Request $r)
     {
-        $returns = Profesor::select('id_profesor','nombres','apellidos','nro_doc','id_tipo_documento')
+        $query = Profesor::select('id_profesor','nombres','apellidos','nro_doc','id_tipo_documento')
         ->with('tipo_documento');
-
-        $resultados = collect($returns->get());
         
-        return $this->toDatatable($r,$resultados);
+        return $this->toDatatable($r,$query);
     }
 
     private function queryLogica(Request $r,$filtros)
@@ -190,7 +188,7 @@ class profesoresController extends Controller
         });
 
             //Otra forma puedo ir agregando clausulas where
-            $returns = Profesor::leftJoin('sistema.tipos_documentos','sistema.profesores.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
+            $query = Profesor::leftJoin('sistema.tipos_documentos','sistema.profesores.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
             ->select(
                 'sistema.profesores.id_profesor','sistema.profesores.nombres','sistema.profesores.apellidos',
                 'sistema.tipos_documentos.nombre as tipo_doc',
@@ -199,13 +197,13 @@ class profesoresController extends Controller
             foreach ($filtered as $key => $value) {
 
                 if($key == 'nombres' || $key == 'apellidos' || $key == 'email'){
-                    $returns = $returns->where('sistema.profesores.'.$key,'ilike','%'.$value.'%');                           
+                    $query = $query->where('sistema.profesores.'.$key,'ilike','%'.$value.'%');                           
                 }else{
-                    $returns = $returns->where('sistema.profesores.'.$key,'=',$value);                           
+                    $query = $query->where('sistema.profesores.'.$key,'=',$value);                           
                 }
             }            
 
-            return collect($returns->get()); 
+            return $query; 
         }
 
         public function getFiltrado(Request $r)
@@ -218,9 +216,9 @@ class profesoresController extends Controller
             $v = Validator::make($filtros->all(),$this->_filters);
             if(!$v->fails()){
 
-                $resultados = $this->queryLogica($r,$filtros);               
+                $query = $this->queryLogica($r,$filtros);               
 
-                return $this->toDatatable($r,$resultados);
+                return $this->toDatatable($r,$query);
             }else{ 
                 Log::info('No paso');
                 Log::info($v->errors());
@@ -279,7 +277,7 @@ class profesoresController extends Controller
             $filtros = collect($r->only('filtros'));
             $filtros = collect($filtros->get('filtros'));
 
-            $data = $this->queryLogica($r,$filtros);
+            $data = $this->queryLogica($r,$filtros)->get();
             $datos = ['profesores' => $data];
             $path = "profesores_filtrados_".date("Y-m-d_H:i:s");
 
@@ -309,7 +307,7 @@ class profesoresController extends Controller
             $filtros = collect($r->only('filtros'));
             $filtros = collect($filtros->get('filtros'));
 
-            $data = $this->queryLogica($r,$filtros);
+            $data = $this->queryLogica($r,$filtros)->get();
             $header = array('Nombres','Apellidos','Tipo doc','Nro doc');
             $column_size = array(65, 65, 25, 35);
             

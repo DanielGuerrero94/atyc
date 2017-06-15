@@ -38,9 +38,9 @@ class efectoresController extends Controller
 
     public function getTabla()
     {
-        $returns = $this->queryLogica()->get();
+        $query = $this->queryLogica();
 
-        return Datatables::of($returns)->addColumn('acciones' , function($ret){
+        return Datatables::of($query)->addColumn('acciones' , function($ret){
             $ver_historial = '<a href="efectores/'.$ret->cuie.'/cursos"><button class="btn btn-info" title="Historial"><i class="fa fa-calendar" aria-hidden="true"></i> Historial</button></a>';         
             return $ver_historial;
         })            
