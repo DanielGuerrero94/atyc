@@ -1,0 +1,27 @@
+{
+  "name": "public",
+  "homepage": "https://github.com/DanielGuerrero94/capacitacion",
+  "authors": [
+    "Rodrigo Cadaval <rodri.cadaval@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "admin-lte": "~2.2.0",
+    "cropper": "~0.11.0",
+    "highcharts": "^5.0.12",
+    "font-awesome": "fontawesome#^4.7.0",
+    "highcharts-export-csv": "*",
+    "html5-form-validation": "~1.5.3",
+    "jquery-typeahead": "^2.7.6",
+    "tether": "^1.4.0"
+  }
+}
