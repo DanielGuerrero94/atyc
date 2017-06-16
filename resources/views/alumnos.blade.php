@@ -39,7 +39,7 @@
 			{ data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
 			{ data: 'provincia.nombre'},
-			{ data: 'acciones'}
+			{ data: 'acciones',"searchable": false}
 			],
 			pagingType: 'simple' 
 		});
@@ -90,7 +90,7 @@
 				{ data: 'id_tipo_documento'},
 				{ data: 'nro_doc'},
 				{ data: 'provincia'},
-				{ data: 'acciones'}
+				{ data: 'acciones',"searchable": false}
 				],			
 				rowReorder: {
 					selector: 'td:nth-child(2)'

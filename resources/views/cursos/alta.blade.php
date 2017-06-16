@@ -86,10 +86,10 @@
             </div>          
         </div>
         <div class="tab-pane" id="alumnos">   
-        @include('alumnos.asignacionAlternativa')            
+         @include('alumnos.asignacionAlternativa')             
         </div>
         <div class="tab-pane" id="profesores">
-        @include('profesores.asignacion')         
+         @include('profesores.asignacionAlternativa')          
         </div>  
         </form>  
       </div>
@@ -314,6 +314,13 @@
       return $(element).find(':selected').val() !== "Seleccionar";
     }, "Debe seleccionar alguna opcion");    
 
+    /*jQuery.validator.addMethod("fecha", function(value, element) {
+      console.log(value);
+      var l10nES = new Intl.DateTimeFormat("es");
+      console.log(l10nES.format(value));
+      return $(element).val() !== "Seleccionar";
+    }, "No es una fecha valida.");*/
+
     var validator = $('#form-alta').validate({
       ignore: [],
       rules : {
@@ -324,7 +331,7 @@
         },
         fecha : {
           required: true,
-          date: true
+          /*fecha: true*/
         },
         area_tematica: { selecciono : true},
         linea_estrategica: { selecciono : true},
@@ -371,6 +378,7 @@
     });
   });
 </script>
+
 
 
 

@@ -23,7 +23,7 @@ class cursosController extends Controller
 	$_rules = [
 	'nombre' => 'required|string',
 	'duracion' => 'required|numeric',
-	'fecha' => 'required|date',
+	'fecha' => 'required',
 	'id_area_tematica' => 'required|numeric',
 	'id_linea_estrategica' => 'required|numeric',
 	'id_provincia' => 'required|numeric'

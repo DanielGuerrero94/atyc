@@ -252,6 +252,18 @@
 
   });
 
+      var timer;
+        window.onload = resetTimer;
+        // DOM Events
+        document.onmousemove = resetTimer;
+        document.onkeypress = resetTimer;
+        function resetTimer() {
+          clearTimeout(timer);
+          timer = setTimeout(function() {
+            $('#logout').trigger('click');
+          },1200000);  
+        }
+
 </script>
 <!-- <script>
 window.location.hash="no-back-button";

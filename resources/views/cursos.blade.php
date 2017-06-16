@@ -39,7 +39,7 @@
 			{ data: 'area_tematica.nombre'},
 			{ data: 'linea_estrategica.nombre'},
 			{ data: 'provincia.nombre'},
-			{ data: 'acciones'}
+			{ data: 'acciones',"searchable": false}
 			],			
 			rowReorder: {
 				selector: 'td:nth-child(2)'
@@ -144,7 +144,7 @@
 				{ data: 'area_tematica'},
 				{ data: 'linea_estrategica'},
 				{ data: 'provincia'},
-				{ data: 'acciones'}
+				{ data: 'acciones',"searchable": false}
 				],			
 				rowReorder: {
 					selector: 'td:nth-child(2)'

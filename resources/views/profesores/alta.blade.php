@@ -57,13 +57,13 @@
 					<div class="form-group col-sm-6">
 						<label class="control-label col-xs-4" for="telefono">Telefono:</label>
 						<div class="col-xs-8">
-							<input name="tel" type="text" class="form-control" id="tel">
+							<input name="tel" type="number" class="form-control" id="tel">
 						</div>
 					</div>
 					<div class="form-group col-sm-6">
 						<label class="control-label col-xs-4" for="cel">Cel:</label>
 						<div class="col-xs-8">
-							<input name="cel" type="text" class="form-control" id="cel">
+							<input name="cel" type="number" class="form-control" id="cel">
 						</div>
 					</div>
 				</div>
@@ -205,9 +205,10 @@
 					},
 					success: function(data, textStatus, xhr) {
 						console.log('Se creo');
+						location.reload();
 					},
 					error: function(xhr, textStatus, errorThrown) {
-						console.log('Fallo');
+						alert('No se pudo dar de alta el profesor.');
 					}
 				});
 			}	

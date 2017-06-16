@@ -4,10 +4,10 @@
 	<div class="col-xs-12">
 		<div class="box box-success">
 			<div class="box-header">Profesor</div>
-			<div class="box-body">
+			<div class="box-body">				
+				<form id="form-alta">
 				{{ csrf_field() }}
 				{{ method_field('PUT') }}
-				<form id="form-alta">
 					<div class="row">
 						<div class="form-group col-sm-6">
 							<label for="nombres" class="control-label col-xs-4">Nombres:</label>
@@ -60,13 +60,13 @@
 						<div class="form-group col-sm-6">
 							<label class="control-label col-xs-4" for="telefono">Telefono:</label>
 							<div class="col-xs-8">
-								<input name="tel" type="text" class="form-control" id="telefono" value="{{$profesor->tel}}">
+								<input name="tel" type="number" class="form-control" id="telefono" value="{{$profesor->tel}}">
 							</div>
 						</div>
 						<div class="form-group col-sm-6">
 							<label class="control-label col-xs-4" for="cel">Cel:</label>
 							<div class="col-xs-8">
-								<input name="cel" type="text" class="form-control" id="cel" value="{{$profesor->cel}}">
+								<input name="cel" type="number" class="form-control" id="cel" value="{{$profesor->cel}}">
 							</div>
 						</div>
 					</div>
@@ -76,17 +76,17 @@
 			<a href="{{url()->previous()}}">
 				<button class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</button>
 			</a>
-				<button class="btn btn-primary pull-right" id="modificar" title="Modificar" data-id="{{$profesor->id_profesor}}"><i class="fa fa-plus" aria-hidden="true"></i>Modificar</button>
+				<div class="btn btn-primary pull-right" id="modificar" title="Modificar" data-id="{{$profesor->id_profesor}}"><i class="fa fa-plus" aria-hidden="true"></i>Modificar</div>
 			</div>
 		</div> 
 	</div>
 	<div class="col-sm-12">
-		<div class="box box-info collapsed-box">
+		<div class="box box-info">
 			<div class="box-header with-border">
 				<h2 class="box-title">Cursos dictados por el profesor</h2>
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse">
-						<i class="fa fa-plus"></i>
+						<i class="fa fa-minus"></i>
 					</button>
 				</div>
 			</div>
@@ -162,16 +162,14 @@
 
 		var profesor = $('.container #modificar').data('id');
 
-		$('#alta').on('click','#modificar',function () {
-			var data = $('#alta form').serialize();
-			data += '&_token='+$('#alta input').val();
-			data += '&_method='+$('#alta input:nth-child(2)').val();
-			data += '&id_tipo_documento='+$('#alta #id_tipo_documento').val();
+		$(".container").on("click","#modificar",function () {
+			var data = $('#form-alta').serialize();
+			data += '&id_tipo_documento='+$('#id_tipo_documento').val();
 
 			console.log(data);
 
 			$.ajax({
-				url: 'profesores/'+profesor,
+				url: profesor,
 				method: 'put',
 				data: data,
 				success: function(data){
@@ -179,6 +177,7 @@
 					$('#alta').html("");
 					$('#abm').show();
 					$('#filtros').show();
+					location.reload("true");
 				},
 				error: function (data) {
 					console.log('Error.');

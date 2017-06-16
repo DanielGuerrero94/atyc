@@ -139,12 +139,12 @@ class profesoresController extends Controller
     {
         $profesor = Profesor::find($id);
 
-        if($r->id_tipo_doc === '6' || $r->id_tipo_doc === '5'){
-            $r->pais = Pais::select('id')->where('nombre','=',$r->pais)->get('id')->first(); 
-            $r->pais = $r->pais['id'];
+        if($request->id_tipo_doc === '6' || $request->id_tipo_doc === '5'){
+            $request->pais = Pais::select('id')->where('nombre','=',$request->pais)->get('id')->first(); 
+            $request->pais = $request->pais['id'];
         }
 
-        $profesor->modificar($r); 
+        $profesor->modificar($request); 
     }
 
     /**

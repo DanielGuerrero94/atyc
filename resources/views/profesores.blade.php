@@ -44,7 +44,7 @@
 			{ data: 'apellidos'},
 			{ data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
-			{ data: 'acciones'}
+			{ data: 'acciones',"searchable": false}
 			],			
 			rowReorder: {
 				selector: 'td:nth-child(2)'
@@ -91,7 +91,7 @@
 					{ data: 'apellidos'},
 					{ data: 'tipo_doc'},
 					{ data: 'nro_doc'},
-					{ data: 'acciones'}
+					{ data: 'acciones',"searchable": false}
 					],			
 					rowReorder: {
 						selector: 'td:nth-child(2)'

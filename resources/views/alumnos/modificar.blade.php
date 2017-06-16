@@ -197,19 +197,19 @@
 				<h2 class="box-title">Cursos aprobados por el alumno</h2>
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse">
-						<i class="fa fa-plus"></i>
+						<i class="fa fa-minus"></i>
 					</button>
 				</div>
 			</div>
 			<div class="box-body">
 				<table id="cursos-table" class="table table-hover" data-url="{{url('cursos/alumno')}}">
 					<thead>
-					<tr>
+						<tr>
 							<th>Nombre curso</th>
 							<th>Horas duracion</th>
 							<th>Provincia organizadora</th>
 							<th>Acciones</th>
-							</tr>
+						</tr>
 					</thead>
 				</table>
 			</div>

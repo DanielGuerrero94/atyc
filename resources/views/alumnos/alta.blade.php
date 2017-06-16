@@ -94,9 +94,9 @@
 				</div>
 				<br>
 				<div class="row" >
-					<div class="form-group" style="display: none;">
-						<label for="tipo_organismo" class="control-label col-xs-2">Organismo:</label>
-						<div class="col-xs-6">
+					<div class="form-group col-xs-12 col-sm-6" style="display: none;">
+						<label for="tipo_organismo" class="control-label col-xs-4">Organismo:</label>
+						<div class="col-xs-8">
 							<select class="form-control" id="tipo_organismo" name="organismo">
 
 								<option>Seleccionar</option>
@@ -112,9 +112,9 @@
 				</div>
 				<br>
 				<div class="row">
-					<div class="form-group" style="display: none">  
-						<label for="nombre_organismo" class="control-label col-xs-2">Nombre organismo:</label>					
-						<div class="typeahead__container col-xs-6">
+					<div class="form-group col-xs-12 col-sm-6" style="display: none">  
+						<label for="nombre_organismo" class="control-label col-xs-4">Nombre organismo:</label>					
+						<div class="typeahead__container col-xs-8">
 							<div class="typeahead__field ">         
 								<span class="typeahead__query ">
 									<input class="nombre_organismo_typeahead form-control" name="nombre_organismo" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="nombre_organismo" disabled>
@@ -124,18 +124,18 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="form-group checkbox" style="display: none;">	
-						<label for="tipo_convenio" class="control-label col-xs-2">Tipo convenio:</label>
-						<div class="col-xs-6">
+					<div class="form-group checkbox col-xs-12 col-sm-6" style="display: none;">	
+						<label for="tipo_convenio" class="control-label col-xs-4">Tipo convenio:</label>
+						<div class="col-xs-8">
 							<input name="tipo_convenio" type="checkbox" id="tipo_convenio">Convenio con el programa CUS SUMAR
 						</div>
 					</div>
 				</div>
 				<br>
 				<div class="row">
-					<div class="form-group" style="display: none;">          
-						<label for="efectores" class="control-label col-xs-2">Efectores:</label>
-						<div class="typeahead__container col-xs-6">
+					<div class="form-group col-xs-12 col-sm-6" style="display: none;">          
+						<label for="efectores" class="control-label col-xs-4">Efectores:</label>
+						<div class="typeahead__container col-xs-8">
 							<div class="typeahead__field ">         
 								<span class="typeahead__query ">
 									<input class="efectores_typeahead form-control" name="efector" type="search" placeholder="Buscar..." autocomplete="off" id="efectores" disabled>
@@ -145,9 +145,9 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="form-group" style="display: none">          
-						<label for="establecimiento" class="control-label col-xs-2">Establecimiento:</label>
-						<div class="typeahead__container col-xs-6">
+					<div class="form-group col-xs-12 col-sm-6" style="display: none">          
+						<label for="establecimiento" class="control-label col-xs-4">Establecimiento:</label>
+						<div class="typeahead__container col-xs-8">
 							<div class="typeahead__field ">             
 								<span class="typeahead__query ">
 									<input class="establecimiento_typeahead form-control" name="establecimiento" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="establecimiento" disabled>
@@ -158,9 +158,9 @@
 				</div>
 				<br>
 				<div class="row">
-					<div class="form-group" style="display: none;">
-						<label for="funcion" class="control-label col-xs-2">Funcion que desempeña:</label>
-						<div class="col-xs-6">
+					<div class="form-group col-xs-12 col-sm-6" style="display: none;">
+						<label for="funcion" class="control-label col-xs-4">Funcion que desempeña:</label>
+						<div class="col-xs-8">
 							<select class="form-control" id="funcion" name="funcion">
 
 								<option data-id="1" title="Seleccionar">Seleccionar</option>
@@ -180,19 +180,19 @@
 					<div class="form-group col-xs-12 col-sm-4">
 						<label for="email" class="control-label col-xs-4">Email:</label>
 						<div class="col-xs-8">
-							<input name="email" type="text" class="form-control" id="email">
+							<input name="email" type="email" class="form-control" id="email">
 						</div>
 					</div>
 					<div class="form-group col-xs-12 col-sm-4">
 						<label for="tel" class="control-label col-xs-4">Tel:</label>
 						<div class="col-xs-8">
-							<input name="tel" type="text" class="form-control" id="tel">
+							<input name="tel" type="number" class="form-control" id="tel">
 						</div>
 					</div>
 					<div class="form-group col-xs-12 col-sm-4">
 						<label for="cel" class="control-label col-xs-4">Cel:</label>
 						<div class="col-xs-8">
-							<input name="cel" type="text" class="form-control" id="cel">
+							<input name="cel" type="number" class="form-control" id="cel">
 						</div>
 					</div>
 				</div>
@@ -469,7 +469,7 @@
 
 		jQuery.validator.addMethod("selecciono", function(value, element) {
 			return $(element).find(':selected').val() !== "Seleccionar";
-		}, "Debe seleccionar alguna opcion");
+		}, "Debe seleccionar alguna opcion.");		
 
 		var esNumero = new RegExp(/^[1-9]\d*$/i);
 

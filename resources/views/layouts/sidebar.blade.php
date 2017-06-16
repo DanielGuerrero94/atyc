@@ -235,13 +235,13 @@
       <li>
         <a href="{{url("/areasTematicas")}}">
           <i class="fa fa-circle-o"></i>
-          <span>Tipologias de accion</span>
+          <span>Areas tematicas</span>
         </a>
       </li>
       <li>
         <a href="{{url("/lineasEstrategicas")}}">
           <i class="fa fa-circle-o"></i>
-          <span>Lineas Estrategicas</span>
+          <span>Tipologias de accion</span>
         </a>
       </li>
       <li>

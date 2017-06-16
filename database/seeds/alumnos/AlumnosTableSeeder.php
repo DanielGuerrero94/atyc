@@ -56,7 +56,7 @@ class AlumnosTableSeeder extends Seeder
      C.id_convenio,
      sub.establecimiento1,
      sub.establecimiento2,
-     sub.organismo1,
+     upper(sub.organismo1),
      sub.organismo2
      FROM dblink('dbname=elearning port=5432 
      host=192.6.0.66 user=postgres password=BernardoCafe008',
