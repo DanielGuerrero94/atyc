@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
+use Auth;
 
 class Curso extends Model
 {
@@ -15,6 +16,7 @@ class Curso extends Model
 	protected $table = "cursos.cursos";
 
 	protected $dates = ['deleted_at'];
+	
 	/**
      * Primary key asociated with the table.
      *
@@ -88,4 +90,12 @@ class Curso extends Model
         ->orderBy('cursos.cursos.fecha','desc')
         ->get();
 	}
+
+	public function scopeSegunProvincia($query)
+    {
+        $id_provincia = Auth::user()->id_provincia;
+        if($id_provincia != 25){           
+            return $query->where('id_provincia',$id_provincia);
+        }
+    }
 }

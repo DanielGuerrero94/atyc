@@ -93,11 +93,11 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('alumnos/pdf','alumnosController@getPdf');
 	Route::get('alumnos/filtrado','alumnosController@getFiltrado');
 	Route::get('alumnos/documentos/{documento}','alumnosController@checkDocumentos');
-	Route::get('alumnos/{id}','alumnosController@edit');
-
 	Route::get('alumnos/typeahead/nombres','alumnosController@getNombres');
 	Route::get('alumnos/typeahead/apellidos','alumnosController@getApellidos');
 	Route::get('alumnos/typeahead/documentos','alumnosController@getDocumentos');
+	Route::get('alumnos/{id}','alumnosController@edit');
+
 
 	Route::post('alumnos','alumnosController@store');
 
@@ -113,6 +113,7 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('profesores/excel','profesoresController@getExcel');
 	Route::get('profesores/pdf','profesoresController@getPdf');
 	Route::get('profesores/documentos/{documento}','profesoresController@checkDocumentos');
+	Route::get('profesores/typeahead','profesoresController@getTypeahead');
 	Route::get('profesores/{id}','profesoresController@edit');
 
 	Route::post('profesores','profesoresController@store');
@@ -134,6 +135,7 @@ Route::group(['middleware' => 'logueado'], function () {
 	Route::get('cursos/profesor/{id}','cursosController@getDictadosPorProfesor');
 	Route::get('cursos/provincias/{id}','cursosController@getAlumnosDeCursosPorProvincia');
 	Route::get('cursos/{id}/alumnos','cursosController@getAlumnos');
+	Route::get('cursos/{id}/profesores','cursosController@getProfesores');
 	Route::get('cursos/{id}','cursosController@edit');
 
 	Route::post('cursos','cursosController@store');

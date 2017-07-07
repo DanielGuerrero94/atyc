@@ -17,7 +17,7 @@ use Datatables;
 use Excel;
 use PDF;
 
-class cursosController extends Controller
+class cursosController extends AbmController
 {
 	private 
 	$_rules = [
@@ -97,6 +97,7 @@ class cursosController extends Controller
 
     		if($request->has('profesores')){
     			$profesores = explode(',',$request->get('profesores'));
+    			logger(json_encode($profesores));
     			$curso->profesores()->attach($profesores);				
     		}
 
@@ -200,11 +201,8 @@ class cursosController extends Controller
 			'area_tematica',
 			'linea_estrategica',
 			'provincia'
-			]);				
-
-		if(Auth::user()->id_provincia != 25){           
-			$query = $query->where('id_provincia',Auth::user()->id_provincia);
-		}
+			])
+		->segunProvincia();	
 
 		return $this->toDatatable($request,$query); 	
 	}
@@ -248,33 +246,52 @@ class cursosController extends Controller
 	{	
 		$nombres = Curso::select('nombre')
 		->groupBy('nombre')
-		->orderBy('nombre');
-
-		if(Auth::user()->id_provincia != 25){
-			$nombres = $nombres->where('id_provincia',Auth::user()->id_provincia);
-		}
-
-		$nombres = $nombres
+		->orderBy('nombre')
+		->segunProvincia()
 		->get()
 		->map(function($item,$key){
 			return $item->nombre;
 		});
 
-		$ret = array(
-			'status' => true,
-			'error' => null,
-			'data' => array(
-				'info' => $nombres
-				)
-			);
-
-		return json_encode($ret);
+		return $this->typeaheadResponse($nombres);
 	}
 
-	public function getProfesores()
+	public function getProfesores($id)
 	{
-		$curso = Curso::find('300')->profesores()->get();
-		return json_encode($curso);
+		logger($id);
+
+		$curso = Curso::findOrFail($id)
+		->with([
+			'profesores' => function($q){
+				$q->with(['tipoDocumento']);
+			}
+		])
+		->select('profesores.id_profesor','nombres','apellidos','profesores.tipoDocumento.nombre','nro_doc')
+		->get();
+
+		logger($curso);
+
+		/*->join('sistema.tipos_documentos','sistema.tipos_documentos.id_tipo_documento','=','sistema.profesores.id_tipo_documento')
+		->select('profesores.id_profesor','nombres','apellidos','sistema.tipos_documentos.nombre as tipo_doc','nro_doc')
+		->get();*/
+
+		logger($curso);
+
+		$returns = collect($curso)->map(function ($item,$key){
+			return array('id_profesor' => $item['id_profesor'],
+				'nombres' => $item['nombres'],
+				'apellidos' => $item['apellidos'],
+				'id_tipo_documento' => $item['tipo_doc'],
+				'nro_doc' => $item['nro_doc']);
+		});
+
+		logger($returns);
+
+		return Datatables::of($returns)
+		->addColumn('acciones' , function($ret){
+			return '<a href="'.url('profesores/'.$ret['id_profesor']).'"><button data-id="'.$ret['id_profesor'].'" class="btn btn-info btn-xs ver" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
+		})            
+		->make(true); 
 	}
 
 	public function getAlumnos($id)
@@ -373,12 +390,8 @@ class cursosController extends Controller
 			'cursos.cursos.edicion','cursos.cursos.duracion',
 			'cursos.areas_tematicas.nombre as area_tematica',
 			'cursos.lineas_estrategicas.nombre as linea_estrategica',
-			'sistema.provincias.nombre as provincia');
-
-		//Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
-		if (Auth::user()->id_provincia != 25) {
-			$query = $query->where('cursos.cursos.id_provincia','=',Auth::user()->id_provincia);
-		}
+			'sistema.provincias.nombre as provincia')
+		->segunProvincia();
 
 		foreach ($filtered as $key => $value) {
 			if($key == 'nombre'){

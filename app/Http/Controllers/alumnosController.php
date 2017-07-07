@@ -17,7 +17,7 @@ use Log;
 use Excel;
 use App\PDF as Pdf;
 
-class alumnosController extends Controller
+class alumnosController extends AbmController
 {
     private 
     $_rules = [
@@ -175,7 +175,7 @@ class alumnosController extends Controller
     {
         $returns = Alumno::select('id_alumno','nombres','apellidos','nro_doc','id_provincia','id_tipo_documento')
         ->with([
-            'tipo_documento',
+            'tipoDocumento',
             'provincia'                                       
             ])
         ->segunProvincia(); 
@@ -241,7 +241,7 @@ class alumnosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getApellidos(Request $r)
+    public function getApellidos()
     {
         $alumno = Alumno::select('id_alumno','nombres','apellidos','nro_doc')
         ->segunProvincia()
@@ -288,23 +288,7 @@ class alumnosController extends Controller
             return $item->$columna;
         });
     }
-
-    /**
-     * Respuesta al typeahead.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    private function typeaheadResponse($info)
-    {
-        $ret = array(
-            'status' => true,
-            'error' => null,
-            'data' => array(
-                'info' => $info
-                )
-            );
-        return json_encode($ret);
-    }
+    
     /* Metodos Typeahead */
 
     private function queryLogica(Request $r,$filtros,$order_by)
@@ -457,7 +441,7 @@ class alumnosController extends Controller
      */
     public function checkDocumentos($documento)
     {
-        $ret = Alumno::where('nro_doc','=',$documento)
+        $ret = Alumno::where('nro_doc',$documento)
         ->get();
         return count($ret) != 0?'true':'false';
     }

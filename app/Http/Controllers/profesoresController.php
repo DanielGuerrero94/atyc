@@ -14,7 +14,7 @@ use Datatables;
 use Excel;
 use App\PDF as Pdf;
 
-class profesoresController extends Controller
+class profesoresController extends AbmController
 {    
     private 
     $_rules = [
@@ -167,7 +167,7 @@ class profesoresController extends Controller
     public function getTabla(Request $r)
     {
         $query = Profesor::select('id_profesor','nombres','apellidos','nro_doc','id_tipo_documento')
-        ->with('tipo_documento');
+        ->with('tipoDocumento');
         
         return $this->toDatatable($r,$query);
     }
@@ -188,45 +188,45 @@ class profesoresController extends Controller
         });
 
             //Otra forma puedo ir agregando clausulas where
-            $query = Profesor::leftJoin('sistema.tipos_documentos','sistema.profesores.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
-            ->select(
-                'sistema.profesores.id_profesor','sistema.profesores.nombres','sistema.profesores.apellidos',
-                'sistema.tipos_documentos.nombre as tipo_doc',
-                'sistema.profesores.nro_doc');
+        $query = Profesor::leftJoin('sistema.tipos_documentos','sistema.profesores.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
+        ->select(
+            'sistema.profesores.id_profesor','sistema.profesores.nombres','sistema.profesores.apellidos',
+            'sistema.tipos_documentos.nombre as tipo_doc',
+            'sistema.profesores.nro_doc');
 
-            foreach ($filtered as $key => $value) {
+        foreach ($filtered as $key => $value) {
 
-                if($key == 'nombres' || $key == 'apellidos' || $key == 'email'){
-                    $query = $query->where('sistema.profesores.'.$key,'ilike','%'.$value.'%');                           
-                }else{
-                    $query = $query->where('sistema.profesores.'.$key,'=',$value);                           
-                }
-            }            
+            if($key == 'nombres' || $key == 'apellidos' || $key == 'email'){
+                $query = $query->where('sistema.profesores.'.$key,'ilike','%'.$value.'%');                           
+            }else{
+                $query = $query->where('sistema.profesores.'.$key,'=',$value);                           
+            }
+        }            
 
-            return $query; 
-        }
+        return $query; 
+    }
 
-        public function getFiltrado(Request $r)
-        {
-            $filtros = collect($r->only('filtros'));
-            $filtros = collect($filtros->get('filtros'));
+    public function getFiltrado(Request $r)
+    {
+        $filtros = collect($r->only('filtros'));
+        $filtros = collect($filtros->get('filtros'));
 
         //Tengo que crear un metodo lo suficientemente generico como para poder ponerlo en abmcontroller
         //Hago un test solo por nombre para armar el front end
-            $v = Validator::make($filtros->all(),$this->_filters);
-            if(!$v->fails()){
+        $v = Validator::make($filtros->all(),$this->_filters);
+        if(!$v->fails()){
 
-                $query = $this->queryLogica($r,$filtros);               
+            $query = $this->queryLogica($r,$filtros);               
 
-                return $this->toDatatable($r,$query);
-            }else{ 
-                Log::info('No paso');
-                Log::info($v->errors());
-                return json_encode($v->errors());
-            }        
-        }
+            return $this->toDatatable($r,$query);
+        }else{ 
+            Log::info('No paso');
+            Log::info($v->errors());
+            return json_encode($v->errors());
+        }        
+    }
 
-        /**
+    /**
      * Devuelve en DataTable los resultados con sus correspondientes acciones.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -234,23 +234,23 @@ class profesoresController extends Controller
      * @param  Collection  $resultados
      * @return \Illuminate\Http\Response
      */
-        public function toDatatable(Request $r,$resultados)
-        {
-            return Datatables::of($resultados)
-                ->addColumn('acciones' , function($ret) use ($r){
+    public function toDatatable(Request $r,$resultados)
+    {
+        return Datatables::of($resultados)
+        ->addColumn('acciones' , function($ret) use ($r){
 
-                    $accion = $r->has('botones')?$r->botones:null;
+            $accion = $r->has('botones')?$r->botones:null;
 
-                    $editarYEliminar = '<a href="'.url('profesores').'/'.$ret->id_profesor.'"><button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
+            $editarYEliminar = '<a href="'.url('profesores').'/'.$ret->id_profesor.'"><button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
 
-                    $agregar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+            $agregar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
-                    return $accion == 'agregar'?$agregar:$editarYEliminar;
-                })            
-                ->make(true);
-        }
+            return $accion == 'agregar'?$agregar:$editarYEliminar;
+        })            
+        ->make(true);
+    }
 
-        /**
+    /**
      * Opciones para los selects del front end.
      *
      * @return \Illuminate\Http\Response
@@ -260,6 +260,21 @@ class profesoresController extends Controller
         $tipoDocumentos = TipoDocumento::all();
 
         return array('documentos' => $tipoDocumentos);
+    }
+
+    /**
+     * Apellidos de los profesores para el typeahead.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getTypeahead(Request $r)
+    {
+        $profesor = Profesor::select('id_profesor','nombres','apellidos','nro_doc')
+        ->get()
+        ->map(function($item,$key){
+            return array('id' => $item->id_profesor,'nombres' => $item->nombres,'apellidos' => $item->apellidos,'documentos' => $item->nro_doc);
+        });
+        return $this->typeaheadResponse($profesor);
     }
 
     /**
@@ -273,26 +288,26 @@ class profesoresController extends Controller
      * @return string path al archivo generado
      */
     public function getExcel(Request $r)
-        {       
-            $filtros = collect($r->only('filtros'));
-            $filtros = collect($filtros->get('filtros'));
+    {       
+        $filtros = collect($r->only('filtros'));
+        $filtros = collect($filtros->get('filtros'));
 
-            $data = $this->queryLogica($r,$filtros)->get();
-            $datos = ['profesores' => $data];
-            $path = "profesores_filtrados_".date("Y-m-d_H:i:s");
+        $data = $this->queryLogica($r,$filtros)->get();
+        $datos = ['profesores' => $data];
+        $path = "profesores_filtrados_".date("Y-m-d_H:i:s");
 
-            Excel::create($path, function ($excel) use ($datos){
-                $excel->sheet('Reporte', function ($sheet) use ($datos){
-                    $sheet->setHeight(1, 20);
-                    $sheet->loadView('excel.profesores', $datos);
-                });
-            })
-            ->store('xls');
+        Excel::create($path, function ($excel) use ($datos){
+            $excel->sheet('Reporte', function ($sheet) use ($datos){
+                $sheet->setHeight(1, 20);
+                $sheet->loadView('excel.profesores', $datos);
+            });
+        })
+        ->store('xls');
 
-            return $path;
-        }
+        return $path;
+    }
 
-        /**
+    /**
      * Corre la query segun filtros y order_by
      * Guarda el resultado en un .pdf
      *
@@ -302,26 +317,26 @@ class profesoresController extends Controller
      * @return \Illuminate\Http\Response
      * @return string path al archivo generado
      */
-        public function getPDF(Request $r)
-        {
-            $filtros = collect($r->only('filtros'));
-            $filtros = collect($filtros->get('filtros'));
+    public function getPDF(Request $r)
+    {
+        $filtros = collect($r->only('filtros'));
+        $filtros = collect($filtros->get('filtros'));
 
-            $data = $this->queryLogica($r,$filtros)->get();
-            $header = array('Nombres','Apellidos','Tipo doc','Nro doc');
-            $column_size = array(65, 65, 25, 35);
-            
-            $mapped = $data->map(function ($item,$key){
-                $profesor = array();
-                array_push($profesor, $item->nombres);
-                array_push($profesor, $item->apellidos);
-                array_push($profesor, $item->tipo_doc);
-                array_push($profesor, $item->nro_doc);
-                return $profesor;
-            });
+        $data = $this->queryLogica($r,$filtros)->get();
+        $header = array('Nombres','Apellidos','Tipo doc','Nro doc');
+        $column_size = array(65, 65, 25, 35);
 
-            return Pdf::save($header,$column_size,14,$mapped);
-        }
+        $mapped = $data->map(function ($item,$key){
+            $profesor = array();
+            array_push($profesor, $item->nombres);
+            array_push($profesor, $item->apellidos);
+            array_push($profesor, $item->tipo_doc);
+            array_push($profesor, $item->nro_doc);
+            return $profesor;
+        });
+
+        return Pdf::save($header,$column_size,14,$mapped);
+    }
 
     /**
      * Verifica si el numero de documento existe.
@@ -331,7 +346,7 @@ class profesoresController extends Controller
      */
     public function checkDocumentos($documento)
     {
-        $ret = Profesor::where('nro_doc','=',$documento)
+        $ret = Profesor::where('nro_doc',$documento)
         ->get();
         return count($ret) != 0?'true':'false';
     }

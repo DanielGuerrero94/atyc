@@ -23,7 +23,7 @@
 			<div class="box-header">
 				<p>Alumnos en el curso.</p>
 			</div>
-			<div class="box-body">
+			<div class="box-body" style="display: none;">
 				<table class="table table-striped" id="alumnos-del-curso">
 					<thead>
 						<tr>
@@ -52,7 +52,6 @@
 				"background-color": "#fff"
 			},
 			template: function (query, item) {
-				console.log(item);
 				return '<tr>'+				
 				'<td>'+
 				item.nombres+
@@ -128,6 +127,7 @@
 					'</td>'+
 					'</tr>';
 					existe = false;
+					 
 					$.each($('#alumnos-del-curso tbody tr .fa-search'),function(k,v){
 						if($(v).data('id') == item.id){
 							existe = true;
@@ -136,6 +136,7 @@
 
 					if(!existe){
 						$('#alumnos-del-curso tbody').append(alumno);			
+						$('#alumnos-del-curso').closest('div').show();
 					}
 					$('#alumnos .alumnos_typeahead').val('');
 				}

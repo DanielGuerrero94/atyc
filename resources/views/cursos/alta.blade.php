@@ -16,7 +16,7 @@
               <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
                 <div class="typeahead__field ">             
                   <span class="typeahead__query ">
-                    <input class="nombre_typeahead " name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
+                    <input class="curso_typeahead " name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
                   </span>
                 </div>
               </div>
@@ -113,100 +113,7 @@
 
     $(".js-example-basic-single").select2();    
 
-    $('#tabla-alumnos').DataTable({
-      scrollY:"200px",
-      scrollCollapse: true,
-      serverSide: false,
-      ajax : {
-        "url": 'alumnos/tabla',
-        "data": {
-          "botones" : 'agregar'
-        }
-      },
-      columns: [
-      { data: 'nombres'},
-      { data: 'apellidos'},
-      { data: 'tipo_documento.nombre'},
-      { data: 'nro_doc'},
-      { data: 'provincia.nombre'},
-      { data: 'acciones'}
-      ]
-    });  
-
-    $('#tabla-alumnos-curso').DataTable({
-      destroy: true,
-      scrollY:"200px",
-      scrollCollapse: true,
-      filter: false,
-      paging: false,
-      serverSide: false,
-      columns: [
-      { data: 'nombres'},
-      { data: 'apellidos'},
-      { data: 'tipo_documento.nombre'},
-      { data: 'nro_doc'},
-      { data: 'provincia.nombre'},
-      { data: 'acciones'}
-      ]
-    });
-
-    $('#tabla-profesores').DataTable({
-      scrollY:"200px",
-      scrollCollapse: true,
-      serverSide: false,
-      ajax : {
-        "url": 'profesores/tabla',
-        "data": {
-          "botones" : 'agregar'
-        }
-      },
-      columns: [
-      { data: 'nombres'},
-      { data: 'apellidos'},
-      { data: 'tipo_documento.nombre'},
-      { data: 'nro_doc'},
-      { data: 'acciones'}
-      ]
-    });
-
-    $('#tabla-profesores-curso').DataTable({
-      scrollY:"200px",
-      scrollCollapse: true,
-      filter: false,
-      paging: false,
-      serverSide: false,
-      columns: [
-      { data: 'nombres'},
-      { data: 'apellidos'},
-      { data: 'tipo_documento.nombre'},
-      { data: 'nro_doc'},
-      { data: 'acciones'}
-      ]
-    });
-
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
-
-    /*$('#alta #tabla-alumnos').on('click','.agregar',function () {
-      console.log("Se agrea al curso el alumno con id:");
-      var fila = $(this).parent().parent();
-      var id = $(this).data('id');
-
-      //fila.hide();      
-      fila.find('td:last').remove();
-      console.log(id);
-      fila.append(botonQuitar);
-      console.log(fila);
-
-      var data = $('#tabla-alumnos').DataTable().row(fila).data();      
-
-      console.log(data);   
-      $('#tabla-alumnos').DataTable().row(fila).remove().draw(false);
-      var nueva_fila = $('#tabla-alumnos-curso').DataTable().row.add(data).draw(false).row().node();
-      console.log(nueva_fila);
-      $(nueva_fila).find('td:last').remove();
-      $(nueva_fila).append(botonQuitar); 
-      $(nueva_fila).find('td:last button').attr('data-id',id);
-    });*/
 
     $('#alta #tabla-profesores').on('click','.agregar',function () {
       console.log("Se agrea al curso el alumno con id:");
@@ -231,7 +138,7 @@
     });
 
     $.typeahead({
-      input: '.nombre_typeahead',
+      input: '.curso_typeahead',
       order: "desc",
       source: {
         info: {
@@ -249,23 +156,11 @@
       }
     });
 
-    /*function getAlumnosSelected() {
-      $('#tabla-alumnos-curso .quitar').map(function(index, val) {
-        return $(val).data('id');
-      });
-    }*/
-
     function getAlumnosSelected() {
       return $('#form-alta #alumnos-del-curso .fa-search').map(function(index, val) {
         return $(val).data('id');
       });
     }
-
-    /*function getProfesoresSelected() {
-      $('#tabla-profesores-curso .quitar').map(function(index, val) {
-        return $(val).data('id');
-      });
-    }*/
 
     function getProfesoresSelected() {
       return $('#profesores-del-curso .fa-search').map(function(index, val) {
@@ -279,10 +174,7 @@
       var id_provincia = $('#form-alta #provincia option:selected').data('id');
 
       var alumnos = getAlumnosSelected();
-      console.log(alumnos);
-      //var alumnos = [49641,4119,33030,3831];
       var profesores = getProfesoresSelected();
-      //var profesores = [207,396,397,399];
       return [
       { 
         name: 'id_linea_estrategica',
@@ -321,8 +213,7 @@
       return $(element).val() !== "Seleccionar";
     }, "No es una fecha valida.");*/
 
-    var validator = $('#form-alta').validate({
-      ignore: [],
+    var validator = $('#alta #form-alta').validate({
       rules : {
         nombre : "required",
         duracion : {
@@ -330,7 +221,7 @@
           number: true
         },
         fecha : {
-          required: true,
+          required: true
           /*fecha: true*/
         },
         area_tematica: { selecciono : true},
@@ -351,8 +242,6 @@
         $(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
       },
       submitHandler : function(form){
-        console.log('Alta del form validado');
-        console.log(getInput());
         $.ajax({
           method : 'post',
           url : 'cursos',
@@ -360,6 +249,7 @@
           success : function(data){
             console.log("Success.");
             alert("Se crea el curso.");
+            location.replace('cursos');
           },
           error : function(data){
             console.log("Error.");

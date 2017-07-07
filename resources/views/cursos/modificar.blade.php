@@ -98,26 +98,50 @@
 			</div>
 		</div> 
 	</div>
-	<div class="col-md-12">
-		<div class="box box-info ">
-			<div class="box-header">
-				<h2 class="box-tittle">Alumnos</h2>
-			</div>
-			<div class="box-body">
-				<table id="alumnos_del_curso" class="table table-hover">
-					<thead>
-						<tr>
-							<th>Nombres</th>
-							<th>Apellidos</th>
-							<th>Tipo Doc</th>
-							<th>Nro Doc</th>
-							<th>Provincia</th>
-							<th>Acciones</th>
-						</tr>
-					</thead>
-				</table>
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="box box-info ">
+				<div class="box-header">
+					<h2 class="box-tittle">Alumnos</h2>
+				</div>
+				<div class="box-body">
+					<table id="alumnos_del_curso" class="table table-hover">
+						<thead>
+							<tr>
+								<th>Nombres</th>
+								<th>Apellidos</th>
+								<th>Tipo Doc</th>
+								<th>Nro Doc</th>
+								<th>Provincia</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
 			</div>
 		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="box box-info ">
+				<div class="box-header">
+					<h2 class="box-tittle">Profesor/es</h2>
+				</div>
+				<div class="box-body">
+					<table id="profesores_del_curso" class="table table-hover">
+						<thead>
+							<tr>
+								<th>Nombres</th>
+								<th>Apellidos</th>
+								<th>Tipo Doc</th>
+								<th>Nro Doc</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>	
 	</div>
 </div>
 @endsection
@@ -203,6 +227,18 @@
    	]
    });
 
+   $('#profesores_del_curso').DataTable({
+   	destroy: true,
+   	ajax : $('#modificar').data('id')+'/profesores',
+   	columns: [
+   	{ data: 'nombres'},
+   	{ data: 'apellidos'},
+   	{ data: 'id_tipo_documento'},
+   	{ data: 'nro_doc'},
+   	{ data: 'acciones'}
+   	]
+   });
+
    /*jQuery.ajax({
       url: $('#modificar').data('id')+'/alumnos',
       complete: function(xhr, textStatus) {
@@ -219,8 +255,8 @@
         console.log(textStatus);
         console.log(errorThrown);
       }
-    });*/
-     
+  });*/
+
 
 });
 </script>

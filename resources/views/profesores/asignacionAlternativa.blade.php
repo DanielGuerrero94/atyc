@@ -11,7 +11,7 @@
 							</span>
 						</div>
 					</div>
-				</div>
+				</div> 
 			</div>
 		</form>
 	</div>	
@@ -21,7 +21,7 @@
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="box box-default no-padding">
 			<div class="box-header">
-				<p>Profesores a cargo del curso.</p>
+				<p>Profesores a cargo del curso.</p> 
 			</div>
 			<div class="box-body" style="display: none;">
 				<table class="table table-striped" id="profesores-del-curso">
@@ -70,7 +70,7 @@
 				Nombres: {
 					display: 'apellidos',
 					ajax:{
-						url: "profesores/typeahead/apellidos",
+						url: "profesores/typeahead",
 						path: "data.info",
 						data: function(query){
 							q: query;
@@ -84,7 +84,7 @@
 				Apellidos: {
 					display: 'apellidos',
 					ajax: {
-						url: "profesores/typeahead/apellidos",
+						url: "profesores/typeahead",
 						path: "data.info",
 						data: function(query){
 							q: query;
@@ -98,7 +98,7 @@
 				Documentos: {
 					display: 'documentos',
 					ajax:{
-						url: "profesores/typeahead/apellidos",
+						url: "profesores/typeahead",
 						path: "data.info",
 						data: function(query){
 							q: query;
@@ -131,10 +131,11 @@
 						if($(v).data('id') == item.id){
 							existe = true;
 						}
-					});
+					});alta
 
 					if(!existe){
-						$('#profesores-del-curso tbody').append(profesor);			
+						$('#profesores-del-curso tbody').append(profesor);	
+						$('#profesores-del-curso').closest('div').show();						
 					}
 					$('#profesores .profesores_typeahead').val('');
 				}

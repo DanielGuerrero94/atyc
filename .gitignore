@@ -4,3 +4,4 @@ storage/exports/
 composer.lock
 public/bower_components/
 public/*.pdf
+/node_modules

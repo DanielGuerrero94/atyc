@@ -7,7 +7,7 @@ use App\TipoDocumento;
 use DB;
 use Log;
 
-class abmController extends Controller
+class AbmController extends Controller
 {
 
     private $excepto = array('created_at','updated_at','deleted_at','id');
@@ -74,6 +74,23 @@ class abmController extends Controller
     public function filtrar(Request $r)
     {
         $tabla = $r->tabla;        
+    }
+
+    /**
+     * Respuesta al typeahead.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    protected function typeaheadResponse($info)
+    {
+        $ret = array(
+            'status' => true,
+            'error' => null,
+            'data' => array(
+                'info' => $info
+                )
+            );
+        return json_encode($ret);
     }
     
 }

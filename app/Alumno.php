@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Log;
 use Auth;
 
 class Alumno extends Model
@@ -30,7 +29,9 @@ class Alumno extends Model
 
     public function cursos()
     {   
-        return $this->belongsToMany('App\Curso','cursos_alumnos','id_cursos','id_alumnos')->withTimestamps();
+        return $this
+            ->belongsToMany('App\Curso', 'cursos_alumnos', 'id_cursos', 'id_alumnos')
+            ->withTimestamps();
     }
 
     public function provincia()
@@ -38,9 +39,10 @@ class Alumno extends Model
         return $this->hasOne('App\Provincia', 'id_provincia', 'id_provincia');
     }
 
-    public function tipo_documento()
+    public function tipoDocumento()
     {
-        return $this->hasOne('App\TipoDocumento', 'id_tipo_documento', 'id_tipo_documento');
+        return $this
+            ->hasOne('App\TipoDocumento', 'id_tipo_documento', 'id_tipo_documento');
     }
 
     public function pais()
@@ -60,33 +62,35 @@ class Alumno extends Model
 
     public static function crear(Request $r)
     {       
-    	$alumno = new Alumno();
+        $alumno = new Alumno();
 
-    	$alumno->nombres = $r->nombres;
-    	$alumno->apellidos = $r->apellidos;
-    	$alumno->nro_doc = $r->nro_doc;
-    	$alumno->localidad = $r->localidad;
-    	$alumno->email = $r->email;
-    	$alumno->tel = $r->tel;
-    	$alumno->cel = $r->cel;
-    	$alumno->id_tipo_documento = $r->id_tipo_documento;
-    	$alumno->id_provincia = $r->id_provincia;
-    	$alumno->id_trabajo = $r->id_trabajo;
-    	$alumno->id_funcion = $r->id_funcion;
+        $alumno->nombres = $r->nombres;
+        $alumno->apellidos = $r->apellidos;
+        $alumno->nro_doc = $r->nro_doc;
+        $alumno->localidad = $r->localidad;
+        $alumno->email = $r->email;
+        $alumno->tel = $r->tel;
+        $alumno->cel = $r->cel;
+        $alumno->id_tipo_documento = $r->id_tipo_documento;
+        $alumno->id_provincia = $r->id_provincia;
+        $alumno->id_trabajo = $r->id_trabajo;
+        $alumno->id_funcion = $r->id_funcion;
           
         $alumno->id_pais = $r->has('pais')?$r->pais:null;
         $alumno->organismo1 = $r->has('tipo_organismo')?$r->tipo_organismo:null;
         $alumno->organismo2 = $r->has('organismo')?$r->organismo:null;
         $alumno->establecimiento1 = $r->has('efectores')?$r->efectores:null;
-        $alumno->establecimiento2 = $r->has('establecimiento')?$r->establecimiento:null;
+        $alumno->establecimiento2 = $r->has('establecimiento')?
+        $r->establecimiento:null;
 
-    	$alumno->save();
+        $alumno->save();
     }
 
     public function scopeSegunProvincia($query)
     {
-        if(Auth::user()->id_provincia != 25){           
-            return $query->where('id_provincia',Auth::user()->id_provincia);
+        $id_provincia = Auth::user()->id_provincia;
+        if ($id_provincia != 25) {           
+            return $query->where('id_provincia', $id_provincia);
         }
     }
 }
