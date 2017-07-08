@@ -28,13 +28,6 @@ class Menu extends Model
     public $timestamps = false;
 
     /**
-     * The model's attributes.
-     *
-     * @var array
-     */
-    protected $attributes = ['nombre','icono','color'];
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -43,6 +36,6 @@ class Menu extends Model
 
     public function subMenues()
     {
-    	return $this->hasMany('sistema.menues','id_menu','id_padre')
+        return $this->hasMany('sistema.menues', 'id_menu', 'id_padre');
     }
 }

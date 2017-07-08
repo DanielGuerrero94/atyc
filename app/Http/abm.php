@@ -15,7 +15,7 @@ class abmController extends Controller
     public function query($query)
     {
         return DB::connection('eLearning')->select($query);
-    }   
+    }
 
     public function filtros($tabla)
     {
@@ -26,31 +26,35 @@ class abmController extends Controller
 
         $ret = collect($this->query($query));*/
 
-        $r = DB::select("SELECT column_name
+        $r = DB::select(
+            "SELECT column_name
             FROM information_schema.columns
             WHERE table_schema = 'public'
-            AND table_name   = '".$tabla."';");
+            AND table_name   = '".$tabla."';"
+        );
         
         /*logger("Query:".json_encode($r));*/
 
         $ret = collect($r);
 
-/*        logger(json_encode($ret));*/
+        /*        logger(json_encode($ret));*/
 
-        $filtered = $ret->filter(function ($value,$key)
-        {
-            foreach ($value as $column => $name) {
-                return !in_array($name,$this->excepto);
-            } 
-        })->map(function ($value,$key)
-        {
-            foreach ($value as $column => &$name) {
-                $name = ucfirst($name);
-                return $value;
-            }    
-        });
+        $filtered = $ret->filter(
+            function ($value, $key) {
+                foreach ($value as $column => $name) {
+                    return !in_array($name, $this->excepto);
+                }
+            }
+        )->map(
+            function ($value, $key) {
+                foreach ($value as $column => &$name) {
+                    $name = ucfirst($name);
+                    return $value;
+                }
+            }
+        );
 
-/*        logger(json_encode($ret));*/
+        /*        logger(json_encode($ret));*/
 
         return json_encode($filtered);
     }
@@ -58,13 +62,12 @@ class abmController extends Controller
     public function formularioConFiltros($tabla)
     {
         logger($tabla);
-        return view('formulario',['columnas' => json_decode($this->filtros($tabla),true)]);
+        return view('formulario', ['columnas' => json_decode($this->filtros($tabla), true)]);
     }
 
     /**
-    *   Quiero agregar que columnas de la tabla necesitan tranformarse en un cuadro de seleccion e ir a buscar en la tabla los valores que corresponda
-    *
-    */
+     *   Quiero agregar que columnas de la tabla necesitan tranformarse en un cuadro de seleccion e ir a buscar en la tabla los valores que corresponda
+     */
 
     public function tiposDocumentos()
     {
@@ -73,8 +76,6 @@ class abmController extends Controller
 
     public function filtrar(Request $r)
     {
-        $tabla = $r->tabla;        
+        $tabla = $r->tabla;
     }
-    
 }
-

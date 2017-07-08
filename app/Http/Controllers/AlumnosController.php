@@ -17,10 +17,9 @@ use Log;
 use Excel;
 use App\PDF as Pdf;
 
-class alumnosController extends AbmController
+class AlumnosController extends AbmController
 {
-    private 
-    $rules = [
+    private $rules = [
     'nombres' => 'required|string',
     'apellidos' => 'required|string',
     'id_tipo_documento' => 'required|numeric',
@@ -40,8 +39,7 @@ class alumnosController extends AbmController
     'cel' => 'nullable'
     ];
 
-    private 
-    $filters = [
+    private $filters = [
     'nombres' => 'string',
     'apellidos' => 'string',
     'id_tipo_documento' => 'numeric',
@@ -58,7 +56,7 @@ class alumnosController extends AbmController
     public function query($query)
     {
         return DB::connection('eLearning')->select($query);
-    }    
+    }
 
     /**
      * View para abm.
@@ -88,7 +86,7 @@ class alumnosController extends AbmController
     public function create()
     {
         return view('alumnos/alta', $this->getSelectOptions());
-    }   
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -102,8 +100,8 @@ class alumnosController extends AbmController
 
         if (!$v->fails()) {
             if ($request->has('pais')) {
-                $request->pais = Pais::select('id_pais')->where('nombre', '=', $request->pais)->get('id_pais')->first(); 
-                $request->pais = $request->pais['id_pais'];    
+                $request->pais = Pais::select('id_pais')->where('nombre', '=', $request->pais)->get('id_pais')->first();
+                $request->pais = $request->pais['id_pais'];
             }
             return Alumno::crear($request);
         } else {
@@ -123,7 +121,7 @@ class alumnosController extends AbmController
         $id_tipo_documento = $alumno->id_tipo_documento;
         $nombre_pais = null;
         if ($id_tipo_documento === 6 || $id_tipo_documento === 5) {
-            $pais = Pais::find($alumno->id_pais);    
+            $pais = Pais::find($alumno->id_pais);
             $nombre_pais = $pais->nombre;
         }
         $array = array('alumno' => $alumno,'pais' => $nombre_pais);
@@ -162,7 +160,7 @@ class alumnosController extends AbmController
     public function destroy($id)
     {
         Alumno::findOrFail($id)->delete();
-    }   
+    }
 
     /**
      * Devuelve la informacion para abm.
@@ -177,10 +175,10 @@ class alumnosController extends AbmController
         ->with(
             [
             'tipoDocumento',
-            'provincia'                                       
+            'provincia'
             ]
         )
-        ->segunProvincia(); 
+        ->segunProvincia();
 
         return  $this->toDatatable($r, $returns);
     }
@@ -192,10 +190,10 @@ class alumnosController extends AbmController
      */
     public function getSelectOptions()
     {
-        $documentos = TipoDocumento::all();        
+        $documentos = TipoDocumento::all();
         $provincias = Provincia::orderBy('nombre')->get();
         $trabajos = Trabajo::orderBy('nombre')->get();
-        $funciones = Funcion::orderBy('nombre')->get();        
+        $funciones = Funcion::orderBy('nombre')->get();
         $organismos = Alumno::select('organismo1')->groupBy('organismo1')->orderBy('organismo1')->get();
 
         return array(
@@ -204,7 +202,7 @@ class alumnosController extends AbmController
             'trabajos' => $trabajos,
             'funciones' => $funciones,
             'organismos' => $organismos);
-    }      
+    }
 
     /* Metodos Typeahead */
 
@@ -249,7 +247,7 @@ class alumnosController extends AbmController
         ->segunProvincia()
         ->get()
         ->map(
-            function ($item,$key) {
+            function ($item, $key) {
                 return array('id' => $item->id_alumno,'nombres' => $item->nombres,'apellidos' => $item->apellidos,'documentos' => $item->nro_doc);
             }
         );
@@ -289,7 +287,7 @@ class alumnosController extends AbmController
         ->orderBy($columna)
         ->get()
         ->map(
-            function ($item,$key) use ($columna) {
+            function ($item, $key) use ($columna) {
                 return $item->$columna;
             }
         );
@@ -297,12 +295,12 @@ class alumnosController extends AbmController
     
     /* Metodos Typeahead */
 
-    private function queryLogica(Request $r,$filtros,$order_by)
+    private function queryLogica(Request $r, $filtros, $order_by)
     {
         //Filtros las que estan vacias si es que me las pasaron
         //Estas funciones para filtrar podrian estar en un middleware
         $filtered = $filtros->filter(
-            function ($value,$key) {
+            function ($value, $key) {
                 return $value != "" && $value != "0";
             }
         );
@@ -310,25 +308,26 @@ class alumnosController extends AbmController
         $query = Alumno::leftJoin('sistema.provincias', 'alumnos.id_provincia', '=', 'sistema.provincias.id_provincia')
         ->leftJoin('sistema.tipos_documentos', 'alumnos.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
         ->select(
-            'id_alumno', 'nombres', 'apellidos',
+            'id_alumno',
+            'nombres',
+            'apellidos',
             'sistema.tipos_documentos.nombre as id_tipo_documento',
             'nro_doc',
             'sistema.provincias.nombre as provincia'
         );
 
-        //Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros 
+        //Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros
         if (Auth::user()->id_provincia != 25) {
             $query = $query->where('alumnos.alumnos.id_provincia', '=', Auth::user()->id_provincia);
         }
 
         foreach ($filtered as $key => $value) {
-
-            if($key == 'nombres' || $key == 'apellidos' || $key == 'localidad' || $key == 'email') {
-                $query = $query->where('alumnos.alumnos.'.$key, 'ilike', '%'.$value.'%');                           
-            }elseif($key == 'id_tipo_documento') {
-                $query = $query->where('alumnos.id_tipo_documento', $value);                           
-            }else{
-                $query = $query->where('alumnos.'.$key, $value);                           
+            if ($key == 'nombres' || $key == 'apellidos' || $key == 'localidad' || $key == 'email') {
+                $query = $query->where('alumnos.alumnos.'.$key, 'ilike', '%'.$value.'%');
+            } elseif ($key == 'id_tipo_documento') {
+                $query = $query->where('alumnos.id_tipo_documento', $value);
+            } else {
+                $query = $query->where('alumnos.'.$key, $value);
             }
         }
 
@@ -344,13 +343,12 @@ class alumnosController extends AbmController
 
         $v = Validator::make($filtros->all(), $this->filters);
         if (!$v->fails()) {
-
-            $query = $this->queryLogica($r, $filtros, $order_by);             
+            $query = $this->queryLogica($r, $filtros, $order_by);
 
             return $this->toDatatable($r, $query);
         } else {
             return json_encode($v->errors());
-        }   
+        }
     }
 
     /**
@@ -361,11 +359,12 @@ class alumnosController extends AbmController
      * @param  Collection               $resultados
      * @return \Illuminate\Http\Response
      */
-    public function toDatatable(Request $r,$resultados)
+    public function toDatatable(Request $r, $resultados)
     {
         return Datatables::of($resultados)
         ->addColumn(
-            'acciones', function ($ret) use ($r) {
+            'acciones',
+            function ($ret) use ($r) {
 
                 $accion = $r->has('botones')?$r->botones:null;
 
@@ -373,9 +372,9 @@ class alumnosController extends AbmController
 
                 $agregar = '<button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
-                return $accion == 'agregar'?$agregar:$editarYEliminar;;
+                return $accion == 'agregar'?$agregar:$editarYEliminar;
             }
-        )            
+        )
         ->make(true);
     }
 
@@ -390,21 +389,22 @@ class alumnosController extends AbmController
      * @return string path al archivo generado
      */
     public function getExcel(Request $r)
-    {       
+    {
         $filtros = collect($r->only('filtros'));
         $filtros = collect($filtros->get('filtros'));
         $order_by = $r->order_by;
 
-        $data = $this->queryLogica($r, $filtros, $order_by)
-        ->get();
+        $data = $this->queryLogica($r, $filtros, $order_by);
         $datos = ['alumnos' => $data];
         $path = "alumnos_filtrados_".date("Y-m-d_H:i:s");
         
 
         Excel::create(
-            $path, function ($excel) use ($datos) {
+            $path,
+            function ($excel) use ($datos) {
                 $excel->sheet(
-                    'Reporte', function ($sheet) use ($datos) {
+                    'Reporte',
+                    function ($sheet) use ($datos) {
                         $sheet->setHeight(1, 20);
                         $sheet->loadView('excel.alumnos', $datos);
                     }
@@ -437,7 +437,7 @@ class alumnosController extends AbmController
         $column_size = array(56,56,20,30,33);
 
         $mapped = $data->map(
-            function ($item,$key) {
+            function ($item, $key) {
                 $alumno = array();
                 array_push($alumno, $item->nombres);
                 array_push($alumno, $item->apellidos);

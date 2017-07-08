@@ -9,7 +9,7 @@ use Log;
 use Validator;
 use Datatables;
 
-class gestoresController extends Controller
+class GestoresController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class gestoresController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -45,13 +45,13 @@ class gestoresController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         try {
-            $gestor = User::findOrFail($id);    
+            $gestor = User::findOrFail($id);
         } catch (ModelNotFoundException $e) {
             $gestor = null;
         }
@@ -61,7 +61,7 @@ class gestoresController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -72,8 +72,8 @@ class gestoresController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int                      $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -84,7 +84,7 @@ class gestoresController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -93,13 +93,15 @@ class gestoresController extends Controller
     }
 
     public function getTabla()
-    {        
-        $query = User::select('id','name as nombre','email');
+    {
+        $query = User::select('id', 'name as nombre', 'email');
         return Datatables::of($query)
-        ->addColumn('acciones' , function($ret){
-            return '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id.'" class="btn btn-danger btn-xs eliminar" title="Eliminar" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Some content"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
-
-        })            
-        ->make(true); 
+        ->addColumn(
+            'acciones',
+            function ($ret) {
+                return '<button data-id="'.$ret->id.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id.'" class="btn btn-danger btn-xs eliminar" title="Eliminar" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Some content"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+            }
+        )
+        ->make(true);
     }
 }

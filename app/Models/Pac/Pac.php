@@ -50,13 +50,12 @@ class Pac extends Model
     }
 
     public function pautas()
-    {   
-        return $this->belongsToMany('App\Models\Pac\Pauta','pac_pautas','id_pauta','id_pac')->withTimestamps();
+    {
+        return $this->belongsToMany('App\Models\Pac\Pauta', 'pac_pautas', 'id_pauta', 'id_pac')->withTimestamps();
     }
 
     public function insumos()
-    {   
-        return $this->belongsToMany('App\Models\Pac\Insumo','pac_insumos','id_insumo','id_pac')->withTimestamps();
+    {
+        return $this->belongsToMany('App\Models\Pac\Insumo', 'pac_insumos', 'id_insumo', 'id_pac')->withTimestamps();
     }
-
 }

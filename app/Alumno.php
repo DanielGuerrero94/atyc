@@ -28,7 +28,7 @@ class Alumno extends Model
     protected $primaryKey = 'id_alumno';
 
     public function cursos()
-    {   
+    {
         return $this
             ->belongsToMany('App\Curso', 'cursos_alumnos', 'id_curso', 'id_alumno')
             ->withTimestamps();
@@ -61,7 +61,7 @@ class Alumno extends Model
     }
 
     public static function crear(Request $r)
-    {       
+    {
         $alumno = new Alumno();
 
         $alumno->nombres = $r->nombres;

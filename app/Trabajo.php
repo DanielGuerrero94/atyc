@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Trabajo extends Model
 {
-	/**
+    /**
      * The table associated with the model.
      *
      * @var string
@@ -25,5 +25,5 @@ class Trabajo extends Model
      *
      * @var bool
      */
-    public $timestamps = false;    
+    public $timestamps = false;
 }

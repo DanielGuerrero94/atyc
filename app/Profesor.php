@@ -18,7 +18,7 @@ class Profesor extends Model
      *
      * @var string
      */
-    protected $table = 'sistema.profesores';    
+    protected $table = 'sistema.profesores';
 
     /**
      * Primary key asociated with the table.
@@ -44,7 +44,7 @@ class Profesor extends Model
         $this->id_tipo_documento = $r->id_tipo_documento;
 
         if ($this->esExtranjero($r)) {
-            $id_pais = Pais::select('id_pais')->where('nombre','=',$r->pais)->get('id_pais')->first();
+            $id_pais = Pais::select('id_pais')->where('nombre', '=', $r->pais)->get('id_pais')->first();
             $this->id_pais = $id_pais['id_pais'];
         }
 

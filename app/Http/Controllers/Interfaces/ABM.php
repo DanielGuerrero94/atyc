@@ -14,18 +14,18 @@ interface ABM
     /**
      * Devuelve en DataTable los resultados con sus correspondientes acciones.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @param  $request['botones']
-     * @param  Collection  $resultados
+     * @param  Collection               $resultados
      * @return \Illuminate\Http\Response
      */
-    public function toDatatable(Request $r,$resultados);
+    public function toDatatable(Request $r, $resultados);
 
     /**
      * Corre la query segun filtros y order_by
      * Guarda el resultado en un .pdf
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @param  array filtros
      * @param  array order_by
      * @return \Illuminate\Http\Response
@@ -37,7 +37,7 @@ interface ABM
      * Corre la query segun filtros y order_by
      * Guarda el resultado en un .xls
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @param  array filtros
      * @param  array order_by
      * @return \Illuminate\Http\Response

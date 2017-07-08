@@ -32,18 +32,17 @@ class EncuestaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -54,19 +53,19 @@ class EncuestaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        return view('encuestas.modificar',$this->show($id));
+        return view('encuestas.modificar', $this->show($id));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int                      $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -77,7 +76,7 @@ class EncuestaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -102,7 +101,7 @@ class EncuestaController extends Controller
      */
     public function google_form()
     {
-        return view('encuestas.google_form'); 
+        return view('encuestas.google_form');
     }
 
     /**
@@ -142,11 +141,13 @@ class EncuestaController extends Controller
         ->orderBy('pregunta.descripcion,respuesta.id_respuesta')
         ->get();*/
 
-        $encuestas = \DB::select('select p.descripcion as pregunta,r.descripcion as respuesta,sum(cantidad) as cantidad from encuestas.encuestas e
+        $encuestas = \DB::select(
+            'select p.descripcion as pregunta,r.descripcion as respuesta,sum(cantidad) as cantidad from encuestas.encuestas e
             join encuestas.preguntas p using(id_pregunta)
             join encuestas.respuestas r using(id_respuesta)
             group by p.descripcion,r.id_respuesta
-            order by p.descripcion,r.id_respuesta');
+            order by p.descripcion,r.id_respuesta'
+        );
 
 
 
@@ -156,22 +157,25 @@ class EncuestaController extends Controller
         $datos = array();
         $ret = array();
 
-        $encuestas = collect($encuestas)->each(function ($value,$item) use(&$ultimo,&$datos,&$ret)
-        {
-            if($value->pregunta != $ultimo){
-                $array =  array(
-                'pregunta' => $value->pregunta,
-                'datos' => $datos);  
-                array_push($ret,$array);
-                $ultimo = $value->pregunta;
-                $datos = array();              
+        $encuestas = collect($encuestas)->each(
+            function ($value, $item) use (&$ultimo, &$datos, &$ret) {
+                if ($value->pregunta != $ultimo) {
+                    $array =  array(
+                    'pregunta' => $value->pregunta,
+                    'datos' => $datos);
+                    array_push($ret, $array);
+                    $ultimo = $value->pregunta;
+                    $datos = array();
+                }
+
+                array_push(
+                    $datos,
+                    array($value->respuesta,$value->cantidad)
+                );
+
+                return $ret;
             }
-
-            array_push($datos,
-                array($value->respuesta,$value->cantidad));
-
-            return $ret; 
-        });
+        );
                 
 
         /*$asd = array('pregunta' => '1- LOS CONTENIDOS TEORICOS Y EL MATERIAL DIDACTICO OFRECIDO FUERON:','datos' => [12,12,14,98,47]);*/
@@ -184,11 +188,9 @@ class EncuestaController extends Controller
 
     public function subida(Request $r)
     {
-        
     }
 
     private function procesarArchivo()
     {
-        
     }
 }

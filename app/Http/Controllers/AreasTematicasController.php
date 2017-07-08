@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\AreaTematica;
 use Datatables;
 
-class areasTematicasController extends Controller
+class AreasTematicasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -26,24 +26,27 @@ class areasTematicasController extends Controller
     public function create()
     {
         return view('areasTematicas/alta');
-    }   
+    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $area = new AreaTematica();
-        $area->crear($request);    
+        //$area->crear($request);
+        $area->create($request);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -55,19 +58,21 @@ class areasTematicasController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        return view('areasTematicas/modificar',$this->show($id));
+        return view('areasTematicas/modificar', $this->show($id));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -79,7 +84,8 @@ class areasTematicasController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -95,7 +101,7 @@ class areasTematicasController extends Controller
      */
     public function getTodos()
     {
-    	return view('areasTematicas');
+        return view('areasTematicas');
     }
     
     /**
@@ -105,11 +111,14 @@ class areasTematicasController extends Controller
      */
     public function getTabla()
     {
-    	$returns = AreaTematica::all();
-    	return Datatables::of($returns)
-        ->addColumn('acciones' , function($ret){
-            return '<button data-id="'.$ret->id_area_tematica.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_area_tematica.'" class="btn btn-danger btn-xs eliminar" title="Eliminar" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Some content"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
-        })            
-        ->make(true);      
-    }  
+        $returns = AreaTematica::all();
+        return Datatables::of($returns)
+        ->addColumn(
+            'acciones',
+            function ($ret) {
+                return '<button data-id="'.$ret->id_area_tematica.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_area_tematica.'" class="btn btn-danger btn-xs eliminar" title="Eliminar" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Some content"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+            }
+        )
+        ->make(true);
+    }
 }

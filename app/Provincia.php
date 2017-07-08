@@ -29,8 +29,8 @@ class Provincia extends Model
 
     public static function set($nombre)
     {
-    	$ret = new Provincia();
-    	$ret->nombre = $nombre;
-    	$ret->save();
+        $ret = new Provincia();
+        $ret->nombre = $nombre;
+        $ret->save();
     }
 }

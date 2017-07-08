@@ -46,10 +46,10 @@ class LoginController extends Controller
     //Sobrecargo estos dos metodos que traigo desde el trait AuthenticatesUsers
 
      /**
-     * Get the login username to be used by the controller.
-     *
-     * @return string
-     */
+      * Get the login username to be used by the controller.
+      *
+      * @return string
+      */
     public function username()
     {
         return 'name';
@@ -58,7 +58,7 @@ class LoginController extends Controller
     /**
      * Get the needed authorization credentials from the request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return array
      */
     protected function credentials(Request $request)

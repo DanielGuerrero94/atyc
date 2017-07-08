@@ -7,21 +7,21 @@
 */
 
 
-Route::get('tests',function ()
-{
-	return view('test/test');
+Route::get('tests', function () {
+    return view('test/test');
 });
-Route::get('test','testController@hello');
-Route::get('test/filtros','testController@filtros');
 
-Route::get('test/profesoresEnUnCurso','cursosController@getProfesores');
+Route::get('test', 'TestController@hello');
+Route::get('test/filtros', 'TestController@filtros');
 
-Route::get('test/documentos','abmController@tiposDocumentos');
+Route::get('test/profesoresEnUnCurso', 'CursosController@getProfesores');
 
-Route::get('test/joined','alumnosController@datosJoineados');
-Route::get('test/excel','reportesController@getExcel');
+Route::get('test/documentos', 'AbmController@tiposDocumentos');
 
-Route::get('test/pdf','reportesController@getPdf');
+Route::get('test/joined', 'AlumnosController@datosJoineados');
+Route::get('test/excel', 'ReportesController@getExcel');
+
+Route::get('test/pdf', 'ReportesController@getPdf');
 
 /*
 |--------------------------------------------------------------------------
@@ -33,206 +33,199 @@ Route::get('test/pdf','reportesController@getPdf');
 | contains the "web" middleware group. Now create something great!
 |
 */
-/*
-Route::get('/', function () {
-    return view('welcome');
-});*/
 
 Route::get('/', function () {
-	return view('dashboard');
+    return view('dashboard');
 });
 
-Route::get('/adminlte', function() {
-	return view('adminlte');
+Route::get('/adminlte', function () {
+    return view('adminlte');
 });
 
-Route::get('/starter', function() {
-	return view('starter');
+Route::get('/starter', function () {
+    return view('starter');
 });
 
-Route::get('/entrar', function() {
-	return view('entrar');
+Route::get('/entrar', function () {
+    return view('entrar');
 });
 
-Route::get('/dashboard', function() {
-	return view('dashboard');
+Route::get('/dashboard', function () {
+    return view('dashboard');
 });
 
 //Dashboard
-Route::get('dashboard/datos','dashboardController@get');
-Route::get('dashboard/data','alumnosController@getActivos');
+Route::get('dashboard/datos', 'DashboardController@get');
+Route::get('dashboard/data', 'AlumnosController@getActivos');
 
 Route::group(['middleware' => 'logueado'], function () {
-	//Descarga
-	Route::get('reportes/descargar/excel/{nombre_reporte}', function($nombre_reporte) {
-		return response()->download(__DIR__.'/../storage/exports/'.$nombre_reporte.'.xls');	
-	});
-	Route::get('reportes/descargar/pdf/{nombre_reporte}', function($nombre_reporte) {
-	    return response()->download(__DIR__.'/../public/'.$nombre_reporte.'.pdf');
-	});
-	Route::get('alumnos/descargar/excel/{nombre_archivo}', function($nombre_archivo) {
-		return response()->download(__DIR__.'/../storage/exports/'.$nombre_archivo.'.xls');
-	});
-	Route::get('alumnos/descargar/pdf/{nombre_archivo}', function($nombre_archivo) {
-		return response()->download(__DIR__.'/../storage/app/'.$nombre_archivo.'.pdf');
-	});
-	Route::get('descargar/excel/{nombre_archivo}', function($nombre_archivo) {
-		return response()->download(__DIR__.'/../storage/exports/'.$nombre_archivo.'.xls');
-	});
-	Route::get('descargar/pdf/{nombre_archivo}', function($nombre_archivo) {
-		return response()->download(__DIR__.'/../storage/exports/'.$nombre_archivo.'.pdf');
-	});	
+    //Descarga
+    Route::get('reportes/descargar/excel/{nombre_reporte}', function ($nombre_reporte) {
+        return response()->download(__DIR__.'/../storage/exports/$nombre_reporte.xls');
+    });
+    Route::get('reportes/descargar/pdf/{nombre_reporte}', function ($nombre_reporte) {
+        return response()->download(__DIR__.'/../public/$nombre_reporte.pdf');
+    });
+    Route::get('alumnos/descargar/excel/{nombre_archivo}', function ($nombre_archivo) {
+        return response()->download(__DIR__.'/../storage/exports/$nombre_archivo.xls');
+    });
+    Route::get('alumnos/descargar/pdf/{nombre_archivo}', function ($nombre_archivo) {
+        return response()->download(__DIR__.'/../storage/app/$nombre_archivo.pdf');
+    });
+    Route::get('descargar/excel/{nombre_archivo}', function ($nombre_archivo) {
+        return response()->download(__DIR__.'/../storage/exports/$nombre_archivo.xls');
+    });
+    Route::get('descargar/pdf/{nombre_archivo}', function ($nombre_archivo) {
+        return response()->download(__DIR__.'/../storage/exports/$nombre_archivo.pdf');
+    });
 
-	//Alumnos
-	Route::get('alumnos','alumnosController@get');
-	Route::get('alumnos/tabla','alumnosController@getTabla');
-	Route::get('alumnos/alta','alumnosController@create');
-	Route::get('alumnos/establecimientos','alumnosController@getEstablecimientos');
-	Route::get('alumnos/nombre_organismo','alumnosController@getNombreOrganismo');
-	Route::get('alumnos/excel','alumnosController@getExcel');
-	Route::get('alumnos/pdf','alumnosController@getPdf');
-	Route::get('alumnos/filtrado','alumnosController@getFiltrado');
-	Route::get('alumnos/documentos/{documento}','alumnosController@checkDocumentos');
-	Route::get('alumnos/typeahead/nombres','alumnosController@getNombres');
-	Route::get('alumnos/typeahead/apellidos','alumnosController@getApellidos');
-	Route::get('alumnos/typeahead/documentos','alumnosController@getDocumentos');
-	Route::get('alumnos/{id}','alumnosController@edit');
+    //Alumnos
+    Route::get('alumnos', 'AlumnosController@get');
+    Route::get('alumnos/tabla', 'AlumnosController@getTabla');
+    Route::get('alumnos/alta', 'AlumnosController@create');
+    Route::get('alumnos/establecimientos', 'AlumnosController@getEstablecimientos');
+    Route::get('alumnos/nombre_organismo', 'AlumnosController@getNombreOrganismo');
+    Route::get('alumnos/excel', 'AlumnosController@getExcel');
+    Route::get('alumnos/pdf', 'AlumnosController@getPdf');
+    Route::get('alumnos/filtrado', 'AlumnosController@getFiltrado');
+    Route::get('alumnos/documentos/{documento}', 'AlumnosController@checkDocumentos');
+    Route::get('alumnos/typeahead/nombres', 'AlumnosController@getNombres');
+    Route::get('alumnos/typeahead/apellidos', 'AlumnosController@getApellidos');
+    Route::get('alumnos/typeahead/documentos', 'AlumnosController@getDocumentos');
+    Route::get('alumnos/{id}', 'AlumnosController@edit');
 
 
-	Route::post('alumnos','alumnosController@store');
+    Route::post('alumnos', 'AlumnosController@store');
 
-	Route::put('alumnos/{id}','alumnosController@update');
+    Route::put('alumnos/{id}', 'AlumnosController@update');
 
-	Route::delete('alumnos/{id}','alumnosController@destroy');
+    Route::delete('alumnos/{id}', 'AlumnosController@destroy');
 
-	//Profesores
-	Route::get('profesores','profesoresController@get');
-	Route::get('profesores/tabla','profesoresController@getTabla');
-	Route::get('profesores/alta','profesoresController@create');
-	Route::get('profesores/filtrado','profesoresController@getFiltrado');
-	Route::get('profesores/excel','profesoresController@getExcel');
-	Route::get('profesores/pdf','profesoresController@getPdf');
-	Route::get('profesores/documentos/{documento}','profesoresController@checkDocumentos');
-	Route::get('profesores/typeahead','profesoresController@getTypeahead');
-	Route::get('profesores/{id}','profesoresController@edit');
+    //Profesores
+    Route::get('profesores', 'ProfesoresController@get');
+    Route::get('profesores/tabla', 'ProfesoresController@getTabla');
+    Route::get('profesores/alta', 'ProfesoresController@create');
+    Route::get('profesores/filtrado', 'ProfesoresController@getFiltrado');
+    Route::get('profesores/excel', 'ProfesoresController@getExcel');
+    Route::get('profesores/pdf', 'ProfesoresController@getPdf');
+    Route::get('profesores/documentos/{documento}', 'ProfesoresController@checkDocumentos');
+    Route::get('profesores/typeahead', 'ProfesoresController@getTypeahead');
+    Route::get('profesores/{id}', 'ProfesoresController@edit');
 
-	Route::post('profesores','profesoresController@store');
+    Route::post('profesores', 'ProfesoresController@store');
 
-	Route::put('profesores/{id}','profesoresController@update');
+    Route::put('profesores/{id}', 'ProfesoresController@update');
 
-	Route::delete('profesores/{id}','profesoresController@destroy');
+    Route::delete('profesores/{id}', 'ProfesoresController@destroy');
 
 //Cursos
-	Route::get('cursos','cursosController@get');
-	Route::get('cursos/tabla','cursosController@getTabla');
-	Route::get('cursos/joined','cursosController@getJoined');
-	Route::get('cursos/alta','cursosController@create');
-	Route::get('cursos/nombres','cursosController@getNombres');
-	Route::get('cursos/excel','cursosController@getExcel');
-	Route::get('cursos/pdf','cursosController@getPdf');
-	Route::get('cursos/filtrado','cursosController@getFiltrado');
-	Route::get('cursos/alumno/{id}','cursosController@getAprobadosPorAlumno');
-	Route::get('cursos/profesor/{id}','cursosController@getDictadosPorProfesor');
-	Route::get('cursos/provincias/{id}','cursosController@getAlumnosDeCursosPorProvincia');
-	Route::get('cursos/{id}/alumnos','cursosController@getAlumnos');
-	Route::get('cursos/{id}/profesores','cursosController@getProfesores');
-	Route::get('cursos/{id}','cursosController@edit');
+    Route::get('cursos', 'CursosController@get');
+    Route::get('cursos/tabla', 'CursosController@getTabla');
+    Route::get('cursos/joined', 'CursosController@getJoined');
+    Route::get('cursos/alta', 'CursosController@create');
+    Route::get('cursos/nombres', 'CursosController@getNombres');
+    Route::get('cursos/excel', 'CursosController@getExcel');
+    Route::get('cursos/pdf', 'CursosController@getPdf');
+    Route::get('cursos/filtrado', 'CursosController@getFiltrado');
+    Route::get('cursos/alumno/{id}', 'CursosController@getAprobadosPorAlumno');
+    Route::get('cursos/profesor/{id}', 'CursosController@getDictadosPorProfesor');
+    Route::get('cursos/provincias/{id}', 'CursosController@getAlumnosDeCursosPorProvincia');
+    Route::get('cursos/{id}/alumnos', 'CursosController@getAlumnos');
+    Route::get('cursos/{id}/profesores', 'CursosController@getProfesores');
+    Route::get('cursos/{id}', 'CursosController@edit');
 
-	Route::post('cursos','cursosController@store');
+    Route::post('cursos', 'CursosController@store');
 
-	Route::put('cursos/{id}','cursosController@update');
+    Route::put('cursos/{id}', 'CursosController@update');
 
-	Route::delete('cursos/{id}','cursosController@destroy');
+    Route::delete('cursos/{id}', 'CursosController@destroy');
 
 //Relaciones de cursos con alumnos y profesores
-	Route::get('curso/{id}','cursosController@getByID');
-	Route::get('users/{id}/alumnos', 'cursosController@getAlumnos');	
+    Route::get('curso/{id}', 'CursosController@getByID');
+    Route::get('users/{id}/alumnos', 'CursosController@getAlumnos');
 
 //Filtros para todas las abms
-	Route::get('filtros/{tabla}','abmController@filtros');
-	Route::get('formularioConFiltros/{tabla}','abmController@formularioConFiltros');
+    Route::get('filtros/{tabla}', 'AbmController@filtros');
+    Route::get('formularioConFiltros/{tabla}', 'AbmController@formularioConFiltros');
 
 //Reportes
-	Route::get('reportes','reportesController@get');
-	Route::get('reportes/cursos','reportesController@getCursos');
-	Route::get('reportes/cursos/provincias/{id}/count','cursosController@getCountAlumnos');
+    Route::get('reportes', 'ReportesController@get');
+    Route::get('reportes/cursos', 'ReportesController@getCursos');
+    Route::get('reportes/cursos/provincias/{id}/count', 'CursosController@getCountAlumnos');
 
-	
-	Route::get('reportes/excel','reportesController@getExcelReporte');
-	Route::get('reportes/pdf','reportesController@getPDFReporte');
-	/*Route::get('reportes/pdf','reportesController@getPdf');*/
-	Route::get('reportes/query','reportesController@queryReporte');
-	Route::get('reportes/query/test','reportesController@queryTest');
-	Route::get('reportes/{id_reporte}','reportesController@reporte');
+    
+    Route::get('reportes/excel', 'ReportesController@getExcelReporte');
+    Route::get('reportes/pdf', 'ReportesController@getPDFReporte');
+    /*Route::get('reportes/pdf','ReportesController@getPdf');*/
+    Route::get('reportes/query', 'ReportesController@queryReporte');
+    Route::get('reportes/query/test', 'ReportesController@queryTest');
+    Route::get('reportes/{id_reporte}', 'ReportesController@reporte');
 
-	//Encuestas
-	Route::get('encuestas/g_plannacer', 'Encuestas\EncuestaController@g_plannacer');
-	Route::get('encuestas/g_plannacer/datos', 'Encuestas\EncuestaController@g_plannacerDatos');
-	Route::get('encuestas/google_form', 'Encuestas\EncuestaController@google_form');
-	Route::get('encuestas/survey', 'Encuestas\EncuestaController@survey');
-	Route::get('encuestas/grafico', 'Encuestas\EncuestaController@grafico');
-	Route::resource('encuestas', 'Encuestas\EncuestaController');
+    //Encuestas
+    Route::get('encuestas/g_plannacer', 'Encuestas\EncuestaController@g_plannacer');
+    Route::get('encuestas/g_plannacer/datos', 'Encuestas\EncuestaController@g_plannacerDatos');
+    Route::get('encuestas/google_form', 'Encuestas\EncuestaController@google_form');
+    Route::get('encuestas/survey', 'Encuestas\EncuestaController@survey');
+    Route::get('encuestas/grafico', 'Encuestas\EncuestaController@grafico');
+    Route::resource('encuestas', 'Encuestas\EncuestaController');
 
 
-	Route::group(['middleware' => 'admin'], function () {
+    Route::group(['middleware' => 'admin'], function () {
 
 //ADMIN
 //Areas tematicas
-		Route::get('areasTematicas','areasTematicasController@getTodos');
-		Route::get('areasTematicas/alta','areasTematicasController@create');
-		Route::get('areasTematicasTabla','areasTematicasController@getTabla');
-		Route::get('areasTematicas/{id}','areasTematicasController@edit');
+        Route::get('areasTematicas', 'AreasTematicasController@getTodos');
+        Route::get('areasTematicas/alta', 'AreasTematicasController@create');
+        Route::get('areasTematicasTabla', 'AreasTematicasController@getTabla');
+        Route::get('areasTematicas/{id}', 'AreasTematicasController@edit');
 
-		Route::post('areasTematicas','areasTematicasController@store');
+        Route::post('areasTematicas', 'AreasTematicasController@store');
 
-		Route::put('areasTematicas/{id}','areasTematicasController@update');
+        Route::put('areasTematicas/{id}', 'AreasTematicasController@update');
 
-		Route::delete('areasTematicas/{id}','areasTematicasController@destroy');
+        Route::delete('areasTematicas/{id}', 'AreasTematicasController@destroy');
 
 
 //Lineas estrategicas
-		Route::get('lineasEstrategicas','lineasEstrategicasController@getTodos');
-		Route::get('lineasEstrategicasTabla','lineasEstrategicasController@getTabla');
-		Route::get('lineasEstrategicas/alta','lineasEstrategicasController@create');
-		Route::get('lineasEstrategicas/{id}','lineasEstrategicasController@edit');
+        Route::get('lineasEstrategicas', 'LineasEstrategicasController@getTodos');
+        Route::get('lineasEstrategicasTabla', 'LineasEstrategicasController@getTabla');
+        Route::get('lineasEstrategicas/alta', 'LineasEstrategicasController@create');
+        Route::get('lineasEstrategicas/{id}', 'LineasEstrategicasController@edit');
 
-		Route::post('lineasEstrategicas','lineasEstrategicasController@store');
+        Route::post('lineasEstrategicas', 'LineasEstrategicasController@store');
 
-		Route::put('lineasEstrategicas/{id}','lineasEstrategicasController@update');
+        Route::put('lineasEstrategicas/{id}', 'LineasEstrategicasController@update');
 
-		Route::delete('lineasEstrategicas/{id}','lineasEstrategicasController@destroy');
+        Route::delete('lineasEstrategicas/{id}', 'LineasEstrategicasController@destroy');
 
-	//Gestores
-		Route::get('gestores/tabla','gestoresController@getTabla');
-		Route::resource('gestores', 'gestoresController');
+    //Gestores
+        Route::get('gestores/tabla', 'GestoresController@getTabla');
+        Route::resource('gestores', 'GestoresController');
 
 //No modificables
 
 //Paises
-		Route::get('paises/nombres','paisesController@getNombres');
+        Route::get('paises/nombres', 'PaisesController@getNombres');
 
 //Provincias
-		Route::get('provincias','provinciasController@index');
-		Route::get('provincias/{id}','provinciasController@show');
+        Route::get('provincias', 'ProvinciasController@index');
+        Route::get('provincias/{id}', 'ProvinciasController@show');
 
 //Efectores
-		Route::get('efectores','efectoresController@get');
-		Route::get('efectores/tabla','efectoresController@getTabla');
-		Route::get('efectores/nombres','efectoresController@getNombres');
-		Route::get('efectores/cuies','efectoresController@getCuiesTypeahead');
-		Route::get('efectores/siisas','efectoresController@getSiisas');
-		Route::get('efectores/typeahead','efectoresController@getTripleTypeahead');
-		Route::get('efectores/{cuie}/cursos','efectoresController@historialCursos');
-	});
+        Route::get('efectores', 'EfectoresController@get');
+        Route::get('efectores/tabla', 'EfectoresController@getTabla');
+        Route::get('efectores/nombres', 'EfectoresController@getNombres');
+        Route::get('efectores/cuies', 'EfectoresController@getCuiesTypeahead');
+        Route::get('efectores/siisas', 'EfectoresController@getSiisas');
+        Route::get('efectores/typeahead', 'EfectoresController@getTripleTypeahead');
+        Route::get('efectores/{cuie}/cursos', 'EfectoresController@historialCursos');
+    });
 });
 
 //Otros
-Route::get('/registrar', function() {
-	return view('registrar');
+Route::get('/registrar', function () {
+    return view('registrar');
 });
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
-
-
-

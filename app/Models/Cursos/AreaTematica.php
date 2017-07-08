@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\Cursos;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,20 +21,27 @@ class AreaTematica extends Model
      */
     protected $primaryKey = 'id_area_tematica';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['nombre'];
+
     public static function table()
     {
-    	return AreaTematica::all();
+        return AreaTematica::all();
     }
 
     public function crear(Request $r)
     {
-    	$this->nombre = $r->nombre;
-    	$this->save();
+        $this->nombre = $r->nombre;
+        $this->save();
     }
 
     public function modificar(Request $r)
     {
         $this->nombre = $r->nombre;
-        $this->save();   
+        $this->save();
     }
 }

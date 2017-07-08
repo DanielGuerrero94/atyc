@@ -7,17 +7,17 @@ use App\Http\Controllers\Mostrar\Mostrar;
 use DB;
 use Log;
 
-class testController extends Mostrar
+class TestController extends Mostrar
 {
 
-	public function __construct()
+    public function __construct()
     {
         $this->setVista('formulario');
         $this->setCampos(array('id','funcion','nombres'));
     }
 
-	public function hello()
-	{
-		logger('Hello');
-	}
+    public function hello()
+    {
+        logger('Hello');
+    }
 }
