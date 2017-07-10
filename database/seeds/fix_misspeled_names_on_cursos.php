@@ -13,7 +13,8 @@ class fix_misspeled_names_on_cursos extends Seeder
     {
     	/*Lista de similares*/
     	/*Hay que revisar que despues los reportes no den mal por eso*/
-        "Abordaje Integral de los adolescentes"
+        
+        /*"Abordaje Integral de los adolescentes"
         "Abordaje Integral de los Adolescentes"
         "Acciones con otros programas/organismos - programa Cáncer."
         "Acciones con otros programas/organismos - Programa Cáncer"
@@ -43,6 +44,6 @@ class fix_misspeled_names_on_cursos extends Seeder
         "Auditoría Médica"
         "Auitoria Médica"
         "bajas tasas de inscritos mensuales con CEB"
-        "Baja tasas de inscriptos mensuales con CEB"
+        "Baja tasas de inscriptos mensuales con CEB"*/
     }
 }
