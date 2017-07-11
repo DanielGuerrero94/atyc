@@ -38,7 +38,7 @@
 		</div>
 	</div>
 	@endif
-	<div id="reporte" data-id="{{$provincia_usuario->id_provincia}}">
+	<div id="reporte" data-id="{{$provincia_usuario->id_provincia}}" style="display:none;">
 		{{ csrf_field() }}
 		<div class="col-md-12">
 			<div class="box box-info ">
@@ -77,10 +77,15 @@
 
 	$(document).ready(function(){
 
-		var id_provincia = $('#abm').data('id');
+		var id_provincia = $('#reporte').data('id');
 
-		$('#reporte-table').DataTable({			
+		if(id_provincia != 25){
+
+			$('#reporte').show();
+
+			$('#reporte-table').DataTable({			
 			ajax : 'cursos/provincias/'+id_provincia+'/count',
+			destroy: true,
 			columns: [
 			{ data: 'nombre'},
 			{ data: 'edicion'},
@@ -91,14 +96,50 @@
 			{ data: 'provincia'},
 			{ data: 'duracion'}
 			]
-		});	
+			});	
+
+		}
+
+		function getFiltrosJson() {
+			var id_provincia = $('#filtros #provincia :selected').data('id');
+
+			return {
+				id_provincia: id_provincia
+				};
+		};
+
+		$('#filtrar').on('click',function (event) {
+			event.preventDefault();
+
+			$('#reporte').show();
+
+			var id_provincia = $('#filtros #provincia :selected').data('id');
+
+			$('#reporte-table').DataTable({			
+			ajax : 'cursos/provincias/'+id_provincia+'/count',
+			destroy: true,
+			columns: [
+			{ data: 'nombre'},
+			{ data: 'edicion'},
+			{ data: 'fecha'},
+			{ data: 'cantidad_alumnos'},
+			{ data: 'linea_estrategica'},
+			{ data: 'area_tematica'},
+			{ data: 'provincia'},
+			{ data: 'duracion'}
+			]
+			});	
+
+		});		
 
 		$('.excel').on('click',function () {
+			var filtros = getFiltrosJson();	
 
 			$.ajax({
 				url: 'excel',
 				data: {
-					id_reporte : 6
+					id_reporte : 6,
+					filtros: filtros
 				},
 				success: function(data){
 					window.location="descargar/"+data;
@@ -111,11 +152,13 @@
 		});
 
 		$('.pdf').on('click',function () {
+			var filtros = getFiltrosJson();	
 
 			$.ajax({
 				url: 'pdf',
 				data: {
-					id_reporte : 6
+					id_reporte : 6,
+					filtros: filtros
 				},
 				success: function(data){
 					window.location="descargar/"+data;

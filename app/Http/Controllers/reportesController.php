@@ -60,9 +60,9 @@ class reportesController extends Controller
 
 	private function queryLogica(Request $r)
 	{
-		Log::info("Reporte: ".json_encode($r->id_reporte));
-		Log::info("Filtros: ".json_encode($r->filtros));
-		Log::info("Order By: ".json_encode($r->order_by));
+		logger("Reporte: ".json_encode($r->id_reporte));
+		logger("Filtros: ".json_encode($r->filtros));
+		logger("Order By: ".json_encode($r->order_by));
 		//Esta parte me quedo horrible voy a tener que reeverlo porque tengo demasiados if
 		//En el caso que no sea un periodo de los que hay en la tabla le concateno las fechas que me pasaron para la columna periodo
 		
@@ -98,8 +98,8 @@ class reportesController extends Controller
 	public function getExcel()
 	{
 		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos.cursos C 
-		left join cursos.cursos_alumnos CA ON CA.id_cursos = C.id_curso 
-		left join alumnos.alumnos A ON CA.id_alumnos = A.id_alumno
+		left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
+		left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
 		inner join sistema.provincias P ON P.id_provincia = C.id_provincia
 		inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
 		inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre
@@ -107,7 +107,7 @@ class reportesController extends Controller
 
 		$data = DB::select($query);
 		$datos = ['cursos' => $data];
-		Log::info($datos);
+		logger($datos);
 
 		Excel::create('Cursos' , function ($excel) use ($datos){
 			$excel->sheet('Tabla_cursos' , function ($sheet) use ($datos){
@@ -122,8 +122,8 @@ class reportesController extends Controller
 	public function getPdf()
 	{
 		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as \"cantidad_alumnos\", CONCAT(LE.numero,'-',LE.nombre) as \"linea_estrategica\",AT.nombre as \"area_tematica\",P.nombre as \"provincia\",C.duracion from cursos C 
-		left join cursos_alumnos CA ON CA.id_cursos = C.id 
-		left join alumnos A ON CA.id_alumnos = A.id
+		left join cursos_alumnos CA ON CA.id_curso = C.id 
+		left join alumnos A ON CA.id_alumno = A.id
 		inner join provincias P ON P.id = C.id_provincia
 		inner join area_tematicas AT ON AT.id = C.id_area_tematica 
 		inner join linea_estrategicas LE ON LE.id = C.id_linea_estrategica  group by C.id,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre
@@ -131,7 +131,7 @@ class reportesController extends Controller
 
 		$data = DB::select($query);
 		$datos = ['cursos' => $data];
-		Log::info('Antes');
+		logger('Antes');
 		$pdf = PDF::loadView('excel.generico',$datos)->download('generico.pdf');
 		
 		return $pdf;

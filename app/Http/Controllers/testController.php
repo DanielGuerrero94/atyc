@@ -18,6 +18,6 @@ class testController extends Mostrar
 
 	public function hello()
 	{
-		Log::info('Hello');
+		logger('Hello');
 	}
 }

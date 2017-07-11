@@ -30,7 +30,7 @@ class Alumno extends Model
     public function cursos()
     {   
         return $this
-            ->belongsToMany('App\Curso', 'cursos_alumnos', 'id_cursos', 'id_alumnos')
+            ->belongsToMany('App\Curso', 'cursos_alumnos', 'id_curso', 'id_alumno')
             ->withTimestamps();
     }
 

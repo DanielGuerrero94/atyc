@@ -211,7 +211,7 @@ class cursosController extends AbmController
 	{
 		$returns = Curso::whereHas('alumnos',function ($query) use ($alumno)
 		{
-			$query->where('id_alumno',$alumno);
+			$query->where('alumnos.id_alumno',$alumno);
 		})
 		->select('id_curso','nombre','duracion','id_provincia')
 		->with('provincia');
@@ -226,7 +226,7 @@ class cursosController extends AbmController
 	{
 		$returns = Curso::whereHas('profesores',function ($query) use ($profesor)
 		{
-			$query->where('id_profesor',$profesor);
+			$query->where('profesores.id_profesor',$profesor);
 		})			
 		->select('id_curso','nombre','fecha','id_provincia')			
 		->with('provincia');
@@ -258,24 +258,18 @@ class cursosController extends AbmController
 
 	public function getProfesores($id)
 	{
-		logger($id);
-
 		$curso = Curso::findOrFail($id)
-		->with([
+		/*->with([
 			'profesores' => function($q){
 				$q->with(['tipoDocumento']);
 			}
 		])
-		->select('profesores.id_profesor','nombres','apellidos','profesores.tipoDocumento.nombre','nro_doc')
-		->get();
-
-		logger($curso);
-
-		/*->join('sistema.tipos_documentos','sistema.tipos_documentos.id_tipo_documento','=','sistema.profesores.id_tipo_documento')
-		->select('profesores.id_profesor','nombres','apellidos','sistema.tipos_documentos.nombre as tipo_doc','nro_doc')
+		->select('sistema.profesores.id_profesor','nombres','apellidos','profesores.tipoDocumento.nombre','nro_doc')
 		->get();*/
-
-		logger($curso);
+		->profesores()
+		->join('sistema.tipos_documentos','sistema.tipos_documentos.id_tipo_documento','=','sistema.profesores.id_tipo_documento')
+		->select('profesores.id_profesor','nombres','apellidos','sistema.tipos_documentos.nombre as tipo_doc','nro_doc')
+		->get();
 
 		$returns = collect($curso)->map(function ($item,$key){
 			return array('id_profesor' => $item['id_profesor'],
@@ -284,8 +278,6 @@ class cursosController extends AbmController
 				'id_tipo_documento' => $item['tipo_doc'],
 				'nro_doc' => $item['nro_doc']);
 		});
-
-		logger($returns);
 
 		return Datatables::of($returns)
 		->addColumn('acciones' , function($ret){
@@ -322,8 +314,8 @@ class cursosController extends AbmController
 	public function getCountAlumnos($id)
 	{
 		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as \"linea_estrategica\",AT.nombre as \"area_tematica\",P.nombre as \"provincia\",C.duracion from cursos.cursos C 
-		left join cursos.cursos_alumnos CA ON CA.id_cursos = C.id_curso 
-		left join alumnos.alumnos A ON CA.id_alumnos = A.id_alumno
+		left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
+		left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
 		inner join sistema.provincias P ON P.id_provincia = C.id_provincia
 		inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
 		inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica";

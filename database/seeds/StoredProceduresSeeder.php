@@ -32,8 +32,8 @@ class StoredProceduresSeeder extends Seeder
       \$BODY\$
       BEGIN IF var_provincia = 0 THEN
       RETURN QUERY SELECT sub.provincia,count(*) as cantidad_alumnos FROM (SELECT A.id_alumno,P.nombre as provincia,sum(C.duracion) as horas_cursadas FROM alumnos.alumnos A
-        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumnos
-        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_cursos
+        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
+        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
         AND C.fecha 
         BETWEEN desde
@@ -44,8 +44,8 @@ class StoredProceduresSeeder extends Seeder
       GROUP BY sub.provincia;
       ELSE RETURN QUERY 
       SELECT sub.provincia,count(*) as cantidad_alumnos FROM (SELECT A.id_alumno,P.nombre as provincia,sum(C.duracion) as horas_cursadas FROM alumnos.alumnos A
-        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumnos
-        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_cursos
+        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
+        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
         AND C.fecha 
         BETWEEN desde
@@ -72,8 +72,8 @@ class StoredProceduresSeeder extends Seeder
       \$BODY\$
       BEGIN IF var_provincia = 0 THEN
       RETURN QUERY SELECT sub.provincia,count(*) as cantidad_alumnos FROM (SELECT A.id_alumno,P.nombre as provincia,sum(C.duracion) as horas_cursadas FROM alumnos.alumnos A
-        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumnos
-        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_cursos
+        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
+        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
         WHERE (A.id_trabajo = 2 OR A.id_trabajo = 3)
         AND C.fecha 
@@ -85,8 +85,8 @@ class StoredProceduresSeeder extends Seeder
       GROUP BY sub.provincia;
       ELSE RETURN QUERY 
       SELECT sub.provincia,count(*) as cantidad_alumnos FROM (SELECT A.id_alumno,P.nombre as provincia,sum(C.duracion) as horas_cursadas FROM alumnos.alumnos A
-        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumnos
-        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_cursos
+        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
+        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
         WHERE (A.id_trabajo = 2 OR A.id_trabajo = 3)
         AND C.fecha 
@@ -114,8 +114,8 @@ class StoredProceduresSeeder extends Seeder
       \$BODY\$
       BEGIN IF var_provincia = 0 THEN
       RETURN QUERY SELECT sub.provincia,count(*) as cantidad_alumnos FROM (SELECT A.id_alumno,P.nombre as provincia FROM alumnos.alumnos A
-        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumnos
-        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_cursos
+        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
+        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
         WHERE C.fecha 
         BETWEEN desde
@@ -124,8 +124,8 @@ class StoredProceduresSeeder extends Seeder
       GROUP BY sub.provincia;
       ELSE RETURN QUERY
       SELECT sub.provincia,count(*) as cantidad_alumnos FROM (SELECT A.id_alumno,P.nombre as provincia FROM alumnos.alumnos A
-        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumnos
-        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_cursos
+        INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
+        INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
         WHERE C.fecha 
         BETWEEN desde
@@ -150,8 +150,8 @@ class StoredProceduresSeeder extends Seeder
       \$BODY\$SELECT P.nombre as provincia,efectores_capacitados.capacitados,total_efectores.total,(CAST(efectores_capacitados.capacitados as float)*100)/CAST(total_efectores.total as float) as porcentaje FROM (
         SELECT count(subA.capacitados) capacitados
         FROM (SELECT A.establecimiento1 as capacitados,P.id_provincia as provincia FROM alumnos.alumnos A 
-          INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumnos
-          INNER JOIN cursos.cursos C ON C.id_curso = CA.id_cursos
+          INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
+          INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
           INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
           WHERE id_trabajo = 2 AND id_convenio = 3 
           AND C.fecha 

@@ -14,8 +14,8 @@ class PivotCursosProfesores extends Migration
     public function up()
     {
         Schema::create('cursos.cursos_profesores', function (Blueprint $table) {
-            $table->integer('id_cursos');//FK
-            $table->integer('id_profesores');//FK
+            $table->integer('id_curso');//FK
+            $table->integer('id_profesor');//FK
             $table->timestamps();
         });
 

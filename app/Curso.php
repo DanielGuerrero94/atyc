@@ -26,12 +26,12 @@ class Curso extends Model
 
 	public function profesores()
 	{
-		return $this->belongsToMany('App\Profesor','cursos.cursos_profesores','id_cursos','id_profesores')->withTimestamps();
+		return $this->belongsToMany('App\Profesor','cursos.cursos_profesores','id_curso','id_profesor')->withTimestamps();
 	}
 
 	public function alumnos()
     {   
-        return $this->belongsToMany('App\Alumno','cursos.cursos_alumnos','id_cursos','id_alumnos')->withTimestamps();
+        return $this->belongsToMany('App\Alumno','cursos.cursos_alumnos','id_curso','id_alumno')->withTimestamps();
     }
 
 	public function provincia()
@@ -82,8 +82,8 @@ class Curso extends Model
 	public static function getByCuie($cuie)
 	{
 		return DB::table('cursos.cursos')
-        ->join('cursos.cursos_alumnos','cursos.cursos_alumnos.id_cursos','=','cursos.cursos.id_curso')
-        ->join('alumnos.alumnos','alumnos.alumnos.id_alumno','=','cursos.cursos_alumnos.id_alumnos')
+        ->join('cursos.cursos_alumnos','cursos.cursos_alumnos.id_curso','=','cursos.cursos.id_curso')
+        ->join('alumnos.alumnos','alumnos.alumnos.id_alumno','=','cursos.cursos_alumnos.id_alumno')
         ->select('cursos.cursos.id_curso','cursos.cursos.nombre','cursos.cursos.fecha',DB::raw('count(*) as alumnos'))
         ->where('alumnos.alumnos.establecimiento1','=',$cuie)
         ->groupBy('cursos.cursos.id_curso','cursos.cursos.nombre','cursos.cursos.fecha')

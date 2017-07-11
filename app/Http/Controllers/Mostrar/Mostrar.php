@@ -52,7 +52,7 @@ class Mostrar extends Controller implements Mostrable
             	return $value;
             }    
         });
-		Log::info($filtered);
+		logger($filtered);
 		return view($this->vista,['columnas' => $filtered]);
 	}	
 

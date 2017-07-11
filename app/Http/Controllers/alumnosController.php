@@ -20,7 +20,7 @@ use App\PDF as Pdf;
 class alumnosController extends AbmController
 {
     private 
-    $_rules = [
+    $rules = [
     'nombres' => 'required|string',
     'apellidos' => 'required|string',
     'id_tipo_documento' => 'required|numeric',
@@ -41,7 +41,7 @@ class alumnosController extends AbmController
     ];
 
     private 
-    $_filters = [
+    $filters = [
     'nombres' => 'string',
     'apellidos' => 'string',
     'id_tipo_documento' => 'numeric',
@@ -52,8 +52,8 @@ class alumnosController extends AbmController
     'localidad' => 'string',
     'nro_doc' => 'numeric'];
 
-    private $_campos = ["nombres","apellidos","tipo_documento","nro_doc","provincia","acciones"];
-    private $_botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
+    private $campos = ["nombres","apellidos","tipo_documento","nro_doc","provincia","acciones"];
+    private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
 
     public function query($query)
     {
@@ -98,7 +98,7 @@ class alumnosController extends AbmController
      */
     public function store(Request $request)
     {
-        $v = Validator::make($request->all(), $this->_rules);
+        $v = Validator::make($request->all(), $this->rules);
 
         if (!$v->fails()) {
             if ($request->has('pais')) {
@@ -342,7 +342,7 @@ class alumnosController extends AbmController
 
         $order_by = $r->has('order_by')?$r->get('order_by'):null;
 
-        $v = Validator::make($filtros->all(), $this->_filters);
+        $v = Validator::make($filtros->all(), $this->filters);
         if (!$v->fails()) {
 
             $query = $this->queryLogica($r, $filtros, $order_by);             

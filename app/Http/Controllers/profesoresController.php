@@ -94,7 +94,7 @@ class profesoresController extends AbmController
             $profesor = new Profesor();         
             $profesor->crear($request);
         }else{
-            Log::info('El profesor no paso la verificacion.'); 
+            logger('El profesor no paso la verificacion.'); 
         }   
     }
 
@@ -220,8 +220,8 @@ class profesoresController extends AbmController
 
             return $this->toDatatable($r,$query);
         }else{ 
-            Log::info('No paso');
-            Log::info($v->errors());
+            logger('No paso');
+            logger($v->errors());
             return json_encode($v->errors());
         }        
     }

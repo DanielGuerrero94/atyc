@@ -14,9 +14,9 @@ class AlterCursosProfesoresPivot01 extends Migration
     public function up()
     {
         Schema::table('cursos.cursos_profesores', function (Blueprint $table) {
-            $table->primary(['id_cursos', 'id_profesores']);
-            $table->foreign('id_cursos')->references('id_curso')->on('cursos.cursos');
-            $table->foreign('id_profesores')->references('id_profesor')->on('sistema.profesores');
+            $table->primary(['id_curso', 'id_profesor']);
+            $table->foreign('id_curso')->references('id_curso')->on('cursos.cursos');
+            $table->foreign('id_profesor')->references('id_profesor')->on('sistema.profesores');
         });
     }
 

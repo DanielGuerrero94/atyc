@@ -31,11 +31,11 @@ class abmController extends Controller
             WHERE table_schema = 'public'
             AND table_name   = '".$tabla."';");
         
-        /*Log::info("Query:".json_encode($r));*/
+        /*logger("Query:".json_encode($r));*/
 
         $ret = collect($r);
 
-/*        Log::info(json_encode($ret));*/
+/*        logger(json_encode($ret));*/
 
         $filtered = $ret->filter(function ($value,$key)
         {
@@ -50,14 +50,14 @@ class abmController extends Controller
             }    
         });
 
-/*        Log::info(json_encode($ret));*/
+/*        logger(json_encode($ret));*/
 
         return json_encode($filtered);
     }
 
     public function formularioConFiltros($tabla)
     {
-        Log::info($tabla);
+        logger($tabla);
         return view('formulario',['columnas' => json_decode($this->filtros($tabla),true)]);
     }
 
