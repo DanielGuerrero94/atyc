@@ -175,14 +175,22 @@
 
         </nav> 
       </header>
+      @if (!Auth::guest())
       <aside class="main-sidebar">
         @include('layouts.sidebar')
-      </aside>            
+      </aside>
       <div class="content-wrapper">      
         <section class="content">
           @yield('content')
         </section>
       </div>
+      @else
+      <div class="content-wrapper" style="margin-left:0em;">      
+        <section class="content">
+          @yield('content')
+        </section>
+      </div>
+      @endif   
     </div>  
   </body>
   </html>

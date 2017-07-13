@@ -1,5 +1,5 @@
 <section class="sidebar" style="height: auto;">
-  <form action="#" method="get" class="sidebar-form">
+  {{-- <form action="#" method="get" class="sidebar-form">
     <div class="input-group">
       <input type="text" name="q" class="form-control" placeholder="Buscar...">
       <span class="input-group-btn">
@@ -8,7 +8,7 @@
         </button>
       </span>
     </div>
-  </form>
+  </form> --}}
   <ul class="sidebar-menu tree" data-widget="tree">
     <li class="header text-center">
       <b><span>MENU</span></b>
