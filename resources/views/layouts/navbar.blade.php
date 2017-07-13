@@ -187,7 +187,8 @@
         </li>
       </ul>
     </li> -->
-    <li class="dropdown user user-menu">
+
+    <!--<li class="dropdown user user-menu">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">
         <span class="hidden-xs">{{ Auth::user()->title }}</span>
       </a>
@@ -228,9 +229,18 @@
         </div>
       </li>
     </ul>
+  </li>-->
+  <li>
+            <a href="{{ url('/logout') }}" onclick="event.preventDefault();
+            document.getElementById('logout-form').submit();" id="logout">
+            Salir
+          </a>
+          <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
+            {{ csrf_field() }}
+          </form>
   </li>
   @else
-  <li class="dropdown user user-menu">
+  <!--<li class="dropdown user user-menu">
     <a href="{{url('/entrar')}}" class="dropdown-toggle" data-toggle="dropdown">
       <span class="hidden-xs">Entrar</span>
     </a>
@@ -262,7 +272,10 @@
         </div>
       </li>
     </ul>
-  </li>
+  </li>-->
+  <li>
+    <a href="{{url("/entrar")}}" class="btn btn-primary btn-flat">Entrar</a>
+    </li>
   @endif
 </ul>
 </div>

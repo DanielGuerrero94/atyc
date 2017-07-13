@@ -187,6 +187,8 @@ class profesoresController extends AbmController
             return $value;   
         });
 
+        logger(json_encode($filtered));
+
             //Otra forma puedo ir agregando clausulas where
         $query = Profesor::leftJoin('sistema.tipos_documentos','sistema.profesores.id_tipo_documento','=','sistema.tipos_documentos.id_tipo_documento')
         ->select(
@@ -213,7 +215,7 @@ class profesoresController extends AbmController
 
         //Tengo que crear un metodo lo suficientemente generico como para poder ponerlo en abmcontroller
         //Hago un test solo por nombre para armar el front end
-        $v = Validator::make($filtros->all(),$this->_filters);
+        $v = Validator::make($filtros->all(),$this->filters);
         if(!$v->fails()){
 
             $query = $this->queryLogica($r,$filtros);               

@@ -64,7 +64,7 @@
 			},
 			dropdownFilter: "Filtro",
 			emptyTemplate: function(){
-				return '<tr><td><span>No hay resultados</span></td><br><td><i class="fa fa-plus text-green"></i><span>Crear profesor</span></td></tr>';
+				return '<tr><td><a href="profesores"><i class="fa fa-plus text-green"></i><span>Crear profesor</span></a></td></tr>';
 			},
 			source: {
 				Nombres: {

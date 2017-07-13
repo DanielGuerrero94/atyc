@@ -32,6 +32,7 @@
 
 		$('#abm-table').DataTable({
 			destroy: true,
+			searching: false,
 			ajax : 'alumnos/tabla',
 			columns: [
 			{ data: 'nombres'},
@@ -77,6 +78,7 @@
 
 			$('#abm-table').DataTable({
 				destroy: true,
+				searching: false,
 				ajax: {
 					url: 'alumnos/filtrado',
 					data: {

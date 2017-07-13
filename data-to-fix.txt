@@ -1,0 +1,14 @@
+documentos de profesores que se ven mal en el excel
+08400451
+085929923
+20 159 010
+23.384.257
+DNI 26.889.539
+28.229.284
+16.628.645
+20.113.853
+24.370.922
+
+el reporte de cursos no imprime los excel y pdf
+el pdf tiene una hoja demas al principio
+arreglar la modificacion de alumno

@@ -52,7 +52,7 @@ class alumnosController extends AbmController
     'localidad' => 'string',
     'nro_doc' => 'numeric'];
 
-    private $campos = ["nombres","apellidos","tipo_documento","nro_doc","provincia","acciones"];
+    private $campos = ["nombres","apellidos","id_tipo_documento","nro_doc","provincia","acciones"];
     private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
 
     public function query($query)
@@ -395,7 +395,8 @@ class alumnosController extends AbmController
         $filtros = collect($filtros->get('filtros'));
         $order_by = $r->order_by;
 
-        $data = $this->queryLogica($r, $filtros, $order_by);
+        $data = $this->queryLogica($r, $filtros, $order_by)
+        ->get();
         $datos = ['alumnos' => $data];
         $path = "alumnos_filtrados_".date("Y-m-d_H:i:s");
         

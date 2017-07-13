@@ -90,7 +90,7 @@ class Alumno extends Model
     {
         $id_provincia = Auth::user()->id_provincia;
         if ($id_provincia != 25) {           
-            return $query->where('id_provincia', $id_provincia);
+            return $query->where('alumnos.id_provincia', $id_provincia);
         }
     }
 }

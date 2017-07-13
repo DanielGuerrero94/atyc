@@ -100,14 +100,14 @@
       </div>
     </div>
   </div> -->
-  <div class="col-lg-8 col-xs-12">
+  <div class="col-lg-12 col-xs-12">
     <div class="box box-danger">
       <div class="box-body">
         <div id="pieTestHighchart"></div>
       </div>
     </div>
   </div>
-  <div class="col-lg-4 col-xs-6">
+  <!--<div class="col-lg-4 col-xs-6">
     <div class="box box-danger">
      <div class="box-header with-border">
       <h3 class="box-title">Provincias con mas cursos dictados</h3>
@@ -116,7 +116,7 @@
       <div id="pieProvinciasHighchart"></div>
     </div>
   </div>
-</div>
+</div>-->
 </div>
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
 	<div class="col-lg-4 col-xs-6">
@@ -194,9 +194,9 @@
 		</div>
 	</div>
 </div>
-<div class="row" style="margin-right: 5px;margin-left: 5px;">
+<!--<div class="row" style="margin-right: 5px;margin-left: 5px;">
   <div id="highchart"></div>  
-</div>
+</div>-->
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
   <div id="columnDrilldown"></div>  
 </div>
@@ -253,7 +253,7 @@
       }
     });
 
-    Highcharts.chart('highchart', {
+    /*Highcharts.chart('highchart', {
 
       title: {
         text: 'Solar Employment Growth by Sector, 2010-2016'
@@ -297,7 +297,7 @@
         data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
       }]
 
-    });
+    });*/
 
 
 
@@ -334,7 +334,7 @@ Highcharts.getOptions().plotOptions.pie.colors = (function () {
     }());
 
 // Build the chart
-Highcharts.chart('pieProvinciasHighchart', {
+/*Highcharts.chart('pieProvinciasHighchart', {
   chart: {
     plotBackgroundColor: null,
     plotBorderWidth: null,
@@ -371,7 +371,7 @@ Highcharts.chart('pieProvinciasHighchart', {
     { name: 'Proprietary or Undetectable', y: 0.2 }
     ]
   }]
-});
+});*/
 
 $.blockUI({ 
  css: {

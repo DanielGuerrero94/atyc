@@ -30,6 +30,7 @@
 
 		$('#abm-table').DataTable({
 			destroy: true,
+			searching: false,
 			ajax : 'cursos/tabla',
 			columns: [
 			{ data: 'nombre'},
@@ -130,6 +131,7 @@
 
 			$('#abm-table').DataTable({
 				destroy: true,
+				searching: false,
 				ajax: {
 					url: 'cursos/filtrado',
 					data: {

@@ -38,6 +38,7 @@
 
 		$('#table').DataTable({
 			destroy: true,
+			searching: false,
 			ajax : 'profesores/tabla',
 			columns: [
 			{ data: 'nombres'},
@@ -55,7 +56,7 @@
 		function getFiltrosJson() {
 			var nombres = $('#nombres')	.val();
 			var apellidos = $('#apellidos').val();
-			var id_tipo_documento = $('#tipo_doc option:selected').val()
+			var id_tipo_documento = $('#id_tipo_documento option:selected').val()
 			var id_pais = $('#nacionalidad').val();
 			var nro_doc = $('#nro_doc').val();
 			var email = $('#email').val();
@@ -80,6 +81,7 @@
 
 				$('#table').DataTable({
 					destroy: true,
+					searching: false,
 					ajax: {
 						url: 'profesores/filtrado',
 						data: {

@@ -64,7 +64,7 @@
 			},
 			dropdownFilter: "Filtro",
 			emptyTemplate: function(){
-				return '<tr><td><span>No hay resultados</span></td><br><td><i class="fa fa-plus text-green"></i><span>Crear alumno</span></td></tr>';
+				return '<tr><td><a href="alumnos"><i class="fa fa-plus text-green"></i><span>Crear alumno</span></a></td></tr>';
 			},
 			source: {
 				Nombres: {

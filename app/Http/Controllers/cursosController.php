@@ -459,9 +459,9 @@ class cursosController extends AbmController
 		$filtros = collect($filtros->get('filtros'));
 
 		$order_by = collect($r->only('order_by'));
-		logger(json_encode($order_by));
 
-		$data = $this->queryLogica($r,$filtros,$order_by);
+		$data = $this->queryLogica($r,$filtros,$order_by)->get();
+		logger(json_encode($data));
 		$datos = ['cursos' => $data];
 		$path = "cursos_filtrados_".date("Y-m-d_H:i:s");
 
