@@ -17,7 +17,7 @@ use App\PDF as Pdf;
 class profesoresController extends AbmController
 {    
     private 
-    $_rules = [
+    $rules = [
     'nombres' => 'required|string',
     'apellidos' => 'required|string',
     'id_tipo_documento' => 'required|numeric',
@@ -26,20 +26,20 @@ class profesoresController extends AbmController
     'email' => 'nullable|email',
     'tel' => 'nullable',
     'cel' => 'nullable'
-    ];
-
-    private 
-    $_filters = [
+    ], 
+    $filters = [
     'nombres' => 'string',
     'apellidos' => 'string',
     'id_tipo_doc' => 'numeric',
     'cel' => 'string',
     'tel' => 'string',
     'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
-    'nro_doc' => 'numeric'];
-
-    private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
-
+    'nro_doc' => 'numeric'
+    ],
+    $botones = [
+        'fa fa-pencil-square-o',
+        'fa fa-trash-o'
+    ];
     public function query($query)
     {
     	return DB::connection('eLearning')->select($query);
@@ -84,7 +84,7 @@ class profesoresController extends AbmController
     public function store(Request $request)
     {
         logger($request);
-        $v = Validator::make($request->all(),$this->_rules);
+        $v = Validator::make($request->all(),$this->rules);
         if(!$v->fails()){
             //Si le setearon pais busco su id
             /*if($request->has('pais')){
@@ -95,7 +95,7 @@ class profesoresController extends AbmController
             $profesor->crear($request);
         }else{
             logger('El profesor no paso la verificacion.'); 
-        }   
+        }  
     }
 
     /**
@@ -346,8 +346,9 @@ class profesoresController extends AbmController
      */
     public function checkDocumentos($documento)
     {
-        $ret = Profesor::where('nro_doc',$documento)
-        ->get();
-        return count($ret) != 0?'true':'false';
+        return json_encode(
+            Profesor::where('nro_doc', $documento)
+                ->get()->count() != 0
+        );
     }
 }

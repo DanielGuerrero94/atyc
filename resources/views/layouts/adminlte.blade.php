@@ -226,6 +226,7 @@
     $.extend( $.fn.dataTable.defaults, {
       processing: true,
       scrollY:"400px",
+      scrollCollapse: true,
       serverSide: true,
       rowReorder: {
         selector: 'td:nth-child(2)'
