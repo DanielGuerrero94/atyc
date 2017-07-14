@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\AreaTematica;
+use App\Models\Cursos\AreaTematica;
 use Datatables;
 
 class AreasTematicasController extends Controller
@@ -37,9 +37,8 @@ class AreasTematicasController extends Controller
      */
     public function store(Request $request)
     {
-        $area = new AreaTematica();
-        //$area->crear($request);
-        $area->create($request);
+            $area = new AreaTematica();
+            return $area->create($request->all());
     }
 
     /**

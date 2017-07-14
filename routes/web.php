@@ -23,6 +23,8 @@ Route::get('test/excel', 'ReportesController@getExcel');
 
 Route::get('test/pdf', 'ReportesController@getPdf');
 
+Route::resource('log', 'LogController');
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes

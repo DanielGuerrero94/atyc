@@ -13,10 +13,10 @@ class FakerSeeder extends Seeder
 		factory(App\Trabajo::class, 10)->create();
 		factory(App\Funcion::class, 10)->create();
 		factory(App\Convenio::class, 10)->create();
-		factory(App\LineaEstrategica::class, 30)->create();
-		factory(App\AreaTematica::class, 30)->create();
+		factory(App\Models\Cursos\LineaEstrategica::class, 30)->create();
+		factory(App\Models\Cursos\AreaTematica::class, 30)->create();
 		factory(App\Alumno::class, 30)->create();
 		factory(App\Profesor::class, 30)->create();
-		factory(App\Curso::class, 10)->create();
+		factory(App\Models\Cursos\Curso::class, 10)->create();
 	}
 }

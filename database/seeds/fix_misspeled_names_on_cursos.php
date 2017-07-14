@@ -11,10 +11,9 @@ class fix_misspeled_names_on_cursos extends Seeder
      */
     public function run()
     {
-    	/*Lista de similares*/
-    	/*Hay que revisar que despues los reportes no den mal por eso*/
-        
-        /*"Abordaje Integral de los adolescentes"
+    	/*Lista de similares
+        Hay que revisar que despues los reportes no den mal por eso
+        "Abordaje Integral de los adolescentes"
         "Abordaje Integral de los Adolescentes"
         "Acciones con otros programas/organismos - programa Cáncer."
         "Acciones con otros programas/organismos - Programa Cáncer"

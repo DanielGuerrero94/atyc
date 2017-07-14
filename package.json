@@ -16,5 +16,23 @@
     "lodash": "^4.16.2",
     "vue": "^2.0.1",
     "vue-resource": "^1.0.3"
-  }
+  },
+  "name": "atyc",
+  "description": "Sistema de gestion de alumnos,profesores,cursos,encuestas,reportes para las UCGP, desarrollado en php con Laravel.",
+  "version": "1.0.0",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanielGuerrero94/elearning.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DanielGuerrero94/elearning/issues"
+  },
+  "homepage": "https://github.com/DanielGuerrero94/elearning#readme"
 }

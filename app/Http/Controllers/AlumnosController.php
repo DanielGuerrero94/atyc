@@ -16,6 +16,7 @@ use Datatables;
 use Log;
 use Excel;
 use App\PDF as Pdf;
+use Illuminate\Support\Facades\Cache;
 
 class AlumnosController extends AbmController
 {
@@ -190,14 +191,31 @@ class AlumnosController extends AbmController
      */
     public function getSelectOptions()
     {
-        $documentos = TipoDocumento::all();
-        $provincias = Provincia::orderBy('nombre')->get();
-        $trabajos = Trabajo::orderBy('nombre')->get();
-        $funciones = Funcion::orderBy('nombre')->get();
-        $organismos = Alumno::select('organismo1')->groupBy('organismo1')->orderBy('organismo1')->get();
+        $tipo_documentos = Cache::remember('tipo_documentos', 5, function () {
+            return TipoDocumento::all();
+        });
+
+        $provincias = Cache::remember('provincias', 5, function () {
+            return Provincia::orderBy('nombre')->get();
+        });
+
+        $trabajos = Cache::remember('trabajos', 5, function () {
+            return Trabajo::orderBy('nombre')->get();
+        });
+
+        $funciones = Cache::remember('funciones', 5, function () {
+            return Funcion::orderBy('nombre')->get();
+        });
+
+        $organismos = Cache::remember('organismo', 5, function () {
+            return Alumno::select('organismo1')
+            ->groupBy('organismo1')
+            ->orderBy('organismo1')
+            ->get();
+        });
 
         return array(
-            'documentos' => $documentos,
+            'documentos' => $tipo_documentos,
             'provincias' => $provincias,
             'trabajos' => $trabajos,
             'funciones' => $funciones,
@@ -339,7 +357,7 @@ class AlumnosController extends AbmController
         $filtros = collect($r->only('filtros'));
         $filtros = collect($filtros->get('filtros'));
 
-        $order_by = $r->has('order_by')?$r->get('order_by'):null;
+        $order_by = $r->input('order_by',null)?$r->get('order_by'):null;
 
         $v = Validator::make($filtros->all(), $this->filters);
         if (!$v->fails()) {
@@ -366,7 +384,7 @@ class AlumnosController extends AbmController
             'acciones',
             function ($ret) use ($r) {
 
-                $accion = $r->has('botones')?$r->botones:null;
+                $accion = $r->input('botones');
 
                 $editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_alumno.'"><button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
 
