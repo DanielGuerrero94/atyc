@@ -36,14 +36,13 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return DB::table('users')
-        ->join('user_roles', 'users.id', '=', 'user_roles.user_id')
-        ->join('roles', 'user_roles.role_id', '=', 'roles.id')
-        ->select(
-            'users.*',
-            'roles.*'
+        return $this->belongsToMany(
+            'App\Role',
+            'public.roles',
+            'id_user',
+            'id_role'
         )
-        ->where('users.id', '=', Auth::user()->id)
-        ->get();
+            ->withTimestamps();
     }
+
 }

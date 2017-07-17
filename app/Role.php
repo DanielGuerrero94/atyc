@@ -4,21 +4,21 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Menu extends Model
+class Role extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'menus';
+    protected $table = 'roles';
 
     /**
-     * The primary key for the model.
+     * Primary key asociated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id_menu';
+    protected $primaryKey = 'id_role';
 
     /**
      * Indicates if the model should be timestamped.
@@ -32,10 +32,16 @@ class Menu extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_padre','title','icon','orden'];
+    protected $fillable = ['name'];
 
-    public function subMenus()
+    public function users()
     {
-        return $this->hasMany('App\Menu', 'id_padre', 'id_menu');
+        return $this->belongsToMany(
+            'App\User',
+            'public.users',
+            'id_role',
+            'id_user'
+        )
+            ->withTimestamps();
     }
 }

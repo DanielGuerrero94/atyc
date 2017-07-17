@@ -37,8 +37,8 @@ class Curso extends Model
         return $this->belongsToMany(
             'App\Profesor',
             'cursos.cursos_profesores',
-            'id_cursos',
-            'id_profesores'
+            'id_curso',
+            'id_profesor'
         )
             ->withTimestamps();
     }
@@ -48,8 +48,8 @@ class Curso extends Model
         return $this->belongsToMany(
             'App\Alumno',
             'cursos.cursos_alumnos',
-            'id_cursos',
-            'id_alumnos'
+            'id_curso',
+            'id_alumno'
         )
             ->withTimestamps();
     }
@@ -62,7 +62,7 @@ class Curso extends Model
     public function areaTematica()
     {
         return $this->hasOne(
-            'App\AreaTematica',
+            'App\Models\Cursos\AreaTematica',
             'id_area_tematica',
             'id_area_tematica'
         );
@@ -71,7 +71,7 @@ class Curso extends Model
     public function lineaEstrategica()
     {
         return $this->hasOne(
-            'App\LineaEstrategica',
+            'App\Models\Cursos\LineaEstrategica',
             'id_linea_estrategica',
             'id_linea_estrategica'
         );
@@ -114,7 +114,7 @@ class Curso extends Model
         return DB::table('cursos.cursos')
         ->join(
             'cursos.cursos_alumnos',
-            'cursos.cursos_alumnos.id_cursos',
+            'cursos.cursos_alumnos.id_curso',
             '=',
             'cursos.cursos.id_curso'
         )
@@ -122,7 +122,7 @@ class Curso extends Model
             'alumnos.alumnos',
             'alumnos.alumnos.id_alumno',
             '=',
-            'cursos.cursos_alumnos.id_alumnos'
+            'cursos.cursos_alumnos.id_alumno'
         )
         ->select(
             'cursos.cursos.id_curso',

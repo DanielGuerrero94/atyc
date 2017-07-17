@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLogsTable extends Migration
+class PivotUsersRoles extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('logs', function (Blueprint $table) {
-            $table->increments('id_log');
-            $table->json('json');
+        Schema::create('users_roles', function (Blueprint $table) {
+            $table->integer('id_user');
+            $table->integer('id_role');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ class CreateLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('logs');
+        Schema::dropIfExists('users_roles');
     }
 }

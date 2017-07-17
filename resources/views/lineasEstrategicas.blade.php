@@ -197,7 +197,7 @@
 						data : $('form').serialize(),
 						success : function(data){
 							console.log("Success.");
-							alert('Se creo la linea estrategica.');
+							alert('Se creo la tipologia de accion.');
 							location.reload();	
 						},
 						error : function(data){
