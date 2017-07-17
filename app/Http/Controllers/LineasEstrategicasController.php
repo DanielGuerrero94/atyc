@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\LineaEstrategica;
+use App\Models\Cursos\LineaEstrategica;
 use Datatables;
 
 class LineasEstrategicasController extends Controller

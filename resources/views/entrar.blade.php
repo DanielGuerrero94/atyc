@@ -30,7 +30,7 @@
 <body class="hold-transition login-page">
   <div class="login-box panel panel-primary">
     <div class="login-logo">
-      <a href="../../index2.html"><b>C</b>apacitación</a>
+      <a href="../../index2.html"><b>A</b>tyc</a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">

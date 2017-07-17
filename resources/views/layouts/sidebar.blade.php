@@ -142,13 +142,6 @@
           </span>
         </a>
         <ul class="treeview-menu">
-        @foreach($menus as $menu)
-          <li>
-            <a href="#"><i class="{{$menu->icon}}"></i>
-              <span>{{$menu->title}}</span>
-            </a>
-          </li>    
-        @endforeach
           <li>
             <a href="#"><i class="fa fa-circle-o"></i>
               <span>Alcances</span>

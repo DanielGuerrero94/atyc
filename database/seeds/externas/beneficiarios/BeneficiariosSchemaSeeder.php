@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class RoleSeeder extends Seeder
+class BeneficiariosSchemaSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,6 +11,7 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $this->call(BeneficiariosTableSeeder::class);
+        $this->call(IndigenasTableSeeder::class);
     }
 }

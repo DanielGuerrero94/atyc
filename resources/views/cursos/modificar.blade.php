@@ -41,7 +41,7 @@
 						<div class="col-sm-8">
 							<select class="form-control" id="area_tematica" name="area_tematica">
 
-								<option data-id="{{$curso->id_area_tematica}}">{{$curso->area_tematica->nombre}}</option>
+								<option data-id="{{$curso->id_area_tematica}}">{{$curso->areaTematica->nombre}}</option>
 
 								@foreach ($areas_tematicas as $area)
 
@@ -56,7 +56,7 @@
 						<div class="col-sm-8">
 							<select class="form-control" id="linea_estrategica" name="linea_estrategica">
 
-								<option data-id="{{$curso->id_linea_estrategica}}">{{$curso->linea_estrategica->nombre}}</option>
+								<option data-id="{{$curso->id_linea_estrategica}}">{{$curso->lineaEstrategica->nombre}}</option>
 
 								@foreach ($lineas_estrategicas as $linea)
 

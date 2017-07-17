@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
         //$this->call(PacSchemaSeeder::class);
 
         $this->call(StoredProceduresSeeder::class);
+        //$this->call(ForeignDataWrapperSeeder::class);
+        $this->call(ExternasSeeder::class);
     }
 
     /*public function run()

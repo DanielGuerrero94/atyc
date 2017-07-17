@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Curso;
+use App\Models\Cursos\Curso;
 use DB;
 use Auth;
 use Datatables;

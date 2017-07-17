@@ -18,6 +18,9 @@ class Schemas extends Migration
         \DB::statement('CREATE SCHEMA encuestas');
         \DB::statement('CREATE SCHEMA pac');        
         \DB::statement('CREATE SCHEMA sistema');        
+        \DB::statement('CREATE SCHEMA beneficiarios');
+        \DB::statement('CREATE SCHEMA efectores');
+        \DB::statement('CREATE SCHEMA geo');
     }
 
     /**
@@ -27,10 +30,13 @@ class Schemas extends Migration
      */
     public function down()
     {
-        \DB::statement('DROP SCHEMA alumnos'); 
-        \DB::statement('DROP SCHEMA cursos');        
-        \DB::statement('DROP SCHEMA encuestas');
-        \DB::statement('DROP SCHEMA pac');        
-        \DB::statement('DROP SCHEMA sistema'); 
+        \DB::statement('DROP SCHEMA alumnos CASCADE'); 
+        \DB::statement('DROP SCHEMA cursos CASCADE');        
+        \DB::statement('DROP SCHEMA encuestas CASCADE');
+        \DB::statement('DROP SCHEMA pac CASCADE');        
+        \DB::statement('DROP SCHEMA sistema CASCADE'); 
+        \DB::statement('DROP SCHEMA beneficiarios CASCADE'); 
+        \DB::statement('DROP SCHEMA efectores CASCADE'); 
+        \DB::statement('DROP SCHEMA geo CASCADE'); 
     }
 }
