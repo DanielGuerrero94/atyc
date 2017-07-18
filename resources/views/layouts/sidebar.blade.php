@@ -26,13 +26,13 @@
         <li>
           <a href={{url("/alumnos")}}>
             <i class="fa fa-circle-o"></i>
-            <span>Gestión de Alumnos</span>
+            <span>Gestión de Participantes</span>
           </a>
         </li>
         <li>
           <a href={{url("/profesores")}}>
             <i class="fa fa-circle-o"></i>
-            <span>Gestión de Profesores</span>
+            <span>Gestión de Docentes</span>
           </a>
         </li>
       </ul>

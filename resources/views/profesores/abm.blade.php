@@ -2,7 +2,7 @@
 		<div class="col-xs-12 ">
 			<div class="box box-info">
 				<div class="box-header">
-					<h2 class="box-tittle">Profesores
+					<h2 class="box-tittle">Docentes
 						<div class="btn-group pull-right" role="group" aria-label="...">
 							<div type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></div>
 							<div type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></div>
@@ -26,7 +26,7 @@
 					</table>
 				</div>
 				<div class="box-footer">
-					<button class="btn btn-success pull-right" id="alta_profesor"><i class="fa fa-plus" aria-hidden="true"></i>Alta Profesor</button>
+					<button class="btn btn-success pull-right" id="alta_profesor"><i class="fa fa-plus" aria-hidden="true"></i>Alta Docente</button>
 				</div>
 			</div>
 		</div>

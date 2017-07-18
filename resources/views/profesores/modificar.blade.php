@@ -3,7 +3,7 @@
 <div class="container">
 	<div class="col-xs-12">
 		<div class="box box-success">
-			<div class="box-header">Profesor</div>
+			<div class="box-header">Docente</div>
 			<div class="box-body">				
 				<form id="form-alta">
 				{{ csrf_field() }}
@@ -83,7 +83,7 @@
 	<div class="col-sm-12">
 		<div class="box box-info">
 			<div class="box-header with-border">
-				<h2 class="box-title">Cursos dictados por el profesor</h2>
+				<h2 class="box-title">Cursos dictados por el docente</h2>
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse">
 						<i class="fa fa-minus"></i>

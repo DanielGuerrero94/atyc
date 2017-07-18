@@ -1,6 +1,6 @@
 <div class="col-xs-12">
 	<div class="box box-success">
-		<div class="box-header">Alta de alumno</div>
+		<div class="box-header">Alta de participante</div>
 		<div class="box-body">
 			<form id="form-alta">
 				{{ csrf_field() }}
@@ -159,7 +159,7 @@
 				<br>
 				<div class="row">
 					<div class="form-group col-xs-12 col-sm-6" style="display: none;">
-						<label for="funcion" class="control-label col-xs-4">Funcion que desempeña:</label>
+						<label for="funcion" class="control-label col-xs-4">Rol con respecto al SUMAR:</label>
 						<div class="col-xs-8">
 							<select class="form-control" id="funcion" name="funcion">
 

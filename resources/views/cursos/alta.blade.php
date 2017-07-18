@@ -3,8 +3,8 @@
     <div class="nav-tabs-custom">
       <ul class="nav nav-tabs">
         <li class="active"><a href="#inicial" data-toggle="tab">Inicial</a></li>
-        <li><a href="#alumnos" data-toggle="tab">Alumnos</a></li>
-        <li><a href="#profesores" data-toggle="tab">Profesores</a></li>
+        <li><a href="#alumnos" data-toggle="tab">Participantes</a></li>
+        <li><a href="#profesores" data-toggle="tab">Docentes</a></li>
       </ul>
       <div class="tab-content">
         <div class="active tab-pane" id="inicial">

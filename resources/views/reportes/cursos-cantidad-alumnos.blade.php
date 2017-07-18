@@ -43,7 +43,7 @@
 		<div class="col-md-12">
 			<div class="box box-info ">
 				<div class="box-header">
-					<h2 class="box-tittle">Reporte cursos de {{$provincia_usuario->nombre}}
+					<h2 class="box-tittle">Cantidad de participantes por acción de capacitación - {{$provincia_usuario->nombre}}
 						<div class="btn-group pull-right ">
 							<button type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></button>
 							<button type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></button>
@@ -58,7 +58,7 @@
 								<th>Edicion</th>
 								<th>Fecha</th>
 								<th>Cantidad de alumnos</th>
-								<th>Linea estrategica</th>
+								<th>Tipologia de accion</th>
 								<th>Area tematica</th>
 								<th>Provincia</th>
 								<th>Duracion</th>

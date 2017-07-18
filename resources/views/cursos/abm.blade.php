@@ -20,7 +20,7 @@
 					<th>Edicion</th>
 					<th>Duracion</th>
 					<th>Area tematica</th>
-					<th>Linea estrategica</th>
+					<th>Tipo de accion</th>
 					<th>Provincia</th>
 					<th>Acciones</th>
 				</tr>

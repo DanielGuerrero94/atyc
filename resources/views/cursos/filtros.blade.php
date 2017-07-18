@@ -47,12 +47,12 @@
 					</div>			
 					@endif
 					<div class="form-group col-sm-4">          
-						<label class="control-label col-xs-5" for="linea_estrategica">Lineas estrategicas:</label>
+						<label class="control-label col-xs-5" for="linea_estrategica">Tipo de accion:</label>
 						<div class="col-xs-7">
 							<select class="form-control" id="linea_estrategica" title="Linea estrategica">
 								<option data-id="0">Todas las lineas</option>
 								@foreach ($lineas_estrategicas as $linea)
-								<option data-id="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
+								<option data-id="{{$linea->id_linea_estrategica}}">{{$linea->numero}}-{{$linea->nombre}}</option>
 								@endforeach
 							</select>          
 						</div>

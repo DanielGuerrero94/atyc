@@ -3,7 +3,7 @@
 		<form role="form">
 			<div class="row">
 				<div class="form-group">          
-					<label for="alumno" class="control-label col-xs-2 col-sm-2 col-md-2 col-lg-2">Buscar alumno:</label>
+					<label for="alumno" class="control-label col-xs-2 col-sm-2 col-md-2 col-lg-2">Buscar participante:</label>
 					<div class="typeahead__container col-xs-10 col-sm-10 col-md-10 col-lg-10">
 						<div class="typeahead__field">             
 							<span class="typeahead__query">
@@ -21,7 +21,7 @@
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="box box-default no-padding">
 			<div class="box-header">
-				<p>Alumnos en el curso.</p>
+				<p>Partipantes en el curso.</p>
 			</div>
 			<div class="box-body" style="display: none;">
 				<table class="table table-striped" id="alumnos-del-curso">
@@ -64,7 +64,7 @@
 			},
 			dropdownFilter: "Filtro",
 			emptyTemplate: function(){
-				return '<tr><td><a href="alumnos"><i class="fa fa-plus text-green"></i><span>Crear alumno</span></a></td></tr>';
+				return '<tr><td><a href="alumnos"><i class="fa fa-plus text-green"></i><span>Crear participante</span></a></td></tr>';
 			},
 			source: {
 				Nombres: {

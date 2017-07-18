@@ -20,7 +20,7 @@
 		<div class="small-box bg-aqua">
 			<div class="inner">
 				<h3 id="alumnos"></h3>
-				<p>Alumnos</p>				             
+				<p>Participantes</p>				             
 			</div>
 			<div class="icon">
 				<i class="fa fa-users"></i>
@@ -44,7 +44,7 @@
 		<div class="small-box bg-aqua">
 			<div class="inner">
 				<h3 id="profesores"></h3>
-				<p>Profesores</p>
+				<p>Docentes</p>
 			</div>
 			<div class="icon">
 				<i class="fa fa-user-md"></i>
@@ -59,7 +59,7 @@
 	<div class="col-lg-4 col-xs-6">
 		<div class="box box-danger">
 			<div class="box-header with-border">
-				<h3 class="box-title">Cursos por tipologia de accion</h3>
+				<h3 class="box-title">Cursos por area tematica</h3>
         <!-- <i class="fa fa-pie-chart btn text-primary pull-right">Ver más</i> -->
       </div>
       <div class="box-body">
@@ -70,7 +70,7 @@
   <div class="col-lg-4 col-xs-6">
     <div class="box box-danger">
      <div class="box-header with-border">
-      <h3 class="box-title">Cursos por linea estrategica</h3>
+      <h3 class="box-title">Cursos por tipologia de accion</h3>
     </div>
     <div class="box-body">
       <canvas id="pieLineas" class="pieChart"></canvas>
@@ -459,7 +459,7 @@ Highcharts.chart('pieTestHighchart', {
     type: 'pie'
   },
   title: {
-    text: 'Cursos por linea estrategica'
+    text: 'Cursos por tipologia de accion'
   },
   tooltip: {
     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
