@@ -6,7 +6,7 @@
 		<div class="small-box bg-aqua">
 			<div class="inner">
 				<h3 id="cursos"></h3>
-				<p>Cursos</p>
+				<p>Acciones</p>
 			</div>
 			<div class="icon">
 				<i class="fa fa-address-book-o"></i>
@@ -59,7 +59,7 @@
 	<div class="col-lg-4 col-xs-6">
 		<div class="box box-danger">
 			<div class="box-header with-border">
-				<h3 class="box-title">Cursos por area tematica</h3>
+				<h3 class="box-title">Acciones por area tematica</h3>
         <!-- <i class="fa fa-pie-chart btn text-primary pull-right">Ver más</i> -->
       </div>
       <div class="box-body">
@@ -70,7 +70,7 @@
   <div class="col-lg-4 col-xs-6">
     <div class="box box-danger">
      <div class="box-header with-border">
-      <h3 class="box-title">Cursos por tipologia de accion</h3>
+      <h3 class="box-title">Acciones por tipologia</h3>
     </div>
     <div class="box-body">
       <canvas id="pieLineas" class="pieChart"></canvas>
@@ -80,7 +80,7 @@
 <div class="col-lg-4 col-xs-6">
   <div class="box box-danger">
    <div class="box-header with-border">
-    <h3 class="box-title">Provincias con mas cursos dictados</h3>
+    <h3 class="box-title">Provincias que mas acciones realizaron</h3>
   </div>
   <div class="box-body">
     <canvas id="pieChart" class="pieChart"></canvas>
@@ -122,7 +122,7 @@
 	<div class="col-lg-4 col-xs-6">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">Cursos por año</h3>
+				<h3 class="box-title">Acciones por año</h3>
 			</div>
 			<div class="box-body">
 				<div class="chart">
@@ -134,7 +134,7 @@
 	<div class="col-lg-4 col-xs-6">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">Cursos por mes y año</h3>
+				<h3 class="box-title">Acciones por mes y año</h3>
 			</div>
 			<div class="box-body">
 				<div class="chart">
@@ -146,7 +146,7 @@
 	<div class="col-lg-4 col-xs-6">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">Cursos 2013</h3>
+				<h3 class="box-title">Acciones 2013</h3>
 			</div>
 			<div class="box-body">
 				<div class="chart">
@@ -160,7 +160,7 @@
 	<div class="col-lg-4 col-xs-6">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">Cursos 2014</h3>
+				<h3 class="box-title">Acciones 2014</h3>
 			</div>
 			<div class="box-body">
 				<div class="chart">
@@ -172,7 +172,7 @@
 	<div class="col-lg-4 col-xs-6">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">Cursos 2015</h3>
+				<h3 class="box-title">Acciones 2015</h3>
 			</div>
 			<div class="box-body">
 				<div class="chart">
@@ -184,7 +184,7 @@
 	<div class="col-lg-4 col-xs-6">
 		<div class="box box-primary">
 			<div class="box-header with-border">
-				<h3 class="box-title">Cursos 2016</h3>
+				<h3 class="box-title">Acciones 2016</h3>
 			</div>
 			<div class="box-body">
 				<div class="chart">
@@ -459,7 +459,7 @@ Highcharts.chart('pieTestHighchart', {
     type: 'pie'
   },
   title: {
-    text: 'Cursos por tipologia de accion'
+    text: 'Acciones por tipologia'
   },
   tooltip: {
     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -488,7 +488,7 @@ Highcharts.chart('columnDrilldown', {
     type: 'column'
   },
   title: {
-    text: 'Cursos dictados por año y desagregado por mes'
+    text: 'Acciones realizadas por año y desagregado por mes'
   },
   subtitle: {
     text: 'Click en la columna año para ver detalle por mes'

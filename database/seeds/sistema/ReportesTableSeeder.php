@@ -22,3 +22,5 @@ actividades de capacitación con más de 10 horas acumuladas\"','acumula-10-hora
         ('grado-satisfaccion','grado-satisfaccion')");        
     }
 }
+
+      

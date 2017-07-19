@@ -1,7 +1,7 @@
 {{csrf_field()}}
 <div class="box box-info">
 	<div class="box-header">
-		<h2 class="box-tittle">Cursos
+		<h2 class="box-tittle">Acciones
 			<div class="btn-group pull-right" role="group" aria-label="...">
 				<div type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></div>
 				<div type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></div>
@@ -20,9 +20,9 @@
 					<th>Edicion</th>
 					<th>Duracion</th>
 					<th>Area tematica</th>
-					<th>Tipo de accion</th>
+					<th>Tipologia de accion</th>
 					<th>Provincia</th>
-					<th>Acciones</th>
+					<th></th>
 				</tr>
 			</thead>
 		</table>
