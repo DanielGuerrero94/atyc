@@ -12,9 +12,11 @@ class ReportesTableSeeder extends Seeder
     public function run()
     {
         \DB::statement("INSERT INTO sistema.reportes(nombre,view) values
-        ('acumula-10-horas','acumula-10-horas'),
+        ('ODP Int.4 \"Número total de staff institucional que participó de
+
+actividades de capacitación con más de 10 horas acumuladas\"','acumula-10-horas'),
         ('banco-acumula-10-horas','banco-acumula-10-horas'),
-        ('alguna-actividad','alguna-actividad'),
+        ('\"Porcentaje de efectores capacitados con modalidad presencial\"','alguna-actividad'),
         ('porcentaje-establecimientos','porcentaje-establecimientos'),
         ('cursos-cantidad-alumnos','cursos-cantidad-alumnos'),
         ('grado-satisfaccion','grado-satisfaccion')");        
