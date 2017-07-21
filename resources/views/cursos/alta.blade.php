@@ -59,7 +59,7 @@
             <br>
             <div class="row">
             <div class="form-group col-xs-12 col-md-6">          
-              <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Lineas estrategicas:</label>
+              <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
               <div class="col-md-8 col-xs-9">
               <select class="form-control" id="linea_estrategica" name="linea_estrategica">
                 <option>Seleccionar</option>

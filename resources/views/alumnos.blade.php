@@ -4,7 +4,7 @@
 
 <div class="container col-xs-12 col-sm-6 col-md-12 col-lg-12">
 	<div class="row ">
-		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
+		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			@include('alumnos.filtros')
 		</div>
 	</div>
@@ -40,7 +40,7 @@
 			{ data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
 			{ data: 'provincia.nombre'},
-			{ data: 'acciones',"searchable": false}
+			{ data: 'acciones'}
 			],
 			pagingType: 'simple' 
 		});
@@ -92,7 +92,7 @@
 				{ data: 'id_tipo_documento'},
 				{ data: 'nro_doc'},
 				{ data: 'provincia'},
-				{ data: 'acciones',"searchable": false}
+				{ data: 'acciones'}
 				],			
 				rowReorder: {
 					selector: 'td:nth-child(2)'

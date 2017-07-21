@@ -37,6 +37,11 @@ class Profesor extends Model
         return $this->hasOne('App\TipoDocumento', 'id_tipo_documento', 'id_tipo_documento');
     }
 
+    public function tipoDocente()
+    {
+        return $this->hasOne('App\TipoDocente', 'id_tipo_docente', 'id_tipo_docente');
+    }
+
     public function crear(Request $r)
     {
         $this->nombres = $r->nombres;

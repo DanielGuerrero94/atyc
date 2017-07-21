@@ -23,6 +23,7 @@ class CreateProfesoresTable extends Migration
             $table->string('cel')->nullable();
             $table->string('tel')->nullable();
             $table->integer('id_pais')->nullable();//FK
+            $table->integer('id_tipo_docente')->default(1);//FK
             $table->timestamps();
             $table->softDeletes();
         });

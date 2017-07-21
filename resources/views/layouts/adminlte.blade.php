@@ -270,7 +270,7 @@
           clearTimeout(timer);
           timer = setTimeout(function() {
             $('#logout').trigger('click');
-          },1100000);  
+          },1000000);  
         }
 
 </script>

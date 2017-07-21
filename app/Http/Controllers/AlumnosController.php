@@ -209,17 +209,35 @@ class AlumnosController extends AbmController
 
         $organismos = Cache::remember('organismo', 5, function () {
             return Alumno::select('organismo1')
+            ->where('organismo1','<>',' ')
             ->groupBy('organismo1')
             ->orderBy('organismo1')
             ->get();
         });
+
+        /* $generos = Cache::remember('generos', 5, function () {
+            return Alumno::select('organismo1')
+            ->groupBy('organismo1')
+            ->orderBy('organismo1')
+            ->get();
+        }); */
+
+        $generos = ['Masculino','Femenino','Otro'];
+        $departamentos = ['Departamento1','Departamento2','Departamento3','Departamento4'];
+        $localidades = ['Localidad1','Localidad2'];
+        $r = array(
+            'generos' => $generos,
+            'departamentos' => $departamentos,
+            'localidades' => $localidades
+            );
 
         return array(
             'documentos' => $tipo_documentos,
             'provincias' => $provincias,
             'trabajos' => $trabajos,
             'funciones' => $funciones,
-            'organismos' => $organismos);
+            'organismos' => $organismos
+            );
     }
 
     /* Metodos Typeahead */

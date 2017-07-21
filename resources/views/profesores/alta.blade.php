@@ -1,6 +1,6 @@
-<div class="col-xs-12">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 	<div class="box box-success">
-		<div class="box-header">Alta de profesor</div>
+		<div class="box-header">Alta de docente</div>
 		<div class="box-body">
 			<form id="form-alta">
 				{{ csrf_field() }}
@@ -47,6 +47,7 @@
 						</div>
 					</div>					
 				</div>	
+				<hr>
 				<div class="row">
 					<div class="form-group col-sm-6">
 						<label class="control-label col-xs-4" for="email">Email:</label>

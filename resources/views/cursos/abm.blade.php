@@ -22,7 +22,7 @@
 					<th>Area tematica</th>
 					<th>Tipologia de accion</th>
 					<th>Provincia</th>
-					<th></th>
+					<th>Acciones</th>
 				</tr>
 			</thead>
 		</table>

@@ -13,7 +13,7 @@
 		</div>
 	</div>	
 	<div class="row">
-		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2" style="display: none;">
+		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="display: none;">
 			
 		</div>		
 	</div>			

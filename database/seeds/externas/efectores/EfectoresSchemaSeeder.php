@@ -14,5 +14,6 @@ class EfectoresSchemaSeeder extends Seeder
         $this->call(EfectoresTableSeeder::class);
         $this->call(DatosGeograficosTableSeeder::class);
         $this->call(DescentralizacionTableSeeder::class);
+        $this->call(PriorizadosTableSeeder::class);
     }
 }

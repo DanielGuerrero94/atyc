@@ -38,7 +38,6 @@
 								<input name="nro_doc" type="text" class="form-control" id="nro_doc" value="{{$profesor->nro_doc}}">
 							</div>
 						</div>
-
 						<div class="form-group col-sm-6" id="nacionalidad" style="display: none">          
 							<label class="control-label col-xs-2" for="pais">Pais:</label>
 							<div class="typeahead__container col-xs-10">
@@ -50,6 +49,7 @@
 							</div>
 						</div>					
 					</div>	
+					<hr>
 					<div class="row">
 						<div class="form-group col-sm-6">
 							<label class="control-label col-xs-4" for="email">Email:</label>
@@ -83,7 +83,7 @@
 	<div class="col-sm-12">
 		<div class="box box-info">
 			<div class="box-header with-border">
-				<h2 class="box-title">Cursos dictados por el docente</h2>
+				<h2 class="box-title">Acciones dictados por el docente</h2>
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse">
 						<i class="fa fa-minus"></i>
@@ -94,7 +94,7 @@
 				<table id="cursos-table" class="table table-hover" data-url="{{url('cursos/profesor')}}">
 					<thead>
 						<tr>
-							<th>Nombre curso</th>
+							<th>Nombre accion</th>
 							<th>Fecha</th>
 							<th>Provincia organizadora</th>
 							<th>Acciones</th>

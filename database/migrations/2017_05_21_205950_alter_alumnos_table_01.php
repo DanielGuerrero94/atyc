@@ -20,6 +20,7 @@ class AlterAlumnosTable01 extends Migration
             $table->foreign('id_trabajo')->references('id_trabajo')->on('alumnos.trabajos');
             $table->foreign('id_funcion')->references('id_funcion')->on('alumnos.funciones');
             $table->foreign('id_convenio')->references('id_convenio')->on('alumnos.convenios');
+            $table->foreign('id_genero')->references('id_genero')->on('alumnos.generos');
         });
     }
 
@@ -37,6 +38,7 @@ class AlterAlumnosTable01 extends Migration
             $table->dropForeign('alumnos_alumnos_id_trabajo_foreign');
             $table->dropForeign('alumnos_alumnos_id_funcion_foreign');
             $table->dropForeign('alumnos_alumnos_id_convenio_foreign');
+            $table->dropForeign('alumnos_alumnos_id_genero_foreign');
         });
     }
 }

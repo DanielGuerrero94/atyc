@@ -19,6 +19,7 @@ class CreateAlumnosTable extends Migration
             $table->string('apellidos');
             $table->integer('id_tipo_documento');//FK
             $table->string('nro_doc');
+            $table->integer('id_genero');//FK
             $table->string('email')->nullable();
             $table->string('cel')->nullable();
             $table->string('tel')->nullable();

@@ -13,6 +13,8 @@ class Schemas extends Migration
      */
     public function up()
     {   
+        \DB::statement('CREATE EXTENSION dblink');
+        \DB::statement('CREATE EXTENSION postgres_fdw');
         \DB::statement('CREATE SCHEMA alumnos'); 
         \DB::statement('CREATE SCHEMA cursos');        
         \DB::statement('CREATE SCHEMA encuestas');

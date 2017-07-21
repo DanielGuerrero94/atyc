@@ -16,7 +16,7 @@ Route::get('test/filtros', 'TestController@filtros');
 
 Route::get('test/profesoresEnUnCurso', 'CursosController@getProfesores');
 
-Route::get('test/documentos', 'AbmController@tiposDocumentos');
+/* Route::get('test/documentos', 'AbmController@tiposDocumentos'); */
 
 Route::get('test/joined', 'AlumnosController@datosJoineados');
 Route::get('test/excel', 'ReportesController@getExcel');
@@ -60,25 +60,25 @@ Route::get('/dashboard', function () {
 Route::get('dashboard/datos', 'DashboardController@get');
 Route::get('dashboard/data', 'AlumnosController@getActivos');
 
-Route::group(['middleware' => 'logueado'], function () {
+Route::group(['middleware' => ['logueado','logging']],function () {
     //Descarga
     Route::get('reportes/descargar/excel/{nombre_reporte}', function ($nombre_reporte) {
-        return response()->download(__DIR__.'/../storage/exports/$nombre_reporte.xls');
+        return response()->download(__DIR__."/../storage/exports/{$nombre_reporte}.xls");
     });
     Route::get('reportes/descargar/pdf/{nombre_reporte}', function ($nombre_reporte) {
-        return response()->download(__DIR__.'/../public/$nombre_reporte.pdf');
+        return response()->download(__DIR__."/../public/{$nombre_reporte}.pdf");
     });
     Route::get('alumnos/descargar/excel/{nombre_archivo}', function ($nombre_archivo) {
-        return response()->download(__DIR__.'/../storage/exports/$nombre_archivo.xls');
+        return response()->download(__DIR__."/../storage/exports/{$nombre_archivo}.xls");
     });
     Route::get('alumnos/descargar/pdf/{nombre_archivo}', function ($nombre_archivo) {
-        return response()->download(__DIR__.'/../storage/app/$nombre_archivo.pdf');
+        return response()->download(__DIR__."/../storage/app/{$nombre_archivo}.pdf");
     });
     Route::get('descargar/excel/{nombre_archivo}', function ($nombre_archivo) {
-        return response()->download(__DIR__.'/../storage/exports/$nombre_archivo.xls');
+        return response()->download(__DIR__."/../storage/exports/{$nombre_archivo}.xls");
     });
     Route::get('descargar/pdf/{nombre_archivo}', function ($nombre_archivo) {
-        return response()->download(__DIR__.'/../storage/exports/$nombre_archivo.pdf');
+        return response()->download(__DIR__."/../storage/exports/{$nombre_archivo}.pdf");
     });
 
     //Alumnos
@@ -145,10 +145,10 @@ Route::group(['middleware' => 'logueado'], function () {
 //Relaciones de cursos con alumnos y profesores
     Route::get('curso/{id}', 'CursosController@getByID');
     Route::get('users/{id}/alumnos', 'CursosController@getAlumnos');
-
+/* 
 //Filtros para todas las abms
     Route::get('filtros/{tabla}', 'AbmController@filtros');
-    Route::get('formularioConFiltros/{tabla}', 'AbmController@formularioConFiltros');
+    Route::get('formularioConFiltros/{tabla}', 'AbmController@formularioConFiltros'); */
 
 //Reportes
     Route::get('reportes', 'ReportesController@get');
@@ -188,7 +188,7 @@ Route::group(['middleware' => 'logueado'], function () {
         Route::delete('areasTematicas/{id}', 'AreasTematicasController@destroy');
 
 
-//Lineas estrategicas
+        //Tipo de acciones
         Route::get('lineasEstrategicas', 'LineasEstrategicasController@getTodos');
         Route::get('lineasEstrategicasTabla', 'LineasEstrategicasController@getTabla');
         Route::get('lineasEstrategicas/alta', 'LineasEstrategicasController@create');
@@ -200,20 +200,26 @@ Route::group(['middleware' => 'logueado'], function () {
 
         Route::delete('lineasEstrategicas/{id}', 'LineasEstrategicasController@destroy');
 
-    //Gestores
+        //Gestores
         Route::get('gestores/tabla', 'GestoresController@getTabla');
         Route::resource('gestores', 'GestoresController');
 
-//No modificables
+        //Periodos
+        Route::resource('periodos', 'PeriodosController');
 
-//Paises
+        //Tipo de docentes
+        Route::resource('tipoDocentes', 'TipoDocentesController');
+
+        //No modificables
+
+        //Paises
         Route::get('paises/nombres', 'PaisesController@getNombres');
 
-//Provincias
+        //Provincias
         Route::get('provincias', 'ProvinciasController@index');
         Route::get('provincias/{id}', 'ProvinciasController@show');
 
-//Efectores
+        //Efectores
         Route::get('efectores', 'EfectoresController@get');
         Route::get('efectores/tabla', 'EfectoresController@getTabla');
         Route::get('efectores/nombres', 'EfectoresController@getNombres');

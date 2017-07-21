@@ -12,7 +12,7 @@
 				<i class="fa fa-address-book-o"></i>
 			</div>
 			<a href={{url("/cursos")}} class="small-box-footer">
-				Mas informacion <i class="fa fa-arrow-circle-right"></i>
+				Más información <i class="fa fa-arrow-circle-right"></i>
 			</a>
 		</div>
 	</div>
@@ -25,7 +25,7 @@
 			<div class="icon">
 				<i class="fa fa-users"></i>
 			</div>			
-			<a href={{url("/alumnos")}} class="small-box-footer">Mas informacion <i class="fa fa-arrow-circle-right"></i></a>			
+			<a href={{url("/alumnos")}} class="small-box-footer">Más información <i class="fa fa-arrow-circle-right"></i></a>			
 		</div>
 	</div>
 	<!-- <div class="col-lg-4 col-xs-6">
@@ -37,7 +37,7 @@
 			<div class="icon">
 				<i class="fa fa-users"></i>
 			</div>			
-			<a href="#" class="small-box-footer">Mas informacion <i class="fa fa-arrow-circle-right"></i> <i class="fa fa-info-circle" title="Activo es aquel alumno que finalizo algun curso en el ultimo período"></i> </a>			
+			<a href="#" class="small-box-footer">Más información <i class="fa fa-arrow-circle-right"></i> <i class="fa fa-info-circle" title="Activo es aquel alumno que finalizo algun curso en el ultimo período"></i> </a>			
 		</div>
 	</div> -->
 	<div class="col-lg-4 col-xs-6">
@@ -50,7 +50,7 @@
 				<i class="fa fa-user-md"></i>
 			</div>
 			<a href={{url("/profesores")}} class="small-box-footer">
-				Mas informacion <i class="fa fa-arrow-circle-right"></i>
+				Más información <i class="fa fa-arrow-circle-right"></i>
 			</a>
 		</div>
 	</div>
@@ -59,7 +59,7 @@
 	<div class="col-lg-4 col-xs-6">
 		<div class="box box-danger">
 			<div class="box-header with-border">
-				<h3 class="box-title">Acciones por area tematica</h3>
+				<h3 class="box-title">Acciones por area temática</h3>
         <!-- <i class="fa fa-pie-chart btn text-primary pull-right">Ver más</i> -->
       </div>
       <div class="box-body">
@@ -70,7 +70,7 @@
   <div class="col-lg-4 col-xs-6">
     <div class="box box-danger">
      <div class="box-header with-border">
-      <h3 class="box-title">Acciones por tipologia</h3>
+      <h3 class="box-title">Acciones por tipología</h3>
     </div>
     <div class="box-body">
       <canvas id="pieLineas" class="pieChart"></canvas>
@@ -80,7 +80,7 @@
 <div class="col-lg-4 col-xs-6">
   <div class="box box-danger">
    <div class="box-header with-border">
-    <h3 class="box-title">Provincias que mas acciones realizaron</h3>
+    <h3 class="box-title">Provincias que más acciones realizaron</h3>
   </div>
   <div class="box-body">
     <canvas id="pieChart" class="pieChart"></canvas>
@@ -110,7 +110,7 @@
   <!--<div class="col-lg-4 col-xs-6">
     <div class="box box-danger">
      <div class="box-header with-border">
-      <h3 class="box-title">Provincias con mas cursos dictados</h3>
+      <h3 class="box-title">Provincias con Más cursos dictados</h3>
     </div>
     <div class="box-body">
       <div id="pieProvinciasHighchart"></div>
@@ -459,7 +459,7 @@ Highcharts.chart('pieTestHighchart', {
     type: 'pie'
   },
   title: {
-    text: 'Acciones por tipologia'
+    text: 'Acciones por tipología'
   },
   tooltip: {
     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -796,7 +796,7 @@ Highcharts.chart('columnDrilldown', {
 
   },
   error: function() {
-   alert("No se pudo cargar la informacion.");
+   alert("No se pudo cargar la información.");
  }
 });
 

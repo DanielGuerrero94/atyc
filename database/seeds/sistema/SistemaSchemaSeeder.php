@@ -15,6 +15,7 @@ class SistemaSchemaSeeder extends Seeder
         $this->call(PeriodosTableSeeder::class);
         $this->call(TiposDocumentosTableSeeder::class);
         $this->call(ProvinciasTableSeeder::class);
+        $this->call(TiposDocentesTableSeeder::class);
         $this->call(ProfesoresTableSeeder::class);
         $this->call(ReportesTableSeeder::class);
     }

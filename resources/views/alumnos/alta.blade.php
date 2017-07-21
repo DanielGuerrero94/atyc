@@ -51,9 +51,9 @@
 				</div>
 				<div class="row">
 					<div class="form-group col-xs-12 col-sm-6">
-						<label for="localidad" class="control-label col-xs-4">Localidad:</label>
+						<label for="genero" class="control-label col-xs-4">Genero:</label>
 						<div class="col-xs-8">
-							<input name="localidad" type="text" class="form-control" id="localidad">
+						
 						</div>
 					</div>					
 					<div class="form-group col-xs-12 col-sm-6">
@@ -73,7 +73,7 @@
 							@endif
 						</div>
 					</div>			
-				</div>	
+				</div>					
 				<hr>
 				<div class="row">
 					<div class="form-group col-xs-12 col-sm-6">

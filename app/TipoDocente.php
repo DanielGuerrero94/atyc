@@ -4,21 +4,25 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Periodo extends Model
+class TipoDocente extends Model
 {
+    use SoftDeletes;
+
+    protected $dates = ['deleted_at'];
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'sistema.periodos';
+    protected $table = 'sistema.tipos_docentes';
 
     /**
      * Primary key asociated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id_periodo';
+    protected $primaryKey = 'id_tipo_docente';
 
     /**
      * Indicates if the model should be timestamped.
@@ -26,11 +30,4 @@ class Periodo extends Model
      * @var bool
      */
     public $timestamps = false;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['nombre','desde','hasta'];
 }
