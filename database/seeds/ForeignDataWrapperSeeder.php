@@ -2,8 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-/* class ForeignDataWrapper extends Seeder */
-class ForeignDataWrapper
+class ForeignDataWrapperSeeder extends Seeder 
 {
     /**
      * Run the database seeds.

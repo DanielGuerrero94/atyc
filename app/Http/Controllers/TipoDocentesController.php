@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\TipoDocente;
 
 class TipoDocentesController extends Controller
 {
@@ -34,7 +35,7 @@ class TipoDocentesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        return TipoDocente::create($request->all());
     }
 
     /**
@@ -68,7 +69,7 @@ class TipoDocentesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**
@@ -79,6 +80,6 @@ class TipoDocentesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return TipoDocente::find($id)->delete();
     }
 }

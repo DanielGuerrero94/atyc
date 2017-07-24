@@ -15,7 +15,7 @@ class CreateTipoDocentesTable extends Migration
     {
         Schema::create('sistema.tipos_docentes', function (Blueprint $table) {
             $table->increments('id_tipo_docente');
-            $table->string('nombre');
+            $table->string('nombre')->unique();
             $table->softDeletes();
         });
     }

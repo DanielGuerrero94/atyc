@@ -37,7 +37,7 @@ class AreaTematicaTest extends TestCase
      */
     public function tienenTestsTodosLosMetodos()
     {
-        system('');
+        $this->assertTrue(true,'message');
     }
 
     /**
@@ -55,7 +55,7 @@ class AreaTematicaTest extends TestCase
         $areaController->store($request);            
     }
 
-    public function mockAreas()
+    public static function mockAreas()
     {
         return array(
             array(array('nombre' => 'primero')),
@@ -64,21 +64,21 @@ class AreaTematicaTest extends TestCase
         );
     }
 
-    public function validRequests()
+    public static function validRequests()
     {
         return array(
-            new Request([],array('nombre' => 'primero')),
-            new Request([],array('nombre' => 'segundo')),
-            new Request([],array('nombre' => 'tercero'))
+            array(new Request([],array('nombre' => 'primero'))),
+            array(new Request([],array('nombre' => 'segundo'))),
+            array(new Request([],array('nombre' => 'tercero')))
         );
     }
 
-    public function invalidRequests()
+    public static function invalidRequests()
     {
         return array(
-            new Request([],array('qwe' => 'random')),
-            new Request([],array('a' => '23-12-1234')),
-            new Request([],array('dw' => 3))
+            array(new Request([],array('qwe' => 'random'))),
+            array(new Request([],array('a' => '23-12-1234'))),
+            array(new Request([],array('dw' => 3)))
         );
     }
 
