@@ -21,7 +21,7 @@
 						<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento:</label>
 						<div class="col-xs-8">
 							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
-								@foreach ($documentos as $documento)
+								@foreach ($tipoDocumento as $documento)
 								
 								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>				 
 								
@@ -47,6 +47,21 @@
 						</div>
 					</div>					
 				</div>	
+				<hr>
+				<div class="row">
+				<div class="form-group col-sm-6">
+						<label class="control-label col-xs-4" for="id_tipo_docente">Tipo de docente:</label>
+						<div class="col-xs-8">
+							<select class="form-control" id="id_tipo_docente">
+								@foreach ($tipoDocente as $tipo)
+								
+								<option data-id="{{$tipo->id_tipo_docente}}">{{$tipo->nombre}}</option>				 
+								
+								@endforeach
+							</select>
+						</div>
+					</div>
+				</div>
 				<hr>
 				<div class="row">
 					<div class="form-group col-sm-6">
@@ -121,9 +136,14 @@
 
 		function getSelected() {
 			var id_tipo_documento = $('#form-alta #id_tipo_documento :selected').data('id');
+			var id_tipo_docente = $('#form-alta #id_tipo_docente :selected').data('id');
 			return [{
 				name: 'id_tipo_documento',
 				value: id_tipo_documento
+			},
+			{
+				name: 'id_tipo_docente',
+				value: id_tipo_docente
 			}];
 		}
 

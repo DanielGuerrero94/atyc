@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\TipoDocumento;
+use App\TipoDocente;
 use App\Profesor;
 use App\Pais;
 use Validator;
@@ -21,6 +22,7 @@ class ProfesoresController extends AbmController
     'nombres' => 'required|string',
     'apellidos' => 'required|string',
     'id_tipo_documento' => 'required|numeric',
+    'id_tipo_docente' => 'required|numeric',
     'pais' => 'required_if:id_tipo_documento,5,6',
     'nro_doc' => 'required|numeric',
     'email' => 'nullable|email',
@@ -32,6 +34,7 @@ class ProfesoresController extends AbmController
     'nombres' => 'string',
     'apellidos' => 'string',
     'id_tipo_doc' => 'numeric',
+    'id_tipo_docente' => 'numeric',
     'cel' => 'string',
     'tel' => 'string',
     'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
@@ -204,7 +207,7 @@ class ProfesoresController extends AbmController
 
         foreach ($filtered as $key => $value) {
             if ($key == 'nombres' || $key == 'apellidos' || $key == 'email') {
-                $query = $query->where('sistema.profesores.'.$key, 'ilike', '%'.$value.'%');
+                $query = $query->where('sistema.profesores.'.$key, 'ilike', $value.'%');
             } else {
                 $query = $query->where('sistema.profesores.'.$key, '=', $value);
             }
@@ -267,8 +270,12 @@ class ProfesoresController extends AbmController
     public function getSelectOptions()
     {
         $tipoDocumentos = TipoDocumento::all();
+        $tipoDocentes = TipoDocente::all();
 
-        return array('documentos' => $tipoDocumentos);
+        return array(
+            'tipoDocumento' => $tipoDocumentos,
+            'tipoDocente' => $tipoDocentes
+        );
     }
 
     /**

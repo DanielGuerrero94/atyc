@@ -27,6 +27,13 @@ class Profesor extends Model
      */
     protected $primaryKey = 'id_profesor';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['nombre'];
+
     public function cursos()
     { 
         return $this->belongsToMany('App\Curso', 'cursos.cursos_profesores', 'id_curso', 'id_profesor')->withTimestamps();
@@ -44,8 +51,8 @@ class Profesor extends Model
 
     public function crear(Request $r)
     {
-        $this->nombres = $r->nombres;
-        $this->apellidos = $r->apellidos;
+        $this->nombres = ucwords($r->nombres);
+        $this->apellidos = ucwords($r->apellidos);
         $this->id_tipo_documento = $r->id_tipo_documento;
 
         if ($this->esExtranjero($r)) {
@@ -53,6 +60,7 @@ class Profesor extends Model
             $this->id_pais = $id_pais['id_pais'];
         }
 
+        $this->id_tipo_docente = $r->id_tipo_docente;
         $this->nro_doc = $r->nro_doc;
         $this->email = $r->email;
         $this->cel = $r->cel;
@@ -63,8 +71,8 @@ class Profesor extends Model
 
     public function modificar(Request $r)
     {
-        $this->nombres = $r->nombres;
-        $this->apellidos = $r->apellidos;
+        $this->nombres = ucwords($r->nombres);
+        $this->apellidos = ucwords($r->apellidos);
 
         $id_tipo_documento = $r->id_tipo_documento;
 

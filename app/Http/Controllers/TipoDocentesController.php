@@ -14,7 +14,7 @@ class TipoDocentesController extends Controller
      */
     public function index()
     {
-        return view('tipodocentes');
+        return view('tipodocentes.abm');
     }
 
     /**
@@ -24,7 +24,7 @@ class TipoDocentesController extends Controller
      */
     public function create()
     {
-        //
+        return view('tipodocentes.alta');
     }
 
     /**
@@ -46,7 +46,7 @@ class TipoDocentesController extends Controller
      */
     public function show($id)
     {
-        //
+        return TipoDocente::find($id)->toJson();
     }
 
     /**
@@ -57,7 +57,7 @@ class TipoDocentesController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('tipodocentes.modificacion');        
     }
 
     /**
@@ -69,7 +69,8 @@ class TipoDocentesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        return TipoDocente::find($id)
+        ->update($request->all());    
     }
 
     /**

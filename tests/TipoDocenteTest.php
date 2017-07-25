@@ -21,6 +21,15 @@ class TipoDocenteTest extends TestCase
         );
     }
 
+    public static function updateTiposDocentesRequest()
+    {
+        return array(
+            array(new Request(array('nombre' => 'orador'))),
+            array(new Request(array('nombre' => 'jefe de catedra'))),
+            array(new Request(array('nombre' => 'decano')))
+        );
+    }
+
     public static function stacks()
     {
         return self::$stack;
@@ -51,10 +60,30 @@ class TipoDocenteTest extends TestCase
     }
 
     /**
+     * Update model with request
+     *
+     * @param Request $r
+     * @test 
+     * @depends create
+     * @dataProvider updateTiposDocentesRequest
+     * @return void
+     */
+    public function update(Request $r)
+    {        
+        $controller = new TipoDocentesController();
+        $id = $controller->store($r)->id_tipo_docente;
+
+        $antes = TipoDocente::find($id)->first()->nombre;
+        $controller->update($r,$id);
+        $despues = TipoDocente::find($id)->nombre;
+        $this->assertFalse($antes === $despues, 'Son iguales no se hizo el update');
+    }
+
+    /**
      * SoftDelete on model
      *
      * @test 
-     * @depends create
+     * @depends update
      */
     public function destroy()
     {
@@ -66,14 +95,5 @@ class TipoDocenteTest extends TestCase
         });
 
         $this->assertTrue(TipoDocente::all()->count() === 0, 'No hizo el SoftDelete');
-
-        TipoDocente::all()
-        ->each(function ($item,$key)
-        {
-            $item->forceDelete();
-        });
-
-        var_dump(TipoDocente::withTrashed());
-        $this->assertTrue(TipoDocente::withTrashed()->count() === 0, 'No los elimino');
     }
 }

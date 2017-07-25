@@ -13,16 +13,16 @@ class Schemas extends Migration
      */
     public function up()
     {   
-        \DB::statement('CREATE EXTENSION dblink');
-        \DB::statement('CREATE EXTENSION postgres_fdw');
-        \DB::statement('CREATE SCHEMA alumnos'); 
-        \DB::statement('CREATE SCHEMA cursos');        
-        \DB::statement('CREATE SCHEMA encuestas');
-        \DB::statement('CREATE SCHEMA pac');        
-        \DB::statement('CREATE SCHEMA sistema');        
-        \DB::statement('CREATE SCHEMA beneficiarios');
-        \DB::statement('CREATE SCHEMA efectores');
-        \DB::statement('CREATE SCHEMA geo');
+        \DB::statement('CREATE EXTENSION IF NOT EXISTS dblink');
+        \DB::statement('CREATE EXTENSION IF NOT EXISTS postgres_fdw');
+        \DB::statement('CREATE SCHEMA IF NOT EXISTS alumnos'); 
+        \DB::statement('CREATE SCHEMA IF NOT EXISTS cursos');        
+        \DB::statement('CREATE SCHEMA IF NOT EXISTS encuestas');
+        \DB::statement('CREATE SCHEMA IF NOT EXISTS pac');        
+        \DB::statement('CREATE SCHEMA IF NOT EXISTS sistema');        
+        \DB::statement('CREATE SCHEMA IF NOT EXISTS beneficiarios');
+        \DB::statement('CREATE SCHEMA IF NOT EXISTS efectores');
+        \DB::statement('CREATE SCHEMA IF NOT EXISTS geo');
     }
 
     /**

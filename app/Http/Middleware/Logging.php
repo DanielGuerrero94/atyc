@@ -37,7 +37,7 @@ class Logging
         $method = $request->getMethod();
         $ip = $request->getClientIp();
         $user = $request->user();
-        $query = json_encode($request->only('order_by','filtros'));
+        $query = json_encode($request->all());
 
         $log = "{$ip} user:{$user->name} {$method}@{$url} query:{$query} - {$duration}ms";
 

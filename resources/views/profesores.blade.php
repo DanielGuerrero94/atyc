@@ -45,7 +45,7 @@
 			{ data: 'apellidos'},
 			{ data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
-			{ data: 'acciones',"searchable": false}
+			{ data: 'acciones',"orderable": false}
 			],			
 			rowReorder: {
 				selector: 'td:nth-child(2)'
@@ -56,7 +56,7 @@
 		function getFiltrosJson() {
 			var nombres = $('#nombres')	.val();
 			var apellidos = $('#apellidos').val();
-			var id_tipo_documento = $('#id_tipo_documento option:selected').val()
+			var id_tipo_documento = $('#id_tipo_documento option:selected').val();
 			var id_pais = $('#nacionalidad').val();
 			var nro_doc = $('#nro_doc').val();
 			var email = $('#email').val();
@@ -76,8 +76,9 @@
 
 			$('#filtros').on('click','#filtrar',function () {
 
-				var filtrosJson = getFiltrosJson();
-				console.log(filtrosJson);
+				//var filtrosJson = getFiltrosJson();
+				//console.log(filtrosJson);
+				var filtrosJson = $('#form-filtros :input').filter(function(i,e){return $(e).val() != ""}).serialize();
 
 				$('#table').DataTable({
 					destroy: true,
@@ -230,13 +231,17 @@
 			});
 
 			$('#abm').on('click','.expand',function () {
-				$('.container').addClass('col-md-12');
+				$('#abm').removeClass('col-lg-8')
+				.removeClass('col-lg-offset-2')
+				.addClass('col-lg-12');
 				$('.compress').show();	
 				$(this).hide();
 			});
 
 			$('#abm').on('click','.compress',function () {
-				$('.container').removeClass('col-md-12');
+				$('#abm').removeClass('col-lg-12')
+				.addClass('col-lg-8')
+				.addClass('col-lg-offset-2');
 				$('.expand').show();	
 				$(this).hide();	
 			});	
