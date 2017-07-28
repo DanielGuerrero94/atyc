@@ -40,7 +40,7 @@
 			{ data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
 			{ data: 'provincia.nombre'},
-			{ data: 'acciones'}
+			{ data: 'acciones', orderable: 'false'}
 			],
 			pagingType: 'simple' 
 		});

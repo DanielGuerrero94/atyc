@@ -160,7 +160,7 @@ class AlumnosController extends AbmController
      */
     public function destroy($id)
     {
-        Alumno::findOrFail($id)->delete();
+        return Alumno::findOrFail($id)->delete();
     }
 
     /**
@@ -341,6 +341,8 @@ class AlumnosController extends AbmController
             }
         );
 
+        logger('Filtered query: '.json_encode($filtered));
+
         $query = Alumno::leftJoin('sistema.provincias', 'alumnos.id_provincia', '=', 'sistema.provincias.id_provincia')
         ->leftJoin('sistema.tipos_documentos', 'alumnos.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
         ->select(
@@ -351,6 +353,7 @@ class AlumnosController extends AbmController
             'nro_doc',
             'sistema.provincias.nombre as provincia'
         );
+
 
         //Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros
         if (Auth::user()->id_provincia != 25) {
@@ -376,7 +379,7 @@ class AlumnosController extends AbmController
         $filtros = collect($filtros->get('filtros'));
 
         $order_by = $r->input('order_by',null)?$r->get('order_by'):null;
-
+        
         $v = Validator::make($filtros->all(), $this->filters);
         if (!$v->fails()) {
             $query = $this->queryLogica($r, $filtros, $order_by);
@@ -430,10 +433,13 @@ class AlumnosController extends AbmController
         $filtros = collect($filtros->get('filtros'));
         $order_by = $r->order_by;
 
-        $data = $this->queryLogica($r, $filtros, $order_by);
+        logger(json_encode($filtros));
+        logger(json_encode($order_by));
+
+        $data = $this->queryLogica($r, $filtros, $order_by)->get();
+        logger(json_encode($data));
         $datos = ['alumnos' => $data];
-        $path = "alumnos_filtrados_".date("Y-m-d_H:i:s");
-        
+        $path = "alumnos_filtrados_".date("Y-m-d_H:i:s");        
 
         Excel::create(
             $path,

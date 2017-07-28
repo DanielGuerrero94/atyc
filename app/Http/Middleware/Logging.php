@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Log;
 
 class Logging
 {
@@ -33,14 +32,30 @@ class Logging
     protected function log($request)
     {
         $duration = $this->end - $this->start;
-        $url = $request->url();        
+        //Le saco el http://*/atyc/public
+        $url = substr($request->url(),strpos($request->url(),'atyc')+12);
         $method = $request->getMethod();
         $ip = $request->getClientIp();
         $user = $request->user();
-        $query = json_encode($request->all());
+        //Saco de la request los datos que me trae el datatable de jquery
+        $query = $request->except([
+            'draw','columns','order','start','length','search','_'
+        ]);
 
-        $log = "{$ip} user:{$user->name} {$method}@{$url} query:{$query} - {$duration}ms";
+        $json = array(
+            'ip' => $ip,
+            'user' => $user->id,
+            'method' => $method,
+            'url' => $url,
+            'query' => $request->all(),
+            'duration' => $duration
+        );
 
-        Log::info($log);
+        $query = json_encode($query);
+
+        $log = "{$ip} user:{$user->name} {$method}@{$url} query:{$query} - {$duration}ms";        
+
+        //logger($log);
+        //logger(json_encode($json));
     }
 }

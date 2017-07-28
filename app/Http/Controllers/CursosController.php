@@ -10,7 +10,6 @@ use App\Provincia;
 use App\Periodo;
 use App\Models\Cursos\Curso;
 use DB;
-use Log;
 use Auth;
 use Validator;
 use Datatables;
@@ -174,7 +173,7 @@ class cursosController extends AbmController
      */
     public function destroy($id)
     {    	
-    	Curso::findOrFail($id)->delete();
+    	return Curso::findOrFail($id)->delete();
     }
 
     /**
@@ -461,7 +460,6 @@ class cursosController extends AbmController
 		$order_by = collect($r->only('order_by'));
 
 		$data = $this->queryLogica($r,$filtros,$order_by)->get();
-		logger(json_encode($data));
 		$datos = ['cursos' => $data];
 		$path = "cursos_filtrados_".date("Y-m-d_H:i:s");
 
