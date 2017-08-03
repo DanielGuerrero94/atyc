@@ -13,6 +13,7 @@ use Excel;
 use PDF;
 use Auth;
 use Datatables;
+use Cache;
 
 class ReportesController extends Controller
 {
@@ -32,14 +33,18 @@ class ReportesController extends Controller
 
     public function getCursos()
     {
-        $provincias = Provincia::all();
-        $id_provincia = Auth::user()->id_provincia;
-        $provincia_usuario = Provincia::find($id_provincia);
+        $provincias = Cache::remember('provincias', 5, function () {
+            return Provincia::all();
+        });
+
+        $provincia_usuario = Provincia::find(Auth::user()->id_provincia);
 
         return view(
             'reportes.cursos-cantidad-alumnos',
-            ['provincias' => $provincias,
-            'provincia_usuario' => $provincia_usuario]
+            [
+            'provincias' => $provincias,
+            'provincia_usuario' => $provincia_usuario
+            ]
         );
     }
 
@@ -47,24 +52,30 @@ class ReportesController extends Controller
     {
         $reporte = Reporte::find($id_reporte);
 
-        $provincias = Provincia::all();
-        $periodos = Periodo::all();
+        $provincias = Cache::remember('provincias', 5, function () {
+            return Provincia::all();
+        });
+
+        $periodos = Cache::remember('periodos', 5, function () {
+            return Periodo::all();
+        });
+
         $provincia_usuario = Provincia::find(Auth::user()->id_provincia);
 
         return view(
             'reportes.'.$reporte->view,
-            ['provincias' => $provincias,
+            [
+            'provincias' => $provincias,
             'periodos' => $periodos,
             'reporte' => $reporte,
-            'provincia_usuario' => $provincia_usuario]
+            'provincia_usuario' => $provincia_usuario
+            ]
         );
     }
 
     public function queryReporte(Request $r)
     {
         $query = $this->queryLogica($r);
-
-        logger($query);
 
         $returns = DB::select($query);
 
@@ -147,7 +158,7 @@ class ReportesController extends Controller
             }
         )
         ->store('xls');
-        return response()->download('/var/www/html/eLearning/storage/exports/Cursos.xls');
+        return response()->download('/var/www/html/atyc/storage/exports/Cursos.xls');
     }
 
     public function getPdf()

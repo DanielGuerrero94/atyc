@@ -11,7 +11,7 @@ class Genero extends Model
      *
      * @var string
      */
-    protected $table = 'generos';
+    protected $table = 'alumnos.generos';
 
     /**
      * Primary key asociated with the table.

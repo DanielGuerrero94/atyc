@@ -26,8 +26,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->call(function (){
+            $path = __DIR__.'/../../storage/exports/*';
+            system("rm {$path}");
+        })->everyMinute();
+
+        $schedule->call(function (){
+            system('date=$(date +%T); file="$date.txt"; echo $file | xargs touch');
+        })->everyMinute();
     }
 
     /**

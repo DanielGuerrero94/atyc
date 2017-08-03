@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\TipoDocumento;
 use DB;
+use Auth;
 use Log;
+use App\TipoDocumento;
 
 abstract class AbmController extends Controller
 {

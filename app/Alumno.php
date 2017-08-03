@@ -60,14 +60,19 @@ class Alumno extends Model
         return $this->hasOne('App\Funcion', 'id_funcion', 'id_funcion');
     }
 
+    public function genero()
+    {
+        return $this->hasOne('App\Genero', 'id_genero', 'id_genero');
+    }
+
     public static function crear(Request $r)
     {
         $alumno = new Alumno();
 
-        $alumno->nombres = $r->nombres;
-        $alumno->apellidos = $r->apellidos;
+        $alumno->nombres = ucwords($r->nombres);
+        $alumno->apellidos = ucwords($r->apellidos);
         $alumno->nro_doc = $r->nro_doc;
-        $alumno->localidad = $r->localidad;
+        $alumno->localidad = ucwords($r->localidad);
         $alumno->email = $r->email;
         $alumno->tel = $r->tel;
         $alumno->cel = $r->cel;
@@ -86,11 +91,29 @@ class Alumno extends Model
         $alumno->save();
     }
 
+    /**
+     * Define si tiene que buscar solo para la provincia 
+     * de la que es el usuario o buscar para todas 
+     * 
+     */
     public function scopeSegunProvincia($query)
     {
         $id_provincia = Auth::user()->id_provincia;
         if ($id_provincia != 25) {           
             return $query->where('alumnos.id_provincia', $id_provincia);
         }
+    }
+
+    /**
+     * Si hace el join con la provincia o no 
+     * 
+     */
+    public function scopeMostrarProvincia($query)
+    {
+        //Hasta que no corriga las views para que los datatable no tengan esta columna se le saca el if
+        /*if (Auth::user()->id_provincia == 25) {*/
+            return $query->leftJoin('sistema.provincias', 'alumnos.id_provincia', '=', 'sistema.provincias.id_provincia')
+                ->select('sistema.provincias.nombre as provincia');            
+        /*}*/
     }
 }

@@ -107,6 +107,13 @@
       </div>
     </div>
   </div>
+  <div class="col-lg-12 col-xs-12">
+    <div class="box box-danger">
+      <div class="box-body">
+  <div id="highchart_acciones" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+      </div>
+    </div>
+  </div>
   <!--<div class="col-lg-4 col-xs-6">
     <div class="box box-danger">
      <div class="box-header with-border">
@@ -302,8 +309,8 @@
 
 
 
-// Radialize the colors
-Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+// Radialize the colors Deberia ponerselo solo al pie
+/*Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
   return {
     radialGradient: {
       cx: 0.5,
@@ -315,7 +322,7 @@ Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, 
             [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
             ]
           };
-        });
+        });*/
 
 
 
@@ -420,6 +427,7 @@ $.ajax ({
   cursos_lineas_estrategicas_hc = data.cursos_lineas_estrategicas_hc;
   cursos_por_anio_hc = data.cursos_por_anio_hc;
   cursos_por_anio_y_mes_hc = data.cursos_por_anio_y_mes_hc;
+  accionesAnioMes = data.accionesAnioMes;
 
   /*Empiezo a hacer cosas*/
 
@@ -527,8 +535,53 @@ Highcharts.chart('columnDrilldown', {
   }
 });
 
+Highcharts.chart('highchart_acciones', {
 
-
+    chart: {
+        type: 'areaspline'
+    },
+    title: {
+        text: 'Acciones por año y mes (Nación)' 
+    },
+    xAxis: {
+        categories: [
+            'Enero',
+            'Febrero',
+            'Marzo',
+            'Abril',
+            'Mayo',
+            'Junio',
+            'Julio',
+            'Agosto',
+            'Septiembre',
+            'Octubre',
+            'Noviembre',
+            'Diciembre'
+        ],
+        tickmarkPlacement: 'on',
+        title: {
+            enabled: false
+        }
+    },
+    yAxis: {
+        title: {
+            text: 'Acciones'
+        }
+    },
+    tooltip: {
+        shared: true,
+        valueSuffix: ' acciones'
+    },
+    credits: {
+        enabled: false
+    },
+    plotOptions: {
+        areaspline: {
+            fillOpacity: 0.5
+        }
+    },
+    series: accionesAnioMes
+});
 
 				//--------------
     //- AREA CHART -

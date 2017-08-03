@@ -1,5 +1,5 @@
 {{ csrf_field() }}	
-		<div class="col-xs-12 ">
+		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
 			<div class="box box-info">
 				<div class="box-header">
 					<h2 class="box-tittle">Docentes

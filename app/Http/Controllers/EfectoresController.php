@@ -58,7 +58,6 @@ class EfectoresController extends Controller
             'data' => array(
                 'nombres' => $this->getNombres(),
                 'cuies' => $this->getCuies()
-                /*'siisas' => $this->getSiisas()*/
                 )
             );
 

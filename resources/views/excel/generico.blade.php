@@ -20,7 +20,7 @@
         <th class="table-header">EDICIÓN</th>
         <th class="table-header">FECHA</th>
         <th class="table-header">CANTIDAD</th>
-        <th class="table-header">LINEA ESTRATÉGICA</th>
+        <th class="table-header">TIPO DE ACCION</th>
         <th class="table-header">AREA TEMÁTICA</th>
         <th class="table-header">PROVINCIA</th>
         <th class="table-header">DURACIÓN</th>

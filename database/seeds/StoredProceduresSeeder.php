@@ -146,8 +146,8 @@ class StoredProceduresSeeder extends Seeder
         IN provincia integer,
         IN desde date,
         IN hasta date)
-      RETURNS TABLE(provincia character varying, capacitados bigint, total integer, porcentaje double precision) AS
-      \$BODY\$SELECT P.nombre as provincia,efectores_capacitados.capacitados,total_efectores.total,(CAST(efectores_capacitados.capacitados as float)*100)/CAST(total_efectores.total as float) as porcentaje FROM (
+      RETURNS TABLE(provincia character varying, capacitados bigint, total integer, porcentaje numeric) AS
+      \$BODY\$SELECT P.nombre as provincia,efectores_capacitados.capacitados,total_efectores.total,round(((CAST(efectores_capacitados.capacitados as float)*100)/CAST(total_efectores.total as float))::numeric,2) as porcentaje FROM (
         SELECT count(subA.capacitados) capacitados
         FROM (SELECT A.establecimiento1 as capacitados,P.id_provincia as provincia FROM alumnos.alumnos A 
           INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno

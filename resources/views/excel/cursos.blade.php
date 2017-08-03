@@ -16,13 +16,13 @@
 
 <table class="table">	
 	<tr>
-		<th class="table-header">Curso</th>
+		<th class="table-header">Acción</th>
         <th class="table-header">Fecha</th>
         <th class="table-header">Edición</th>
         <th class="table-header">Duración</th>
-        <th class="table-header">Area tematica</th>
-        <th class="table-header">Linea estrategica</th>
-        <th class="table-header">Provincia</th>
+        <th class="table-header">Area temática</th>
+        <th class="table-header">Tipo de acción</th>
+        <th class="table-header">Jurisdicción</th>
 	</tr>
 	@foreach($cursos as $curso)
 		<tr>

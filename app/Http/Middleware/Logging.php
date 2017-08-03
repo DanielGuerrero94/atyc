@@ -55,7 +55,7 @@ class Logging
 
         $log = "{$ip} user:{$user->name} {$method}@{$url} query:{$query} - {$duration}ms";        
 
-        //logger($log);
-        //logger(json_encode($json));
+        logger($log);
+        logger(json_encode($json));
     }
 }

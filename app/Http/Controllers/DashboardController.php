@@ -37,7 +37,8 @@ class DashboardController extends Controller
          'cursos2016' => $this->getCursosPorAnioYMes('2016'),
          'cursos_por_anio' => $this->getCursosPorAnio(),
          'cursos_por_anio_hc' => $this->getCursosPorAnioHc(),
-         'cursos_por_anio_y_mes_hc' => $this->getCursosPorAnioYMesHc());
+         'cursos_por_anio_y_mes_hc' => $this->getCursosPorAnioYMesHc(),
+         'accionesAnioMes' => $this->accionesAnioMes());
 
 
         $returns = array_merge($counts, $tortas);
@@ -207,5 +208,28 @@ class DashboardController extends Controller
             }
         );
         return $ret;
+    }
+
+    public function accionesAnioMes()
+    {
+        $acciones = \DB::select("(select extract(year from fecha) as anio,extract(month from fecha) as mes,count(*) as cantidad from cursos.cursos
+where fecha > '2013-01-01'
+group by extract(year from fecha),extract(month from fecha)
+order by extract(year from fecha),extract(month from fecha))
+union all
+(select max(extract(year from fecha)),generate_series((select extract(month from max(fecha))::numeric) + 1,12),0 from cursos.cursos)");
+
+        return collect($acciones)
+            ->groupBy('anio')
+            ->map(function ($acciones,$anio) {
+                return array(
+                    'name' => $anio,
+                    'data' => array_map(function ($dato) {
+                        return $dato->cantidad;
+                        }, $acciones->toArray())
+                );
+            })
+            ->values()
+            ->toArray();
     }
 }
