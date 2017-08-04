@@ -68,6 +68,15 @@
     </div>
   </div>   
 </div>
+<div class="row">
+  <div class="col-lg-12 col-xs-12">
+    <div class="box box-success">
+      <div class="box-body">
+        <div id="accionesReportadas" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
   <div class="col-lg-12 col-xs-12">
     <div class="box box-danger">
@@ -374,6 +383,7 @@ $.ajax ({
   accionesAnioMes = data.accionesAnioMes;
   accionesPorTipo = data.accionesPorTipo;
   accionesPorTematica = data.accionesPorTematica;
+  accionesReportadas = data.accionesReportadas;
 
   /*Empiezo a hacer cosas*/
 
@@ -431,15 +441,6 @@ Highcharts.chart('pieAccionesTipologia', {
         connectorColor: 'silver'
       },
       size : 300
-    },
-    series: {
-      color: {
-        radialGradient: { cx: 0.5, cy: 0.5, r: 0.5 },
-        stops: [
-        [0, '#003399'],
-        [1, '#3366AA']
-        ]
-      },
     }
   },  
   series: cursos_lineas_estrategicas_hc
@@ -482,13 +483,10 @@ Highcharts.chart('highchart_acciones', {
     shared: true,
     valueSuffix: ' acciones'
   },
-  credits: {
-    enabled: false
-  },
   plotOptions: {
     areaspline: {
       fillOpacity: 0.5
-    }
+    }  
   },
   series: accionesAnioMes
 });
@@ -497,6 +495,25 @@ Highcharts.chart('accionesPorTipo', {
   colorAxis: {
     minColor: '#FFFFFF',
     maxColor: Highcharts.getOptions().colors[2]
+  },
+  plotOptions: {
+    treemap: {
+      allowPointSelect: true,
+      point: {
+        events: {
+          click: function (e) {
+            console.log(this.name);
+            console.log($(this));
+            alert(this.name);
+          }
+        }
+      },
+      tooltip: {
+        pointFormatter: function () {
+          return this.name + ': ' + this.label + ' <b>' + this.value + '</b> acciones.';
+        }
+      }
+    }
   },
   series: [{
     type: 'treemap',
@@ -513,6 +530,19 @@ Highcharts.chart('accionesPorTematica', {
     minColor: '#FFFFFF',
     maxColor: Highcharts.getOptions().colors[0]
   },
+  legend: {
+    labelFormat: "{name.substring(1,12)}"
+  },
+  plotOptions: {
+    treemap: {
+      dataLabels: {
+        formatter: function () {
+          console.log(this.point.name);
+          return '<span>'+this.point.name.substring(0,20) + '</span>';
+        }
+      }
+    }
+  },
   series: [{
     type: 'treemap',
     layoutAlgorithm: 'squarified',
@@ -521,6 +551,64 @@ Highcharts.chart('accionesPorTematica', {
   title: {
     text: 'Cantidad de acciones por temática (Nación)'
   }
+});
+
+
+Highcharts.chart('accionesReportadas', {
+
+    chart: {
+        type: 'heatmap',
+        marginTop: 40,
+        marginBottom: 80,
+        plotBorderWidth: 1
+    },
+
+
+    title: {
+        text: 'Acciones reportadas al sistema este año'
+    },
+
+    xAxis: {
+        categories: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']
+    },
+
+    yAxis: {
+        categories: ['CABA','BUENOS AIRES','CATAMARCA','CORDOBA','CORRIENTES','ENTRE RIOS','JUJUY','LA RIOJA','MENDOZA','SALTA','SAN JUAN','SAN LUIS','SANTA FE','SANTIAGO DEL ESTERO','CHACO','TUCUMAN','CHUBUT','FORMOSA','LA PAMPA','MISIONES','NEUQUEN','RIO NEGRO','SANTA CRUZ','TIERRA DEL FUEGO'],
+        title: null
+    },
+
+    colorAxis: {
+        min: 0,
+        minColor: '#FFFFFF',
+        maxColor: Highcharts.getOptions().colors[0]
+    },
+
+    legend: {
+        align: 'right',
+        layout: 'vertical',
+        margin: 0,
+        verticalAlign: 'top',
+        y: 25,
+        symbolHeight: 280
+    },
+
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.series.yAxis.categories[this.point.y] + '</b> reporto <br><b>' +
+                this.point.value + '</b> acciones en <br><b>' + this.series.xAxis.categories[this.point.x] + '</b>';
+        }
+    },
+
+    series: [{
+        name: 'Sales per employee',
+        borderWidth: 1,
+        data: accionesReportadas,
+        dataLabels: {
+            enabled: true,
+            color: '#000000'
+        }
+    }]
+
 });
 
 				//--------------
