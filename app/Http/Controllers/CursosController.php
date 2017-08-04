@@ -491,6 +491,8 @@ class cursosController extends AbmController
 
 		$data = $this->queryLogica($r,$filtros,null)->get();
 
+		logger(json_encode($data));
+
 		$header = array('Nombre','Fecha','Edicion','Duracion','Area Tematica','Linea Estrategica','Provincia');
 		$column_size =  array(80,25,15,17,60,60,20);
 
