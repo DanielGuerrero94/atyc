@@ -146,6 +146,10 @@
 
     <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/drilldown.js")}}"></script>
 
+    <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/heatmap.js")}}"></script>
+
+    <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/treemap.js")}}"></script>
+
     <!-- Inputmask -->
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/input-mask/jquery.inputmask.js")}}"></script>
 
