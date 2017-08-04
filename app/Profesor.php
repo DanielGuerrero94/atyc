@@ -82,6 +82,7 @@ class Profesor extends Model
             $this->id_pais = $r->pais;
         }
 
+        $this->id_tipo_docente = $r->id_tipo_docente;
         $this->nro_doc = $r->nro_doc;
         $this->email = $r->email;
         $this->cel = $r->cel;

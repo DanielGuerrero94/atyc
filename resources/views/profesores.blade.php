@@ -2,15 +2,11 @@
 
 @section('content')
 <div class="container col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<div class="row">
-		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
-			@include('profesores.filtros')
-		</div>		
+	<div class="row">		
+		@include('profesores.filtros')
 	</div>
 	<div class="row">
-		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
-			@include('profesores.abm')
-		</div>
+		@include('profesores.abm')
 	</div>	
 	<div class="row">
 		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="display: none;">
@@ -43,9 +39,9 @@
 			columns: [
 			{ data: 'nombres'},
 			{ data: 'apellidos'},
-			{ data: 'tipo_documento.nombre'},
+			{ name: 'id_tipo_documento', data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
-			{ data: 'acciones',"orderable": false}
+			{ data: 'acciones', orderable: false}
 			],			
 			rowReorder: {
 				selector: 'td:nth-child(2)'
@@ -76,9 +72,8 @@
 
 			$('#filtros').on('click','#filtrar',function () {
 
-				//var filtrosJson = getFiltrosJson();
-				//console.log(filtrosJson);
-				var filtrosJson = $('#form-filtros :input').filter(function(i,e){return $(e).val() != ""}).serialize();
+				var filtrosJson = getFiltrosJson();
+				//var filtrosJson = $('#form-filtros :input').filter(function(i,e){return $(e).val() != ""}).serialize();
 
 				$('#table').DataTable({
 					destroy: true,
@@ -94,7 +89,7 @@
 					{ data: 'apellidos'},
 					{ data: 'tipo_doc'},
 					{ data: 'nro_doc'},
-					{ data: 'acciones',"searchable": false}
+					{ data: 'acciones', orderable: false}
 					],			
 					rowReorder: {
 						selector: 'td:nth-child(2)'
@@ -219,7 +214,6 @@
 							});
 
 							location.reload("true");
-
 						},
 						"Cancelar" : function () {
 							$(this).dialog("destroy");

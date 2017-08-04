@@ -37,10 +37,10 @@
 			columns: [
 			{ data: 'nombres'},
 			{ data: 'apellidos'},
-			{ data: 'tipo_documento.nombre'},
+			{ name: 'id_tipo_documento',data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
 			{ data: 'provincia.nombre'},
-			{ data: 'acciones'}
+			{ data: 'acciones', orderable: false}
 			],
 			pagingType: 'simple' 
 		});
@@ -89,10 +89,10 @@
 				columns: [
 				{ data: 'nombres'},
 				{ data: 'apellidos'},
-				{ data: 'id_tipo_documento'},
+				{ data: 'id_tipo_documento',orderable: false},
 				{ data: 'nro_doc'},
 				{ data: 'provincia'},
-				{ data: 'acciones'}
+				{ data: 'acciones', orderable: false}
 				],			
 				rowReorder: {
 					selector: 'td:nth-child(2)'

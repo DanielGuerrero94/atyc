@@ -21,7 +21,7 @@
         <th class="table-header">Respuesta</th>
         <th class="table-header">Cantidad</th>
         <th class="table-header">Total</th>
-        <th class="table-header">%</th>
+        <th class="table-header">Porcentaje</th>
 	</tr>
 	@foreach($resultados as $resultado)
 		<tr>
@@ -30,7 +30,7 @@
 			<td>{{$resultado->respuesta}}</td>
 			<td>{{$resultado->cantidad}}</td>
 			<td>{{$resultado->total}}</td>
-			<td>{{$resultado->porcentaje}}</td>
+			<td>{{$resultado->porcentaje}}%</td>
 		</tr>
 	@endforeach
 </table>

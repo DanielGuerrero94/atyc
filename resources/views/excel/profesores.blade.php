@@ -18,8 +18,8 @@
 	<tr>
 		<th class="table-header">Nombres</th>
         <th class="table-header">Apellidos</th>
-        <th class="table-header">Tipo Doc</th>
-        <th class="table-header">Nro Doc</th>
+        <th class="table-header">Tipo Documento</th>
+        <th class="table-header">Número Documento</th>
 	</tr>
 	@foreach($profesores as $profesor)
 		<tr>

@@ -4,7 +4,7 @@
 	<div class="col-sm-12">
 		<div class="box box-success ">
 			<div class="box-header with-border">
-				<h2 class="box-title">Alumno</h2>
+				<h2 class="box-title">Participante</h2>
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse">
 						<i class="fa fa-minus"></i>
@@ -60,14 +60,27 @@
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col-sm-6">
-							<label for="localidad" class="control-label col-sm-5">Localidad:</label>
-							<div class="col-sm-7">
-								<input type="text" class="form-control" id="localidad" value="{{$alumno->localidad}}">
-							</div>
+						<div class="form-group col-xs-12 col-sm-6">
+						<label for="genero" class="control-label col-sm-5 col-xs-4">Genero:</label>
+						<div class="col-sm-7 col-xs-8">
+							<select class="form-control" id="genero" name="id_genero">
+								<option>Seleccionar</option>
+
+								@foreach ($generos as $genero)
+								@if ($alumno->id_genero == $genero->id_genero)
+								<option value="{{$genero->id_genero}}" selected="selected">{{$genero->nombre}}</option>
+										@else
+								<option value="{{$genero->id_genero}}">{{$genero->nombre}}</option>
+										@endif	
+								
+								@endforeach
+							</select>
+
 						</div>
+					</div>
+					</div>
+					<hr>
+					<div class="row">
 						<div class="form-group col-sm-6">
 							<label for="provincia" class="control-label col-sm-3">Provincia:</label>
 							<div class="col-sm-7">
@@ -78,6 +91,12 @@
 
 									@endforeach
 								</select>
+							</div>
+						</div>
+						<div class="form-group col-sm-6">
+							<label for="localidad" class="control-label col-sm-5">Localidad:</label>
+							<div class="col-sm-7">
+								<input type="text" class="form-control" id="localidad" value="{{$alumno->localidad}}">
 							</div>
 						</div>
 					</div>	
@@ -99,7 +118,7 @@
 					</div>
 					<br>
 					<div class="row" >
-						<div class="form-group">
+						<div class="form-group" style="display: none">
 							<label for="tipo_organismo" class="control-label col-xs-2">Organismo:</label>
 							<div class="col-xs-6">
 								<select class="form-control" name="tipo_organismo" id="tipo_organismo">
@@ -117,7 +136,7 @@
 					</div>
 					<br>
 					<div class="row" >
-						<div class="form-group">
+						<div class="form-group" style="display: none">
 							<label for="nombre_organismo" class="control-label col-xs-2">Nombre organismo:</label>
 							<div class="col-xs-6">
 								<input name="organismo" type="text" class="form-control" id="nombre_organismo" value="{{$alumno->organismo2}}">
@@ -140,7 +159,7 @@
 					</div>
 					<br>
 					<div class="row">
-						<div class="form-group">
+						<div class="form-group" style="display: none">
 							<label for="establecimiento" class="control-label col-xs-2">Establecimiento:</label>
 							<div class="col-xs-6">
 								<input name="establecimiento" type="text" class="form-control" id="establecimiento" value="{{$alumno->establecimiento2}}">
@@ -149,7 +168,7 @@
 					</div>
 					<br>
 					<div class="row">
-						<div class="form-group">
+						<div class="form-group" style="display: none">
 							<label for="funcion" class="control-label col-sm-4">Funcion que desempeña:</label>
 							<div class="col-sm-8">
 								<select class="form-control" id="funcion" value="{{$alumno->id_funcion}}">
@@ -194,7 +213,7 @@
 	<div class="col-sm-12">
 		<div class="box box-info">
 			<div class="box-header with-border">
-				<h2 class="box-title">Cursos aprobados por el alumno</h2>
+				<h2 class="box-title">Acciones de capacitación a las que asistio</h2>
 				<div class="box-tools pull-right">
 					<button type="button" class="btn btn-box-tool" data-widget="collapse">
 						<i class="fa fa-minus"></i>

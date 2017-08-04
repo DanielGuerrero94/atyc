@@ -1,4 +1,4 @@
-<div id="filtros" class="col-xs-12">
+<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
 	<div class="box box-info" style="display: none;">
 		<div class="box-header with-border">
 			<h2 class="box-title">Filtros</h2>
@@ -23,14 +23,14 @@
 					<div class="form-group col-sm-4">  		  		
 						<label for="duracion" class="control-label col-xs-5">Duracion</label>
 						<div class="col-xs-7">
-							<input class="form-control" id="duracion" name="duracion">
+							<input class="form-control" id="duracion" name="duracion" type="number">
 						</div>
 					</div>			
 
 					<div class="form-group col-sm-4">  		  		
 						<label for="edicion" class="control-label col-xs-5">Edicion</label>
 						<div class="col-xs-7">
-							<input class="form-control" id="edicion" name="edicion">
+							<input class="form-control" id="edicion" name="edicion" type="number">
 						</div>						
 					</div>			
 					@if(Auth::user()->id_provincia == 25)
@@ -50,7 +50,7 @@
 						<label class="control-label col-xs-5" for="linea_estrategica">Tipo de accion:</label>
 						<div class="col-xs-7">
 							<select class="form-control" id="linea_estrategica" title="Linea estrategica">
-								<option data-id="0">Todas las lineas</option>
+								<option data-id="0">Todos los tipos</option>
 								@foreach ($lineas_estrategicas as $linea)
 								<option data-id="{{$linea->id_linea_estrategica}}">{{$linea->numero}}-{{$linea->nombre}}</option>
 								@endforeach
@@ -62,7 +62,7 @@
 						<label class="control-label col-xs-5" for="area_tematica">Areas Tematicas:</label>
 						<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 							<select class="form-control"  id="area_tematica" title="Area tematica">
-								<option data-id="0">Todas las areas</option>
+								<option data-id="0">Todas las tematicas</option>
 								@foreach ($areas_tematicas as $area)
 								<option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
 								@endforeach
@@ -70,6 +70,7 @@
 						</div>
 					</div>					
 				</div>
+				<hr>
 				<div class="row">
 					<div class="form-group col-sm-4">
 						<label for="periodo" class="control-label col-xs-5">Período:</label>

@@ -4,7 +4,7 @@
 	<div class="col-sm-12">
 		<div class="box box-success ">
 			<div class="box-header with-border">
-				<h2 class="box-title">Curso</h2>
+				<h2 class="box-title">Acción</h2>
 			</div>		
 			<div class="box-body">
 				<form class="form" role="form">	
@@ -22,26 +22,17 @@
 						</div>
 					</div>	
 					<div class="form-group col-sm-6">
-						<label for="provincia" class="control-label col-sm-4">Provincia:</label>
+						<label for="provincia" class="control-label col-sm-4">Jurisdicción:</label>
 						<div class="col-sm-8">
-							<select class="form-control" id="provincia" name="provincia">
-
-								<option data-id="{{$curso->id_provincia}}">{{$curso->provincia->nombre}}</option>
-
-								@foreach ($provincias as $provincia)
-
-								<option data-id="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>				 
-
-								@endforeach
-							</select>
+						<input type="text" class="form-control" id="edicion" name="edicion" data-id="{{$curso->id_provincia}}" value="{{$curso->provincia->nombre}}" disabled>
 						</div>
 					</div>	
 					<div class="form-group col-sm-6">
-						<label for="area_tematica" class="control-label col-sm-4">Area tematica:</label>
+						<label for="area_tematica" class="control-label col-sm-4">Area temática:</label>
 						<div class="col-sm-8">
 							<select class="form-control" id="area_tematica" name="area_tematica">
 
-								<option data-id="{{$curso->id_area_tematica}}">{{$curso->areaTematica->nombre}}</option>
+								<option data-id="{{$curso->id_area_tematica}}" disabled>{{$curso->areaTematica->nombre}}</option>
 
 								@foreach ($areas_tematicas as $area)
 
@@ -52,7 +43,7 @@
 						</div>
 					</div>
 					<div class="form-group col-sm-6">
-						<label for="linea_estrategica" class="control-label col-sm-4">Linea Estrategica:</label>
+						<label for="linea_estrategica" class="control-label col-sm-4">Tipo de acción:</label>
 						<div class="col-sm-8">
 							<select class="form-control" id="linea_estrategica" name="linea_estrategica">
 
@@ -67,13 +58,13 @@
 						</div>
 					</div>
 					<div class="form-group col-sm-6">
-						<label for="edicion" class="control-label col-sm-4">Edicion:</label>
+						<label for="edicion" class="control-label col-sm-4">Edición:</label>
 						<div class="col-sm-8">
-							<input type="text" class="form-control" id="edicion" name="edicion" value="{{$curso->edicion}}" disabled>
+							<input type="number" class="form-control" id="edicion" name="edicion" value="{{$curso->edicion}}" disabled>
 						</div>
 					</div>
 					<div class="form-group col-sm-6">
-						<label for="duracion" class="control-label col-sm-4">Duracion:</label>
+						<label for="duracion" class="control-label col-sm-4">Duración:</label>
 						<div class="col-sm-8">
 							<input type="text" class="form-control" id="duracion" name="duracion" value="{{$curso->duracion}}">
 						</div>

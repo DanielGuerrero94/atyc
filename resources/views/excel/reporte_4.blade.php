@@ -20,7 +20,7 @@
         <th class="table-header">Provincia</th>
         <th class="table-header">Capacitados</th>
         <th class="table-header">Total efectores</th>
-        <th class="table-header">%</th>
+        <th class="table-header">Porcentaje</th>
 	</tr>
 	@foreach($resultados as $resultado)
 		<tr>
@@ -28,7 +28,7 @@
 			<td>{{$resultado->provincia}}</td>
 			<td>{{$resultado->capacitados}}</td>
 			<td>{{$resultado->total}}</td>
-			<td>{{$resultado->porcentaje}}</td>
+			<td>{{$resultado->porcentaje}}%</td>
 		</tr>
 	@endforeach
 </table>

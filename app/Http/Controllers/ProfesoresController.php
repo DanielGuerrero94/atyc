@@ -4,20 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use App\TipoDocumento;
 use App\TipoDocente;
+use App\TipoDocumento;
 use App\Profesor;
 use App\Pais;
-use Validator;
+use Cache;
 use DB;
+use Auth;
 use Log;
+use Validator;
 use Datatables;
 use Excel;
 use App\PDF as Pdf;
 
 class ProfesoresController extends AbmController
 {
-    
+
     private $rules = [
     'nombres' => 'required|string',
     'apellidos' => 'required|string',
@@ -26,24 +28,24 @@ class ProfesoresController extends AbmController
     'pais' => 'required_if:id_tipo_documento,5,6',
     'nro_doc' => 'required|numeric',
     'email' => 'nullable|email',
-    'tel' => 'nullable',
-    'cel' => 'nullable'
-    ];
-
-    private $filters = [
+    'tel' => 'nullable|numeric',
+    'cel' => 'nullable|numeric'
+    ],
+    $filters = [
     'nombres' => 'string',
     'apellidos' => 'string',
-    'id_tipo_doc' => 'numeric',
+    'id_tipo_documento' => 'numeric',
     'id_tipo_docente' => 'numeric',
     'cel' => 'string',
-    'tel' => 'string',
+    'tel' => 'string',//11
     'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
     'nro_doc' => 'numeric'
     ],
     $botones = [
-        'fa fa-pencil-square-o',
-        'fa fa-trash-o'
+    'fa fa-pencil-square-o',
+    'fa fa-trash-o'
     ];
+
     public function query($query)
     {
         return DB::connection('eLearning')->select($query);
@@ -87,14 +89,8 @@ class ProfesoresController extends AbmController
      */
     public function store(Request $request)
     {
-        logger($request);
         $v = Validator::make($request->all(), $this->rules);
         if (!$v->fails()) {
-            //Si le setearon pais busco su id
-            /*if($request->has('pais')){
-                $request->pais = Pais::select('id_pais')->where('nombre','=',$request->pais)->get('id_pais')->first(); 
-                $request->pais = $request->pais['id_pais'];    
-            } */
             $profesor = new Profesor();
             $profesor->crear($request);
         } else {
@@ -110,15 +106,19 @@ class ProfesoresController extends AbmController
      */
     public function show($id)
     {
-        $profesor = Profesor::find($id);
-        $nombre_pais = null;
-        $id_tipo_documento = $profesor->id_tipo_documento;
-        if ($id_tipo_documento === 6 || $id_tipo_documento === 5) {
-            $pais = Pais::find($profesor->id_pais);
-            $nombre_pais = $pais->nombre;
+        try {
+            $profesor = Profesor::with(['tipoDocente'])->findOrFail($id);
+            $nombre_pais = null;
+            $id_tipo_documento = $profesor->id_tipo_documento;
+            if ($id_tipo_documento === 6 || $id_tipo_documento === 5) {
+                $pais = Pais::find($profesor->id_pais);
+                $nombre_pais = $pais->nombre;
+            }
+            $profesor = array('profesor' => $profesor,'pais' => $nombre_pais);
+            return array_merge($profesor, $this->getSelectOptions());            
+        } catch (ModelNotFoundException $e) {
+            return json_encode($e->message);
         }
-        $profesor = array('profesor' => $profesor,'pais' => $nombre_pais);
-        return array_merge($profesor, $this->getSelectOptions());
     }
 
     /**
@@ -141,15 +141,23 @@ class ProfesoresController extends AbmController
      */
     public function update(Request $request, $id)
     {
-        $profesor = Profesor::find($id);
-
-        if ($request->id_tipo_doc === '6' || $request->id_tipo_doc === '5') {
-            $request->pais = Pais::select('id')->where('nombre', '=', $request->pais)->get('id')->first();
-            $request->pais = $request->pais['id'];
-        }
-
-        $profesor->modificar($request);
+        logger(json_encode($request->all()));
+        try {
+            $profesor = Profesor::findOrFail($id);            
+            if ($request->id_tipo_doc === '6' || $request->id_tipo_doc === '5') {
+                $request->pais = Pais::select('id')->where('nombre', '=', $request->pais)->get('id')->first();
+                $request->pais = $request->pais['id'];
+            }
+            return $profesor->modificar($request);
+        } catch (ModelNotFoundException $e) {
+            return json_encode($e->message);
+        }        
     }
+
+    /*ebsas1
+    1234
+    sistemasuec 
+    $uMaR2017*/
 
     /**
      * Remove the specified resource from storage.
@@ -159,8 +167,12 @@ class ProfesoresController extends AbmController
      */
     public function destroy($id)
     {
-        $profesor = Profesor::find($id);
-        $profesor->delete();
+        logger($id);
+        try {
+            return Profesor::findOrFail($id)->delete();
+        } catch (ModelNotFoundException $e) {
+            return json_encode($e->message());
+        }
     }
     
     /**
@@ -183,19 +195,9 @@ class ProfesoresController extends AbmController
             function ($value, $key) {
                 return $value != "";
             }
-        );
+            );
 
-            //Mapeo pasando a minuscula
-        $mapped = $filtered->map(
-            function ($value, $key) {
-                $key = mb_strtolower($key);
-                return $value;
-            }
-        );
-
-        logger(json_encode($filtered));
-
-            //Otra forma puedo ir agregando clausulas where
+        //Otra forma puedo ir agregando clausulas where
         $query = Profesor::leftJoin('sistema.tipos_documentos', 'sistema.profesores.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
         ->select(
             'sistema.profesores.id_profesor',
@@ -203,7 +205,7 @@ class ProfesoresController extends AbmController
             'sistema.profesores.apellidos',
             'sistema.tipos_documentos.nombre as tipo_doc',
             'sistema.profesores.nro_doc'
-        );
+            );
 
         foreach ($filtered as $key => $value) {
             if ($key == 'nombres' || $key == 'apellidos' || $key == 'email') {
@@ -219,7 +221,10 @@ class ProfesoresController extends AbmController
     public function getFiltrado(Request $r)
     {
         $filtros = collect($r->only('filtros'));
+        
         $filtros = collect($filtros->get('filtros'));
+
+        
 
         //Tengo que crear un metodo lo suficientemente generico como para poder ponerlo en abmcontroller
         //Hago un test solo por nombre para armar el front end
@@ -258,7 +263,7 @@ class ProfesoresController extends AbmController
 
                 return $accion == 'agregar'?$agregar:$editarYEliminar;
             }
-        )
+            )
         ->make(true);
     }
 
@@ -269,13 +274,18 @@ class ProfesoresController extends AbmController
      */
     public function getSelectOptions()
     {
-        $tipoDocumentos = TipoDocumento::all();
-        $tipoDocentes = TipoDocente::all();
+        $tipoDocumentos = Cache::remember('tipo_documentos', 5, function () {
+            return TipoDocumento::all();
+        });
+
+        $tipoDocentes = Cache::remember('tipo_docentes', 5, function () {
+            return TipoDocente::all();
+        });
 
         return array(
             'tipoDocumento' => $tipoDocumentos,
             'tipoDocente' => $tipoDocentes
-        );
+            );
     }
 
     /**
@@ -291,7 +301,7 @@ class ProfesoresController extends AbmController
             function ($item, $key) {
                 return array('id' => $item->id_profesor,'nombres' => $item->nombres,'apellidos' => $item->apellidos,'documentos' => $item->nro_doc);
             }
-        );
+            );
         return $this->typeaheadResponse($profesor);
     }
 
@@ -312,7 +322,7 @@ class ProfesoresController extends AbmController
 
         $data = $this->queryLogica($r, $filtros)->get();
         $datos = ['profesores' => $data];
-        $path = "profesores_filtrados_".date("Y-m-d_H:i:s");
+        $path = "docentes_".date("Y-m-d_H:i:s");
 
         Excel::create(
             $path,
@@ -323,9 +333,9 @@ class ProfesoresController extends AbmController
                         $sheet->setHeight(1, 20);
                         $sheet->loadView('excel.profesores', $datos);
                     }
-                );
+                    );
             }
-        )
+            )
         ->store('xls');
 
         return $path;
@@ -359,7 +369,7 @@ class ProfesoresController extends AbmController
                 array_push($profesor, $item->nro_doc);
                 return $profesor;
             }
-        );
+            );
 
         return Pdf::save($header, $column_size, 14, $mapped);
     }
@@ -374,7 +384,7 @@ class ProfesoresController extends AbmController
     {
         return json_encode(
             Profesor::where('nro_doc', $documento)
-                ->get()->count() != 0
-        );
+            ->get()->count() != 0
+            );
     }
 }

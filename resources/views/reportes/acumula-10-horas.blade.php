@@ -8,7 +8,7 @@
 		</div>	
 	</div>	
 	<div class="row">
-		<div id="reporte" data-id-provincia="{{$provincia_usuario->id}}" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2" style="display: none;">
+		<div id="reporte" data-id-provincia="{{$provincia_usuario->id}}" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">
 		{{ csrf_field() }}
 				<div class="box box-info ">
 					<div class="box-header">
@@ -24,7 +24,7 @@
 							<thead>
 								<tr>
 									<th>Período</th>
-									<th>Provincia</th>
+									<th>Jurisdicción</th>
 									<th>Cantidad de alumnos</th>		
 								</tr>
 							</thead>
@@ -77,7 +77,9 @@
 			$('#reporte').show();
 
 			table = $('#reporte-table').DataTable({	
-				destroy: true,		
+				destroy: true,
+				searching: false,
+				ordering: false,		
 				ajax : {
 					url: 'query',
 					data: {

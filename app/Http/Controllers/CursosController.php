@@ -10,7 +10,6 @@ use App\Provincia;
 use App\Periodo;
 use App\Models\Cursos\Curso;
 use DB;
-use Log;
 use Auth;
 use Validator;
 use Datatables;
@@ -174,7 +173,7 @@ class cursosController extends AbmController
      */
     public function destroy($id)
     {    	
-    	Curso::findOrFail($id)->delete();
+    	return Curso::findOrFail($id)->delete();
     }
 
     /**
@@ -387,7 +386,7 @@ class cursosController extends AbmController
 
 		foreach ($filtered as $key => $value) {
 			if($key == 'nombre'){
-				$query = $query->where('cursos.cursos.'.$key,'ilike','%'.$value.'%');                           
+				$query = $query->where('cursos.cursos.'.$key,'ilike', $value.'%');                           
 			}elseif ($key == 'desde') {
 				$query = $query->where('cursos.cursos.fecha','>',$value);
 			}elseif ($key == 'hasta') {
@@ -439,7 +438,7 @@ class cursosController extends AbmController
 			$agregar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
 			return $accion == 'agregar'?$agregar:$editarYEliminar;
-		})            
+		})
 		->make(true);
 	}
 
@@ -461,9 +460,8 @@ class cursosController extends AbmController
 		$order_by = collect($r->only('order_by'));
 
 		$data = $this->queryLogica($r,$filtros,$order_by)->get();
-		logger(json_encode($data));
 		$datos = ['cursos' => $data];
-		$path = "cursos_filtrados_".date("Y-m-d_H:i:s");
+		$path = "acciones_".date("Y-m-d_H:i:s");
 
 		Excel::create($path, function ($excel) use ($datos){
 			$excel->sheet('Reporte', function ($sheet) use ($datos){
@@ -508,6 +506,6 @@ class cursosController extends AbmController
 			return $curso;
 		});
 
-		return PDF::save($header,$column_size,10,$mapped);
+		return PDF::save($header, $column_size, 10, $mapped);
 	}
 }

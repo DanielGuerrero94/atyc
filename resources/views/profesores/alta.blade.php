@@ -23,8 +23,7 @@
 							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
 								@foreach ($tipoDocumento as $documento)
 								
-								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>				 
-								
+								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>					
 								@endforeach
 							</select>
 						</div>

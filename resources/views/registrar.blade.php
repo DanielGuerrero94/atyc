@@ -43,11 +43,11 @@
 
 <div class="register-box">
   <div class="register-logo">
-    <a href="../../index2.html"><b>E</b>learning</a>
+    <p><b>Atyc</b></p>
   </div>
 
   <div class="register-box-body">
-    <p class="login-box-msg">Iniciar sesion</p>
+    <p class="login-box-msg">Solicitud de usuario.</p>
 
     <form action="{{ url('/register') }}" method="post" role="form">
     {{ csrf_field() }}
@@ -67,17 +67,16 @@
         <input id="password-confirm" name="password_confirmation" type="password" class="form-control" placeholder="Repetir Contraseña" required>
         <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
       </div>
+      <hr>
       <div class="row">
+        <div class="col-xs-4 pull-left">
+          <a href={{url("/entrar")}} class="btn btn-primary btn-block btn-flat">Entrar</a>
+        </div>
         <div class="col-xs-4 pull-right">
           <button type="submit" class="btn btn-primary btn-block btn-flat">Registrar</button>
         </div>
       </div>
-    </form>
-
-    <div class="social-auth-links text-center">
-      <p>----</p>
-      <a href={{url("/entrar")}} class="text-center">Entrar</a>
-    </div>    
+    </form>    
   </div>
   <!-- /.form-box -->
 </div>

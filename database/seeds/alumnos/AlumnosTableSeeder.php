@@ -25,7 +25,7 @@ class AlumnosTableSeeder extends Seeder
    */
   public function updateTableToMigrate()
   {
-    \DB::connection('g_plannacer')->statement('update g_plannacer.alumnos set trabaja_en = upper(trabaja_en)');
+    \DB::connection('g_plannacer')->statement('update g_plannacer.alumnos set trabaja_en = upper(trabaja_en)');    
     \DB::connection('g_plannacer')->statement('update g_plannacer.alumnos set funcion = upper(funcion)');
     \DB::connection('g_plannacer')->statement('update g_plannacer.alumnos set tipo_convenio = upper(tipo_convenio)');
     \DB::connection('g_plannacer')->statement("update g_plannacer.alumnos set tipo_convenio = '' where tipo_convenio is null");

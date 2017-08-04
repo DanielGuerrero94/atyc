@@ -28,18 +28,6 @@
 			<a href={{url("/alumnos")}} class="small-box-footer">Más información <i class="fa fa-arrow-circle-right"></i></a>			
 		</div>
 	</div>
-	<!-- <div class="col-lg-4 col-xs-6">
-		<div class="small-box bg-aqua">
-			<div class="inner">
-				<h3 id="alumnos">15963</h3>
-				<p>Alumnos activos</p>				             
-			</div>
-			<div class="icon">
-				<i class="fa fa-users"></i>
-			</div>			
-			<a href="#" class="small-box-footer">Más información <i class="fa fa-arrow-circle-right"></i> <i class="fa fa-info-circle" title="Activo es aquel alumno que finalizo algun curso en el ultimo período"></i> </a>			
-		</div>
-	</div> -->
 	<div class="col-lg-4 col-xs-6">
 		<div class="small-box bg-aqua">
 			<div class="inner">
@@ -55,12 +43,45 @@
 		</div>
 	</div>
 </div>
+<div class="row">
+  <div class="col-lg-12 col-xs-12">
+    <div class="box box-primary">
+      <div class="box-body">
+        <div id="highchart_acciones" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+      </div>
+    </div>
+  </div>  
+</div>
+<div class="row">
+  <div class="col-lg-6 col-xs-12">
+    <div class="box box-success">
+      <div class="box-body">
+        <div id="accionesPorTipo" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6 col-xs-12">
+    <div class="box box-info">
+      <div class="box-body">
+        <div id="accionesPorTematica" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+      </div>
+    </div>
+  </div>   
+</div>
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
-	<div class="col-lg-4 col-xs-6">
-		<div class="box box-danger">
-			<div class="box-header with-border">
-				<h3 class="box-title">Acciones por area temática</h3>
-        <!-- <i class="fa fa-pie-chart btn text-primary pull-right">Ver más</i> -->
+  <div class="col-lg-12 col-xs-12">
+    <div class="box box-danger">
+      <div class="box-body">
+        <div id="pieAccionesTipologia"></div>
+      </div>
+    </div>
+  </div>  
+</div>
+<div class="row" style="margin-right: 5px;margin-left: 5px;">
+  <div class="col-lg-4 col-xs-6">
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title">Acciones por area temática</h3>
       </div>
       <div class="box-body">
         <canvas id="pieAreas" class="pieChart"></canvas>
@@ -87,36 +108,6 @@
   </div>
 </div>
 </div>
-</div>
-<div class="row" style="margin-right: 5px;margin-left: 5px;">
-  <!-- <div class="col-lg-4 col-xs-6">
-    <div class="box box-danger">
-      <div class="box-header with-border">
-        <h3 class="box-title">Cursos por area tematica</h3>
-        <i class="fa fa-pie-chart btn text-primary pull-right">Ver más</i>
-      </div>
-      <div class="box-body">
-      <canvas id="pieLineas" class="pieChart"></canvas>
-      </div>
-    </div>
-  </div> -->
-  <div class="col-lg-12 col-xs-12">
-    <div class="box box-danger">
-      <div class="box-body">
-        <div id="pieTestHighchart"></div>
-      </div>
-    </div>
-  </div>
-  <!--<div class="col-lg-4 col-xs-6">
-    <div class="box box-danger">
-     <div class="box-header with-border">
-      <h3 class="box-title">Provincias con Más cursos dictados</h3>
-    </div>
-    <div class="box-body">
-      <div id="pieProvinciasHighchart"></div>
-    </div>
-  </div>
-</div>-->
 </div>
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
 	<div class="col-lg-4 col-xs-6">
@@ -302,8 +293,8 @@
 
 
 
-// Radialize the colors
-Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+// Radialize the colors Deberia ponerselo solo al pie
+/*Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
   return {
     radialGradient: {
       cx: 0.5,
@@ -315,7 +306,7 @@ Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, 
             [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
             ]
           };
-        });
+        });*/
 
 
 
@@ -332,46 +323,6 @@ Highcharts.getOptions().plotOptions.pie.colors = (function () {
       }
       return colors;
     }());
-
-// Build the chart
-/*Highcharts.chart('pieProvinciasHighchart', {
-  chart: {
-    plotBackgroundColor: null,
-    plotBorderWidth: null,
-    plotShadow: false,
-    type: 'pie'
-  },
-  title: {
-    text: 'Browser market shares at a specific website, 2014'
-  },
-  tooltip: {
-    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-  },
-  plotOptions: {
-    pie: {
-      allowPointSelect: true,
-      cursor: 'pointer',
-      dataLabels: {
-        enabled: false,
-        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-        style: {
-          color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-        }
-      }
-    }
-  },
-  series: [{
-    name: 'Brands',
-    data: [
-    { name: 'Microsoft Internet Explorer', y: 56.33 },
-    { name: 'Chrome', y: 24.03 },
-    { name: 'Firefox', y: 10.38 },
-    { name: 'Safari', y: 4.77 },
-    { name: 'Opera', y: 0.91 },
-    { name: 'Proprietary or Undetectable', y: 0.2 }
-    ]
-  }]
-});*/
 
 $.blockUI({ 
  css: {
@@ -420,6 +371,9 @@ $.ajax ({
   cursos_lineas_estrategicas_hc = data.cursos_lineas_estrategicas_hc;
   cursos_por_anio_hc = data.cursos_por_anio_hc;
   cursos_por_anio_y_mes_hc = data.cursos_por_anio_y_mes_hc;
+  accionesAnioMes = data.accionesAnioMes;
+  accionesPorTipo = data.accionesPorTipo;
+  accionesPorTematica = data.accionesPorTematica;
 
   /*Empiezo a hacer cosas*/
 
@@ -451,12 +405,12 @@ $.ajax ({
 
 
 // Build the chart
-Highcharts.chart('pieTestHighchart', {
+Highcharts.chart('pieAccionesTipologia', {
   chart: {
     plotBackgroundColor: null,
     plotBorderWidth: null,
     plotShadow: false,
-    type: 'pie'
+    type: 'pie',
   },
   title: {
     text: 'Acciones por tipología'
@@ -477,58 +431,97 @@ Highcharts.chart('pieTestHighchart', {
         connectorColor: 'silver'
       },
       size : 300
+    },
+    series: {
+      color: {
+        radialGradient: { cx: 0.5, cy: 0.5, r: 0.5 },
+        stops: [
+        [0, '#003399'],
+        [1, '#3366AA']
+        ]
+      },
     }
-  },
+  },  
   series: cursos_lineas_estrategicas_hc
 });
 
-// Create the chart
-Highcharts.chart('columnDrilldown', {
+Highcharts.chart('highchart_acciones', {
+
   chart: {
-    type: 'column'
+    type: 'areaspline',    
   },
   title: {
-    text: 'Acciones realizadas por año y desagregado por mes'
-  },
-  subtitle: {
-    text: 'Click en la columna año para ver detalle por mes'
+    text: 'Acciones por año y mes (Nación)' 
   },
   xAxis: {
-    type: 'Año'
+    categories: [
+    'Enero',
+    'Febrero',
+    'Marzo',
+    'Abril',
+    'Mayo',
+    'Junio',
+    'Julio',
+    'Agosto',
+    'Septiembre',
+    'Octubre',
+    'Noviembre',
+    'Diciembre'
+    ],
+    tickmarkPlacement: 'on',
+    title: {
+      enabled: false
+    }
   },
   yAxis: {
     title: {
-      text: 'Total cursos'
-    }
-
-  },
-  legend: {
-    enabled: false
-  },
-  drilldown: {
-
-  },
-  plotOptions: {
-    series: {
-      borderWidth: 0,
-      dataLabels: {
-        enabled: true
-      }
+      text: 'Acciones'
     }
   },
   tooltip: {
-    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b><br/>'
+    shared: true,
+    valueSuffix: ' acciones'
   },
+  credits: {
+    enabled: false
+  },
+  plotOptions: {
+    areaspline: {
+      fillOpacity: 0.5
+    }
+  },
+  series: accionesAnioMes
+});
 
-  series: cursos_por_anio_hc,
-  drilldown: {
-    series: cursos_por_anio_y_mes_hc
+Highcharts.chart('accionesPorTipo', {
+  colorAxis: {
+    minColor: '#FFFFFF',
+    maxColor: Highcharts.getOptions().colors[2]
+  },
+  series: [{
+    type: 'treemap',
+    layoutAlgorithm: 'squarified',
+    data: accionesPorTipo
+  }],
+  title: {
+    text: 'Cantidad de acciones por tipología (Nación)'
   }
 });
 
-
-
+Highcharts.chart('accionesPorTematica', {
+  colorAxis: {
+    minColor: '#FFFFFF',
+    maxColor: Highcharts.getOptions().colors[0]
+  },
+  series: [{
+    type: 'treemap',
+    layoutAlgorithm: 'squarified',
+    data: accionesPorTematica
+  }],
+  title: {
+    text: 'Cantidad de acciones por temática (Nación)'
+  }
+});
 
 				//--------------
     //- AREA CHART -

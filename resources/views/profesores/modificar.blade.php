@@ -24,10 +24,13 @@
 						<div class="form-group col-sm-6">
 							<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento:</label>
 							<div class="col-xs-8">
-								<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" value="{{$profesor->id_tipo_documento}}">
-									@foreach ($tipoDocumento as $documento)
-
-									<option value="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>										
+								<select class="form-control" id="id_tipo_documento" name="id_tipo_documento">
+									@foreach ($tipoDocumento as $documento)							
+										@if ($documento->id_tipo_documento == $profesor->id_tipo_documento)
+										<option value="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}" selected="selected">{{$documento->nombre}}</option>
+										@else
+										<option value="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>
+										@endif						
 									@endforeach
 								</select>
 							</div>
@@ -50,6 +53,25 @@
 						</div>					
 					</div>	
 					<hr>
+				<div class="row">
+				<div class="form-group col-sm-6">
+						<label class="control-label col-xs-4" for="id_tipo_docente">Tipo de docente:</label>
+						<div class="col-xs-8">
+							<select class="form-control" id="id_tipo_docente" name="id_tipo_docente">
+								@foreach ($tipoDocente as $tipo)
+								
+								@if ($tipo->id_tipo_docente == $profesor->id_tipo_docente)
+								<option value="{{$tipo->id_tipo_docente}}" selected="selected">{{$tipo->nombre}}</option>
+								@else
+								<option value="{{$tipo->id_tipo_docente}}">{{$tipo->nombre}}</option>
+								@endif				 
+								
+								@endforeach
+							</select>
+						</div>
+					</div>
+				</div>
+				<hr>
 					<div class="row">
 						<div class="form-group col-sm-6">
 							<label class="control-label col-xs-4" for="email">Email:</label>
@@ -164,9 +186,6 @@
 
 		$(".container").on("click","#modificar",function () {
 			var data = $('#form-alta').serialize();
-			data += '&id_tipo_documento='+$('#id_tipo_documento').val();
-
-			console.log(data);
 
 			$.ajax({
 				url: profesor,

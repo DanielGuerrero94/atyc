@@ -25,7 +25,7 @@
 								<th>Provincia</th>
 								<th>Capacitados</th>
 								<th>Total efectores</th>
-								<th>%</th>
+								<th>Porcentaje</th>
 							</tr>
 						</thead>
 					</table>

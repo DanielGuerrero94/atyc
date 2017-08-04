@@ -30,11 +30,11 @@
 <body class="hold-transition login-page">
   <div class="login-box panel panel-primary">
     <div class="login-logo">
-      <a href="../../index2.html"><b>A</b>tyc</a>
+      <p><b>Atyc</b></p>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
-      <p class="login-box-msg">Iniciar sesion</p>
+      <p class="login-box-msg"><u>Iniciar sesión</u></p>
 
       <form action="{{ url('/login') }}" role="form" method="post">
         {{ csrf_field() }}        
@@ -56,6 +56,7 @@
           </span>
           @endif
         </div>
+        <br>
         <div class="row">
           <div class="col-xs-8">
             <div class="checkbox icheck">
@@ -64,20 +65,15 @@
               </label>
             </div>
           </div>
-          <!-- /.col -->
           <div class="col-xs-4">
             <button type="submit" class="btn btn-primary btn-block ">Entrar</button>
           </div>
-          <!-- /.col -->
         </div>
       </form>
-
+      <hr>
       <div class="social-auth-links text-center">
-        <p>----</p>
         <a href={{url("/registrar")}} class="text-center">Registrarse</a>
       </div>
-      <!-- /.login-box -->
-
       <!-- jQuery 2.2.3 -->
       <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js") }}"></script>
       <!-- Bootstrap 3.3.6 -->

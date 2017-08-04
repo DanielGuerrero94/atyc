@@ -3,20 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Alumno;
 use App\Provincia;
 use App\Pais;
 use App\Funcion;
 use App\Trabajo;
 use App\TipoDocumento;
-use App\Alumno;
-use Auth;
-use DB;
+use App\Genero;
+use Cache;
 use Validator;
 use Datatables;
-use Log;
 use Excel;
 use App\PDF as Pdf;
-use Illuminate\Support\Facades\Cache;
+use DB;
+use Auth;
+use Log;
 
 class AlumnosController extends AbmController
 {
@@ -29,6 +30,7 @@ class AlumnosController extends AbmController
     'localidad' => 'required|string',
     'id_provincia' => 'required|numeric',
     'id_trabajo' => 'required|numeric',
+    'id_genero' => 'required|numeric',
     'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
     //'establecimiento' => 'required_if:id_trabajo,2|required_if:id_trabajo,2|string',
     'tipo_convenio' => 'nullable',
@@ -38,26 +40,28 @@ class AlumnosController extends AbmController
     'email' => 'nullable|email',
     'tel' => 'nullable',
     'cel' => 'nullable'
-    ];
-
-    private $filters = [
+    ],
+    $filters = [
     'nombres' => 'string',
     'apellidos' => 'string',
     'id_tipo_documento' => 'numeric',
     'id_provincia' => 'numeric',
+    'id_genero' => 'numeric',
     'cel' => 'string',
     'tel' => 'string',
     'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
     'localidad' => 'string',
-    'nro_doc' => 'numeric'];
-
-    private $campos = ["nombres","apellidos","id_tipo_documento","nro_doc","provincia","acciones"];
-    private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
-
-    public function query($query)
-    {
-        return DB::connection('eLearning')->select($query);
-    }
+    'nro_doc' => 'numeric'
+    ],
+    $campos = [
+    "nombres",
+    "apellidos",
+    "id_tipo_documento",
+    "nro_doc",
+    "provincia",
+    "acciones"
+    ],
+    $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
 
     /**
      * View para abm.
@@ -99,6 +103,8 @@ class AlumnosController extends AbmController
     {
         $v = Validator::make($request->all(), $this->rules);
 
+        logger(json_encode($request->all()));
+
         if (!$v->fails()) {
             if ($request->has('pais')) {
                 $request->pais = Pais::select('id_pais')->where('nombre', '=', $request->pais)->get('id_pais')->first();
@@ -107,6 +113,7 @@ class AlumnosController extends AbmController
             return Alumno::crear($request);
         } else {
             logger(json_encode($v->errors()));
+            return json_encode($v->errors());
         }
     }
 
@@ -160,7 +167,11 @@ class AlumnosController extends AbmController
      */
     public function destroy($id)
     {
-        Alumno::findOrFail($id)->delete();
+        try {
+            Alumno::findOrFail($id)->delete();            
+        } catch (ModelNotFoundException $e) {
+            return json_encode($e->message);
+        } 
     }
 
     /**
@@ -172,7 +183,7 @@ class AlumnosController extends AbmController
      */
     public function getTabla(Request $r)
     {
-        $returns = Alumno::select('id_alumno', 'nombres', 'apellidos', 'nro_doc', 'id_provincia', 'id_tipo_documento')
+        $returns = Alumno::select('id_alumno', 'nombres', 'apellidos', 'nro_doc', 'alumnos.id_provincia', 'alumnos.id_tipo_documento')
         ->with(
             [
             'tipoDocumento',
@@ -207,7 +218,7 @@ class AlumnosController extends AbmController
             return Funcion::orderBy('nombre')->get();
         });
 
-        $organismos = Cache::remember('organismo', 5, function () {
+        $organismos = Cache::remember('organismos', 5, function () {
             return Alumno::select('organismo1')
             ->where('organismo1','<>',' ')
             ->groupBy('organismo1')
@@ -215,28 +226,17 @@ class AlumnosController extends AbmController
             ->get();
         });
 
-        /* $generos = Cache::remember('generos', 5, function () {
-            return Alumno::select('organismo1')
-            ->groupBy('organismo1')
-            ->orderBy('organismo1')
-            ->get();
-        }); */
-
-        $generos = ['Masculino','Femenino','Otro'];
-        $departamentos = ['Departamento1','Departamento2','Departamento3','Departamento4'];
-        $localidades = ['Localidad1','Localidad2'];
-        $r = array(
-            'generos' => $generos,
-            'departamentos' => $departamentos,
-            'localidades' => $localidades
-            );
+        $generos = Cache::remember('generos', 5, function () {
+            return Genero::all();
+        }); 
 
         return array(
             'documentos' => $tipo_documentos,
             'provincias' => $provincias,
             'trabajos' => $trabajos,
             'funciones' => $funciones,
-            'organismos' => $organismos
+            'organismos' => $organismos,
+            'generos' => $generos
             );
     }
 
@@ -257,9 +257,9 @@ class AlumnosController extends AbmController
      *
      * @return \Illuminate\Http\Response
      */
-    public function getEstablecimientos()
+    public function getEstablecimientos(Request $r)
     {
-        return $this->typeahead('establecimiento2');
+        return $this->typeahead($r,'establecimiento2');
     }
 
     /**
@@ -305,9 +305,9 @@ class AlumnosController extends AbmController
      *
      * @return \Illuminate\Http\Response
      */
-    private function typeahead($columna)
+    private function typeahead(Request $r,$columna)
     {
-        return $this->typeaheadResponse($this->queryOneColumn($columna));
+        return $this->typeaheadResponse($this->queryOneColumn($r,$columna));
     }
 
     /**
@@ -315,12 +315,13 @@ class AlumnosController extends AbmController
      *
      * @return \Illuminate\Http\Response
      */
-    private function queryOneColumn($columna)
+    private function queryOneColumn(Request $r,$columna)
     {
         return Alumno::select($columna)
         ->segunProvincia()
         ->groupBy($columna)
         ->orderBy($columna)
+        ->where($columna,'ilike',$r->search.'%')
         ->get()
         ->map(
             function ($item, $key) use ($columna) {
@@ -335,14 +336,16 @@ class AlumnosController extends AbmController
     {
         //Filtros las que estan vacias si es que me las pasaron
         //Estas funciones para filtrar podrian estar en un middleware
+        //O pueden estar directamente en el front end y no mandarlas
         $filtered = $filtros->filter(
             function ($value, $key) {
                 return $value != "" && $value != "0";
             }
         );
 
-        $query = Alumno::leftJoin('sistema.provincias', 'alumnos.id_provincia', '=', 'sistema.provincias.id_provincia')
-        ->leftJoin('sistema.tipos_documentos', 'alumnos.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
+        $query = Alumno::leftJoin('sistema.tipos_documentos',
+        'alumnos.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
+        ->leftJoin('sistema.provincias', 'alumnos.id_provincia', '=', 'sistema.provincias.id_provincia')
         ->select(
             'id_alumno',
             'nombres',
@@ -350,18 +353,25 @@ class AlumnosController extends AbmController
             'sistema.tipos_documentos.nombre as id_tipo_documento',
             'nro_doc',
             'sistema.provincias.nombre as provincia'
-        );
+        )
+        ->segunProvincia();
 
-        //Con esto logro que las provincias solo vean lo que les corresponda pero la uec tenga disponible los filtros
-        if (Auth::user()->id_provincia != 25) {
-            $query = $query->where('alumnos.alumnos.id_provincia', '=', Auth::user()->id_provincia);
-        }
+        /*$query = Alumno::leftJoin('sistema.tipos_documentos',
+        'alumnos.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
+        ->select(
+            'id_alumno',
+            'nombres',
+            'apellidos',
+            'sistema.tipos_documentos.nombre as id_tipo_documento',
+            'nro_doc'
+        )
+        ->segunProvincia()
+        ->mostrarProvincia(); */                   
+        
 
         foreach ($filtered as $key => $value) {
             if ($key == 'nombres' || $key == 'apellidos' || $key == 'localidad' || $key == 'email') {
-                $query = $query->where('alumnos.alumnos.'.$key, 'ilike', '%'.$value.'%');
-            } elseif ($key == 'id_tipo_documento') {
-                $query = $query->where('alumnos.id_tipo_documento', $value);
+                $query = $query->where('alumnos.alumnos.'.$key, 'ilike', $value.'%');
             } else {
                 $query = $query->where('alumnos.'.$key, $value);
             }
@@ -376,7 +386,7 @@ class AlumnosController extends AbmController
         $filtros = collect($filtros->get('filtros'));
 
         $order_by = $r->input('order_by',null)?$r->get('order_by'):null;
-
+        
         $v = Validator::make($filtros->all(), $this->filters);
         if (!$v->fails()) {
             $query = $this->queryLogica($r, $filtros, $order_by);
@@ -430,10 +440,9 @@ class AlumnosController extends AbmController
         $filtros = collect($filtros->get('filtros'));
         $order_by = $r->order_by;
 
-        $data = $this->queryLogica($r, $filtros, $order_by);
+        $data = $this->queryLogica($r, $filtros, $order_by)->get();
         $datos = ['alumnos' => $data];
-        $path = "alumnos_filtrados_".date("Y-m-d_H:i:s");
-        
+        $path = "participantes_".date("Y-m-d_H:i:s");        
 
         Excel::create(
             $path,
@@ -469,20 +478,34 @@ class AlumnosController extends AbmController
 
         $data = $this->queryLogica($r, $filtros, null)->get();
 
-        $header = array('Nombres','Apellidos','Tipo Doc','Nro Doc','Provincia');
+        $header = array('Nombres','Apellidos','Tipo Doc','Nro Doc');
         $column_size = array(56,56,20,30,33);
 
-        $mapped = $data->map(
-            function ($item, $key) {
-                $alumno = array();
-                array_push($alumno, $item->nombres);
-                array_push($alumno, $item->apellidos);
-                array_push($alumno, $item->id_tipo_documento);
-                array_push($alumno, $item->nro_doc);
-                array_push($alumno, $item->provincia);
-                return $alumno;
-            }
-        );
+        if (Auth::user()->id_provincia == 25) {
+            array_push($header, 'Provincia');
+            $mapped = $data->map(
+                function ($item, $key) {
+                    $alumno = array();
+                    array_push($alumno, $item->nombres);
+                    array_push($alumno, $item->apellidos);
+                    array_push($alumno, $item->id_tipo_documento);
+                    array_push($alumno, $item->nro_doc);
+                    array_push($alumno, $item->provincia);
+                    return $alumno;
+                }
+            );
+        } else {
+            $mapped = $data->map(
+                function ($item, $key) {
+                    $alumno = array();
+                    array_push($alumno, $item->nombres);
+                    array_push($alumno, $item->apellidos);
+                    array_push($alumno, $item->id_tipo_documento);
+                    array_push($alumno, $item->nro_doc);
+                    return $alumno;
+                }
+            );    
+        }
 
         return Pdf::save($header, $column_size, 13, $mapped);
     }

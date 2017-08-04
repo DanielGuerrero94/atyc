@@ -40,7 +40,7 @@ class ProfesoresTableSeeder extends Seeder
             sub.id as id_profesor, 
             sub.nombres,
             sub.apellidos,
-            T.id_tipo_documento as \"id_tipo_documento\",
+            T.id_tipo_documento as id_tipo_documento,
             sub.nro_doc,
             sub.email,
             sub.cel,

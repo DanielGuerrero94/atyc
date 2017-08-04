@@ -3,19 +3,14 @@
 @section('content')
 <div class="container col-xs-12 col-sm-6 col-md-12 col-lg-12">
 	<div class="row">
-		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
-			@include('cursos.filtros')
-		</div>	
-	</div>	
-	<div class="row">
-		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
-			@include('cursos.abm')			
-		</div>	
+		@include('cursos.filtros')
 	</div>
 	<div class="row">
-		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2" style="display: none;">
-
-		</div>				
+		@include('cursos.abm')
+	</div>
+	<div class="row">
+		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">
+		</div>
 	</div>
 </div>
 @endsection
@@ -37,10 +32,10 @@
 			{ data: 'fecha'},
 			{ data: 'edicion'},
 			{ data: 'duracion'},
-			{ data: 'area_tematica.nombre'},
-			{ data: 'linea_estrategica.nombre'},
-			{ data: 'provincia.nombre'},
-			{ data: 'acciones',"searchable": false}
+			{ name: 'id_area_tematica', data: 'area_tematica.nombre'},
+			{ name: 'id_linea_estrategica', data: 'linea_estrategica.nombre'},
+			{ name: 'id_provincia', data: 'provincia.nombre'},
+			{ data: 'acciones',"orderable": false}
 			],			
 			rowReorder: {
 				selector: 'td:nth-child(2)'
@@ -146,7 +141,7 @@
 				{ data: 'area_tematica'},
 				{ data: 'linea_estrategica'},
 				{ data: 'provincia'},
-				{ data: 'acciones',"searchable": false}
+				{ data: 'acciones', orderable: false}
 				],			
 				rowReorder: {
 					selector: 'td:nth-child(2)'

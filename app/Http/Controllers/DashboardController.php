@@ -37,7 +37,10 @@ class DashboardController extends Controller
          'cursos2016' => $this->getCursosPorAnioYMes('2016'),
          'cursos_por_anio' => $this->getCursosPorAnio(),
          'cursos_por_anio_hc' => $this->getCursosPorAnioHc(),
-         'cursos_por_anio_y_mes_hc' => $this->getCursosPorAnioYMesHc());
+         'cursos_por_anio_y_mes_hc' => $this->getCursosPorAnioYMesHc(),
+         'accionesAnioMes' => $this->accionesAnioMes(),
+         'accionesPorTipo' => $this->accionesPorTipo(),
+         'accionesPorTematica' => $this->accionesPorTematica());
 
 
         $returns = array_merge($counts, $tortas);
@@ -54,19 +57,20 @@ class DashboardController extends Controller
 
     private function getCountAlumnos()
     {
-        return $this->getCountTabla("alumnos.alumnos")->count();
+        return $this->getCountTabla("alumnos.alumnos")
+            ->count();
     }
 
     private function getCountCursos()
     {
         return $this->getCountTabla("cursos.cursos")
-            ->groupBy('nombre')
             ->count();
     }
 
     private function getCountProfesores()
     {
-        return $this->getCountTabla("sistema.profesores")->count();
+        return $this->getCountTabla("sistema.profesores")
+            ->count();
     }
 
     private function getCursos()
@@ -207,5 +211,77 @@ class DashboardController extends Controller
             }
         );
         return $ret;
+    }
+
+    public function accionesAnioMes()
+    {
+        $acciones = \DB::select("(select extract(year from fecha) as anio,extract(month from fecha) as mes,count(*) as cantidad from cursos.cursos
+where fecha > '2013-01-01'
+group by extract(year from fecha),extract(month from fecha)
+order by extract(year from fecha),extract(month from fecha))
+union all
+(select max(extract(year from fecha)),generate_series((select extract(month from max(fecha))::numeric) + 1,12),0 from cursos.cursos)");
+
+        $colores = ['#d0d1e6','#a6bddb','#67a9cf','#3690c0','#02818a','#016c59','#014636'];
+
+        return collect($acciones)
+            ->groupBy('anio')
+            ->map(function ($acciones,$anio) use (&$colores){
+                return array(
+                    'name' => $anio,
+                    'data' => array_map(function ($dato) {
+                        return $dato->cantidad;
+                        }, $acciones->toArray()),
+                    'color' => array_shift($colores)
+                );
+            })
+            ->values()
+            ->toArray();
+    }
+
+    //Implementar
+    public function accionesPorTipo()
+    {
+        $acciones = \DB::select("select l.numero as tipo,count(*) as cantidad from cursos.cursos c 
+join cursos.lineas_estrategicas l on l.id_linea_estrategica = c.id_linea_estrategica
+group by l.numero
+order by l.numero");
+
+        $contadorColores = 0;
+
+        return collect($acciones)
+            ->map(function ($accion) use (&$contadorColores){
+                $contadorColores++;
+                return array(
+                    'name' => $accion->tipo,
+                    'value' => $accion->cantidad,
+                    'colorValue' => $contadorColores
+                );
+            })
+            ->values()
+            ->toArray();
+    }
+
+    //Implementar
+    public function accionesPorTematica()
+    {
+        $acciones = \DB::select("select a.nombre as tematica,count(*) as cantidad from cursos.cursos c 
+join cursos.areas_tematicas a on a.id_area_tematica = c.id_area_tematica
+group by a.nombre
+order by count(*) desc");
+
+        $contadorColores = 0;
+
+        return collect($acciones)
+            ->map(function ($accion) use (&$contadorColores){
+                $contadorColores++;
+                return array(
+                    'name' => $accion->tematica,
+                    'value' => $accion->cantidad,
+                    'colorValue' => $contadorColores
+                );
+            })
+            ->values()
+            ->toArray();
     }
 }

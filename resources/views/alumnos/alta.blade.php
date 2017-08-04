@@ -26,7 +26,7 @@
 							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
 								@foreach ($documentos as $documento)
 								
-								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>
+								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}" value="{{$documento->id_tipo_documento}}">{{$documento->nombre}}</option>
 								
 								@endforeach
 							</select>
@@ -53,11 +53,23 @@
 					<div class="form-group col-xs-12 col-sm-6">
 						<label for="genero" class="control-label col-xs-4">Genero:</label>
 						<div class="col-xs-8">
-						
+							<select class="form-control" id="genero" name="id_genero">
+								<option>Seleccionar</option>
+
+								@foreach ($generos as $genero)
+								
+								<option value="{{$genero->id_genero}}">{{$genero->nombre}}</option>
+								
+								@endforeach
+							</select>
+
 						</div>
-					</div>					
+					</div>								
+				</div>	
+				<hr>
+				<div class="row">
 					<div class="form-group col-xs-12 col-sm-6">
-						<label for="provincia" class="control-label col-xs-4">Provincia:</label>
+						<label for="provincia" class="control-label col-xs-4">Jurisdicción:</label>
 						<div class="col-xs-8">
 							@if(Auth::user()->id_provincia == 25)
 							<select class="form-control" id="provincia">
@@ -72,8 +84,14 @@
 							</select>
 							@endif
 						</div>
-					</div>			
-				</div>					
+					</div>
+					<div class="form-group col-xs-12 col-sm-6">
+						<label for="localidad" class="control-label col-xs-4">Localidad:</label>
+						<div class="col-xs-8">
+							<input id="localidad" type="text" class="form-control" name="localidad">
+						</div>
+					</div>	
+				</div>				
 				<hr>
 				<div class="row">
 					<div class="form-group col-xs-12 col-sm-6">
@@ -81,11 +99,11 @@
 						<div class="col-xs-8">
 							<select class="form-control" id="trabaja_en" name="trabaja_en">
 
-								<option data-id="0">Seleccionar</option>
+								<option data-id="0" value="0">Seleccionar</option>
 
 								@foreach ($trabajos as $trabajo)
 								
-								<option data-id="{{$trabajo->id_trabajo}}" title="{{$trabajo->nombre}}">{{$trabajo->nombre}}</option>				 					
+								<option data-id="{{$trabajo->id_trabajo}}" value="{{$trabajo->id_trabajo}}">{{$trabajo->nombre}}</option>				 					
 								@endforeach
 								
 							</select>
@@ -143,6 +161,7 @@
 							</div>
 						</div>
 					</div>
+					<button type="button" class="btn btn-default" id="ver_efectores" style="display: none;">Ver todos</button>
 				</div>
 				<div class="row">
 					<div class="form-group col-xs-12 col-sm-6" style="display: none">          
@@ -214,11 +233,15 @@
 		$.typeahead({
 			input: '.establecimiento_typeahead',
 			order: "desc",
+			dynamic: true,
 			source: {
 				info: {
 					ajax: {
 						url: "alumnos/establecimientos",
 						path: "data.info",
+						data: {
+							search: "@{{query}}"
+						},
 						success: function(data){
 							console.log("ajax success");
 							console.log(data);							
@@ -273,6 +296,9 @@
 					ajax: {
 						url: "efectores/typeahead",
 						path: "data.nombres",
+						data: {
+							search: "@{{query}}"
+						},
 						error: function(data){
 							console.log("ajax error");
 							console.log(data);
@@ -283,6 +309,9 @@
 					ajax: {
 						url: "efectores/typeahead",
 						path: "data.cuies",
+						data: {
+							search: "@{{query}}"
+						},
 						error: function(data){
 							console.log("ajax error");
 							console.log(data);
@@ -319,6 +348,11 @@
 			}
 		});
 
+		$('#alta').on('click', '#ver_efectores', function(event) {
+			event.preventDefault();
+			
+		});
+
 
 		var establecimiento = $('#alta').find('#establecimiento').closest('.form-group');
 		var efectores = $('#alta').find('#efectores').closest('.form-group');
@@ -327,13 +361,15 @@
 		formulario*/
 
 		$('#alta').on("click","#trabaja_en",function () {
+			console.log('asd');
 			$(this).attr("title",$(this).find(":selected").attr("title"));
 			var tipo_organismo = $('#alta').find('#tipo_organismo').closest('.form-group');
 			var tipo_convenio = $('#alta').find('#tipo_convenio').closest('.form-group');
 			var nombre_organismo = $('#alta').find('#nombre_organismo').closest('.form-group');
 			var funcion = $('#alta').find('#funcion').closest('.form-group');
 
-			if ($(this).val() == 'ORGANISMO GUBERNAMENTAL') {
+			//Respeta los valores en la base de datos
+			if ($(this).val() == 3) {
 				tipo_organismo.show();
 				nombre_organismo.show();
 				$('#nombre_organismo').attr('disabled',false);
@@ -345,7 +381,7 @@
 				efectores.hide();
 				$('#efectores').attr('disabled',true);
 			}
-			else if($(this).val() == 'ESTABLECIMIENTO DE SALUD'){
+			else if($(this).val() == 2){
 				tipo_convenio.show();				
 				establecimiento.show();
 				$('#establecimiento').attr('disabled',false);
@@ -387,7 +423,7 @@
 		$('#alta').on("click","#id_tipo_documento",function () {
 			$(this).attr("title",$(this).find(":selected").attr("title"));
 			var nacionalidad = $('#alta').find('#nacionalidad');
-			if ($(this).val() == 'DEX' || $(this).val() == 'PAS' ) {
+			if ($(this).val() == 5 || $(this).val() == 6 ) {
 				nacionalidad.show();
 				$('#pais').attr('disabled',false);
 			}
@@ -403,6 +439,7 @@
 			var nombres = $('#nombres')	.val();
 			var apellidos = $('#apellidos').val();
 			var id_tipo_documento = $('#id_tipo_documento option:selected').data('id');
+			var id_genero = $('#id_genero option:selected').val();
 			var nro_doc = $('#nro_doc').val();
 			var email = $('#email').val();
 			var cel = $('#cel').val();
@@ -429,6 +466,7 @@
 				nombres: nombres,
 				apellidos: apellidos,
 				id_tipo_documento: id_tipo_documento,
+				id_genero: id_genero,
 				nro_doc: nro_doc,
 				email: email,
 				cel: cel,
@@ -530,6 +568,7 @@
 			cel : {
 				number: true
 			},
+			id_genero: { selecciono : true},
 			funcion: { selecciono : true},
 			organismo: { selecciono : true},
 			tipo_organismo: { selecciono : true},
