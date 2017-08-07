@@ -287,6 +287,29 @@ class DashboardController extends Controller
         ->toArray();
     }
 
+    public function accionesPorTematicaAlternativa()
+    {
+        $acciones = \DB::select("select a.nombre as tematica,count(*) as cantidad from cursos.cursos c 
+            join cursos.areas_tematicas a on a.id_area_tematica = c.id_area_tematica
+            group by a.nombre
+            order by count(*) desc");
+
+        $r = collect($acciones)
+        ->map(function ($accion) use (&$contadorColores){
+            return array(
+                '0' => $accion->tematica,
+                '1' => $accion->cantidad
+                );
+        })
+        ->values()
+        ->toArray();
+
+        return array(
+            'name' => 'Acciones',
+            'data' => $r
+            );
+    }
+
     public function accionesInformadasEsteAnio()
     {
         $acciones = \DB::select("(select id_provincia,extract(month from fecha) as mes,count(*) as cantidad from cursos.cursos 

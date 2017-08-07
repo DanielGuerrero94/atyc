@@ -46,7 +46,7 @@
 					<h2 class="box-tittle">Cantidad de participantes por acción de capacitación
 						<div class="btn-group pull-right ">
 							<button type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></button>
-							<button type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></button>
+							
 						</div>	
 						</h2>								
 				</div>				
@@ -136,32 +136,9 @@
 			var filtros = getFiltrosJson();	
 
 			$.ajax({
-				url: 'excel',
-				data: {
-					id_reporte : 6,
-					filtros: filtros
-				},
+				url: 'excel6',
 				success: function(data){
-					window.location="descargar/"+data;
-				},
-				error: function (data) {
-					alert('No se pudo crear el archivo.');
-					console.log(data);
-				}
-			});
-		});
-
-		$('.pdf').on('click',function () {
-			var filtros = getFiltrosJson();	
-
-			$.ajax({
-				url: 'pdf',
-				data: {
-					id_reporte : 6,
-					filtros: filtros
-				},
-				success: function(data){
-					window.location="descargar/"+data;
+					window.location="descargar/excel/"+data;
 				},
 				error: function (data) {
 					alert('No se pudo crear el archivo.');

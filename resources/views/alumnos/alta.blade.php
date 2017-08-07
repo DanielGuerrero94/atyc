@@ -295,9 +295,9 @@
 				nombre: {
 					ajax: {
 						url: "efectores/typeahead",
-						path: "data.nombres",
-						data: {
-							search: "@{{query}}"
+						path: "data.nombres",						
+						data: function(query){
+							q: query;
 						},
 						error: function(data){
 							console.log("ajax error");
@@ -308,9 +308,9 @@
 				cuie: {
 					ajax: {
 						url: "efectores/typeahead",
-						path: "data.cuies",
-						data: {
-							search: "@{{query}}"
+						path: "data.cuies",						
+						data: function(query){
+							q: query;
 						},
 						error: function(data){
 							console.log("ajax error");

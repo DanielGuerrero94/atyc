@@ -27,13 +27,20 @@ class EfectoresController extends Controller
 
     public function queryLogica()
     {
-        return $this->query()
-            ->table('efectores')
-            ->join('datos_geograficos', 'datos_geograficos.id_efector', '=', 'efectores.id_efector')
+        return DB::table('efectores.efectores')
+            ->join('efectores.datos_geograficos', 'datos_geograficos.id_efector', '=', 'efectores.id_efector')
             ->leftJoin('geo.provincias', 'geo.provincias.id_provincia', '=', 'datos_geograficos.id_provincia')
             ->leftJoin('geo.departamentos', 'geo.departamentos.id', '=', 'datos_geograficos.id_departamento')
             ->leftJoin('geo.localidades', 'geo.localidades.id', '=', 'datos_geograficos.id_localidad')
+            /*->join('alumnos.alumnos', 'alumnos.alumnos.establecimiento1', '=', 'efectores.efectores.cuie')*/
             ->select('geo.provincias.descripcion AS provincia', 'efectores.siisa', 'efectores.cuie', 'efectores.nombre', 'efectores.denominacion_legal', 'efectores.domicilio', 'geo.departamentos.nombre_departamento AS departamento', 'geo.localidades.nombre_localidad AS localidad', 'efectores.codigo_postal', 'datos_geograficos.ciudad');
+            /*return DB::select("select gp.descripcion AS provincia, e.siisa,e.cuie,e.nombre,e.denominacion_legal,e.domicilio,gd.nombre_departamento AS departamento, gl.nombre_localidad AS localidad,e.codigo_postal,d.ciudad 
+from efectores.efectores e
+join efectores.datos_geograficos d on d.id_efector = e.id_efector
+left join geo.provincias gp on gp.id_provincia = d.id_provincia
+left join geo.departamentos gd on gd.id = d.id_departamento
+left join geo.localidades gl on gl.id = d.id_localidad
+inner join alumnos.alumnos a on a.establecimiento1 = e.cuie");*/
     }
 
     public function getTabla()
@@ -52,6 +59,7 @@ class EfectoresController extends Controller
 
     public function getTripleTypeahead()
     {
+        logger('Busca el efector');
         $ret = array(
             'status' => true,
             'error' => null,
@@ -60,6 +68,8 @@ class EfectoresController extends Controller
                 'cuies' => $this->getCuies()
                 )
             );
+
+        logger(json_encode($ret));
 
         return json_encode($ret);
     }
@@ -75,13 +85,17 @@ class EfectoresController extends Controller
             $query = $query->where('datos_geograficos.id_provincia', '=', Auth::user()->id_provincia);
         }
 
-        return $query->orderBy('efectores.nombre')
+        $r = $query->orderBy('efectores.nombre')
             ->get()
             ->map(
                 function ($item, $key) {
                     return $item->nombre;
                 }
             );
+
+        logger(json_encode($r));
+
+        return $r;
     }
 
     public function getCuies()
@@ -94,13 +108,16 @@ class EfectoresController extends Controller
             $query = $query->where('datos_geograficos.id_provincia', '=', Auth::user()->id_provincia);
         }
 
-        return $query->orderBy('cuie')
+        $r = $query->orderBy('cuie')
             ->get()
             ->map(
                 function ($item, $key) {
                     return $item->cuie;
                 }
             );
+
+        logger(json_encode($r));
+        return $r;
     }
 
     /*public function getSiisas()
