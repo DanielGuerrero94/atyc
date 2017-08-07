@@ -26,9 +26,7 @@ class cursosController extends AbmController
 	'id_area_tematica' => 'required|numeric',
 	'id_linea_estrategica' => 'required|numeric',
 	'id_provincia' => 'required|numeric'
-	];
-
-	private 
+	], 
 	$filters = [
 	'nombre' => 'string',
 	'duracion' => 'numeric',
@@ -38,9 +36,12 @@ class cursosController extends AbmController
 	'id_area_tematica' => 'numeric',
 	'id_periodo' => 'numeric',
 	'desde' => 'string',
-	'hasta' => 'string'];
-
-	private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
+	'hasta' => 'string'
+	], 
+	$botones = [
+	'fa fa-pencil-square-o',
+	'fa fa-trash-o'
+	];
 
 	//Lo tengo aca pero lo podria tener en otra clase porque lo pueden llegar a usar todas las tablas porque estan en latin1 pero lo muestro en utf-8
 
@@ -392,7 +393,7 @@ class cursosController extends AbmController
 
 		foreach ($filtered as $key => $value) {
 			if($key == 'nombre'){
-				$query = $query->where('cursos.cursos.'.$key,'ilike', $value.'%');                           
+				$query = $query->where('cursos.cursos.'.$key,'ilike', '%'.$value.'%');                           
 			}elseif ($key == 'desde') {
 				$query = $query->where('cursos.cursos.fecha','>',$value);
 			}elseif ($key == 'hasta') {
