@@ -312,6 +312,17 @@ class cursosController extends AbmController
 
 	public function getCountAlumnos($id)
 	{
+		$query = $this->queryCountAlumnos($id);
+
+		$cursos = DB::select($query);
+		$cursos = collect($cursos);
+
+		return Datatables::of($cursos)
+		->make(true); 	
+	}
+
+	public function queryCountAlumnos($id)
+	{
 		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos.cursos C 
 		left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
 		left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
@@ -326,12 +337,7 @@ class cursosController extends AbmController
 		$query .= " group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre
 		order by C.nombre,C.edicion
 		";
-
-		$cursos = DB::select($query);
-		$cursos = collect($cursos);
-
-		return Datatables::of($cursos)
-		->make(true); 	
+		return $query;
 	}
 
 	public function getAlumnosDeCursosPorProvincia($id)
@@ -509,5 +515,34 @@ class cursosController extends AbmController
 		});
 
 		return PDF::save($header, $column_size, 10, $mapped);
+	}
+
+	/**
+     * Corre la query para el reporte (No deberia estar aca)
+     * Guarda el resultado en un .xls
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  array filtros
+     * @param  array order_by
+     * @return \Illuminate\Http\Response
+     * @return string path al archivo generado
+     */
+	public function getExcelReporte()
+	{		
+		$id = Auth::user()->id_provincia;
+		$data = DB::select($this->queryCountAlumnos($id));
+		$data = collect($data);
+		$datos = ['cursos' => $data];
+		$path = "cant_participantes_acciones_".date("Y-m-d_H:i:s");
+
+		Excel::create($path, function ($excel) use ($datos){
+			$excel->sheet('Reporte', function ($sheet) use ($datos){
+				$sheet->setHeight(1, 20);
+				$sheet->loadView('excel.reporte_6', $datos);
+			});
+		})
+		->store('xls');
+
+		return $path;
 	}
 }

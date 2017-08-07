@@ -60,7 +60,7 @@ Route::get('/dashboard', function () {
 Route::get('dashboard/datos', 'DashboardController@get');
 Route::get('dashboard/data', 'AlumnosController@getActivos');
 
-Route::group(['middleware' => ['logueado','logging']],function () {
+Route::group(['middleware' => ['logueado']],function () {
     //Descarga
     Route::get('reportes/descargar/excel/{nombre_reporte}', function ($nombre_reporte) {
         return response()->download(__DIR__."/../storage/exports/{$nombre_reporte}.xls");
@@ -157,6 +157,7 @@ Route::group(['middleware' => ['logueado','logging']],function () {
 
     
     Route::get('reportes/excel', 'ReportesController@getExcelReporte');
+    Route::get('reportes/excel6', 'CursosController@getExcelReporte');
     Route::get('reportes/pdf', 'ReportesController@getPDFReporte');
     /*Route::get('reportes/pdf','ReportesController@getPdf');*/
     Route::get('reportes/query', 'ReportesController@queryReporte');

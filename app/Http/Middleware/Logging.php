@@ -37,6 +37,7 @@ class Logging
         $method = $request->getMethod();
         $ip = $request->getClientIp();
         $user = $request->user();
+        logger(json_encode($user));
         //Saco de la request los datos que me trae el datatable de jquery
         $query = $request->except([
             'draw','columns','order','start','length','search','_'

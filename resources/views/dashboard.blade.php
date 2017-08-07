@@ -68,6 +68,8 @@
     </div>
   </div>   
 </div>
+@if(!Auth::guest())
+@if(Auth::user()->id_provincia == 25)
 <div class="row">
   <div class="col-lg-12 col-xs-12">
     <div class="box box-success">
@@ -77,16 +79,21 @@
     </div>
   </div>
 </div>
+@endif
+@endif
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
   <div class="col-lg-12 col-xs-12">
-    <div class="box box-danger">
+    <div class="box box-default">
       <div class="box-body">
         <div id="pieAccionesTipologia"></div>
       </div>
     </div>
   </div>  
 </div>
-<div class="row" style="margin-right: 5px;margin-left: 5px;">
+
+
+
+<!-- <div class="row" style="margin-right: 5px;margin-left: 5px;">
   <div class="col-lg-4 col-xs-6">
     <div class="box box-danger">
       <div class="box-header with-border">
@@ -193,7 +200,7 @@
 			</div>
 		</div>
 	</div>
-</div>
+</div> -->
 <!--<div class="row" style="margin-right: 5px;margin-left: 5px;">
   <div id="highchart"></div>  
 </div>-->
