@@ -1,22 +1,18 @@
 @extends('layouts.adminlte')
 
 @section('content')
-
-<div class="container col-xs-12 col-sm-6 col-md-12 col-lg-12">
-	<div class="row ">
-		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			@include('alumnos.filtros')
-		</div>
+<div class="row ">
+	<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+		@include('alumnos.filtros')
 	</div>
-	<div class="row">
-		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2">
-			@include('alumnos.abm')
-		</div>  
-	</div>	
-	<div class="row">
-		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 col-lg-offset-2" style="display: none;">
-			
-		</div>
+</div>
+<div class="row">
+	<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+		@include('alumnos.abm')
+	</div>  
+</div>	
+<div class="row">
+	<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">		
 	</div>
 </div>
 @endsection
@@ -28,6 +24,18 @@
 
 		$('#abm').on('click','.filter',function () {
 			$('#filtros .box').show();
+		});
+
+		$('#abm').on('click','.expand',function () {
+			$('#abm').removeClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			$('.compress').show();	
+			$(this).hide();
+		});
+
+		$('#abm').on('click','.compress',function () {
+			$('#abm').addClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			$('.expand').show();	
+			$(this).hide();	
 		});
 
 		$('#abm-table').DataTable({
@@ -234,105 +242,14 @@
 			$('#filtros .box').show();
 		});
 
-			/*$('#abm').on("click",".editar",function(){
-				$('#filtros .box').hide();
-				$('#abm').hide();
-				var alumno = $(this).attr("alumno-id");
-				$.ajax({
-					url: 'alumnos/'+alumno,
-					method: 'get',
-					success: function(data){
-						$('#alta').html(data);
-						$('#alta').show();
+		$('#limpiar').on("click",function(){
+			console.log('voy a borrar');
+			$('.form-control').val('');
+			$(this).closest('.box-footer').hide();
+		});	
 
-						$('#alta').find('#cursos-table').DataTable({					
-							searching: false,
-							ajax : 'cursos/alumno/'+alumno,
-							columns: [
-							{ data: 'Nombre curso'},
-							{ data: 'Horas duracion'},
-							{ data: 'Modalidad'},				
-							{ data: 'Provincia organizadora'}
-							]
-						});
-					}
-				});			
-			});*/
+	});
 
-			$('#limpiar').on("click",function(){
-				console.log('voy a borrar');
-				$('.form-control').val('');
-				$(this).closest('.box-footer').hide();
-			});		
-
-			/*$('#alta').on("click","#modificar",function(){
-				var alumno = $(this).attr("alumno-id");
-				jQuery('<div/>', {
-					id: 'dialogModificacion',
-					text: ''
-				}).appendTo('.container');
-
-				$("#dialogModificacion").dialog({
-					title: "Verificacion",
-					show: {
-						effect: "fold"
-					},
-					hide: {
-						effect: "fade"
-					},
-					modal: true,
-					width : 360,
-					height : 220,
-					closeOnEscape: true,
-					resizable: false,
-					dialogClass: "alert",
-					open: function () {
-						jQuery('<p/>', {
-							id: 'dialogModificacion',
-							text: '¿Esta seguro que quiere modificar al alumno?'
-						}).appendTo('#dialogModificacion');
-					},
-					buttons :
-					{
-						"Aceptar" : function () {
-							$(this).dialog("destroy");
-							$("#dialogModificacion").html("");
-
-							$.ajax({				
-								url : 'alumnos/'+alumno,
-								method : 'put',
-								data : $('form').serialize(),
-								success : function(data){
-									console.log("Success.");
-									location.reload("true");			
-								},
-								error : function(data){
-									console.log("Error.");
-								}
-							});
-
-						},
-						"Cancelar" : function () {
-							$(this).dialog("destroy");
-							$("#dialogModificacion").html("");
-						}
-					}				
-				});			
-			});*/
-
-			$('#abm').on('click','.expand',function () {
-				$('.container').addClass('col-md-12');
-				$('.compress').show();	
-				$(this).hide();
-			});
-
-			$('#abm').on('click','.compress',function () {
-				$('.container').removeClass('col-md-12');
-				$('.expand').show();	
-				$(this).hide();	
-			});
-
-		})
-	</script> 
-	@endsection
+</script> 
+@endsection
 

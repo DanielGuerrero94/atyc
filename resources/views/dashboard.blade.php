@@ -2,11 +2,11 @@
 
 @section('content')
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
-	<div class="col-lg-4 col-xs-6">
+  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
 		<div class="small-box bg-aqua">
 			<div class="inner">
 				<h3 id="cursos"></h3>
-				<p>Acciones</p>
+				<h4>Acciones</h4>
 			</div>
 			<div class="icon">
 				<i class="fa fa-address-book-o"></i>
@@ -16,11 +16,11 @@
 			</a>
 		</div>
 	</div>
-	<div class="col-lg-4 col-xs-6">
+	  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
 		<div class="small-box bg-aqua">
 			<div class="inner">
 				<h3 id="alumnos"></h3>
-				<p>Participantes</p>				             
+				<h4>Participantes</h4>				             
 			</div>
 			<div class="icon">
 				<i class="fa fa-users"></i>
@@ -28,11 +28,11 @@
 			<a href={{url("/alumnos")}} class="small-box-footer">Más información <i class="fa fa-arrow-circle-right"></i></a>			
 		</div>
 	</div>
-	<div class="col-lg-4 col-xs-6">
+	  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
 		<div class="small-box bg-aqua">
 			<div class="inner">
 				<h3 id="profesores"></h3>
-				<p>Docentes</p>
+				<h4>Docentes</h4>
 			</div>
 			<div class="icon">
 				<i class="fa fa-user-md"></i>

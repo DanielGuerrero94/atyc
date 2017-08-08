@@ -130,6 +130,12 @@
           <span>Tipo de docentes</span>
         </a>
       </li>
+      <li>
+        <a href="{{url("/funciones")}}">
+          <i class="fa fa-circle-o"></i>
+          <span>Rol en el sumar</span>
+        </a>
+      </li>
         </ul>
       </li>      
       <li>

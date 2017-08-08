@@ -75,12 +75,18 @@
             <div class="form-group col-xs-12 col-md-6">          
               <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
               <div class="col-md-8 col-xs-9">
-              <select class="form-control" id="provincia" name="provincia">
-                <option>Seleccionar</option>
+              @if(Auth::user()->id_provincia == 25)
+              <select class="form-control" id="provincia">
                 @foreach ($provincias as $provincia)
-                <option data-id="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>
+                
+                <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>                 
                 @endforeach
-              </select>  
+              </select>
+              @else
+              <select class="form-control" id="provincia" name="provincia" disabled>
+                <option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>  
+              </select>
+              @endif
               </div>        
             </div>
             </div>          
@@ -259,7 +265,8 @@
       }
     });
 
-    $('#alta').on('click','.store',function() {     
+    $('#alta').on('click','.store',function() {  
+      $('#alta #form-alta .nav-tabs').children().first().children().click();
       if(validator.valid()){
         $('#alta #form-alta').submit(); 
       }else{

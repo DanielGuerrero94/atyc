@@ -59,7 +59,6 @@ inner join alumnos.alumnos a on a.establecimiento1 = e.cuie");*/
 
     public function getTripleTypeahead()
     {
-        logger('Busca el efector');
         $ret = array(
             'status' => true,
             'error' => null,
@@ -69,55 +68,43 @@ inner join alumnos.alumnos a on a.establecimiento1 = e.cuie");*/
                 )
             );
 
-        logger(json_encode($ret));
-
         return json_encode($ret);
     }
 
     public function getNombres()
     {
-        $query = $this->query()
-            ->table('efectores')
-            ->join('datos_geograficos', 'efectores.id_efector', '=', 'datos_geograficos.id_efector')
-            ->select('efectores.nombre');
+        $query = DB::table('efectores.efectores')
+            ->join('efectores.datos_geograficos', 'efectores.efectores.id_efector', '=', 'efectores.datos_geograficos.id_efector')
+            ->select('efectores.efectores.nombre');
 
         if (Auth::user()->id_provincia != 25) {
-            $query = $query->where('datos_geograficos.id_provincia', '=', Auth::user()->id_provincia);
+            $query = $query->where('efectores.datos_geograficos.id_provincia', '=', Auth::user()->id_provincia);
         }
 
-        $r = $query->orderBy('efectores.nombre')
+        return $query->orderBy('efectores.efectores.nombre')
             ->get()
-            ->map(
-                function ($item, $key) {
+            ->map(function ($item, $key) {
                     return $item->nombre;
                 }
-            );
-
-        logger(json_encode($r));
-
-        return $r;
+            )->toArray();
     }
 
     public function getCuies()
     {
-        $query = $this->query()
-            ->table('efectores')
+        $query = DB::table('efectores.efectores')
+            ->join('efectores.datos_geograficos', 'efectores.efectores.id_efector', '=', 'efectores.datos_geograficos.id_efector')
             ->select('cuie');
 
-        if (Auth::user()->id_provincia != 25) {
-            $query = $query->where('datos_geograficos.id_provincia', '=', Auth::user()->id_provincia);
+        $provincia = Auth::user()->id_provincia;
+
+        if ($provincia != 25) {
+            $query = $query->where('datos_geograficos.id_provincia', '=', $provincia);
         }
 
-        $r = $query->orderBy('cuie')
-            ->get()
-            ->map(
-                function ($item, $key) {
-                    return $item->cuie;
-                }
-            );
-
-        logger(json_encode($r));
-        return $r;
+        return $query->orderBy('cuie')
+            ->get()->map(function ($values){
+                return $values->cuie;
+            })->toArray();
     }
 
     /*public function getSiisas()

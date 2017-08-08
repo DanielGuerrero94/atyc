@@ -66,31 +66,12 @@
 			$('#alta').hide();
 		});
 
-	/*$('#alta').on('click','#crear',function() {
-
-		console.log($('form').serialize());
-
-		$.ajax({
-			method : 'post',
-			url : 'areasTematicas/set',
-			data : $('form').serialize(),
-			success : function(data){
-				console.log("Success.");
-				location.reload();	
-			},
-			error : function(data){
-				console.log("Error.");
-			}
-		})
-	});*/
-
 	$('#abm').on('click','.editar',function() {
 		
 		var area = $(this).data('id');
 
 		$.ajax ({
 			url: 'areasTematicas/'+area,
-			method: 'get',
 			success: function(data){
 				$('#alta').html(data);
 				$('#alta').show();
