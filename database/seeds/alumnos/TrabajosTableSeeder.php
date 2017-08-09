@@ -31,11 +31,9 @@ class TrabajosTableSeeder extends Seeder
     		AS sub(trabaja_en character varying(300)))");*/
 
         \DB::statement("INSERT INTO alumnos.trabajos (nombre) values
-            ('BENEFICIARIO SUMAR'),
+            ('ESTUDIA/SIN TRABAJO FORMAL'),
             ('ESTABLECIMIENTO DE SALUD'),
             ('ORGANISMO GUBERNAMENTAL'),
-            ('TRABAJO NO RELACIONADO AL SUMAR - ESTUDIA - NO TRABAJA')");
-
-        \DB::statement("UPDATE alumnos.trabajos SET nombre = 'ESTUDIA/SIN TRABAJO FORMAL' WHERE nombre = 'BENEFICIARIO SUMAR'");
+            ('TRABAJO NO RELACIONADO AL SUMAR')");
     }
 }

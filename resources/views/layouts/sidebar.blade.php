@@ -46,7 +46,7 @@
     <li class="treeview">
       <a href="#">
         <i class="fa fa-file-o" aria-hidden="true"></i>
-        <span>Evaluación</span>
+        <span>Monitoreo y Evaluación</span>
         <span class="pull-right-container">
           <i class="fa fa-angle-left pull-right"></i>
         </span>
@@ -54,32 +54,35 @@
       <ul class="treeview-menu" role="menu">
         <li>
           <a href='{{url("/reportes/1")}}'>
-            <i class="fa fa-circle-o"></i>
-            <span>ODP 4</span>
+            <span>1 - ODP 4</span>
           </a>
         </li>
-        <li>
+        <!-- <li>
           <a href='{{url("/reportes/2")}}'>
             <i class="fa fa-circle-o"></i>
             <span>Banco.</span>
           </a>
-        </li>
-        <li>
+        </li> -->
+        <!-- <li>
           <a href='{{url("/reportes/3")}}'>
             <i class="fa fa-circle-o"></i>
             <span>Total staff institucional.</span>
           </a>
-        </li>
+        </li> -->
         <li>
           <a href='{{url("/reportes/4")}}'>
-            <i class="fa fa-circle-o"></i>
-            <span>Establecimientos capacitados</span>
+            <span>2 - Porcentaje de efectores</span>
+            <br>
+            <span>capacitados con modalidad</span>
+            <br> 
+            <span>presencial</span>
           </a>
         </li>
         <li>
           <a href='{{url("/reportes/cursos")}}'>
-            <i class="fa fa-circle-o"></i>
-            <span>Alumnos por curso</span>
+            <span>3 - Cantidad de participantes</span>
+            <br>
+            <span>por acción de capacitación</span>
           </a>
         </li>
       </ul>

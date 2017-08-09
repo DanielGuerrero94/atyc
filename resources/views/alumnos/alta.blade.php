@@ -87,7 +87,7 @@
 				<div class="form-group col-xs-12 col-sm-6">
 					<label for="localidad" class="control-label col-xs-4">Localidad:</label>
 					<div class="col-xs-8">
-						<input id="localidad" type="text" class="form-control" name="localidad">
+						<input id="localidad" type="text" class="form-control" name="localidad" placeholder="Donde trabaja o desarrola su funcion">
 					</div>
 				</div>	
 			</div>				

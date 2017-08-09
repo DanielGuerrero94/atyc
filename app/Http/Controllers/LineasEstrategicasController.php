@@ -109,7 +109,7 @@ class LineasEstrategicasController extends Controller
         ->addColumn(
             'acciones',
             function ($ret) {
-                return '<button data-id="'.$ret->id_linea_estrategica.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.'<button data-id="'.$ret->id_linea_estrategica.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+                return '<button data-id="'.$ret->id_linea_estrategica.'" class="btn btn-info btn-xs editar" title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'/*.'<button data-id="'.$ret->id_linea_estrategica.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>'*/;
             }
         )
         ->make(true);

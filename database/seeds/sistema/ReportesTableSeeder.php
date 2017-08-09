@@ -14,11 +14,11 @@ class ReportesTableSeeder extends Seeder
         \DB::statement("INSERT INTO sistema.reportes(nombre,view) values
         ('ODP Int.4 \"Número total de staff institucional que participó de
 
-actividades de capacitación con más de 10 horas acumuladas\"','acumula-10-horas'),
+actividades de capacitación con más de 10 horas acumuladas\"','odp4'),
         ('banco-acumula-10-horas','banco-acumula-10-horas'),
-        ('\"Porcentaje de efectores capacitados con modalidad presencial\"','alguna-actividad'),
-        ('porcentaje-establecimientos','porcentaje-establecimientos'),
-        ('cursos-cantidad-alumnos','cursos-cantidad-alumnos'),
+        ('alguna-actividad','alguna-actividad'),
+        ('\"Porcentaje de efectores capacitados con modalidad presencial\"','porcentaje-efectores'),
+        ('Cantidad de participantes por acción de capacitación','cantidad-participantes'),
         ('grado-satisfaccion','grado-satisfaccion')");        
     }
 }
