@@ -93,7 +93,7 @@ class ReportesController extends Controller
         */
         
 
-        $id_provincia = in_array('id_provincia', $r->filtros)?
+        $id_provincia = array_key_exists('id_provincia', $r->filtros)?
         $r->filtros['id_provincia']:Auth::user()->id_provincia;
         if ($id_provincia == 25) {
             $id_provincia = 0;
