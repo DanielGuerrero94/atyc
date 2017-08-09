@@ -172,6 +172,11 @@ Route::group(['middleware' => ['logueado']],function () {
     Route::get('encuestas/grafico', 'Encuestas\EncuestaController@grafico');
     Route::resource('encuestas', 'Encuestas\EncuestaController');
 
+    //Efectores informacion que pueden acceder las provincias.
+    Route::get('efectores/nombres', 'EfectoresController@getNombres');
+        Route::get('efectores/cuies', 'EfectoresController@getCuiesTypeahead');
+        Route::get('efectores/siisas', 'EfectoresController@getSiisas');
+        Route::get('efectores/typeahead', 'EfectoresController@getTripleTypeahead');
 
     Route::group(['middleware' => 'admin'], function () {
 
@@ -206,7 +211,11 @@ Route::group(['middleware' => ['logueado']],function () {
         Route::resource('gestores', 'GestoresController');
 
         //Periodos
+        Route::get('periodos/table', 'PeriodosController@table');
         Route::resource('periodos', 'PeriodosController');
+
+        //Funciones/Roles del sumar
+        Route::resource('funciones', 'FuncionesController');
 
         //Tipo de docentes
         Route::resource('tipoDocentes', 'TipoDocentesController');
@@ -222,11 +231,7 @@ Route::group(['middleware' => ['logueado']],function () {
 
         //Efectores
         Route::get('efectores', 'EfectoresController@get');
-        Route::get('efectores/tabla', 'EfectoresController@getTabla');
-        Route::get('efectores/nombres', 'EfectoresController@getNombres');
-        Route::get('efectores/cuies', 'EfectoresController@getCuiesTypeahead');
-        Route::get('efectores/siisas', 'EfectoresController@getSiisas');
-        Route::get('efectores/typeahead', 'EfectoresController@getTripleTypeahead');
+        Route::get('efectores/tabla', 'EfectoresController@getTabla');       
         Route::get('efectores/{cuie}/cursos', 'EfectoresController@historialCursos');
     });
 });

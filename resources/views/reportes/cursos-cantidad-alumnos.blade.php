@@ -57,7 +57,7 @@
 								<th>Nombre</th>
 								<th>Edición</th>
 								<th>Fecha</th>
-								<th>Cantidad de alumnos</th>
+								<th>Cantidad de participantes</th>
 								<th>Tipología de acción</th>
 								<th>Area temática</th>
 								<th>Jurisdicción</th>

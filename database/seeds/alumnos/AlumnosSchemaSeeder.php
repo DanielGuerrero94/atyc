@@ -17,6 +17,7 @@ class AlumnosSchemaSeeder extends Seeder
         $this->call(GenerosTableSeeder::class);
         $this->call(AlumnosTableSeeder::class);
 
+
         \DB::statement("update alumnos.funciones set nombre = 'Equipo de salud - Cargo Directivo' where id_funcion = 4;");
 
         \DB::statement("update alumnos.funciones set nombre = 'Equipo de salud - Profesional de la salud' where id_funcion = 6;");

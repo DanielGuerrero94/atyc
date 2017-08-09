@@ -25,7 +25,7 @@
 								<tr>
 									<th>Período</th>
 									<th>Jurisdicción</th>
-									<th>Cantidad de alumnos</th>		
+									<th>Cantidad de participantes</th>		
 								</tr>
 							</thead>
 						</table>

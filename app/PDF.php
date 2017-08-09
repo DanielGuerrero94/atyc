@@ -91,6 +91,17 @@ class PDF extends Fpdf
         $this->Cell(array_sum($w), 0, '', 'T');
     }
 
+    /*public static function generar($header, $column_size, $font_size, $data, $file_name)
+    {
+        $this->save($header, $column_size, $font_size, $data);      
+
+
+        $nombre = $file_name.date("Y-m-d-H:s");
+        $path = __DIR__.'/../storage/exports/'.$nombre.'.pdf';
+        Fpdf::Output($path, 'F');
+        return $nombre;
+    }*/
+
     public static function save($header, $column_size, $font_size, $data)
     {
         $w = $column_size;
@@ -128,8 +139,7 @@ class PDF extends Fpdf
             $cantidad++;
         }
         Fpdf::Cell(array_sum($w), 0, '', 'T');
-
-        $nombre = 'file-'.date("Y-m-d-H:s");
+        $nombre = 'file_'.date("Y-m-d-H:s");
         $path = __DIR__.'/../storage/exports/'.$nombre.'.pdf';
         Fpdf::Output($path, 'F');
         return $nombre;
