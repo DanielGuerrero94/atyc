@@ -1,19 +1,22 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="container col-xs-12 col-sm-6 col-md-12 col-lg-12">
-	<div class="row">
-		@include('cursos.filtros')
+<div class="row">	
+	<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+		@include('cursos.filtros')		
 	</div>
-	<div class="row">
+</div>
+<div class="row">		
+	<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
 		@include('cursos.abm')
 	</div>
-	<div class="row">
-		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">
-		</div>
+</div>
+<div class="row">
+	<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">
 	</div>
 </div>
 @endsection
+
 @section('script')
 <script type="text/javascript">
 
@@ -164,21 +167,6 @@
 			});
 		});
 
-		/*$('#abm').on("click",".editar",function(){
-			var curso = $(this).data('id');
-			console.log(curso);
-			$('#filtros').hide();
-			$('#abm').hide();
-			$.ajax({
-				url: 'cursos/'+curso,
-				method: 'get',
-				success: function(data){
-					$('#alta').html(data);
-					$('#alta').show();
-				}
-			})
-		});*/
-
 		$("#alta").on("click","#volver",function(){
 			console.log('Se vuelve sin crear el curso.');
 			$('#alta').html("");
@@ -186,44 +174,14 @@
 			$('#filtros').show();
 		});
 
-		/*$("#alta").on("click","#modificar",function(){
-
-			var curso = $(this).data('id');
-			var data = $('#alta form').serialize();
-			data += '&id_area_tematica='+$('#alta form #area_tematica :selected').data('id');
-			data += '&id_linea_estrategica='+$('#alta form #linea_estrategica :selected').data('id');
-			data += '&id_provincia='+$('#alta form #provincia :selected').data('id');
-
-
-			console.log(data);
-
-			$.ajax({
-				url: 'cursos/'+curso,
-				method: 'put',
-				data: data,
-				success: function(data){
-					console.log('Se modifico el curso correctamente.');
-					$('#alta').html("");
-					$('#abm').show();
-					$('#filtros').show();
-				},
-				error: function (data) {
-					console.log('Hubo un error.');
-					console.log(data);
-				}
-			})
-
-
-		});	*/
-
 		$('#abm').on('click','.expand',function () {
-			$('.container').addClass('col-md-12');
+			$('#abm').removeClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
 			$('.compress').show();	
 			$(this).hide();
 		});
 
 		$('#abm').on('click','.compress',function () {
-			$('.container').removeClass('col-md-12');
+			$('#abm').addClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
 			$('.expand').show();	
 			$(this).hide();	
 		});

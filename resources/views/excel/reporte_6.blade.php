@@ -19,7 +19,7 @@
 		<th class="table-header">Curso</th>
         <th class="table-header">Edición</th>
         <th class="table-header">Fecha</th>
-        <th class="table-header">Cantidad</th>
+        <th class="table-header">Cantidad de participantes</th>
         <th class="table-header">Tipo de accion</th>
         <th class="table-header">Area Temática</th>
         <th class="table-header">Provincia</th>

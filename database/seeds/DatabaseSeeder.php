@@ -16,9 +16,9 @@ class DatabaseSeeder extends Seeder
         $this->call(AlumnosSchemaSeeder::class);
         $this->call(CursosSchemaSeeder::class);
         $this->call(EncuestasSchemaSeeder::class);
-        //$this->call(PacSchemaSeeder::class);
+        ////$this->call(PacSchemaSeeder::class);
         $this->call(StoredProceduresSeeder::class);
-        //$this->call(ForeignDataWrapperSeeder::class);
+        $this->call(ForeignDataWrapperSeeder::class);
         $this->call(ExternasSeeder::class);
     }
 

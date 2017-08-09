@@ -112,7 +112,6 @@ class AlumnosController extends AbmController
             }
             return Alumno::crear($request);
         } else {
-            logger(json_encode($v->errors()));
             return json_encode($v->errors());
         }
     }
@@ -259,7 +258,7 @@ class AlumnosController extends AbmController
      */
     public function getEstablecimientos(Request $r)
     {
-        return $this->typeahead($r,'establecimiento2');
+        return $this->typeahead('establecimiento2');
     }
 
     /**
@@ -305,9 +304,9 @@ class AlumnosController extends AbmController
      *
      * @return \Illuminate\Http\Response
      */
-    private function typeahead(Request $r,$columna)
+    private function typeahead($columna)
     {
-        return $this->typeaheadResponse($this->queryOneColumn($r,$columna));
+        return $this->typeaheadResponse($this->queryOneColumn($columna));
     }
 
     /**
@@ -315,13 +314,13 @@ class AlumnosController extends AbmController
      *
      * @return \Illuminate\Http\Response
      */
-    private function queryOneColumn(Request $r,$columna)
+    private function queryOneColumn($columna)
     {
         return Alumno::select($columna)
         ->segunProvincia()
         ->groupBy($columna)
         ->orderBy($columna)
-        ->where($columna,'ilike',$r->search.'%')
+        //->where($columna,'ilike',$r->search.'%')
         ->get()
         ->map(
             function ($item, $key) use ($columna) {

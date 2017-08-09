@@ -30,7 +30,7 @@ class ForeignDataWrapperSeeder extends Seeder
 
         if($user && $password){
             \DB::statement("
-        CREATE USER MAPPING FOR daniel 
+        CREATE USER MAPPING FOR postgres 
         SERVER {$name} 
         OPTIONS (user '{$user}', password '{$password}')
         ;");

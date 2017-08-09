@@ -171,7 +171,7 @@
 					},
 					numero: {
 						required: true,
-						digits: true
+						number: true
 					}
 				},
 				messages:{

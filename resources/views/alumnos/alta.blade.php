@@ -1,229 +1,226 @@
-<div class="col-xs-12">
-	<div class="box box-success">
-		<div class="box-header">Alta de participante</div>
-		<div class="box-body">
-			<form id="form-alta">
-				{{ csrf_field() }}
-				<div class="row">
-					<div class="form-group col-xs-12 col-sm-6">
-						<label for="nombres" class="control-label col-xs-4">Nombres: </label>
-						<div class="col-xs-8">
-							<input name="nombres" type="text" class="form-control" id="nombres">
-						</div>
+<div class="box box-success">
+	<div class="box-header">Alta de participante</div>
+	<div class="box-body">
+		<form id="form-alta">
+			{{ csrf_field() }}
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-6">
+					<label for="nombres" class="control-label col-xs-4">Nombres: </label>
+					<div class="col-xs-8">
+						<input name="nombres" type="text" class="form-control" id="nombres">
 					</div>
-					<div class="form-group cols-xs col-sm-6">
-						<label for="apellidos" class="control-label col-xs-4">Apellidos: </label>
-						<div class="col-xs-8">
-							<input name="apellidos" type="text" class="form-control" id="apellidos">
+				</div>
+				<div class="form-group cols-xs col-sm-6">
+					<label for="apellidos" class="control-label col-xs-4">Apellidos: </label>
+					<div class="col-xs-8">
+						<input name="apellidos" type="text" class="form-control" id="apellidos">
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-6">
+					<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento: </label>
+					<div class="col-xs-8">
+						<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
+							@foreach ($documentos as $documento)
+							
+							<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}" value="{{$documento->id_tipo_documento}}">{{$documento->nombre}}</option>
+							
+							@endforeach
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-xs-12 col-sm-6">
+					<label for="nro_doc" class="control-label col-xs-4">Nro doc:</label>
+					<div class="col-xs-8">
+						<input name="nro_doc" type="text" class="form-control" id="nro_doc">
+					</div>
+				</div>
+				<div class="form-group col-xs-12 col-sm-6" id="nacionalidad" style="display: none">          
+					<label class="control-label col-xs-4" for="pais">Pais:</label>
+					<div class="typeahead__container col-xs-8">
+						<div class="typeahead__field ">         
+							<span class="typeahead__query ">
+								<input class="pais_typeahead form-control" name="pais" type="search" placeholder="Buscar..." autocomplete="off" id="pais" disabled>
+							</span>
 						</div>
 					</div>
 				</div>
-				<br>
-				<div class="row">
-					<div class="form-group col-xs-12 col-sm-6">
-						<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento: </label>
-						<div class="col-xs-8">
-							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
-								@foreach ($documentos as $documento)
-								
-								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}" value="{{$documento->id_tipo_documento}}">{{$documento->nombre}}</option>
-								
-								@endforeach
-							</select>
-						</div>
+			</div>
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-6">
+					<label for="genero" class="control-label col-xs-4">Genero:</label>
+					<div class="col-xs-8">
+						<select class="form-control" id="genero" name="id_genero">
+							<option>Seleccionar</option>
+
+							@foreach ($generos as $genero)
+							
+							<option value="{{$genero->id_genero}}">{{$genero->nombre}}</option>
+							
+							@endforeach
+						</select>
+
 					</div>
-					<div class="form-group col-xs-12 col-sm-6">
-						<label for="nro_doc" class="control-label col-xs-4">Nro doc:</label>
-						<div class="col-xs-8">
-							<input name="nro_doc" type="text" class="form-control" id="nro_doc">
-						</div>
-					</div>
-					<div class="form-group col-xs-12 col-sm-6" id="nacionalidad" style="display: none">          
-						<label class="control-label col-xs-4" for="pais">Pais:</label>
-						<div class="typeahead__container col-xs-8">
-							<div class="typeahead__field ">         
-								<span class="typeahead__query ">
-									<input class="pais_typeahead form-control" name="pais" type="search" placeholder="Buscar..." autocomplete="off" id="pais" disabled>
-								</span>
-							</div>
-						</div>
+				</div>								
+			</div>	
+			<hr>
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-6">
+					<label for="provincia" class="control-label col-xs-4">Jurisdicción:</label>
+					<div class="col-xs-8">
+						@if(Auth::user()->id_provincia == 25)
+						<select class="form-control" id="provincia">
+							@foreach ($provincias as $provincia)
+							
+							<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
+							@endforeach
+						</select>
+						@else
+						<select class="form-control" id="provincia" name="provincia" disabled>
+							<option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>	
+						</select>
+						@endif
 					</div>
 				</div>
-				<div class="row">
-					<div class="form-group col-xs-12 col-sm-6">
-						<label for="genero" class="control-label col-xs-4">Genero:</label>
-						<div class="col-xs-8">
-							<select class="form-control" id="genero" name="id_genero">
-								<option>Seleccionar</option>
-
-								@foreach ($generos as $genero)
-								
-								<option value="{{$genero->id_genero}}">{{$genero->nombre}}</option>
-								
-								@endforeach
-							</select>
-
-						</div>
-					</div>								
+				<div class="form-group col-xs-12 col-sm-6">
+					<label for="localidad" class="control-label col-xs-4">Localidad:</label>
+					<div class="col-xs-8">
+						<input id="localidad" type="text" class="form-control" name="localidad" placeholder="Donde trabaja o desarrola su funcion">
+					</div>
 				</div>	
-				<hr>
-				<div class="row">
-					<div class="form-group col-xs-12 col-sm-6">
-						<label for="provincia" class="control-label col-xs-4">Jurisdicción:</label>
-						<div class="col-xs-8">
-							@if(Auth::user()->id_provincia == 25)
-							<select class="form-control" id="provincia">
-								@foreach ($provincias as $provincia)
-								
-								<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
-								@endforeach
-							</select>
-							@else
-							<select class="form-control" id="provincia" name="provincia" disabled>
-								<option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>	
-							</select>
-							@endif
-						</div>
+			</div>				
+			<hr>
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-6">
+					<label for="trabaja_en" class="control-label col-xs-4">Trabaja en:</label>
+					<div class="col-xs-8">
+						<select class="form-control" id="trabaja_en" name="trabaja_en">
+
+							<option data-id="0" value="0">Seleccionar</option>
+
+							@foreach ($trabajos as $trabajo)
+							
+							<option data-id="{{$trabajo->id_trabajo}}" value="{{$trabajo->id_trabajo}}">{{$trabajo->nombre}}</option>				 					
+							@endforeach
+							
+						</select>
 					</div>
-					<div class="form-group col-xs-12 col-sm-6">
-						<label for="localidad" class="control-label col-xs-4">Localidad:</label>
-						<div class="col-xs-8">
-							<input id="localidad" type="text" class="form-control" name="localidad">
-						</div>
-					</div>	
-				</div>				
-				<hr>
-				<div class="row">
-					<div class="form-group col-xs-12 col-sm-6">
-						<label for="trabaja_en" class="control-label col-xs-4">Trabaja en:</label>
-						<div class="col-xs-8">
-							<select class="form-control" id="trabaja_en" name="trabaja_en">
+				</div>
+			</div>
+			<br>
+			<div class="row" >
+				<div class="form-group col-xs-12 col-sm-6" style="display: none;">
+					<label for="tipo_organismo" class="control-label col-xs-4">Organismo:</label>
+					<div class="col-xs-8">
+						<select class="form-control" id="tipo_organismo" name="organismo">
 
-								<option data-id="0" value="0">Seleccionar</option>
+							<option>Seleccionar</option>
 
-								@foreach ($trabajos as $trabajo)
-								
-								<option data-id="{{$trabajo->id_trabajo}}" value="{{$trabajo->id_trabajo}}">{{$trabajo->nombre}}</option>				 					
-								@endforeach
-								
-							</select>
+							@foreach ($organismos as $organismo)
+							
+							<option title="{{$organismo->organismo1}}">{{$organismo->organismo1}}</option>				 					
+							@endforeach							
+							
+						</select>
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-6" style="display: none">  
+					<label for="nombre_organismo" class="control-label col-xs-4">Nombre organismo:</label>					
+					<div class="typeahead__container col-xs-8">
+						<div class="typeahead__field ">         
+							<span class="typeahead__query ">
+								<input class="nombre_organismo_typeahead form-control" name="nombre_organismo" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="nombre_organismo" disabled>
+							</span>
 						</div>
 					</div>
 				</div>
-				<br>
-				<div class="row" >
-					<div class="form-group col-xs-12 col-sm-6" style="display: none;">
-						<label for="tipo_organismo" class="control-label col-xs-4">Organismo:</label>
-						<div class="col-xs-8">
-							<select class="form-control" id="tipo_organismo" name="organismo">
-
-								<option>Seleccionar</option>
-
-								@foreach ($organismos as $organismo)
-								
-								<option title="{{$organismo->organismo1}}">{{$organismo->organismo1}}</option>				 					
-								@endforeach							
-								
-							</select>
+			</div>
+			<div class="row">
+				<div class="form-group checkbox col-xs-12 col-sm-6" style="display: none;">	
+					<label for="tipo_convenio" class="control-label col-xs-4">Tipo convenio:</label>
+					<div class="col-xs-8">
+						<input name="tipo_convenio" type="checkbox" id="tipo_convenio">Convenio con el programa CUS SUMAR
+					</div>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-6" style="display: none;">          
+					<label for="efectores" class="control-label col-xs-4">Efectores:</label>
+					<div class="typeahead__container col-xs-8">
+						<div class="typeahead__field ">         
+							<span class="typeahead__query ">
+								<input class="efectores_typeahead form-control" name="efector" type="search" placeholder="Buscar..." autocomplete="off" id="efectores" disabled>
+							</span>
 						</div>
 					</div>
 				</div>
-				<br>
-				<div class="row">
-					<div class="form-group col-xs-12 col-sm-6" style="display: none">  
-						<label for="nombre_organismo" class="control-label col-xs-4">Nombre organismo:</label>					
-						<div class="typeahead__container col-xs-8">
-							<div class="typeahead__field ">         
-								<span class="typeahead__query ">
-									<input class="nombre_organismo_typeahead form-control" name="nombre_organismo" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="nombre_organismo" disabled>
-								</span>
-							</div>
+				<button type="button" class="btn btn-default" id="ver_efectores" style="display: none;">Ver todos</button>
+			</div>
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-6" style="display: none">          
+					<label for="establecimiento" class="control-label col-xs-4">Establecimiento:</label>
+					<div class="typeahead__container col-xs-8">
+						<div class="typeahead__field ">             
+							<span class="typeahead__query ">
+								<input class="establecimiento_typeahead form-control" name="establecimiento" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="establecimiento" disabled>
+							</span>
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="form-group checkbox col-xs-12 col-sm-6" style="display: none;">	
-						<label for="tipo_convenio" class="control-label col-xs-4">Tipo convenio:</label>
-						<div class="col-xs-8">
-							<input name="tipo_convenio" type="checkbox" id="tipo_convenio">Convenio con el programa CUS SUMAR
-						</div>
-					</div>
-				</div>
-				<br>
-				<div class="row">
-					<div class="form-group col-xs-12 col-sm-6" style="display: none;">          
-						<label for="efectores" class="control-label col-xs-4">Efectores:</label>
-						<div class="typeahead__container col-xs-8">
-							<div class="typeahead__field ">         
-								<span class="typeahead__query ">
-									<input class="efectores_typeahead form-control" name="efector" type="search" placeholder="Buscar..." autocomplete="off" id="efectores" disabled>
-								</span>
-							</div>
-						</div>
-					</div>
-					<button type="button" class="btn btn-default" id="ver_efectores" style="display: none;">Ver todos</button>
-				</div>
-				<div class="row">
-					<div class="form-group col-xs-12 col-sm-6" style="display: none">          
-						<label for="establecimiento" class="control-label col-xs-4">Establecimiento:</label>
-						<div class="typeahead__container col-xs-8">
-							<div class="typeahead__field ">             
-								<span class="typeahead__query ">
-									<input class="establecimiento_typeahead form-control" name="establecimiento" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="establecimiento" disabled>
-								</span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<br>
-				<div class="row">
-					<div class="form-group col-xs-12 col-sm-6" style="display: none;">
-						<label for="funcion" class="control-label col-xs-4">Rol con respecto al SUMAR:</label>
-						<div class="col-xs-8">
-							<select class="form-control" id="funcion" name="funcion">
+			</div>
+			<br>
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-6" style="display: none;">
+					<label for="funcion" class="control-label col-xs-4">Rol con respecto al SUMAR:</label>
+					<div class="col-xs-8">
+						<select class="form-control" id="funcion" name="funcion">
 
-								<option data-id="1" title="Seleccionar">Seleccionar</option>
+							<option data-id="1" title="Seleccionar">Seleccionar</option>
 
-								@foreach ($funciones as $funcion)
+							@foreach ($funciones as $funcion)
 
-								<option data-id="{{$funcion->id_funcion}}" title="{{$funcion->nombre}}">{{$funcion->nombre}}</option>	
+							<option data-id="{{$funcion->id_funcion}}" title="{{$funcion->nombre}}">{{$funcion->nombre}}</option>	
 
-								@endforeach
+							@endforeach
 
-							</select>
-						</div>
-					</div>	
-				</div>					
-				<hr>
-				<div class="row">
-					<div class="form-group col-xs-12 col-sm-4">
-						<label for="email" class="control-label col-xs-4">Email:</label>
-						<div class="col-xs-8">
-							<input name="email" type="email" class="form-control" id="email">
-						</div>
+						</select>
 					</div>
-					<div class="form-group col-xs-12 col-sm-4">
-						<label for="tel" class="control-label col-xs-4">Tel:</label>
-						<div class="col-xs-8">
-							<input name="tel" type="number" class="form-control" id="tel">
-						</div>
-					</div>
-					<div class="form-group col-xs-12 col-sm-4">
-						<label for="cel" class="control-label col-xs-4">Cel:</label>
-						<div class="col-xs-8">
-							<input name="cel" type="number" class="form-control" id="cel">
-						</div>
+				</div>	
+			</div>					
+			<hr>
+			<div class="row">
+				<div class="form-group col-xs-12 col-sm-4">
+					<label for="email" class="control-label col-xs-4">Email:</label>
+					<div class="col-xs-8">
+						<input name="email" type="email" class="form-control" id="email">
 					</div>
 				</div>
-				<div class="box-footer">
-					<div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</div>
-					<button class="btn btn-success pull-right" id="crear" title="Alta"><i class="fa fa-plus" aria-hidden="true"></i>Alta</button>
+				<div class="form-group col-xs-12 col-sm-4">
+					<label for="tel" class="control-label col-xs-4">Tel:</label>
+					<div class="col-xs-8">
+						<input name="tel" type="number" class="form-control" id="tel">
+					</div>
 				</div>
-			</form>
-		</div>
-		
-	</div> 
-</div>
+				<div class="form-group col-xs-12 col-sm-4">
+					<label for="cel" class="control-label col-xs-4">Cel:</label>
+					<div class="col-xs-8">
+						<input name="cel" type="number" class="form-control" id="cel">
+					</div>
+				</div>
+			</div>
+			<div class="box-footer">
+				<div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</div>
+				<button class="btn btn-success pull-right" id="crear" title="Alta"><i class="fa fa-plus" aria-hidden="true"></i>Alta</button>
+			</div>
+		</form>
+	</div>		
+</div> 
 
 <script type="text/javascript">
 
@@ -238,9 +235,9 @@
 				info: {
 					ajax: {
 						url: "alumnos/establecimientos",
-						path: "data.info",
-						data: {
-							search: "@{{query}}"
+						path: "data.info",						
+						data: function(query){
+							q: query;
 						},
 						success: function(data){
 							console.log("ajax success");
@@ -267,7 +264,10 @@
 				info: {
 					ajax: {
 						url: "paises/nombres",
-						path: "data.info",
+						path: "data.info",						
+						data: function(query){
+							q: query;
+						},
 						error: function(data){
 							console.log("ajax error");
 							console.log(data);

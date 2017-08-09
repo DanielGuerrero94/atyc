@@ -18,7 +18,7 @@
 	<tr>
 		<th class="table-header">Período</th>
         <th class="table-header">Provincia</th>
-        <th class="table-header">Cantidad de alumnos</th>
+        <th class="table-header">Cantidad de participantes</th>
 	</tr>
 	@foreach($resultados as $resultado)
 		<tr>

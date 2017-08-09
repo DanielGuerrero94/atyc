@@ -1,95 +1,93 @@
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<div class="box box-success">
-		<div class="box-header">Alta de docente</div>
-		<div class="box-body">
-			<form id="form-alta">
-				{{ csrf_field() }}
-				<div class="row">
-					<div class="form-group col-sm-6">
-						<label for="nombres" class="control-label col-xs-4">Nombres:</label>
-						<div class="col-xs-8">
-							<input name="nombres" type="text" class="form-control" id="nombres">	
-						</div>
-					</div>
-					<div class="form-group col-sm-6">
-						<label for="apellidos" class="control-label col-xs-4">Apellidos:</label>
-						<div class="col-xs-8">
-							<input name="apellidos" type="text" class="form-control" id="apellidos">
-						</div>
-					</div>
-					<div class="form-group col-sm-6">
-						<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento:</label>
-						<div class="col-xs-8">
-							<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
-								@foreach ($tipoDocumento as $documento)
-								
-								<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>					
-								@endforeach
-							</select>
-						</div>
-					</div>
-					<div class="form-group col-sm-6">
-						<label class="control-label col-xs-4" for="nro_doc">Nro doc:</label>
-						<div class="col-xs-8">
-							<input name="nro_doc" type="text" class="form-control" id="nro_doc">
-						</div>
-					</div>
-
-					<div class="form-group col-sm-6" id="nacionalidad" style="display: none">          
-						<label class="control-label col-xs-2" for="pais">Pais:</label>
-						<div class="typeahead__container col-xs-10">
-							<div class="typeahead__field ">         
-								<span class="typeahead__query ">
-									<input class="pais_typeahead form-control" name="pais" type="search" placeholder="Buscar..." autocomplete="off" id="pais" disabled>
-								</span>
-							</div>
-						</div>
-					</div>					
-				</div>	
-				<hr>
-				<div class="row">
+<div class="box box-success">
+	<div class="box-header">Alta de docente</div>
+	<div class="box-body">
+		<form id="form-alta">
+			{{ csrf_field() }}
+			<div class="row">
 				<div class="form-group col-sm-6">
-						<label class="control-label col-xs-4" for="id_tipo_docente">Tipo de docente:</label>
-						<div class="col-xs-8">
-							<select class="form-control" id="id_tipo_docente">
-								@foreach ($tipoDocente as $tipo)
-								
-								<option data-id="{{$tipo->id_tipo_docente}}">{{$tipo->nombre}}</option>				 
-								
-								@endforeach
-							</select>
-						</div>
+					<label for="nombres" class="control-label col-xs-4">Nombres:</label>
+					<div class="col-xs-8">
+						<input name="nombres" type="text" class="form-control" id="nombres">	
 					</div>
 				</div>
-				<hr>
-				<div class="row">
-					<div class="form-group col-sm-6">
-						<label class="control-label col-xs-4" for="email">Email:</label>
-						<div class="col-xs-8">
-							<input name="email" type="email" class="form-control" id="email">
-						</div>
-					</div>
-					<div class="form-group col-sm-6">
-						<label class="control-label col-xs-4" for="telefono">Telefono:</label>
-						<div class="col-xs-8">
-							<input name="tel" type="number" class="form-control" id="tel">
-						</div>
-					</div>
-					<div class="form-group col-sm-6">
-						<label class="control-label col-xs-4" for="cel">Cel:</label>
-						<div class="col-xs-8">
-							<input name="cel" type="number" class="form-control" id="cel">
-						</div>
+				<div class="form-group col-sm-6">
+					<label for="apellidos" class="control-label col-xs-4">Apellidos:</label>
+					<div class="col-xs-8">
+						<input name="apellidos" type="text" class="form-control" id="apellidos">
 					</div>
 				</div>
-			</form>
-		</div>
-		<div class="box-footer">
-			<div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo"></i>Volver</div>
-			<button type="submit" class="btn btn-success pull-right" id="crear" title="Alta"><i class="fa fa-plus"></i>Alta</button>
-		</div>
-	</div> 
-</div>
+				<div class="form-group col-sm-6">
+					<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento:</label>
+					<div class="col-xs-8">
+						<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
+							@foreach ($tipoDocumento as $documento)
+							
+							<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>					
+							@endforeach
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-sm-6">
+					<label class="control-label col-xs-4" for="nro_doc">Nro doc:</label>
+					<div class="col-xs-8">
+						<input name="nro_doc" type="text" class="form-control" id="nro_doc">
+					</div>
+				</div>
+
+				<div class="form-group col-sm-6" id="nacionalidad" style="display: none">          
+					<label class="control-label col-xs-2" for="pais">Pais:</label>
+					<div class="typeahead__container col-xs-10">
+						<div class="typeahead__field ">         
+							<span class="typeahead__query ">
+								<input class="pais_typeahead form-control" name="pais" type="search" placeholder="Buscar..." autocomplete="off" id="pais" disabled>
+							</span>
+						</div>
+					</div>
+				</div>					
+			</div>	
+			<hr>
+			<div class="row">
+				<div class="form-group col-sm-6">
+					<label class="control-label col-xs-4" for="id_tipo_docente">Tipo de docente:</label>
+					<div class="col-xs-8">
+						<select class="form-control" id="id_tipo_docente">
+							@foreach ($tipoDocente as $tipo)
+							
+							<option data-id="{{$tipo->id_tipo_docente}}">{{$tipo->nombre}}</option>				 
+							
+							@endforeach
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="form-group col-sm-6">
+					<label class="control-label col-xs-4" for="email">Email:</label>
+					<div class="col-xs-8">
+						<input name="email" type="email" class="form-control" id="email">
+					</div>
+				</div>
+				<div class="form-group col-sm-6">
+					<label class="control-label col-xs-4" for="telefono">Telefono:</label>
+					<div class="col-xs-8">
+						<input name="tel" type="number" class="form-control" id="tel">
+					</div>
+				</div>
+				<div class="form-group col-sm-6">
+					<label class="control-label col-xs-4" for="cel">Cel:</label>
+					<div class="col-xs-8">
+						<input name="cel" type="number" class="form-control" id="cel">
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="box-footer">
+		<div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo"></i>Volver</div>
+		<button type="submit" class="btn btn-success pull-right" id="crear" title="Alta"><i class="fa fa-plus"></i>Alta</button>
+	</div>
+</div> 
 
 <script type="text/javascript">
 	$(document).ready(function () {
@@ -213,26 +211,26 @@
 							console.log("Fallo la request ajax para validacion de documento.");
 						}
 					});
-				}	
-			},
-			submitHandler : function(form){
-				$.ajax({
-					url: 'profesores',
-					type: 'POST',						
-					data: getInput(),
-					complete: function(xhr, textStatus) {
-						console.log('ajax complete');
-					},
-					success: function(data, textStatus, xhr) {
-						console.log('Se creo');
-						location.reload();
-					},
-					error: function(xhr, textStatus, errorThrown) {
-						alert('No se pudo dar de alta el profesor.');
-					}
-				});
 			}	
-		});
+		},
+		submitHandler : function(form){
+			$.ajax({
+				url: 'profesores',
+				type: 'POST',						
+				data: getInput(),
+				complete: function(xhr, textStatus) {
+					console.log('ajax complete');
+				},
+				success: function(data, textStatus, xhr) {
+					console.log('Se creo');
+					location.reload();
+				},
+				error: function(xhr, textStatus, errorThrown) {
+					alert('No se pudo dar de alta el profesor.');
+				}
+			});
+		}	
+	});
 
 		$('#alta').on('click','#crear',function() {			
 			if(validator.valid()){

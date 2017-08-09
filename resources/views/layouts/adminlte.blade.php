@@ -140,7 +140,7 @@
     <!-- Modulos highcharts -->
     <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/exporting.js")}}"></script>
 
-    <script type="text/javascript" src="{{asset("/bower_components/highcharts-export-csv/export-csv.js")}}"></script>
+    <script type="text/javascript" src="{{asset("/bower_components/highcharts-export-csv/highcharts-export-csv.js")}}"></script>
 
     <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/data.js")}}"></script>
 
