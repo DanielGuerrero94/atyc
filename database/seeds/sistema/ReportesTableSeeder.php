@@ -15,12 +15,10 @@ class ReportesTableSeeder extends Seeder
         ('ODP Int.4 \"Número total de staff institucional que participó de
 
 actividades de capacitación con más de 10 horas acumuladas\"','odp4'),
-        ('banco-acumula-10-horas','banco-acumula-10-horas'),
-        ('alguna-actividad','alguna-actividad'),
-        ('\"Porcentaje de efectores capacitados con modalidad presencial\"','porcentaje-efectores'),
+        ('Reporte banco','banco-acumula-10-horas'),
+        ('Total staff institucional','total-staff-institucional'),
+        ('Porcentaje de efectores capacitados con modalidad presencial','porcentaje-efectores'),
         ('Cantidad de participantes por acción de capacitación','cantidad-participantes'),
-        ('grado-satisfaccion','grado-satisfaccion')");        
+        ('Grado de satisfaccion de los participates','grado-satisfaccion')");        
     }
-}
-
-      
+}      

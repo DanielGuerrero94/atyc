@@ -116,4 +116,13 @@ class Alumno extends Model
                 ->select('sistema.provincias.nombre as provincia');            
         /*}*/
     }
+
+    /**
+     * Para saber si puede o no verlo, tira exception
+     * 
+     */
+    public function puedeVer($user)
+    {
+        return $user == 25 || $user == $this->id_provincia;
+    }
 }

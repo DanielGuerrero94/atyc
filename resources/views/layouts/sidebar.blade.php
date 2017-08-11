@@ -63,15 +63,14 @@
             <span>Banco.</span>
           </a>
         </li> -->
-        <!-- <li>
+        <li>
           <a href='{{url("/reportes/3")}}'>
-            <i class="fa fa-circle-o"></i>
-            <span>Total staff institucional.</span>
+            <span>2 - Total staff institucional</span>
           </a>
-        </li> -->
+        </li>
         <li>
           <a href='{{url("/reportes/4")}}'>
-            <span>2 - Porcentaje de efectores</span>
+            <span>3 - Porcentaje de efectores</span>
             <br>
             <span>capacitados con modalidad</span>
             <br> 
@@ -80,7 +79,7 @@
         </li>
         <li>
           <a href='{{url("/reportes/cursos")}}'>
-            <span>3 - Cantidad de participantes</span>
+            <span>4 - Cantidad de participantes</span>
             <br>
             <span>por acción de capacitación</span>
           </a>

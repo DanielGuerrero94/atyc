@@ -127,16 +127,16 @@ class ProfesoresController extends AbmController
         }
     }
 
-            /**
+    /**
             * Show the form for editing the specified resource.
             *
             * @param  int $id
             * @return \Illuminate\Http\Response
             */
-            public function edit($id)
-            {
-                return view('profesores/modificar', $this->show($id));
-            }
+    public function edit($id)
+    {
+        return view('profesores/modificar', $this->show($id));
+    }
 
             /**
             * Update the specified resource in storage.

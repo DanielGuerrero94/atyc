@@ -8,137 +8,63 @@ use DB;
 
 class DashboardController extends Controller
 {
-    private $nombre_mes  = array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
-
-    //Para ahorrarme escribir siempre que connection usar
-    public function query($query)
+    public function firstDraw()
     {
-        return DB::connection('eLearning')->select($query);
+        return $this->counts();
     }
 
-    public function get()
+    public function counts()
     {
-
-        $counts = array(
-           'alumnos' => $this->getCountAlumnos(),
-           'cursos' => $this->getCountCursos(),
-           'profesores' => $this->getCountProfesores());
-
-        $tortas = array(
-           'cursos_areas_tematicas' => $this->getCountCursosPorAreaTematica(),
-           'cursos_lineas_estrategicas' => $this->getCountCursosPorLineaEstrategica(),
-           'cursos_lineas_estrategicas_hc' => $this->to_highchart_pie(),
-           'cursos_por_provincia' => $this->getCountCursosPorProvincia());
-
-        $graficos = array(
-           'cursos2013' => $this->getCursosPorAnioYMes('2013'),
-           'cursos2014' => $this->getCursosPorAnioYMes('2014'),
-           'cursos2015' => $this->getCursosPorAnioYMes('2015'),
-           'cursos2016' => $this->getCursosPorAnioYMes('2016'),
-           'cursos_por_anio' => $this->getCursosPorAnio(),
-           'cursos_por_anio_hc' => $this->getCursosPorAnioHc(),
-           'cursos_por_anio_y_mes_hc' => $this->getCursosPorAnioYMesHc(),
-           'accionesAnioMes' => $this->accionesAnioMes(),
-           'accionesPorTipo' => $this->accionesPorTipo(),
-           'accionesPorTematica' => $this->accionesPorTematica(),
-           'accionesReportadas' => $this->accionesInformadasEsteAnio());
-
-
-        $returns = array_merge($counts, $tortas);
-        $returns = array_merge($returns, $graficos);
-        return json_encode($returns);
+        return array(
+            'participantes' => $this->getCountTable("alumnos.alumnos"),
+            'acciones' => $this->getCountTable("cursos.cursos"),
+            'docentes' => $this->getCountTable("sistema.profesores")
+            );
     }
 
-    private function getCountTabla($tabla)
+    public function pies()
     {
-        return DB::table($tabla)
+        return array(
+            'porcentajeTematica' => $this->porcentajeTematica()
+            );            
+    }
+
+    public function areas()
+    {
+        return array(
+            'accionesPorAnioYMes' => $this->accionesPorAnioYMes()
+            );    
+    }
+
+    public function heats()
+    {
+        return array(
+            'accionesReportadas' => $this->accionesInformadasEsteAnio()
+            );        
+    }
+
+    public function trees()
+    {
+        return array(
+            'accionesPorTipologia' => $this->accionesPorTipologia(),
+            'accionesPorTematica' => $this->accionesPorTematica()
+            );            
+    }
+
+    private function getCountTable($table)
+    {
+        return DB::table($table)
         ->whereNull('deleted_at')
-        ->get();
-    }
-
-    private function getCountAlumnos()
-    {
-        return $this->getCountTabla("alumnos.alumnos")
         ->count();
     }
 
-    private function getCountCursos()
+    private function porcentajeTematica()
     {
-        return $this->getCountTabla("cursos.cursos")
-        ->count();
-    }
-
-    private function getCountProfesores()
-    {
-        return $this->getCountTabla("sistema.profesores")
-        ->count();
-    }
-
-    private function getCursos()
-    {
-        return Curso::query();
-    }
-
-    private function getCountCursosPorAreaTematica()
-    {
-        return $this->getCursos()
-        ->join('cursos.areas_tematicas', 'cursos.cursos.id_area_tematica', '=', 'cursos.areas_tematicas.id_area_tematica')
-        ->select('cursos.areas_tematicas.nombre as label', DB::raw('count(*) as value'))
-        ->groupBy('cursos.areas_tematicas.nombre')
-        ->get();
-    }
-
-    private function getCountCursosPorLineaEstrategica()
-    {
-        return $this->getCursos()
+        $cursos = Curso::query()
         ->join('cursos.lineas_estrategicas', 'cursos.id_linea_estrategica', '=', 'cursos.lineas_estrategicas.id_linea_estrategica')
         ->select(DB::raw('CONCAT(cursos.lineas_estrategicas.numero,\' - \',cursos.lineas_estrategicas.nombre) as label'), DB::raw('count(*) as value'))
         ->groupBy('cursos.lineas_estrategicas.nombre', 'cursos.lineas_estrategicas.numero')
         ->get();
-    }
-
-    private function getCursosPorAnioYMes($anio)
-    {
-        return $this->getCursos()
-        ->select(DB::raw('count(*) as cantidad,EXTRACT(ISOYEAR FROM cursos.cursos.fecha) as anio,EXTRACT(MONTH FROM cursos.cursos.fecha) as mes'))
-        ->whereYear('cursos.cursos.fecha', $anio)
-        ->groupBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha),EXTRACT(MONTH FROM cursos.cursos.fecha)'))
-        ->orderBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha),EXTRACT(MONTH FROM cursos.cursos.fecha)'))
-        ->get();
-    }
-
-    private function getCursosPorAnio()
-    {
-        return $this->getCursos()
-        ->select(DB::raw('count(*) as cantidad,EXTRACT(ISOYEAR FROM cursos.cursos.fecha) as anio'))
-        ->where(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha)'), '>=', '2013')
-        ->groupBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha)'))
-        ->orderBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha)'))
-        ->get();
-    }
-
-    private function getCursosTodosPorAnioYMes()
-    {
-        return $this->getCursos()
-        ->select(DB::raw('count(*) as cantidad,EXTRACT(ISOYEAR FROM cursos.cursos.fecha) as anio,EXTRACT(MONTH FROM cursos.cursos.fecha) as mes'))
-        ->where(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha)'), '>=', '2013')
-        ->groupBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha),EXTRACT(MONTH FROM cursos.cursos.fecha)'))
-        ->orderBy(DB::raw('EXTRACT(ISOYEAR FROM cursos.cursos.fecha),EXTRACT(MONTH FROM cursos.cursos.fecha)'))
-        ->get();
-    }
-
-    private function getCountCursosPorProvincia()
-    {
-        return $this->getCursos()
-        ->join('sistema.provincias', 'cursos.id_provincia', '=', 'sistema.provincias.id_provincia')
-        ->select('sistema.provincias.nombre as label', DB::raw('count(*) as value'))
-        ->groupBy('sistema.provincias.id_provincia')
-        ->get();
-    }
-
-    private function to_highchart_pie()
-    {
-        $cursos = $this->getCountCursosPorLineaEstrategica();
         
         $total = $cursos->reduce(
             function ($carry, $value) {
@@ -160,61 +86,7 @@ class DashboardController extends Controller
         return array($ret);
     }
 
-    public function getCursosPorAnioHc()
-    {
-        $cursos_por_anio = $this->getCursosPorAnio();
-        
-        $data = array();
-
-        $cursos_por_anio->each(
-            function ($value, $item) use (&$data) {
-                $array = array(
-                    'name' => $value->anio,
-                    'y' => $value->cantidad,
-                    'drilldown' => $value->anio);
-                array_push($data, $array);
-            }
-            );
-
-        $series = array(
-           'name' => 'Cursos',
-           'colorByPoint' => true,
-           'data' => $data);
-
-        return array($series);
-    }
-
-    public function getCursosPorAnioYMesHc()
-    {
-        $cursos_por_anio = $this->getCursosPorAnio();
-        
-        $ret = array();
-
-        $cursos_por_anio->each(
-            function ($value, $item) use (&$ret) {
-
-                $cursos_del_anio = $this->getCursosPorAnioYMes($value->anio);
-                $data = array();
-
-                $cursos_del_anio->each(
-                    function ($value, $key) use (&$data) {
-                        /*$mes = $this->$nombre_mes[(int)$value->mes];*/
-                        array_push($data, array($value->mes,$value->cantidad));
-                    }
-                    );
-
-                $drilldown = array(
-                    'name' => $value->anio,
-                    'id' => $value->anio,
-                    'data' => $data);
-
-                array_push($ret, $drilldown);
-            }
-            );
-        return $ret;
-    }
-
-    public function accionesAnioMes()
+    public function accionesPorAnioYMes()
     {
         $acciones = \DB::select("(select extract(year from fecha) as anio,extract(month from fecha) as mes,count(*) as cantidad from cursos.cursos
             where fecha > '2013-01-01'
@@ -240,8 +112,7 @@ class DashboardController extends Controller
         ->toArray();
     }
 
-    //Implementar
-    public function accionesPorTipo()
+    public function accionesPorTipologia()
     {
         $acciones = \DB::select("select l.numero as tipo,l.nombre as titulo,count(*) as cantidad from cursos.cursos c 
             join cursos.lineas_estrategicas l on l.id_linea_estrategica = c.id_linea_estrategica
@@ -264,7 +135,6 @@ class DashboardController extends Controller
         ->toArray();
     }
 
-    //Implementar
     public function accionesPorTematica()
     {
         $acciones = \DB::select("select a.nombre as tematica,count(*) as cantidad from cursos.cursos c 
@@ -285,29 +155,6 @@ class DashboardController extends Controller
         })
         ->values()
         ->toArray();
-    }
-
-    public function accionesPorTematicaAlternativa()
-    {
-        $acciones = \DB::select("select a.nombre as tematica,count(*) as cantidad from cursos.cursos c 
-            join cursos.areas_tematicas a on a.id_area_tematica = c.id_area_tematica
-            group by a.nombre
-            order by count(*) desc");
-
-        $r = collect($acciones)
-        ->map(function ($accion) use (&$contadorColores){
-            return array(
-                '0' => $accion->tematica,
-                '1' => $accion->cantidad
-                );
-        })
-        ->values()
-        ->toArray();
-
-        return array(
-            'name' => 'Acciones',
-            'data' => $r
-            );
     }
 
     public function accionesInformadasEsteAnio()

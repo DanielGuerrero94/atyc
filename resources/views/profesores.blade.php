@@ -1,20 +1,22 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="row">		
-	<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-		@include('profesores.filtros')
+<div class="container-fluid">
+	<div class="row">		
+		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+			@include('profesores.filtros')
+		</div>
 	</div>
+	<div class="row">
+		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+			@include('profesores.abm')
+		</div>
+	</div>	
+	<div class="row">
+		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">	
+		</div>		
+	</div>			
 </div>
-<div class="row">
-	<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-		@include('profesores.abm')
-	</div>
-</div>	
-<div class="row">
-	<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">	
-	</div>		
-</div>			
 @endsection
 
 @section('script')
@@ -29,11 +31,13 @@
 
 	$(document).ready(function(){
 
+		var datatable;
+
 		$('#abm').on('click','.filter',function () {			
 			$('#filtros .box').show();
 		});
 
-		$('#table').DataTable({
+		datatable = $('#table').DataTable({
 			destroy: true,
 			searching: false,
 			ajax : 'profesores/tabla',
@@ -77,7 +81,7 @@
 			var filtrosJson = getFiltrosJson();
 				//var filtrosJson = $('#form-filtros :input').filter(function(i,e){return $(e).val() != ""}).serialize();
 
-				$('#table').DataTable({
+				datatable = $('#table').DataTable({
 					destroy: true,
 					searching: false,
 					ajax: {
@@ -228,12 +232,14 @@
 
 		$('#abm').on('click','.expand',function () {
 			$('#abm').removeClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			datatable.draw();
 			$('.compress').show();	
 			$(this).hide();
 		});
 
 		$('#abm').on('click','.compress',function () {
-			$('#abm').removeClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			$('#abm').addClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			datatable.draw();
 			$('.expand').show();	
 			$(this).hide();	
 		});	

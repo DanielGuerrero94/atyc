@@ -19,6 +19,9 @@ use DB;
 use Auth;
 use Log;
 
+//Exceptions
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class AlumnosController extends AbmController
 {
     private $rules = [
@@ -124,7 +127,9 @@ class AlumnosController extends AbmController
      */
     public function show($id)
     {
-        $alumno = Alumno::findOrFail($id);
+        $alumno = Alumno::segunProvincia()
+        ->findOrFail($id);
+
         $id_tipo_documento = $alumno->id_tipo_documento;
         $nombre_pais = null;
         if ($id_tipo_documento === 6 || $id_tipo_documento === 5) {
@@ -132,7 +137,8 @@ class AlumnosController extends AbmController
             $nombre_pais = $pais->nombre;
         }
         $array = array('alumno' => $alumno,'pais' => $nombre_pais);
-        return array_merge($array, $this->getSelectOptions());
+        return array_merge($array, $this->getSelectOptions());    
+        
     }
 
     /**
@@ -143,7 +149,12 @@ class AlumnosController extends AbmController
      */
     public function edit($id)
     {
-        return view('alumnos/modificar', $this->show($id));
+        try {
+            $participante = $this->show($id);
+            return view('alumnos/modificar', $participante);
+        } catch (ModelNotFoundException $e) {
+            return json_encode('El dato no existe o no tiene permiso para verlo.');
+        }
     }
 
     /**
@@ -167,7 +178,9 @@ class AlumnosController extends AbmController
     public function destroy($id)
     {
         try {
-            Alumno::findOrFail($id)->delete();            
+            Alumno::segunProvincia()
+            ->findOrFail($id)
+            ->delete();            
         } catch (ModelNotFoundException $e) {
             return json_encode($e->message);
         } 
@@ -188,7 +201,7 @@ class AlumnosController extends AbmController
             'tipoDocumento',
             'provincia'
             ]
-        )
+            )
         ->segunProvincia();
 
         return  $this->toDatatable($r, $returns);
@@ -285,7 +298,7 @@ class AlumnosController extends AbmController
             function ($item, $key) {
                 return array('id' => $item->id_alumno,'nombres' => $item->nombres,'apellidos' => $item->apellidos,'documentos' => $item->nro_doc);
             }
-        );
+            );
         return $this->typeaheadResponse($alumno);
     }
 
@@ -326,7 +339,7 @@ class AlumnosController extends AbmController
             function ($item, $key) use ($columna) {
                 return $item->$columna;
             }
-        );
+            );
     }
     
     /* Metodos Typeahead */
@@ -336,14 +349,19 @@ class AlumnosController extends AbmController
         //Filtros las que estan vacias si es que me las pasaron
         //Estas funciones para filtrar podrian estar en un middleware
         //O pueden estar directamente en el front end y no mandarlas
+        logger('FILTROS '.json_encode($filtros));
+
         $filtered = $filtros->filter(
             function ($value, $key) {
                 return $value != "" && $value != "0";
             }
-        );
+            );
 
-        $query = Alumno::leftJoin('sistema.tipos_documentos',
-        'alumnos.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
+        logger('FILTERED '.json_encode($filtered));
+
+        $query = Alumno::segunProvincia()        
+        ->leftJoin('sistema.tipos_documentos',
+            'alumnos.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
         ->leftJoin('sistema.provincias', 'alumnos.id_provincia', '=', 'sistema.provincias.id_provincia')
         ->select(
             'id_alumno',
@@ -352,25 +370,11 @@ class AlumnosController extends AbmController
             'sistema.tipos_documentos.nombre as id_tipo_documento',
             'nro_doc',
             'sistema.provincias.nombre as provincia'
-        )
-        ->segunProvincia();
-
-        /*$query = Alumno::leftJoin('sistema.tipos_documentos',
-        'alumnos.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
-        ->select(
-            'id_alumno',
-            'nombres',
-            'apellidos',
-            'sistema.tipos_documentos.nombre as id_tipo_documento',
-            'nro_doc'
-        )
-        ->segunProvincia()
-        ->mostrarProvincia(); */                   
-        
+            );                        
 
         foreach ($filtered as $key => $value) {
             if ($key == 'nombres' || $key == 'apellidos' || $key == 'localidad' || $key == 'email') {
-                $query = $query->where('alumnos.alumnos.'.$key, 'ilike', $value.'%');
+                $query = $query->where('alumnos.alumnos.'.$key, 'ilike', '%'.$value.'%');
             } else {
                 $query = $query->where('alumnos.'.$key, $value);
             }
@@ -419,7 +423,7 @@ class AlumnosController extends AbmController
 
                 return $accion == 'agregar'?$agregar:$editarYEliminar;
             }
-        )
+            )
         ->make(true);
     }
 
@@ -452,9 +456,9 @@ class AlumnosController extends AbmController
                         $sheet->setHeight(1, 20);
                         $sheet->loadView('excel.alumnos', $datos);
                     }
-                );
+                    );
             }
-        )
+            )
         ->store('xls');
 
         return $path;
@@ -492,7 +496,7 @@ class AlumnosController extends AbmController
                     array_push($alumno, $item->provincia);
                     return $alumno;
                 }
-            );
+                );
         } else {
             $mapped = $data->map(
                 function ($item, $key) {
@@ -503,7 +507,7 @@ class AlumnosController extends AbmController
                     array_push($alumno, $item->nro_doc);
                     return $alumno;
                 }
-            );    
+                );    
         }
 
         return Pdf::save($header, $column_size, 13, $mapped);
@@ -519,7 +523,7 @@ class AlumnosController extends AbmController
     {
         return json_encode(
             Alumno::where('nro_doc', $documento)
-                ->get()->count() != 0
-        );
+            ->get()->count() != 0
+            );
     }
 }

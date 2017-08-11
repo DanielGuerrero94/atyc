@@ -9,10 +9,9 @@
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <title>CUS-SUMAR-ATYC</title>
-
+  
   <!-- Styles -->
   <link href={{url("/css/app.css")}} rel="stylesheet">
-  <link href={{url("/css/elearning.css")}} rel="stylesheet">
 
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/plugins/datatables/dataTables.bootstrap.css")}}">  
 
@@ -55,6 +54,8 @@
   
   <!-- datatable responsive -->
   <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.dataTables.min.css" rel="stylesheet" />
+
+  <link href={{url("/css/elearning.css")}} rel="stylesheet">
 
   <!-- Scripts -->
   <script>
@@ -133,22 +134,6 @@
 
     <!-- Scripts propios -->
     <script type="text/javascript" src="{{asset("/js/elearning.js")}}"></script> 
-
-    <!-- Highcharts -->
-    <script type="text/javascript" src="{{asset("/bower_components/highcharts/highcharts.js")}}"></script>
-
-    <!-- Modulos highcharts -->
-    <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/exporting.js")}}"></script>
-
-    <script type="text/javascript" src="{{asset("/bower_components/highcharts-export-csv/highcharts-export-csv.js")}}"></script>
-
-    <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/data.js")}}"></script>
-
-    <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/drilldown.js")}}"></script>
-
-    <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/heatmap.js")}}"></script>
-
-    <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/treemap.js")}}"></script>
 
     <!-- Inputmask -->
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/input-mask/jquery.inputmask.js")}}"></script>

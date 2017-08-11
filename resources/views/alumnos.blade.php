@@ -1,19 +1,21 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="row ">
-	<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-		@include('alumnos.filtros')
+<div class="container-fluid">
+	<div class="row ">
+		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+			@include('alumnos.filtros')
+		</div>
 	</div>
-</div>
-<div class="row">
-	<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-		@include('alumnos.abm')
-	</div>  
-</div>	
-<div class="row">
-	<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">		
-	</div>
+	<div class="row">
+		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+			@include('alumnos.abm')
+		</div>  
+	</div>	
+	<div class="row">
+		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">		
+		</div>
+	</div>	
 </div>
 @endsection
 
@@ -22,23 +24,27 @@
 
 	$(document).ready(function(){
 
+		var datatable;
+
 		$('#abm').on('click','.filter',function () {
 			$('#filtros .box').show();
 		});
 
 		$('#abm').on('click','.expand',function () {
 			$('#abm').removeClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			datatable.draw();
 			$('.compress').show();	
 			$(this).hide();
 		});
 
 		$('#abm').on('click','.compress',function () {
 			$('#abm').addClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			datatable.draw();
 			$('.expand').show();	
 			$(this).hide();	
 		});
 
-		$('#abm-table').DataTable({
+		datatable = $('#abm-table').DataTable({
 			destroy: true,
 			searching: false,
 			ajax : 'alumnos/tabla',
@@ -79,12 +85,13 @@
 
 		$('#filtros').on('click','#filtrar',function () {
 
-			var filtros = getFiltrosJson();
+			/*var filtros = getFiltrosJson();*/
+			var filtros = $('#form-filtros :input').filter(function(i,e){return $(e).val() != ""}).serializeArray();
 			console.log(filtros);
 			var order_by = $('#abm-table').DataTable().order();
 			console.log(order_by);
 
-			$('#abm-table').DataTable({
+			datatable = $('#abm-table').DataTable({
 				destroy: true,
 				searching: false,
 				ajax: {

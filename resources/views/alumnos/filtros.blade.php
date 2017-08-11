@@ -29,7 +29,7 @@
 						<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" name="id_tipo_documento">
 							@foreach ($documentos as $documento)
 
-							<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>
+							<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}" value="{{$documento->id_tipo_documento}}">{{$documento->nombre}}</option>
 
 							@endforeach
 						</select>
@@ -85,11 +85,9 @@
 				</div>
 				@endif					
 			</div>
-			<div class="row">
-				<div class="box-footer">		
-					<div class="btn btn-info pull-right" id="filtrar"><i class="fa fa-filter"></i>Filtrar</div>	
-				</div>						
-			</div>
+			<div class="box-footer">		
+				<div class="btn btn-info pull-right" id="filtrar"><i class="fa fa-filter"></i>Filtrar</div>	
+			</div>	
 		</form>
 	</div>
 </div>

@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\TipoDocente;
 
+//Exceptions
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+
 class TipoDocentesController extends Controller
 {
     /**
@@ -14,7 +18,7 @@ class TipoDocentesController extends Controller
      */
     public function index()
     {
-        return view('tipodocentes.abm');
+        return view('tipoDocentes');
     }
 
     /**
@@ -24,7 +28,7 @@ class TipoDocentesController extends Controller
      */
     public function create()
     {
-        return view('tipodocentes.alta');
+        return view('tipoDocentes.alta');
     }
 
     /**
@@ -35,7 +39,11 @@ class TipoDocentesController extends Controller
      */
     public function store(Request $request)
     {
-        return TipoDocente::create($request->all());
+        try {
+            return TipoDocente::create($request->only('nombre'));
+        } catch (QueryException $e) {
+            return json_encode($e->getMessage());
+        }
     }
 
     /**
@@ -46,7 +54,11 @@ class TipoDocentesController extends Controller
      */
     public function show($id)
     {
-        return TipoDocente::find($id)->toJson();
+        try {
+            return TipoDocente::findOrFail($id)->toJson();
+        } catch (ModelNotFoundException $e) {
+            return json_encode($e->getMessage());
+        }
     }
 
     /**
@@ -57,7 +69,7 @@ class TipoDocentesController extends Controller
      */
     public function edit($id)
     {
-        return view('tipodocentes.modificacion');        
+        return view('tipoDocentes.modificacion');        
     }
 
     /**
@@ -69,8 +81,14 @@ class TipoDocentesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return TipoDocente::find($id)
-        ->update($request->all());    
+        try {
+            return TipoDocente::findOrFail($id)
+            ->update($request->all());
+        } catch (ModelNotFoundException $e) {
+            return json_encode($e->getMessage());
+        } catch (QueryException $e) {
+            return json_encode($e->getMessage());
+        }    
     }
 
     /**
@@ -81,6 +99,12 @@ class TipoDocentesController extends Controller
      */
     public function destroy($id)
     {
-        return TipoDocente::find($id)->delete();
+        try {
+            return TipoDocente::findOrFail($id)->delete();
+        } catch (ModelNotFoundException $e) {
+            return json_encode($e->getMessage());
+        } catch (QueryException $e) {
+            return json_encode($e->getMessage());
+        }
     }
 }

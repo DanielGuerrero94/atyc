@@ -59,8 +59,13 @@ Route::get('/dashboard', function () {
 //Dashboard
 Route::get('dashboard/datos', 'DashboardController@get');
 Route::get('dashboard/data', 'AlumnosController@getActivos');
+Route::get('dashboard/draw/first', 'DashboardController@firstDraw');
+Route::get('dashboard/draw/areas', 'DashboardController@areas');
+Route::get('dashboard/draw/trees', 'DashboardController@trees');
+Route::get('dashboard/draw/pies', 'DashboardController@pies');
+Route::get('dashboard/draw/heats', 'DashboardController@heats');
 
-Route::group(['middleware' => ['logueado']],function () {
+Route::group(['middleware' => ['logueado','logging']],function () {
     //Descarga
     Route::get('reportes/descargar/excel/{nombre_reporte}', function ($nombre_reporte) {
         return response()->download(__DIR__."/../storage/exports/{$nombre_reporte}.xls");

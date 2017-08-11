@@ -127,63 +127,6 @@ class ReportesController extends Controller
         return Datatables::of($returns)->make(true);
     }
 
-    public function getExcel()
-    {
-        $query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos,
-        CONCAT(LE.numero,'-',LE.nombre) as linea_estrategica,AT.nombre as area_tematica,
-        P.nombre as provincia,C.duracion 
-        from cursos.cursos C 
-		left join cursos.cursos_alumnos CA ON CA.id_cursos = C.id_curso 
-		left join alumnos.alumnos A ON CA.id_alumnos = A.id_alumno
-		inner join sistema.provincias P ON P.id_provincia = C.id_provincia
-		inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
-		inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica 
-        group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre
-		order by C.nombre,C.edicion";
-
-        $data = DB::select($query);
-        $datos = ['cursos' => $data];
-        logger($datos);
-
-        Excel::create(
-            'Cursos',
-            function ($excel) use ($datos) {
-                $excel->sheet(
-                    'Tabla_cursos',
-                    function ($sheet) use ($datos) {
-                        $sheet->setHeight(1, 20);
-                        $sheet->loadView('excel.generico', $datos);
-                    }
-                );
-            }
-        )
-        ->store('xls');
-        return response()->download('/var/www/html/atyc/storage/exports/Cursos.xls');
-    }
-
-    public function getPdf()
-    {
-        $query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos,
-         CONCAT(LE.numero,'-',LE.nombre) as linea_estrategica,AT.nombre as area_tematica,
-         P.nombre as provincia,C.duracion 
-        from cursos C 
-		left join cursos_alumnos CA ON CA.id_cursos = C.id 
-		left join alumnos A ON CA.id_alumnos = A.id
-		inner join provincias P ON P.id = C.id_provincia
-		inner join area_tematicas AT ON AT.id = C.id_area_tematica 
-		inner join linea_estrategicas LE ON LE.id = C.id_linea_estrategica
-        group by C.id,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre
-		order by C.nombre,C.edicion
-        limit 10";
-
-        $data = DB::select($query);
-        $datos = ['cursos' => $data];
-        logger('Antes');
-        $pdf = PDF::loadView('excel.generico', $datos)->download('generico.pdf');
-        
-        return $pdf;
-    }
-
     public function getExcelReporte(Request $r)
     {
         $reporte = Reporte::find($r->id_reporte);

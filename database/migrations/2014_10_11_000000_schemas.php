@@ -23,6 +23,7 @@ class Schemas extends Migration
         \DB::statement('CREATE SCHEMA IF NOT EXISTS beneficiarios');
         \DB::statement('CREATE SCHEMA IF NOT EXISTS efectores');
         \DB::statement('CREATE SCHEMA IF NOT EXISTS geo');
+        \DB::statement('CREATE SCHEMA IF NOT EXISTS dw'); 
     }
 
     /**
@@ -40,5 +41,6 @@ class Schemas extends Migration
         \DB::statement('DROP SCHEMA beneficiarios CASCADE'); 
         \DB::statement('DROP SCHEMA efectores CASCADE'); 
         \DB::statement('DROP SCHEMA geo CASCADE'); 
+        \DB::statement('DROP SCHEMA dw CASCADE'); 
     }
 }

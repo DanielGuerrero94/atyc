@@ -2,7 +2,7 @@
   "name": "public",
   "homepage": "https://github.com/DanielGuerrero94/capacitacion",
   "authors": [
-    "Rodrigo Cadaval <rodri.cadaval@gmail.com>"
+    "Daniel Guerrero <danielcussumar@gmail.com>"
   ],
   "description": "",
   "main": "",
@@ -19,9 +19,9 @@
     "cropper": "~0.11.0",
     "highcharts": "^5.0.12",
     "font-awesome": "fontawesome#^4.7.0",
-    "highcharts-export-csv": "*",
     "html5-form-validation": "~1.5.3",
     "jquery-typeahead": "^2.7.6",
-    "tether": "^1.4.0"
+    "tether": "^1.4.0",
+    "export-csv": "https://github.com/highcharts/export-csv"
   }
 }

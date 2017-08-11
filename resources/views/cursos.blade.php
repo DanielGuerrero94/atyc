@@ -1,18 +1,20 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="row">	
-	<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-		@include('cursos.filtros')		
+<div class="container-fluid">
+	<div class="row">	
+		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+			@include('cursos.filtros')		
+		</div>
 	</div>
-</div>
-<div class="row">		
-	<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
-		@include('cursos.abm')
+	<div class="row">		
+		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+			@include('cursos.abm')
+		</div>
 	</div>
-</div>
-<div class="row">
-	<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">
+	<div class="row">
+		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">
+		</div>
 	</div>
 </div>
 @endsection
@@ -22,11 +24,13 @@
 
 	$(document).ready(function(){
 
+		var datatable;
+
 		$('#abm').on('click','.filter',function () {
 			$('#filtros .box').show();
 		});
 
-		$('#abm-table').DataTable({
+		datatable = $('#abm-table').DataTable({
 			destroy: true,
 			searching: false,
 			ajax : 'cursos/tabla',
@@ -127,7 +131,7 @@
 			var filtrosJson = getFiltrosJson();
 			console.log(filtrosJson);
 
-			$('#abm-table').DataTable({
+			datatable = $('#abm-table').DataTable({
 				destroy: true,
 				searching: false,
 				ajax: {
@@ -176,12 +180,14 @@
 
 		$('#abm').on('click','.expand',function () {
 			$('#abm').removeClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			datatable.draw();
 			$('.compress').show();	
 			$(this).hide();
 		});
 
 		$('#abm').on('click','.compress',function () {
 			$('#abm').addClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			datatable.draw();
 			$('.expand').show();	
 			$(this).hide();	
 		});

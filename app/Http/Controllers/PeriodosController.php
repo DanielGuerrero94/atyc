@@ -38,7 +38,11 @@ class PeriodosController extends Controller
      */
     public function store(Request $request)
     {
-        return new Periodo($request->only(['nombre','desde','hasta']));
+        try {
+            return Periodo::create($request->only(['nombre','desde','hasta']));            
+        } catch (Illuminate\Database\QueryException $e) {
+            logger(json_encode($e));
+        }
     }
 
     /**
@@ -89,7 +93,7 @@ class PeriodosController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return json_encode('No se puede borrar');
     }
 
     /**
