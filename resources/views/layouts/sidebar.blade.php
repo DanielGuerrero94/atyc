@@ -14,7 +14,7 @@
       <b><span>MENU</span></b>
     </li>
     @if (!Auth::guest())            
-    <li class="treeview">
+    <li class="treeview" id="ejecucion">
       <a href="#">
         <i class="fa fa-tachometer" aria-hidden="true"></i>
         <span>Ejecución</span>

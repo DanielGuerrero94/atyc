@@ -76,17 +76,20 @@ class DashboardController extends Controller
 
         $cursos->each(
             function ($value, $item) use ($total, &$data) {
-                $array = array('name' => $value->label,'y' => $value->value * 100 / $total);
+                $array = array('name' => $value->label,'y' => round($value->value * 100 / $total,2));
                 array_push($data, $array);
             }
             );
 
-        $ret = array('name' => 'Lineas','data' => $data);
-
-        return array($ret);
+        return array(
+            array(
+                'name' => 'Lineas',
+                'data' => $data
+                )
+            );
     }
 
-    public function accionesPorAnioYMes()
+    private function accionesPorAnioYMes()
     {
         $acciones = \DB::select("(select extract(year from fecha) as anio,extract(month from fecha) as mes,count(*) as cantidad from cursos.cursos
             where fecha > '2013-01-01'
@@ -112,7 +115,7 @@ class DashboardController extends Controller
         ->toArray();
     }
 
-    public function accionesPorTipologia()
+    private function accionesPorTipologia()
     {
         $acciones = \DB::select("select l.numero as tipo,l.nombre as titulo,count(*) as cantidad from cursos.cursos c 
             join cursos.lineas_estrategicas l on l.id_linea_estrategica = c.id_linea_estrategica
@@ -135,7 +138,7 @@ class DashboardController extends Controller
         ->toArray();
     }
 
-    public function accionesPorTematica()
+    private function accionesPorTematica()
     {
         $acciones = \DB::select("select a.nombre as tematica,count(*) as cantidad from cursos.cursos c 
             join cursos.areas_tematicas a on a.id_area_tematica = c.id_area_tematica
@@ -157,7 +160,7 @@ class DashboardController extends Controller
         ->toArray();
     }
 
-    public function accionesInformadasEsteAnio()
+    private function accionesInformadasEsteAnio()
     {
         $acciones = \DB::select("(select id_provincia,extract(month from fecha) as mes,count(*) as cantidad from cursos.cursos 
             where extract(year from fecha) = extract(year from now())

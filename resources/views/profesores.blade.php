@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
+	<button type="button" class="btn btn-default" id="tutorial">Tutorial</button>
 	<div class="row">		
 		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
 			@include('profesores.filtros')
@@ -27,9 +28,41 @@
         var nro_doc = data[3] || 0; // use data for the age column
         return nro_doc == $('#nro_doc').val();
     }
-    );
+    );    
 
-	$(document).ready(function(){
+	$(document).ready(function(){		
+
+		$('.container-fluid').on('click', '#tutorial', function(event) {
+			event.preventDefault();
+			var tour_docentes = new Tour({
+			debug: true,
+			backdrop: true,
+			template: "<div class='popover tour'><div class='arrow'></div><h3 class='popover-title'></h3><div class='popover-content'></div><div class='popover-navigation'><button class='btn btn-info' data-role='prev'>« Ant</button><span data-role='separator'>|</span><button class='btn btn-info' data-role='next'>Sig »</button><button class='btn btn-info' data-role='end'>Fin</button></div></div>",
+			steps: [
+			{
+				element: "#abm",
+				title: "Abm docentes",
+				content: "Puede ver los docentes de la provincia",
+				placement: 'top'
+			},
+			{
+				element: "#abm .btn-group",
+				title: "Botones",
+				content: "Puede exportar en excel o pdf",
+				placement: 'left'
+			},
+			{
+				element: "#alta_profesor",
+				title: "Dar de alta",
+				content: "Para poder dar de alta un nuevo docente",
+				placement: 'left'
+			}
+			]});
+
+		tour_docentes.init();
+
+		tour_docentes.restart();
+		});		
 
 		var datatable;
 
@@ -44,8 +77,8 @@
 			columns: [
 			{ data: 'nombres'},
 			{ data: 'apellidos'},
-			{ name: 'id_tipo_documento', data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
+			{ name: 'id_tipo_documento', data: 'tipo_documento.nombre'},
 			{ data: 'acciones', orderable: false}
 			],			
 			rowReorder: {
@@ -54,60 +87,41 @@
 			responsive: true
 		});
 
-		function getFiltrosJson() {
-			var nombres = $('#nombres')	.val();
-			var apellidos = $('#apellidos').val();
-			var id_tipo_documento = $('#id_tipo_documento option:selected').val();
-			var id_pais = $('#nacionalidad').val();
-			var nro_doc = $('#nro_doc').val();
-			var email = $('#email').val();
-			var cel = $('#cel').val();
-			var tel = $('#tel').val();
-
-			return data = {
-				nombres: nombres,
-				apellidos: apellidos,
-				id_tipo_documento: id_tipo_documento,
-				id_pais: id_pais,
-				nro_doc: nro_doc,
-				email: email,
-				cel: cel,
-				tel: tel
-			};
-		};
-
 		$('#filtros').on('click','#filtrar',function () {
 
-			var filtrosJson = getFiltrosJson();
-				//var filtrosJson = $('#form-filtros :input').filter(function(i,e){return $(e).val() != ""}).serialize();
+			filtros = $('#form-filtros :input')
+			.filter(function(i,e){return $(e).val() != ""})
+			.serializeArray();
 
-				datatable = $('#table').DataTable({
-					destroy: true,
-					searching: false,
-					ajax: {
-						url: 'profesores/filtrado',
-						data: {
-							filtros: filtrosJson 
-						}
-					},
-					columns: [
-					{ data: 'nombres'},
-					{ data: 'apellidos'},
-					{ data: 'tipo_doc'},
-					{ data: 'nro_doc'},
-					{ data: 'acciones', orderable: false}
-					],			
-					rowReorder: {
-						selector: 'td:nth-child(2)'
-					},
-					responsive: true
-				});
+			datatable = $('#table').DataTable({
+				destroy: true,
+				searching: false,
+				ajax: {
+					url: 'profesores/filtrado',
+					data: {
+						filtros: filtros 
+					}
+				},
+				columns: [
+				{ data: 'nombres'},
+				{ data: 'apellidos'},
+				{ data: 'nro_doc'},
+				{ data: 'tipo_doc'},
+				{ data: 'acciones', orderable: false}
+				],			
+				rowReorder: {
+					selector: 'td:nth-child(2)'
+				},
+				responsive: true
 			});
+		});
 
 		$('.excel').on('click',function () {
 
-			var filtros = getFiltrosJson();
-			console.log(filtros);
+			filtros = $('#form-filtros :input')
+			.filter(function(i,e){return $(e).val() != ""})
+			.serializeArray();
+
 			var order_by = $('#table').DataTable().order();
 			console.log(order_by);
 
@@ -133,8 +147,10 @@
 
 		$('.pdf').on('click',function () {
 
-			var filtros = getFiltrosJson();
-			console.log(filtros);
+			filtros = $('#form-filtros :input')
+			.filter(function(i,e){return $(e).val() != ""})
+			.serializeArray();
+
 			var order_by = $('#table').DataTable().order();
 			console.log(order_by);			
 

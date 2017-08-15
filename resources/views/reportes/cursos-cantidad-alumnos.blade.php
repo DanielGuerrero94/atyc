@@ -2,42 +2,9 @@
 
 @section('content')
 <div class="container">
-	@if($provincia_usuario->id_provincia == 25)
 	<div id="filtros" class="col-xs-12">
-		<div class="box box-info">
-			<div class="box-header with-border">
-				<h2 class="box-title">Filtros</h2>
-				<div class="box-tools pull-right">
-					<button type="button" class="btn btn-box-tool" data-widget="collapse">
-						<i class="fa fa-minus"></i>
-					</button>
-					<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-				</div>
-			</div>
-			<div class="box-body">
-				<form id="form-filtros">
-					<div class="row">
-						<div class="form-group col-sm-6">
-							<label for="provincia" class="control-label col-xs-2">Provincia:</label>
-							<div class="col-xs-6">
-								<select class="form-control" id="provincia">
-								<option data-id="0" title="Todas las provincias">Todas las provincias</option>
-									@foreach ($provincias as $provincia)
-									<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>							
-									@endforeach
-								</select>
-							</div>
-						</div>	
-					</div>
-				</div>
-				<div class="box-footer">	
-					<button class="btn btn-danger pull-right" id="limpiar" style="display: none"><i class="fa fa-eraser"></i>Limpiar</button>
-					<button class="btn btn-info pull-right" id="filtrar"><i class="fa fa-filter"></i>Filtrar</button>				
-				</div>
-			</form>
-		</div>
+		@include('reportes.filtros')	
 	</div>
-	@endif
 	<div id="reporte" data-id="{{$provincia_usuario->id_provincia}}" style="display:none;">
 		{{ csrf_field() }}
 		<div class="col-md-12">
@@ -137,6 +104,10 @@
 
 			$.ajax({
 				url: 'excel6',
+				data: {
+					filtros: filtros,
+					order_by: order_by 
+				}
 				success: function(data){
 					window.location="descargar/excel/"+data;
 				},

@@ -17,41 +17,18 @@ use Cache;
 
 class ReportesController extends Controller
 {
-    public function query($query)
-    {
-        return DB::connection('eLearning')->select($query);
-    }
-
     public function get()
     {
-        return view(
-            'reportes',
-            ['provincias' => Provincia::all(),
-            'periodos' => Periodo::all()]
-        );
+        return view('reportes', $this->getSelectOptions());
     }
 
-    public function getCursos()
+    /**
+     * Opciones para los selects del front end.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSelectOptions()
     {
-        $provincias = Cache::remember('provincias', 5, function () {
-            return Provincia::all();
-        });
-
-        $provincia_usuario = Provincia::find(Auth::user()->id_provincia);
-
-        return view(
-            'reportes.cursos-cantidad-alumnos',
-            [
-            'provincias' => $provincias,
-            'provincia_usuario' => $provincia_usuario
-            ]
-        );
-    }
-
-    public function reporte($id_reporte)
-    {
-        $reporte = Reporte::find($id_reporte);
-
         $provincias = Cache::remember('provincias', 5, function () {
             return Provincia::all();
         });
@@ -60,17 +37,40 @@ class ReportesController extends Controller
             return Periodo::all();
         });
 
+        return array(
+            'provincias' => $provincias,
+            'periodos' => $periodos
+            );
+    }
+
+    public function getCursos()
+    {
         $provincia_usuario = Provincia::find(Auth::user()->id_provincia);
+
+        $extra = array(
+            'provincia_usuario' => $provincia_usuario
+            );
+
+        return view('reportes.cursos-cantidad-alumnos',
+            array_merge($this->getSelectOptions(), $extra)
+            );
+    }
+
+    public function reporte($id_reporte)
+    {
+        $reporte = Reporte::find($id_reporte);        
+
+        $provincia_usuario = Provincia::find(Auth::user()->id_provincia);
+
+        $extra = array(
+            'reporte' => $reporte,
+            'provincia_usuario' => $provincia_usuario
+            );
 
         return view(
             'reportes.'.$reporte->view,
-            [
-            'provincias' => $provincias,
-            'periodos' => $periodos,
-            'reporte' => $reporte,
-            'provincia_usuario' => $provincia_usuario
-            ]
-        );
+            array_merge($this->getSelectOptions(),$extra)
+            );
     }
 
     public function queryReporte(Request $r)
@@ -91,7 +91,6 @@ class ReportesController extends Controller
         en el caso que no sea un periodo de los que hay en la tabla le concateno
         las fechas que me pasaron para la columna periodo
         */
-        
 
         $id_provincia = array_key_exists('id_provincia', $r->filtros)?
         $r->filtros['id_provincia']:Auth::user()->id_provincia;

@@ -95,7 +95,7 @@ Route::group(['middleware' => ['logueado','logging']],function () {
     Route::get('alumnos/excel', 'AlumnosController@getExcel');
     Route::get('alumnos/pdf', 'AlumnosController@getPdf');
     Route::get('alumnos/filtrado', 'AlumnosController@getFiltrado');
-    Route::get('alumnos/documentos/{documento}', 'AlumnosController@checkDocumentos');
+    Route::get('alumnos/documentos', 'AlumnosController@checkDocumentos');
     Route::get('alumnos/typeahead/nombres', 'AlumnosController@getNombres');
     Route::get('alumnos/typeahead/apellidos', 'AlumnosController@getApellidos');
     Route::get('alumnos/typeahead/documentos', 'AlumnosController@getDocumentos');
@@ -179,9 +179,13 @@ Route::group(['middleware' => ['logueado','logging']],function () {
 
     //Efectores informacion que pueden acceder las provincias.
     Route::get('efectores/nombres', 'EfectoresController@getNombres');
-        Route::get('efectores/cuies', 'EfectoresController@getCuiesTypeahead');
-        Route::get('efectores/siisas', 'EfectoresController@getSiisas');
-        Route::get('efectores/typeahead', 'EfectoresController@getTripleTypeahead');
+    Route::get('efectores/cuies', 'EfectoresController@getCuiesTypeahead');
+    Route::get('efectores/siisas', 'EfectoresController@getSiisas');
+    Route::get('efectores/typeahead', 'EfectoresController@getTripleTypeahead');
+    Route::get('efectores/nombres/typeahead', 'EfectoresController@nombresTypeahead');
+    Route::get('efectores/cuies/typeahead', 'EfectoresController@cuiesTypeahead');
+
+    Route::get('provincias/localidades/typeahead', 'ProvinciasController@localidadesTypeahead');
 
     Route::group(['middleware' => 'admin'], function () {
 

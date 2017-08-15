@@ -27,7 +27,7 @@
 		var datatable;
 
 		$('#abm').on('click','.filter',function () {
-			$('#filtros .box').show();
+			$('#filtros .box').toggle();
 		});
 
 		$('#abm').on('click','.expand',function () {
@@ -51,45 +51,21 @@
 			columns: [
 			{ data: 'nombres'},
 			{ data: 'apellidos'},
-			{ name: 'id_tipo_documento',data: 'tipo_documento.nombre'},
 			{ data: 'nro_doc'},
+			{ name: 'id_tipo_documento',data: 'tipo_documento.nombre'},
 			{ data: 'provincia.nombre'},
 			{ data: 'acciones', orderable: false}
 			],
-			pagingType: 'simple' 
+			responsive: true
 		});
 
-		function getFiltrosJson() {
-			var nombres = $('#nombres')	.val();
-			var apellidos = $('#apellidos').val();
-			var id_tipo_documento = $('#id_tipo_documento option:selected').data('id');
-			var nro_doc = $('#nro_doc').val();
-			var email = $('#email').val();
-			var cel = $('#cel').val();
-			var tel = $('#tel').val();
-			var localidad = $('#localidad').val();
-			var id_provincia = $('#provincia option:selected').data('id');
+		function getFiltros(){
+			return $('#form-filtros :input')
+			.filter(function(i,e){return $(e).val() != ""})
+			.serializeArray();
+		}
 
-			return data = {
-				nombres: nombres,
-				apellidos: apellidos,
-				id_tipo_documento: id_tipo_documento,
-				nro_doc: nro_doc,
-				email: email,
-				cel: cel,
-				tel: tel,
-				localidad: localidad,
-				id_provincia: id_provincia
-			};
-		};
-
-		$('#filtros').on('click','#filtrar',function () {
-
-			/*var filtros = getFiltrosJson();*/
-			var filtros = $('#form-filtros :input').filter(function(i,e){return $(e).val() != ""}).serializeArray();
-			console.log(filtros);
-			var order_by = $('#abm-table').DataTable().order();
-			console.log(order_by);
+		$('#filtros').on('click','#filtrar',function () {	
 
 			datatable = $('#abm-table').DataTable({
 				destroy: true,
@@ -97,15 +73,14 @@
 				ajax: {
 					url: 'alumnos/filtrado',
 					data: {
-						filtros: filtros,
-						order_by: order_by 
+						filtros: getFiltros()
 					}
 				},
 				columns: [
 				{ data: 'nombres'},
 				{ data: 'apellidos'},
-				{ data: 'id_tipo_documento',orderable: false},
 				{ data: 'nro_doc'},
+				{ data: 'id_tipo_documento',orderable: false},
 				{ data: 'provincia'},
 				{ data: 'acciones', orderable: false}
 				],			
@@ -114,20 +89,15 @@
 				},
 				responsive: true
 			});
+
 		});
 
 		$('.excel').on('click',function () {
 
-			var filtros = getFiltrosJson();
-			console.log(filtros);
-			var order_by = $('#abm-table').DataTable().order();
-			console.log(order_by);
-
 			$.ajax({
 				url: 'alumnos/excel',
 				data: {
-					filtros: filtros,
-					order_by: order_by
+					filtros: getFiltros()
 				},
 				beforeSend: function () {
 					alert('Se descargara pronto.');
@@ -141,14 +111,10 @@
 					console.log(data);
 				}
 			});
+
 		});
 
 		$('.pdf').on('click',function () {
-
-			var filtros = getFiltrosJson();
-			console.log(filtros);
-			var order_by = $('#abm-table').DataTable().order();
-			console.log(order_by);			
 
 			$.ajax({
 				url: 'alumnos/pdf',
@@ -168,6 +134,7 @@
 					console.log(data);
 				}
 			});			
+
 		});			
 
 		$('#abm').on("click",".eliminar",function(){
@@ -234,7 +201,6 @@
 			$('#abm').hide();
 			$.ajax({
 				url: 'alumnos/alta',
-				method: 'get',
 				success: function(data){
 					$('#alta').html(data);
 					$('#alta').show();

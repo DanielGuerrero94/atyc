@@ -112,9 +112,12 @@
 
 <script type="text/javascript">
 
-  $(document).ajaxStop($.unblockUI);
+  $(document).ajaxStop($.unblockUI);  
 
   $(document).ready(function(){
+
+    // Instance the tour
+
 
     Highcharts.setOptions({
       lang: {        

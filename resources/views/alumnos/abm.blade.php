@@ -17,9 +17,9 @@
 				<tr>
 					<th>Nombres</th>
 					<th>Apellidos</th>
-					<th>Tipo Doc</th>
 					<th>Nro Doc</th>
-					<th>Provincia</th>
+					<th>Tipo Doc</th>
+					<th>Jurisdicción</th>
 					<th>Acciones</th>
 				</tr>
 			</thead>

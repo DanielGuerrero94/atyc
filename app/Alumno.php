@@ -27,6 +27,13 @@ class Alumno extends Model
      */
     protected $primaryKey = 'id_alumno';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['nombre'];    
+
     public function cursos()
     {
         return $this
@@ -80,15 +87,20 @@ class Alumno extends Model
         $alumno->id_provincia = $r->id_provincia;
         $alumno->id_trabajo = $r->id_trabajo;
         $alumno->id_funcion = $r->id_funcion;
+        $alumno->id_genero = $r->id_genero;
+        $alumno->id_convenio = $r->has('id_convenio')?$r->id_convenio:null;
           
         $alumno->id_pais = $r->has('pais')?$r->pais:null;
         $alumno->organismo1 = $r->has('tipo_organismo')?$r->tipo_organismo:null;
         $alumno->organismo2 = $r->has('organismo')?$r->organismo:null;
-        $alumno->establecimiento1 = $r->has('efectores')?$r->efectores:null;
+
+        $alumno->establecimiento1 = $r->has('efector')?
+        $r->efector:null;
+
         $alumno->establecimiento2 = $r->has('establecimiento')?
         $r->establecimiento:null;
 
-        $alumno->save();
+        return $alumno->save();
     }
 
     /**
@@ -115,14 +127,5 @@ class Alumno extends Model
             return $query->leftJoin('sistema.provincias', 'alumnos.id_provincia', '=', 'sistema.provincias.id_provincia')
                 ->select('sistema.provincias.nombre as provincia');            
         /*}*/
-    }
-
-    /**
-     * Para saber si puede o no verlo, tira exception
-     * 
-     */
-    public function puedeVer($user)
-    {
-        return $user == 25 || $user == $this->id_provincia;
     }
 }

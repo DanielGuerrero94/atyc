@@ -23,6 +23,8 @@
 						<input class="form-control" id="apellidos" name="apellidos">
 					</div>
 				</div>						
+			</div>
+			<div class="row">
 				<div class="form-group col-sm-4">
 					<label class="control-label col-xs-5" for="id_tipo_documento">Tipo de Documento:</label>
 					<div class="col-xs-7">
@@ -34,15 +36,16 @@
 							@endforeach
 						</select>
 					</div>
-				</div>						
-			</div>
-			<div class="row">
+				</div>	
 				<div class="form-group col-sm-4">  		  		
 					<label for="nro_doc" class="control-label col-xs-5">Nro doc</label>
 					<div class="col-xs-7">
-						<input class="form-control" id="nro_doc" name="nro_doc">
+						<input class="form-control" id="nro_doc" name="nro_doc" type="number">
 					</div>
 				</div>						
+			</div>	
+			<hr>					
+			<div class="row">
 				<div class="form-group col-sm-4">  		  		
 					<label for="email" class="control-label col-xs-5">Email</label>
 					<div class="col-xs-7">
@@ -50,20 +53,20 @@
 					</div>
 				</div>						
 				<div class="form-group col-sm-4">  		  		
-					<label for="cel" class="control-label col-xs-5">Cel</label>
-					<div class="col-xs-7">
-						<input class="form-control" id="cel" name="cel">
-					</div>
-				</div>						
-
-			</div>
-			<div class="row">
-				<div class="form-group col-sm-4">  		  		
 					<label for="tel" class="control-label col-xs-5">Tel</label>
 					<div class="col-xs-7">
-						<input class="form-control" id="tel" name="tel">
+						<input class="form-control" id="tel" name="tel" type="number">
 					</div>
 				</div>						
+				<div class="form-group col-sm-4">  		  		
+					<label for="cel" class="control-label col-xs-5">Cel</label>
+					<div class="col-xs-7">
+						<input class="form-control" id="cel" name="cel" type="number">
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
 				<div class="form-group col-sm-4">  		  		
 					<label for="localidad" class="control-label col-xs-5">Localidad</label>
 					<div class="col-xs-7">
@@ -74,11 +77,11 @@
 				<div class="form-group col-sm-4">
 					<label for="provincia" class="control-label col-xs-5">Provincia:</label>
 					<div class="col-xs-7">
-						<select class="form-control" id="provincia">
+						<select class="form-control" id="provincia" name="id_provincia">
 							<option data-id="0">Todas las provincias</option>
 							@foreach ($provincias as $provincia)
 
-							<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
+							<option data-id="{{$provincia->id_provincia}}" value="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
 							@endforeach
 						</select>
 					</div>

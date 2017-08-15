@@ -331,7 +331,7 @@ class cursosController extends AbmController
 		inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
 		inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica";
 
-		if($id !== '0'){
+		if($id !== '0' and $id !== 25){
 			$query .= " WHERE C.id_provincia = '".$id."'";	
 		}
 
@@ -528,8 +528,9 @@ class cursosController extends AbmController
      * @return \Illuminate\Http\Response
      * @return string path al archivo generado
      */
-	public function getExcelReporte()
+	public function getExcelReporte(Request $r)
 	{		
+		logger($r->only(['id_provincia','desde','hasta']));
 		$id = Auth::user()->id_provincia;
 		$data = DB::select($this->queryCountAlumnos($id));
 		$data = collect($data);

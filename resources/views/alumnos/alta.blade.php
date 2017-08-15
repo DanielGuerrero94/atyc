@@ -22,7 +22,7 @@
 				<div class="form-group col-xs-12 col-sm-6">
 					<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento: </label>
 					<div class="col-xs-8">
-						<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
+						<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" name="id_tipo_documento">
 							@foreach ($documentos as $documento)
 							
 							<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}" value="{{$documento->id_tipo_documento}}">{{$documento->nombre}}</option>
@@ -31,10 +31,10 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group col-xs-12 col-sm-6">
+				<div id="numero_documento" class="form-group col-xs-12 col-sm-6">
 					<label for="nro_doc" class="control-label col-xs-4">Nro doc:</label>
 					<div class="col-xs-8">
-						<input name="nro_doc" type="text" class="form-control" id="nro_doc">
+						<input name="nro_doc" type="number" class="form-control" id="nro_doc">
 					</div>
 				</div>
 				<div class="form-group col-xs-12 col-sm-6" id="nacionalidad" style="display: none">          
@@ -71,15 +71,15 @@
 					<label for="provincia" class="control-label col-xs-4">Jurisdicción:</label>
 					<div class="col-xs-8">
 						@if(Auth::user()->id_provincia == 25)
-						<select class="form-control" id="provincia">
+						<select class="form-control" id="provincia" name="id_provincia">
 							@foreach ($provincias as $provincia)
 							
-							<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
+							<option data-id="{{$provincia->id_provincia}}" value="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
 							@endforeach
 						</select>
 						@else
-						<select class="form-control" id="provincia" name="provincia" disabled>
-							<option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>	
+						<select class="form-control" id="provincia" name="id_provincia" disabled>
+							<option data-id="{{Auth::user()->id_provincia}}" value="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>	
 						</select>
 						@endif
 					</div>
@@ -96,7 +96,7 @@
 				<div class="form-group col-xs-12 col-sm-6">
 					<label for="trabaja_en" class="control-label col-xs-4">Trabaja en:</label>
 					<div class="col-xs-8">
-						<select class="form-control" id="trabaja_en" name="trabaja_en">
+						<select class="form-control" id="trabaja_en" name="id_trabajo">
 
 							<option data-id="0" value="0">Seleccionar</option>
 
@@ -179,13 +179,13 @@
 				<div class="form-group col-xs-12 col-sm-6" style="display: none;">
 					<label for="funcion" class="control-label col-xs-4">Rol con respecto al SUMAR:</label>
 					<div class="col-xs-8">
-						<select class="form-control" id="funcion" name="funcion">
+						<select class="form-control" id="funcion" name="id_funcion">
 
-							<option data-id="1" title="Seleccionar">Seleccionar</option>
+							<option data-id="1" value="0" title="Seleccionar">Seleccionar</option>
 
 							@foreach ($funciones as $funcion)
 
-							<option data-id="{{$funcion->id_funcion}}" title="{{$funcion->nombre}}">{{$funcion->nombre}}</option>	
+							<option data-id="{{$funcion->id_funcion}}" value="{{$funcion->id_funcion}}" title="{{$funcion->nombre}}">{{$funcion->nombre}}</option>	
 
 							@endforeach
 
@@ -236,8 +236,8 @@
 					ajax: {
 						url: "alumnos/establecimientos",
 						path: "data.info",						
-						data: function(query){
-							q: query;
+						data: {
+							q: "@{{query}}"
 						},
 						success: function(data){
 							console.log("ajax success");
@@ -265,8 +265,8 @@
 					ajax: {
 						url: "paises/nombres",
 						path: "data.info",						
-						data: function(query){
-							q: query;
+						data: {
+							q: "@{{query}}"
 						},
 						error: function(data){
 							console.log("ajax error");
@@ -282,10 +282,12 @@
 			}
 		});		
 
-		$.typeahead({
+		var efectores_typeahead = $.typeahead({
 			input: '.efectores_typeahead',
 			maxItem: 15,
 			order: "desc",
+			dynamic: true,
+			hint: true,
 			backdrop: {
 				"background-color": "#fff"
 			},
@@ -294,10 +296,11 @@
 			source: {
 				nombre: {
 					ajax: {
-						url: "efectores/typeahead",
+						url: "efectores/nombres/typeahead",
 						path: "data.nombres",						
-						data: function(query){
-							q: query;
+						data: {
+							q: "@{{query}}",
+							id_provincia: $('#alta #form-alta #provincia').val()
 						},
 						error: function(data){
 							console.log("ajax error");
@@ -307,10 +310,11 @@
 				},
 				cuie: {
 					ajax: {
-						url: "efectores/typeahead",
+						url: "efectores/cuies/typeahead",
 						path: "data.cuies",						
-						data: function(query){
-							q: query;
+						data: {
+							q: "@{{query}}",
+							id_provincia: $('#alta #form-alta #provincia').val()
 						},
 						error: function(data){
 							console.log("ajax error");
@@ -334,6 +338,35 @@
 					ajax: {
 						url: "alumnos/nombre_organismo",
 						path: "data.info",
+						data: {
+							q: "@{{query}}"
+						},
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
+					}
+				}
+			},
+			callback: {
+				onInit: function (node) {
+					console.log('Typeahead Initiated on ' + node.selector);
+				}
+			}
+		});
+
+		$.typeahead({
+			input: '.nombre_organismo_typeahead',
+			order: "desc",
+			source: {
+				info: {
+					ajax: {
+						url: "provincias/localidades/typeahead",
+						path: "data.info",
+						data: {
+							q: "@{{query}}",
+							id_provincia: $('#alta #form-alta #provincia').val()
+						},
 						error: function(data){
 							console.log("ajax error");
 							console.log(data);
@@ -349,19 +382,24 @@
 		});
 
 		$('#alta').on('click', '#ver_efectores', function(event) {
-			event.preventDefault();
-			
+			event.preventDefault();			
 		});
 
 
 		var establecimiento = $('#alta').find('#establecimiento').closest('.form-group');
 		var efectores = $('#alta').find('#efectores').closest('.form-group');
 
-		/*Funciones para que aparezacan o desaparezcan campos en el
+		$('#alta').on('click', '#provincia', function(event) {
+			event.preventDefault();
+			/* Act on the event */
+			console.log($(this).val());
+		});
+
+		/*Funciones para que aparezcan o desaparezcan campos en el
 		formulario*/
 
-		$('#alta').on("click","#trabaja_en",function () {
-			console.log('asd');
+		$('#alta').on("click","#trabaja_en",function (e) {
+
 			$(this).attr("title",$(this).find(":selected").attr("title"));
 			var tipo_organismo = $('#alta').find('#tipo_organismo').closest('.form-group');
 			var tipo_convenio = $('#alta').find('#tipo_convenio').closest('.form-group');
@@ -369,19 +407,25 @@
 			var funcion = $('#alta').find('#funcion').closest('.form-group');
 
 			//Respeta los valores en la base de datos
-			if ($(this).val() == 3) {
-				tipo_organismo.show();
-				nombre_organismo.show();
-				$('#nombre_organismo').attr('disabled',false);
-				funcion.show();
+			id_trabajo = parseInt($(this).val());
+
+			switch (id_trabajo) {
+
+				case 1:				
+				tipo_organismo.hide();
 				tipo_convenio.hide();
 				$('#alta').find('#tipo_convenio').prop('checked',false);
+				nombre_organismo.hide();
+				funcion.show();
+				$('#alta').find('#funcion').val(9).attr('disabled',true);
 				establecimiento.hide();
 				$('#establecimiento').attr('disabled',true);
 				efectores.hide();
 				$('#efectores').attr('disabled',true);
-			}
-			else if($(this).val() == 2){
+				break;
+
+				case 2: 
+				console.log('asd');
 				tipo_convenio.show();				
 				establecimiento.show();
 				$('#establecimiento').attr('disabled',false);
@@ -389,8 +433,24 @@
 				nombre_organismo.hide();
 				$('#nombre_organismo').attr('disabled',true);
 				funcion.show();
-			}
-			else {
+				$('#alta').find('#funcion').val(0).attr('disabled',false);
+				break;
+
+				case 3:
+				tipo_organismo.show();
+				nombre_organismo.show();
+				$('#nombre_organismo').attr('disabled',false);
+				funcion.show();
+				$('#alta').find('#funcion').val(0).attr('disabled',false);
+				tipo_convenio.hide();
+				$('#alta').find('#tipo_convenio').prop('checked',false);
+				establecimiento.hide();
+				$('#establecimiento').attr('disabled',true);
+				efectores.hide();
+				$('#efectores').attr('disabled',true);
+				break;
+
+				default:
 				tipo_organismo.hide();
 				tipo_convenio.hide();
 				$('#alta').find('#tipo_convenio').prop('checked',false);
@@ -400,7 +460,9 @@
 				$('#establecimiento').attr('disabled',true);
 				efectores.hide();
 				$('#efectores').attr('disabled',true);
-			}			
+				break;
+			}
+
 		});
 
 		$('#alta').on('change','.checkbox',function () {			
@@ -506,132 +568,120 @@
 		}						
 
 		jQuery.validator.addMethod("selecciono", function(value, element) {
-			return $(element).find(':selected').val() !== "Seleccionar";
+			sel = $(element).find(':selected').val();
+			return sel !== "Seleccionar" && sel != 0;
 		}, "Debe seleccionar alguna opcion.");		
 
 		var esNumero = new RegExp(/^[1-9]\d*$/i);
 
 		var validator = $('#alta #form-alta').validate({
-			debug: true,
 			onfocusout: function () {
 				var form = $('#alta #form-alta');
 				var nro_doc = form.find('#nro_doc');
+				var id_tipo_documento = form.find('#id_tipo_documento').val();
 
-				if( form.find('#id_tipo_documento').val() == 'DNI' 
-					&& nro_doc.val() != ''
-					&& esNumero.test(nro_doc.val()) 					
-					&& !nro_doc.closest('.form-group').hasClass('has-success')){
+				if (esNumero.test(nro_doc.val())) {
 
 					$.ajax({
-						method : 'get',
-						url : 'alumnos/documentos/'+nro_doc.val(),
+						url : 'alumnos/documentos',
+						data: {
+							nro_doc: nro_doc.val(),
+							id_tipo_documento: id_tipo_documento
+						},
 						success : function(data){
 
-							if(data == "true"){
-								console.log("El documento ya esta registrado.");
+							if (data.existe) {
+
 								nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
-								if(!nro_doc.parent().find('span').length){
-									nro_doc.parent().append("<span class=\"help-block\">El numero de documento ya esta registrado</span>");	
-								}						
-							}
-							else{
+
+								if (!nro_doc.parent().find('span').length) {
+
+									nro_doc.parent().append('<span class="help-block">El numero de documento ya esta registrado</span>');	
+								}		
+
+							} else {
+								console.log("El documento no esta.");
 								nro_doc.parent().find('span').remove();
 								nro_doc.closest('.form-group').removeClass('has-error').addClass('has-success');	
 							}
+
 						},
 						error : function(data){
 							console.log("Fallo la request ajax para validacion de documento.");
 						}
 					});
 
-			}else if(!esNumero.test(nro_doc.val())){
-				nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
-				if(!nro_doc.parent().find('span').length){
-					nro_doc.parent().append("<span class=\"help-block\">Tiene que ingresar un numero de documento</span>");	
-				}
-			}	
-		},
-		rules : {
-			nombres : "required",
-			apellidos : "required",
-			localidad : "required",
-			establecimiento : "required",
-			efector : "required",
-			nombre_organismo : "required",
-			nro_doc : {
-				required: true,
-				number: true
-			},
-			tel : {
-				number: true
-			},
-			cel : {
-				number: true
-			},
-			id_genero: { selecciono : true},
-			funcion: { selecciono : true},
-			organismo: { selecciono : true},
-			tipo_organismo: { selecciono : true},
-			trabaja_en: { selecciono : true},
-		},
-		messages:{
-			nombres : "Campo obligatorio",
-			apellidos : "Campo obligatorio",
-			localidad : "Campo obligatorio",
-			establecimiento : "Campo obligatorio",
-			efector : "Campo obligatorio",
-			nombre_organismo : "Campo obligatorio",
-			nro_doc : "Tiene que ser un numero",
-			tel : "Tiene que ser un numero",
-			cel : "Tiene que ser un numero"
-		},
-		highlight: function(element)
-		{
-			$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-		},
-		success: function(element)
-		{
-			$(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
-		},
-		submitHandler : function(form){
-			console.log("submitHandler");
-			$.ajax({
-				url: 'alumnos',
-				type: 'POST',						
-				data: getInput(),
-				complete: function(xhr, textStatus) {
-					console.log('ajax complete');
-				},
-				success: function(data, textStatus, xhr) {
-					console.log('Se creo');
-					console.log(data);
-					location.reload();
-				},
-				error: function(xhr, textStatus, errorThrown) {
-					console.log('Fallo');
-				}
-			});
-		}	
-	});
+				} else {
 
-		
-		/*$('#alta').on("click","#crear",function () {
-			$.ajax({
-				method : 'post',
-				url : 'alumnos',
-				data : serializado,
-				success : function(data){
-					console.log(jQuery.parseJSON(data));
-					console.log(jQuery.parseJSON(data).nro_doc);
-					location.reload();
+					nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
+
+					if(!nro_doc.parent().find('span').length){
+						nro_doc.parent().append('<span class="help-block">Tiene que ingresar un numero de documento</span>');	
+					}
+				}	
+			},	
+			rules : {
+				nombres : "required",
+				apellidos : "required",
+				localidad : "required",
+				establecimiento : "required",
+				efector : "required",
+				nombre_organismo : "required",
+				nro_doc : {
+					required: true,
+					number: true
 				},
-				error : function(data){
-					alert("El alumno no se pudo dar de alta.");
-					console.log("Ajax Error.");
-					console.log(data);
-				}
-			});
-		});*/
+				tel : {
+					number: true
+				},
+				cel : {
+					number: true
+				},
+				id_genero: { selecciono : true},
+				funcion: { selecciono : true},
+				organismo: { selecciono : true},
+				tipo_organismo: { selecciono : true},
+				trabaja_en: { selecciono : true},
+			},
+			messages:{
+				nombres : "Campo obligatorio",
+				apellidos : "Campo obligatorio",
+				localidad : "Campo obligatorio",
+				establecimiento : "Campo obligatorio",
+				efector : "Campo obligatorio",
+				nombre_organismo : "Campo obligatorio",
+				nro_doc : "Tiene que ser un numero",
+				tel : "Tiene que ser un numero",
+				cel : "Tiene que ser un numero"
+			},
+			highlight: function(element)
+			{
+				$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+			},
+			success: function(element)
+			{
+				$(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
+			},
+			submitHandler : function(form){
+				$.ajax({
+					url: 'alumnos',
+					type: 'POST',						
+					data: getInput(),
+					complete: function(xhr, textStatus) {
+						console.log('ajax complete');
+					},
+					success: function(data, textStatus, xhr) {
+						console.log('Se creo');
+						console.log(data);
+						location.reload();
+					},
+					error: function(xhr, textStatus, errorThrown) {
+						console.log('Fallo');
+					}
+				});
+			}	
+		});
+
 	});
 </script> 
 

@@ -24,6 +24,6 @@ class DatosGeograficosTableSeeder extends Seeder
             latitud double precision,
             longitud double precision
         )
-        SERVER ".env('SERVER_NAME')." ;");
+        SERVER ".env('SERVER_NAME')." ;");        
     }
 }

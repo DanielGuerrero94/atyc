@@ -54,7 +54,7 @@
   
   <!-- datatable responsive -->
   <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.dataTables.min.css" rel="stylesheet" />
-
+<link href="{{asset("/bower_components/bootstrap-tour-0.11.0/build/css/bootstrap-tour.min.css")}}" rel="stylesheet">
   <link href={{url("/css/elearning.css")}} rel="stylesheet">
 
   <!-- Scripts -->
@@ -148,6 +148,8 @@
 
     <!-- datatable responsive -->
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+
+    <script src="{{asset("/bower_components/bootstrap-tour-0.11.0/build/js/bootstrap-tour.min.js")}}"></script>
     
 
   </head>

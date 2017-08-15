@@ -3,11 +3,11 @@
 	<div class="box-header">
 		<h2 class="box-tittle">Docentes
 			<div class="btn-group pull-right" role="group" aria-label="...">
-				<div type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></div>
-				<div type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></div>
-				<div type="button" class="btn btn-info filter" title="Filtro"><i class="fa fa-sliders" aria-hidden="true"></i></div>
-				<div type="button" class="btn btn-info expand" title="Expandir"><i class="fa fa-expand" aria-hidden="true"></i></div>
-				<div type="button" class="btn btn-info compress" title="Comprimir" style="display: none;"><i class="fa fa-compress" aria-hidden="true"></i></div>	
+				<button type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></button>
+				<button type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></button>
+				<button type="button" class="btn btn-box-tool btn-info filter" title="Filtro"><i class="fa fa-sliders" aria-hidden="true"></i></button>
+				<button type="button" class="btn btn-box-tool btn-info compress" title="Comprimir" style="display: none;"><i class="fa fa-compress" aria-hidden="true"></i></button>
+				<button type="button" class="btn btn-box-tool btn-info expand" title="Expandir"><i class="fa fa-expand" aria-hidden="true"></i></button>					
 			</div>
 		</h2>
 	</div>
@@ -17,8 +17,8 @@
 				<tr>
 					<th>Nombres</th>
 					<th>Apellidos</th>
-					<th>Tipo Doc</th>
 					<th>Nro Doc</th>
+					<th>Tipo Doc</th>
 					<th>Acciones</th>
 				</tr>
 			</thead>

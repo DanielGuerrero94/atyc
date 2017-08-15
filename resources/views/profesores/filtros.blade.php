@@ -25,7 +25,6 @@
 					</div>
 				</div>							
 			</div>
-
 			<div class="row">
 				<div class="form-group col-sm-4">
 					<label class="control-label col-xs-5" for="id_tipo_documento">Tipo de Documento:</label>
@@ -41,48 +40,48 @@
 				<div class="form-group col-sm-4">  		  		
 					<label for="Nro doc" class="control-label col-xs-5">Nro doc</label>
 					<div class="col-xs-7">
-						<input class="form-control" id="nro_doc" name="nro_doc">
+						<input class="form-control" id="nro_doc" name="nro_doc" type="number">
 					</div>
 				</div>					
 			</div>
-				<!-- <div class="row">
-					<div class="form-group col-sm-4">
-						<label class="control-label col-xs-5" for="id_tipo_docente">Tipo de Documento:</label>
-						<div class="col-xs-7">
-							<select class="form-control" id="id_tipo_docente" name="id_tipo_docente">
-								@foreach ($tipoDocente as $docente)
-
-								<option value="{{$docente->id_tipo_docente}}">{{$docente->nombre}}</option>
-
-								@endforeach
-							</select>
-						</div>
-					</div>	
-				</div> -->
-				<div class="row">
-					<div class="form-group col-sm-4">  		  		
-						<label for="Email" class="control-label col-xs-5">Email</label>
-						<div class="col-xs-7">
-							<input class="form-control" id="email" name="email">
-						</div>
-					</div>						
-
-					<div class="form-group col-sm-4">  		  		
-						<label for="Cel" class="control-label col-xs-5">Cel</label>
-						<div class="col-xs-7">
-							<input class="form-control" id="cel" name="cel">
-						</div>
+			<hr>
+			<div class="row">
+				<div class="form-group col-sm-4">
+					<label class="control-label col-xs-5" for="id_tipo_docente">Tipo de Docente:</label>
+					<div class="col-xs-7">
+						<select class="form-control" id="id_tipo_docente" name="id_tipo_docente">
+							@foreach ($tipoDocente as $docente)
+							<option value="{{$docente->id_tipo_docente}}">{{$docente->nombre}}</option>
+							@endforeach
+						</select>
 					</div>
-					<div class="form-group col-sm-4">  		  		
-						<label for="Tel" class="control-label col-xs-5">Tel</label>
-						<div class="col-xs-7">
-							<input class="form-control" id="tel" name="tel">
-						</div>
-					</div>							
+				</div>	
+			</div>
+			<hr> 
+			<div class="row">
+				<div class="form-group col-sm-4">  		  		
+					<label for="Email" class="control-label col-xs-5">Email</label>
+					<div class="col-xs-7">
+						<input class="form-control" id="email" name="email">
+					</div>
+				</div>						
+
+				<div class="form-group col-sm-4">  		  		
+					<label for="Cel" class="control-label col-xs-5">Cel</label>
+					<div class="col-xs-7">
+						<input class="form-control" id="cel" name="cel" type="number">
+					</div>
 				</div>
-				<div class="box-footer">		
-					<div class="btn btn-info pull-right" id="filtrar"><i class="fa fa-filter"></i>Filtrar</div>	
-				</div>
-			</form>
-		</div>
+				<div class="form-group col-sm-4">  		  		
+					<label for="Tel" class="control-label col-xs-5">Tel</label>
+					<div class="col-xs-7">
+						<input class="form-control" id="tel" name="tel" type="number">
+					</div>
+				</div>							
+			</div>
+			<div class="box-footer">		
+				<div class="btn btn-info pull-right" id="filtrar"><i class="fa fa-filter"></i>Filtrar</div>	
+			</div>
+		</form>
 	</div>
+</div>

@@ -33,5 +33,6 @@ class CacheRefresh
             logger($event->value->count());
             logger(json_encode($event));
         }
+        
     }
 }

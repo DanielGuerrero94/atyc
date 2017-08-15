@@ -18,6 +18,7 @@ use App\PDF as Pdf;
 use DB;
 use Auth;
 use Log;
+use App\Http\Controllers\EfectoresController;
 
 //Exceptions
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -50,8 +51,8 @@ class AlumnosController extends AbmController
     'id_tipo_documento' => 'numeric',
     'id_provincia' => 'numeric',
     'id_genero' => 'numeric',
-    'cel' => 'string',
-    'tel' => 'string',
+    'cel' => 'numeric',
+    'tel' => 'numeric',
     'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
     'localidad' => 'string',
     'nro_doc' => 'numeric'
@@ -109,11 +110,26 @@ class AlumnosController extends AbmController
         logger(json_encode($request->all()));
 
         if (!$v->fails()) {
+
             if ($request->has('pais')) {
-                $request->pais = Pais::select('id_pais')->where('nombre', '=', $request->pais)->get('id_pais')->first();
-                $request->pais = $request->pais['id_pais'];
+                $id_pais = Pais::select('id_pais')->where('nombre', $request->pais)->get('id_pais')->first();
+                $request->pais = $id_pais;
             }
-            return Alumno::crear($request);
+
+            if ($request->has('efector')) {
+                $con = new EfectoresController();            
+                $cuie = $con->findCuie($request->efector);
+                if ($cuie) {
+                    $request->efector = $cuie;            
+                } else {
+                    return array(
+                        'status' => false,
+                        'error' => 'No existe el efector'
+                        );
+                }           
+            }
+
+            Alumno::crear($request);
         } else {
             return json_encode($v->errors());
         }
@@ -271,6 +287,7 @@ class AlumnosController extends AbmController
      */
     public function getEstablecimientos(Request $r)
     {
+        logger(json_encode($r->all()));
         return $this->typeahead('establecimiento2');
     }
 
@@ -341,24 +358,9 @@ class AlumnosController extends AbmController
             }
             );
     }
-    
-    /* Metodos Typeahead */
 
     private function queryLogica(Request $r, $filtros, $order_by)
     {
-        //Filtros las que estan vacias si es que me las pasaron
-        //Estas funciones para filtrar podrian estar en un middleware
-        //O pueden estar directamente en el front end y no mandarlas
-        logger('FILTROS '.json_encode($filtros));
-
-        $filtered = $filtros->filter(
-            function ($value, $key) {
-                return $value != "" && $value != "0";
-            }
-            );
-
-        logger('FILTERED '.json_encode($filtered));
-
         $query = Alumno::segunProvincia()        
         ->leftJoin('sistema.tipos_documentos',
             'alumnos.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
@@ -372,8 +374,8 @@ class AlumnosController extends AbmController
             'sistema.provincias.nombre as provincia'
             );                        
 
-        foreach ($filtered as $key => $value) {
-            if ($key == 'nombres' || $key == 'apellidos' || $key == 'localidad' || $key == 'email') {
+        foreach ($filtros as $key => $value) {
+            if ($this->filters[$key] == 'string'){
                 $query = $query->where('alumnos.alumnos.'.$key, 'ilike', '%'.$value.'%');
             } else {
                 $query = $query->where('alumnos.'.$key, $value);
@@ -385,15 +387,16 @@ class AlumnosController extends AbmController
 
     public function getFiltrado(Request $r)
     {
-        $filtros = collect($r->only('filtros'));
-        $filtros = collect($filtros->get('filtros'));
+        $filtros = collect($r->get('filtros'))
+        ->mapWithKeys(function ($item){   
+            return [$item['name'] => $item['value']] ;
+        });
 
         $order_by = $r->input('order_by',null)?$r->get('order_by'):null;
         
         $v = Validator::make($filtros->all(), $this->filters);
         if (!$v->fails()) {
             $query = $this->queryLogica($r, $filtros, $order_by);
-
             return $this->toDatatable($r, $query);
         } else {
             return json_encode($v->errors());
@@ -439,8 +442,11 @@ class AlumnosController extends AbmController
      */
     public function getExcel(Request $r)
     {
-        $filtros = collect($r->only('filtros'));
-        $filtros = collect($filtros->get('filtros'));
+        $filtros = collect($r->get('filtros'))
+        ->mapWithKeys(function ($item){   
+            return [$item['name'] => $item['value']] ;
+        });
+
         $order_by = $r->order_by;
 
         $data = $this->queryLogica($r, $filtros, $order_by)->get();
@@ -476,8 +482,10 @@ class AlumnosController extends AbmController
      */
     public function getPdf(Request $r)
     {
-        $filtros = collect($r->only('filtros'));
-        $filtros = collect($filtros->get('filtros'));
+        $filtros = collect($r->get('filtros'))
+        ->mapWithKeys(function ($item){   
+            return [$item['name'] => $item['value']] ;
+        });
 
         $data = $this->queryLogica($r, $filtros, null)->get();
 
@@ -519,11 +527,12 @@ class AlumnosController extends AbmController
      * @param  string $documento
      * @return \Illuminate\Http\Response
      */
-    public function checkDocumentos($documento)
-    {
-        return json_encode(
-            Alumno::where('nro_doc', $documento)
-            ->get()->count() != 0
+    public function checkDocumentos(Request $r)
+    {        
+        return array(
+            'existe' => Alumno::where('nro_doc', $r->input('nro_doc'))
+            ->where('id_tipo_documento', $r->input('id_tipo_documento'))
+            ->count() != 0
             );
     }
 }

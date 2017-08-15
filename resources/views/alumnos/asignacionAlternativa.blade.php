@@ -40,8 +40,10 @@
 		</div>
 	</div>
 </div>
+
 <script type="text/javascript">
 	$(document).ready(function() {
+
 		$.typeahead({
 			input: '.alumnos_typeahead',
 			maxItem: 10,
@@ -72,8 +74,8 @@
 					ajax:{
 						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
-						data: function(query){
-							q: query;
+						data: {
+							q: @{{query}};
 						},
 						error: function(data){
 							console.log("ajax error");
@@ -86,8 +88,8 @@
 					ajax: {
 						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
-						data: function(query){
-							q: query;
+						data: {
+							q: @{{query}};
 						},
 						error: function(data){
 							console.log("ajax error");
@@ -100,8 +102,8 @@
 					ajax:{
 						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
-						data: function(query){
-							q: query;
+						data: {
+							q: @{{query}};
 						},
 						error: function(data){
 							console.log("ajax error");
