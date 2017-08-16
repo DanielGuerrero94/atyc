@@ -8,6 +8,26 @@ use DB;
 
 class DashboardController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return view('dashboard');
+    }
+
+    public function registrar()
+    {
+        return view('registrar');
+    }
+
+    public function entrar()
+    {
+        return view('entrar');
+    }
+
     public function firstDraw()
     {
         return $this->counts();

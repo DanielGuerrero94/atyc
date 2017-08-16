@@ -84,11 +84,11 @@
             <span>por acción de capacitación</span>
           </a>
         </li>
-        <!-- <li>
-          <a href='{{url("/reportes/cursos")}}'>
+        <li>
+          <a href='{{url("/reportes/efectores")}}'>
             <span>5 - Efectores</span>
           </a>
-        </li> -->
+        </li>
       </ul>
     </li>             
     @if(Auth::user()->id_provincia == 25)

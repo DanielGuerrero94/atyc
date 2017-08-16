@@ -10,16 +10,6 @@ use Datatables;
 
 class EfectoresController extends Controller
 {
-    public function rawQuery($query)
-    {
-        return DB::connection('efectores')->select($query);
-    }
-
-    public function query()
-    {
-        return DB::connection('efectores');
-    }
-
     public function get()
     {
         return view('efectores');
@@ -27,33 +17,23 @@ class EfectoresController extends Controller
 
     public function queryLogica()
     {
-        return DB::table('efectores.efectores')
-        ->join('efectores.datos_geograficos', 'datos_geograficos.id_efector', '=', 'efectores.id_efector')
-        ->leftJoin('geo.provincias', 'geo.provincias.id_provincia', '=', 'datos_geograficos.id_provincia')
-        ->leftJoin('geo.departamentos', 'geo.departamentos.id', '=', 'datos_geograficos.id_departamento')
-        ->leftJoin('geo.localidades', 'geo.localidades.id', '=', 'datos_geograficos.id_localidad')
-        /*->join('alumnos.alumnos', 'alumnos.alumnos.establecimiento1', '=', 'efectores.efectores.cuie')*/
-        ->select('geo.provincias.descripcion AS provincia', 'efectores.siisa', 'efectores.cuie', 'efectores.nombre', 'efectores.denominacion_legal', 'efectores.domicilio', 'geo.departamentos.nombre_departamento AS departamento', 'geo.localidades.nombre_localidad AS localidad', 'efectores.codigo_postal', 'datos_geograficos.ciudad');
-            /*return DB::select("select gp.descripcion AS provincia, e.siisa,e.cuie,e.nombre,e.denominacion_legal,e.domicilio,gd.nombre_departamento AS departamento, gl.nombre_localidad AS localidad,e.codigo_postal,d.ciudad 
-        from efectores.efectores e
-        join efectores.datos_geograficos d on d.id_efector = e.id_efector
-        left join geo.provincias gp on gp.id_provincia = d.id_provincia
-        left join geo.departamentos gd on gd.id = d.id_departamento
-        left join geo.localidades gl on gl.id = d.id_localidad
-        inner join alumnos.alumnos a on a.establecimiento1 = e.cuie");*/
+        return DB::table('efectores.efectores as e')
+        ->join('efectores.datos_geograficos as dg', 'dg.id_efector', '=', 'e.id_efector')
+        ->leftJoin('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
+        ->leftJoin('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
+        ->leftJoin('geo.localidades as l', 'l.id', '=', 'dg.id_localidad')
+        ->select('p.descripcion as provincia', 'e.siisa', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'e.domicilio', 'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad', 'e.codigo_postal', 'dg.ciudad');
     }
 
     public function getTabla()
     {
         $query = $this->queryLogica();
 
-        return Datatables::of($query)->addColumn(
-            'acciones',
-            function ($ret) {
-                $ver_historial = '<a href="efectores/'.$ret->cuie.'/cursos"><button class="btn btn-info" title="Historial"><i class="fa fa-calendar" aria-hidden="true"></i> Historial</button></a>';
-                return $ver_historial;
-            }
-            )
+        return Datatables::of($query)
+        ->addColumn('acciones', function ($ret) {
+            $ver_historial = '<a href="efectores/'.$ret->cuie.'/cursos"><button class="btn btn-info" title="Historial"><i class="fa fa-calendar" aria-hidden="true"></i> Historial</button></a>';
+            return $ver_historial;
+        })
         ->make(true);
     }
 
@@ -86,11 +66,11 @@ class EfectoresController extends Controller
 
     public function getNombres(Request $r)
     {
-        $query = DB::table('efectores.efectores')
-        ->join('efectores.datos_geograficos', 'efectores.efectores.id_efector', '=', 'efectores.datos_geograficos.id_efector')
-        ->select('efectores.efectores.nombre')
-        ->where('efectores.efectores.nombre','ilike','%'.$r->q.'%')
-        ->orderBy('efectores.efectores.nombre');
+        $query = DB::table('efectores.efectores as e')
+        ->join('efectores.datos_geograficos as dg', 'e.id_efector', '=', 'dg.id_efector')
+        ->select('e.nombre')
+        ->where('e.nombre','ilike','%'.$r->q.'%')
+        ->orderBy('e.nombre');
 
         return $this->segunProvincia($query,$r->id_provincia)
         ->get()
@@ -102,11 +82,11 @@ class EfectoresController extends Controller
 
     public function getCuies(Request $r)
     {
-        $query = DB::table('efectores.efectores')
-        ->join('efectores.datos_geograficos', 'efectores.efectores.id_efector', '=', 'efectores.datos_geograficos.id_efector')
-        ->select('efectores.efectores.cuie')
-        ->where('efectores.efectores.cuie','ilike','%'.$r->q.'%')
-        ->orderBy('efectores.efectores.cuie');
+        $query = DB::table('efectores.efectores as e')
+        ->join('efectores.datos_geograficos as dg', 'e.id_efector', '=', 'dg.id_efector')
+        ->select('e.cuie')
+        ->where('e.cuie','ilike','%'.$r->q.'%')
+        ->orderBy('e.cuie');
 
         return $this->segunProvincia($query,$r->id_provincia)    
         ->get()
@@ -124,7 +104,7 @@ class EfectoresController extends Controller
 
             $id_provincia = $id_provincia < 10?"0".strval($id_provincia):strval($id_provincia);
 
-            $query = $query->where('efectores.datos_geograficos.id_provincia', $id_provincia);
+            $query = $query->where('dg.id_provincia', $id_provincia);
         }
 
         return $query;
@@ -138,11 +118,11 @@ class EfectoresController extends Controller
 
         if ($provincia != 25) {
             $efector = $efector
-            ->where('datos_geograficos.id_provincia', $provincia);
+            ->where('dg.id_provincia', $provincia);
         }
 
         $efector = $efector
-        ->where('efectores.cuie', $cuie)
+        ->where('e.cuie', $cuie)
         ->first();
 
         $cursos = Curso::getByCuie($cuie);
@@ -157,9 +137,9 @@ class EfectoresController extends Controller
             return $string;
         }
 
-        $efector = DB::table('efectores.efectores')
-        ->select('efectores.efectores.cuie')
-        ->where('efectores.efectores.nombre',$string)
+        $efector = DB::table('efectores.efectores as e')
+        ->select('e.cuie')
+        ->where('e.nombre',$string)
         ->first();
 
         return $efector?$efector->cuie:$efector;

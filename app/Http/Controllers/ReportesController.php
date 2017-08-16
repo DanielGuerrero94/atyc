@@ -48,6 +48,11 @@ class ReportesController extends Controller
         return view('reportes.cursos-cantidad-alumnos',$this->getSelectOptions());
     }
 
+    public function efectores(Request $r)
+    {     
+        return $this->reporte(6);
+    }
+
     public function reporte($id_reporte)
     {
         $reporte = Reporte::find($id_reporte);        

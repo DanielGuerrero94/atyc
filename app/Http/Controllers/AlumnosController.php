@@ -287,7 +287,6 @@ class AlumnosController extends AbmController
      */
     public function getEstablecimientos(Request $r)
     {
-        logger(json_encode($r->all()));
         return $this->typeahead('establecimiento2');
     }
 
@@ -311,11 +310,14 @@ class AlumnosController extends AbmController
         $alumno = Alumno::select('id_alumno', 'nombres', 'apellidos', 'nro_doc')
         ->segunProvincia()
         ->get()
-        ->map(
-            function ($item, $key) {
-                return array('id' => $item->id_alumno,'nombres' => $item->nombres,'apellidos' => $item->apellidos,'documentos' => $item->nro_doc);
-            }
-            );
+        ->map(function ($item, $key) {
+            return array(
+                'id' => $item->id_alumno,
+                'nombres' => $item->nombres,
+                'apellidos' => $item->apellidos,
+                'documentos' => $item->nro_doc
+                );
+        });
         return $this->typeaheadResponse($alumno);
     }
 
@@ -350,13 +352,10 @@ class AlumnosController extends AbmController
         ->segunProvincia()
         ->groupBy($columna)
         ->orderBy($columna)
-        //->where($columna,'ilike',$r->search.'%')
         ->get()
-        ->map(
-            function ($item, $key) use ($columna) {
-                return $item->$columna;
-            }
-            );
+        ->map(function ($item, $key) use ($columna) {
+            return $item->$columna;
+        });
     }
 
     private function queryLogica(Request $r, $filtros, $order_by)

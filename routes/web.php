@@ -6,24 +6,40 @@
 |--------------------------------------------------------------------------
 */
 
-
-Route::get('tests', function () {
-    return view('test/test');
-});
-
 Route::get('test', 'TestController@hello');
 Route::get('test/filtros', 'TestController@filtros');
-
 Route::get('test/profesoresEnUnCurso', 'CursosController@getProfesores');
-
-/* Route::get('test/documentos', 'AbmController@tiposDocumentos'); */
-
 Route::get('test/joined', 'AlumnosController@datosJoineados');
 Route::get('test/excel', 'ReportesController@getExcel');
-
 Route::get('test/pdf', 'ReportesController@getPdf');
 
-Route::resource('log', 'LogController');
+/*
+|--------------------------------------------------------------------------
+| Login Routes
+|--------------------------------------------------------------------------
+*/
+
+Auth::routes();
+Route::get('/home', 'HomeController@index');
+
+Route::get('/', 'DashboardController@index');
+Route::get('/entrar', 'DashboardController@entrar');
+Route::get('/registrar', 'DashboardController@registrar');
+
+/*
+|--------------------------------------------------------------------------
+| Dashboard Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('dashboard', 'DashboardController@index');
+Route::get('dashboard/datos', 'DashboardController@get');
+Route::get('dashboard/data', 'AlumnosController@getActivos');
+Route::get('dashboard/draw/first', 'DashboardController@firstDraw');
+Route::get('dashboard/draw/areas', 'DashboardController@areas');
+Route::get('dashboard/draw/trees', 'DashboardController@trees');
+Route::get('dashboard/draw/pies', 'DashboardController@pies');
+Route::get('dashboard/draw/heats', 'DashboardController@heats');
 
 /*
 |--------------------------------------------------------------------------
@@ -36,55 +52,19 @@ Route::resource('log', 'LogController');
 |
 */
 
-Route::get('/', function () {
-    return view('dashboard');
-});
-
-Route::get('/adminlte', function () {
-    return view('adminlte');
-});
-
-Route::get('/starter', function () {
-    return view('starter');
-});
-
-Route::get('/entrar', function () {
-    return view('entrar');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-
-//Dashboard
-Route::get('dashboard/datos', 'DashboardController@get');
-Route::get('dashboard/data', 'AlumnosController@getActivos');
-Route::get('dashboard/draw/first', 'DashboardController@firstDraw');
-Route::get('dashboard/draw/areas', 'DashboardController@areas');
-Route::get('dashboard/draw/trees', 'DashboardController@trees');
-Route::get('dashboard/draw/pies', 'DashboardController@pies');
-Route::get('dashboard/draw/heats', 'DashboardController@heats');
-
+//Logueado
 Route::group(['middleware' => ['logueado','logging']],function () {
+    //Log
+    Route::resource('log', 'LogController');
+
     //Descarga
-    Route::get('reportes/descargar/excel/{nombre_reporte}', function ($nombre_reporte) {
-        return response()->download(__DIR__."/../storage/exports/{$nombre_reporte}.xls");
-    });
-    Route::get('reportes/descargar/pdf/{nombre_reporte}', function ($nombre_reporte) {
-        return response()->download(__DIR__."/../public/{$nombre_reporte}.pdf");
-    });
-    Route::get('alumnos/descargar/excel/{nombre_archivo}', function ($nombre_archivo) {
-        return response()->download(__DIR__."/../storage/exports/{$nombre_archivo}.xls");
-    });
-    Route::get('alumnos/descargar/pdf/{nombre_archivo}', function ($nombre_archivo) {
-        return response()->download(__DIR__."/../storage/app/{$nombre_archivo}.pdf");
-    });
-    Route::get('descargar/excel/{nombre_archivo}', function ($nombre_archivo) {
-        return response()->download(__DIR__."/../storage/exports/{$nombre_archivo}.xls");
-    });
-    Route::get('descargar/pdf/{nombre_archivo}', function ($nombre_archivo) {
-        return response()->download(__DIR__."/../storage/exports/{$nombre_archivo}.pdf");
-    });
+    Route::get('reportes/descargar/excel/{nombre_archivo}', 'DescargasController@excel');
+    Route::get('descargar/excel/{nombre_archivo}', 'DescargasController@excel');
+    Route::get('alumnos/descargar/excel/{nombre_archivo}', 'DescargasController@excel');
+
+    Route::get('descargar/pdf/{nombre_archivo}', 'DescargasController@pdf');
+    Route::get('reportes/descargar/pdf/{nombre_archivo}', 'DescargasController@pdf_reportes');
+    Route::get('alumnos/descargar/pdf/{nombre_archivo}', 'DescargasController@pdf_alumnos');
 
     //Alumnos
     Route::get('alumnos', 'AlumnosController@get');
@@ -125,7 +105,7 @@ Route::group(['middleware' => ['logueado','logging']],function () {
 
     Route::delete('profesores/{id}', 'ProfesoresController@destroy');
 
-//Cursos
+    //Cursos
     Route::get('cursos', 'CursosController@get');
     Route::get('cursos/tabla', 'CursosController@getTabla');
     Route::get('cursos/joined', 'CursosController@getJoined');
@@ -147,26 +127,27 @@ Route::group(['middleware' => ['logueado','logging']],function () {
 
     Route::delete('cursos/{id}', 'CursosController@destroy');
 
-//Relaciones de cursos con alumnos y profesores
+    //Relaciones de cursos con alumnos y profesores
     Route::get('curso/{id}', 'CursosController@getByID');
     Route::get('users/{id}/alumnos', 'CursosController@getAlumnos');
-/* 
-//Filtros para todas las abms
-    Route::get('filtros/{tabla}', 'AbmController@filtros');
-    Route::get('formularioConFiltros/{tabla}', 'AbmController@formularioConFiltros'); */
 
-//Reportes
+    /* 
+     * Filtros para todas las abms
+     * Route::get('filtros/{tabla}', 'AbmController@filtros');
+     * Route::get('formularioConFiltros/{tabla}', 'AbmController@formularioConFiltros'); 
+     */
+
+    //Reportes
     Route::get('reportes', 'ReportesController@get');
     Route::get('reportes/cursos', 'ReportesController@getCursos');
-    Route::get('reportes/cursos/provincias/{id}/count', 'CursosController@getCountAlumnos');
-
-    
+    Route::get('reportes/cursos/provincias/{id}/count', 'CursosController@getCountAlumnos');    
     Route::get('reportes/excel', 'ReportesController@getExcelReporte');
     Route::get('reportes/excel6', 'CursosController@getExcelReporte');
     Route::get('reportes/pdf', 'ReportesController@getPDFReporte');
     /*Route::get('reportes/pdf','ReportesController@getPdf');*/
     Route::get('reportes/query', 'ReportesController@queryReporte');
     Route::get('reportes/query/test', 'ReportesController@queryTest');
+    Route::get('reportes/efectores', 'ReportesController@reporte');
     Route::get('reportes/{id_reporte}', 'ReportesController@reporte');
 
     //Encuestas
@@ -187,10 +168,10 @@ Route::group(['middleware' => ['logueado','logging']],function () {
 
     Route::get('provincias/localidades/typeahead', 'ProvinciasController@localidadesTypeahead');
 
+    //ADMIN
     Route::group(['middleware' => 'admin'], function () {
 
-//ADMIN
-//Areas tematicas
+        //Areas tematicas
         Route::get('areasTematicas', 'AreasTematicasController@getTodos');
         Route::get('areasTematicas/alta', 'AreasTematicasController@create');
         Route::get('areasTematicasTabla', 'AreasTematicasController@getTabla');
@@ -201,7 +182,6 @@ Route::group(['middleware' => ['logueado','logging']],function () {
         Route::put('areasTematicas/{id}', 'AreasTematicasController@update');
 
         Route::delete('areasTematicas/{id}', 'AreasTematicasController@destroy');
-
 
         //Tipo de acciones
         Route::get('lineasEstrategicas', 'LineasEstrategicasController@getTodos');
@@ -229,6 +209,11 @@ Route::group(['middleware' => ['logueado','logging']],function () {
         //Tipo de docentes
         Route::resource('tipoDocentes', 'TipoDocentesController');
 
+        //Session
+        Route::get('session', 'TestController@session');
+
+        Route::get('session/put', 'TestController@sessionPut');
+
         //No modificables
 
         //Paises
@@ -242,13 +227,6 @@ Route::group(['middleware' => ['logueado','logging']],function () {
         Route::get('efectores', 'EfectoresController@get');
         Route::get('efectores/tabla', 'EfectoresController@getTabla');       
         Route::get('efectores/{cuie}/cursos', 'EfectoresController@historialCursos');
+
     });
 });
-
-//Otros
-Route::get('/registrar', function () {
-    return view('registrar');
-});
-Auth::routes();
-
-Route::get('/home', 'HomeController@index');
