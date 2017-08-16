@@ -311,9 +311,9 @@ class cursosController extends AbmController
 		->make(true); 		
 	}
 
-	public function getCountAlumnos($id)
+	public function getCountAlumnos(Request $r,$id)
 	{
-		$query = $this->queryCountAlumnos($id);
+		$query = $this->queryCountAlumnos($r,$id);
 
 		$cursos = DB::select($query);
 		$cursos = collect($cursos);
@@ -322,7 +322,7 @@ class cursosController extends AbmController
 		->make(true); 	
 	}
 
-	public function queryCountAlumnos($id)
+	public function queryCountAlumnos(Request $r,$id_provincia)
 	{
 		$query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos.cursos C 
 		left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
@@ -331,13 +331,12 @@ class cursosController extends AbmController
 		inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
 		inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica";
 
-		if($id !== '0' and $id !== 25){
-			$query .= " WHERE C.id_provincia = '".$id."'";	
+		if($id_provincia !== '0' and $id_provincia !== 25){
+			$query .= " WHERE C.id_provincia = '".$id_provincia."'";	
 		}
 
-		$query .= " group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre
-		order by C.nombre,C.edicion
-		";
+		$query .= "group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre";
+
 		return $query;
 	}
 
@@ -393,7 +392,7 @@ class cursosController extends AbmController
 
 		foreach ($filtered as $key => $value) {
 			if($key == 'nombre'){
-				$query = $query->where('cursos.cursos.'.$key,'ilike', '%'.$value.'%');                           
+				$query = $query->where('cursos.cursos.'.$key,'ilike', '%'.$value.'%');
 			}elseif ($key == 'desde') {
 				$query = $query->where('cursos.cursos.fecha','>',$value);
 			}elseif ($key == 'hasta') {
@@ -530,9 +529,8 @@ class cursosController extends AbmController
      */
 	public function getExcelReporte(Request $r)
 	{		
-		logger($r->only(['id_provincia','desde','hasta']));
-		$id = Auth::user()->id_provincia;
-		$data = DB::select($this->queryCountAlumnos($id));
+		$id_provincia = array_key_exists('id_provincia', $r->filtros)?$r->filtros['id_provincia']:Auth::user()->id_provincia;
+		$data = DB::select($this->queryCountAlumnos($r,$id_provincia));
 		$data = collect($data);
 		$datos = ['cursos' => $data];
 		$path = "cant_participantes_acciones_".date("Y-m-d_H:i:s");

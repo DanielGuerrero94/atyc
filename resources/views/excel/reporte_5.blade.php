@@ -16,21 +16,27 @@
 
 <table class="table">	
 	<tr>
-		<th class="table-header">Período</th>
-        <th class="table-header">Provincia</th>
-        <th class="table-header">Respuesta</th>
-        <th class="table-header">Cantidad</th>
-        <th class="table-header">Total</th>
-        <th class="table-header">Porcentaje</th>
+		<th class="table-header">Periodo</th>
+		<th class="table-header">Jurisdiccion</th>
+		<th class="table-header">Curso</th>
+		<th class="table-header">Edición</th>
+		<th class="table-header">Fecha</th>
+		<th class="table-header">Cantidad de participantes</th>
+		<th class="table-header">Tipo de accion</th>
+		<th class="table-header">Area Temática</th>
+		<th class="table-header">Duración</th>
 	</tr>
 	@foreach($resultados as $resultado)
-		<tr>
-			<td>{{$resultado->periodo}}</td>
-			<td>{{$resultado->provincia}}</td>
-			<td>{{$resultado->respuesta}}</td>
-			<td>{{$resultado->cantidad}}</td>
-			<td>{{$resultado->total}}</td>
-			<td>{{$resultado->porcentaje}}%</td>
-		</tr>
+	<tr>
+	<td>{{$resultado->periodo}}</td>
+		<td>{{$resultado->provincia}}</td>
+		<td>{{$resultado->nombre}}</td>
+		<td>{{$resultado->edicion}}</td>si
+		<td>{{$resultado->fecha}}</td>
+		<td>{{$resultado->cantidad_alumnos}}</td>
+		<td>{{$resultado->tipologia}}</td>
+		<td>{{$resultado->tematica}}</td>
+		<td>{{$resultado->duracion}}</td>
+	</tr>
 	@endforeach
 </table>

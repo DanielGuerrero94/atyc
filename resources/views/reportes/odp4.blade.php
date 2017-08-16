@@ -1,7 +1,7 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
 	<div class="row">
 		<div id="filtros" class="col-xs-12">
 			@include('reportes.filtros')	
@@ -41,19 +41,7 @@
 	$.unblockUI();
 
 	$(document).ready(function(){
-		var table;			
-
-		$('#toggle-fecha').on('click',function () {
-
-			var icono = $(this).find('i');
-
-			switchIcon(icono,'fa-toggle-off','fa-toggle-on');
-			
-			var periodo = $('#periodo').closest('.row');
-			var fecha = $('.fa-calendar').closest('.row');			
-			
-			showCalendarInputs(periodo,fecha);
-		});		
+		var table;				
 
 		function getFiltrosJson() {
 			var id_provincia = $('#filtros #provincia :selected').data('id');

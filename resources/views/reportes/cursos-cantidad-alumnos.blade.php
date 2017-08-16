@@ -1,11 +1,11 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
 	<div id="filtros" class="col-xs-12">
 		@include('reportes.filtros')	
 	</div>
-	<div id="reporte" data-id="{{$provincia_usuario->id_provincia}}" style="display:none;">
+	<div id="reporte" data-id="{{Auth::user()->id_provincia}}" style="display:none;">
 		{{ csrf_field() }}
 		<div class="col-md-12">
 			<div class="box box-info ">
@@ -15,19 +15,20 @@
 							<button type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></button>
 							
 						</div>	
-						</h2>								
+					</h2>								
 				</div>				
 				<div class="box-body">
 					<table id="reporte-table" class="table table-hover">
 						<thead>
 							<tr>
+								<th>Periodo</th>
+								<th>Jurisdicción</th>
 								<th>Nombre</th>
 								<th>Edición</th>
 								<th>Fecha</th>
 								<th>Cantidad de participantes</th>
 								<th>Tipología de acción</th>
 								<th>Area temática</th>
-								<th>Jurisdicción</th>
 								<th>Duración</th>
 							</tr>
 						</thead>
@@ -51,30 +52,44 @@
 			$('#reporte').show();
 
 			$('#reporte-table').DataTable({			
-			ajax : 'cursos/provincias/'+id_provincia+'/count',
-			destroy: true,
-			columns: [
-			{ data: 'nombre'},
-			{ data: 'edicion'},
-			{ data: 'fecha'},
-			{ data: 'cantidad_alumnos'},
-			{ data: 'linea_estrategica'},
-			{ data: 'area_tematica'},
-			{ data: 'provincia'},
-			{ data: 'duracion'}
-			]
+				ajax : {
+					url: 'query',
+					data: {
+						id_reporte : 5,
+						filtros: getFiltrosJson()
+					}
+				},
+				destroy: true,
+				columns: [
+				{ data: 'periodo'},
+				{ data: 'provincia'},
+				{ data: 'nombre'},
+				{ data: 'edicion'},
+				{ data: 'fecha'},
+				{ data: 'cantidad_alumnos'},
+				{ data: 'tipologia'},
+				{ data: 'tematica'},
+				{ data: 'duracion'}
+				]
 			});	
 
-		}
+		}		
 
 		function getFiltrosJson() {
 			var id_provincia = $('#filtros #provincia :selected').data('id');
+			var id_periodo,desde,hasta;
 
-			return {
-				id_provincia: id_provincia
-				};
+			if($('#toggle-fecha i').hasClass('fa-toggle-off')){
+				id_periodo = $('#filtros #periodo :selected').data('id');
+			}else{
+				desde = $('#filtros #desde').val();
+				hasta = $('#filtros #hasta').val();
+			}
+
+			var data = {id_provincia: id_provincia,id_periodo: id_periodo,desde: desde,hasta: hasta};
+			return data;
 		};
-
+		
 		$('#filtrar').on('click',function (event) {
 			event.preventDefault();
 
@@ -83,31 +98,38 @@
 			var id_provincia = $('#filtros #provincia :selected').data('id');
 
 			$('#reporte-table').DataTable({			
-			ajax : 'cursos/provincias/'+id_provincia+'/count',
-			destroy: true,
-			columns: [
-			{ data: 'nombre'},
-			{ data: 'edicion'},
-			{ data: 'fecha'},
-			{ data: 'cantidad_alumnos'},
-			{ data: 'linea_estrategica'},
-			{ data: 'area_tematica'},
-			{ data: 'provincia'},
-			{ data: 'duracion'}
-			]
+				ajax : {
+					url: 'query',
+					data: {
+						id_reporte : 5,
+						filtros: getFiltrosJson()
+					}
+				},
+				destroy: true,
+				columns: [
+				{ data: 'periodo'},
+				{ data: 'provincia'},
+				{ data: 'nombre'},
+				{ data: 'edicion'},
+				{ data: 'fecha'},
+				{ data: 'cantidad_alumnos'},
+				{ data: 'tipologia'},
+				{ data: 'tematica'},
+				{ data: 'duracion'}
+				]
 			});	
 
 		});		
 
-		$('.excel').on('click',function () {
-			var filtros = getFiltrosJson();	
+		$('.excel').on('click',function (event) {
+			event.preventDefault();
 
 			$.ajax({
-				url: 'excel6',
+				url: 'excel',
 				data: {
-					filtros: filtros,
-					order_by: order_by 
-				}
+					id_reporte : 5,
+					filtros: getFiltrosJson()
+				},
 				success: function(data){
 					window.location="descargar/excel/"+data;
 				},
@@ -116,6 +138,7 @@
 					console.log(data);
 				}
 			});
+
 		});
 
 	});

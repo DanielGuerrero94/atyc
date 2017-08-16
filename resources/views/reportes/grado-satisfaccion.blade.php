@@ -1,7 +1,7 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
 	<div id="filtros" class="col-xs-12">
 		@include('reportes.filtros')	
 	</div>

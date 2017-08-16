@@ -45,15 +45,7 @@ class ReportesController extends Controller
 
     public function getCursos()
     {
-        $provincia_usuario = Provincia::find(Auth::user()->id_provincia);
-
-        $extra = array(
-            'provincia_usuario' => $provincia_usuario
-            );
-
-        return view('reportes.cursos-cantidad-alumnos',
-            array_merge($this->getSelectOptions(), $extra)
-            );
+        return view('reportes.cursos-cantidad-alumnos',$this->getSelectOptions());
     }
 
     public function reporte($id_reporte)
@@ -87,30 +79,40 @@ class ReportesController extends Controller
         logger("Reporte: ".json_encode($r->id_reporte));
         logger("Filtros: ".json_encode($r->filtros));
         logger("Order By: ".json_encode($r->order_by));
-        /*Esta parte me quedo horrible voy a tener que reeverlo porque tengo demasiados if
-        en el caso que no sea un periodo de los que hay en la tabla le concateno
-        las fechas que me pasaron para la columna periodo
-        */
+
+        $id_reporte = $r->id_reporte;
 
         $id_provincia = array_key_exists('id_provincia', $r->filtros)?
         $r->filtros['id_provincia']:Auth::user()->id_provincia;
-        if ($id_provincia == 25) {
-            $id_provincia = 0;
+
+        if (array_key_exists('id_periodo', $r->filtros)) {
+            $id_periodo = $r->filtros['id_periodo'];
+        } else if (array_key_exists('desde', $r->filtros) && array_key_exists('hasta', $r->filtros)) {
+            $desde = $r->filtros['desde'];
+            $hasta = $r->filtros['hasta'];
         }
 
-        if (array_key_exists('desde', $r->filtros) && array_key_exists('hasta', $r->filtros)) {
-            $query = "SELECT CONCAT('".$r->filtros['desde']."'::date,'/','".$r->filtros['hasta']."'::date) as periodo,* 
-            FROM reporte_".$r->id_reporte."('".$id_provincia."','".$r->filtros['desde']."','".$r->filtros['hasta']."')";
-        } elseif ($r->id_reporte == '4') {
-            $query = "SELECT P.nombre as periodo ,R.provincia,R.capacitados,R.total,R.porcentaje 
-            FROM sistema.periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R";
-        } elseif ($r->filtros['id_periodo'] == '0') {
-            $query = "SELECT P.nombre as periodo ,R.provincia,R.cantidad_alumnos 
-            FROM sistema.periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R";
+        if (!array_key_exists('id_periodo', $r->filtros)) {
+
+            $query = "SELECT CONCAT('{$desde}'::date,'/','{$hasta}'::date) as periodo,* 
+            FROM reporte_{$r->id_reporte}('{$id_provincia}','{$desde}','{$hasta}')";
+
+        } elseif ($id_reporte == '5' and $id_periodo == '0') {
+
+            $query = "SELECT P.nombre as periodo ,R.* 
+            FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R order by P.id_periodo,R.provincia,R.nombre,R.edicion";
+
+        } elseif ($id_periodo == '0') {
+
+            $query = "SELECT P.nombre as periodo ,R.* 
+            FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R";
+
         } else {
-            $query = "SELECT P.nombre as periodo ,R.provincia,R.cantidad_alumnos 
-            FROM sistema.periodos P,reporte_".$r->id_reporte."(".$id_provincia.",P.desde,P.hasta) R 
-            where P.id_periodo = ".$r->filtros['id_periodo'];
+
+            $query = "SELECT P.nombre as periodo ,R.*
+            FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R 
+            where P.id_periodo = {$id_periodo}";            
+
         }
 
         return $query;
@@ -129,6 +131,7 @@ class ReportesController extends Controller
     public function getExcelReporte(Request $r)
     {
         $reporte = Reporte::find($r->id_reporte);
+        logger(json_encode($reporte));
         $query_default = $this->queryLogica($r);
         $nombre_reporte = $reporte->view;
 
@@ -170,5 +173,25 @@ class ReportesController extends Controller
         $pdf = PDF::loadView($pdf_reporte, $datos)->save($path.".pdf");
 
         return $path;
+    }
+
+    public function reporte5($id_provincia = '0',$desde = '2014-01-01',$hasta = '2014-12-31')
+    {
+        $query = DB::table('sistema.provincias as p')
+        ->leftJoin('efectores.datos_geograficos as dg',DB::raw('dg.id_provincia::integer'),'=','p.id_provincia')
+        ->join('efectores.efectores as e','e.id_efector','=','dg.id_efector')
+        ->join('efectores.compromiso_gestion as cg','cg.id_efector','=','e.id_efector')
+        ->join('alumnos.alumnos as a','a.establecimiento1','=','e.cuie')
+        ->join('cursos.cursos_alumnos as ca','ca.id_alumno','=','a.id_alumno')
+        ->join('cursos.cursos as c','c.id_curso','=','c.id_curso')
+        ->select('p.nombre as provincia',DB::raw('count(distinct e.cuie) as capacitados'))
+        ->whereBetween('c.fecha',[$desde,$hasta])
+        ->groupBy('p.nombre');
+
+        if ($id_provincia != '0') {
+            $query = $query->where('p.id_provincia',$id_provincia);
+        }
+
+        return $query;
     }
 }

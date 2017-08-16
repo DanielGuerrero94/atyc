@@ -11,6 +11,7 @@ class TrabajosTableSeeder extends Seeder
      */
     public function run()
     {      
+        $this->update();
         $this->insert();
     }
 
@@ -35,5 +36,10 @@ class TrabajosTableSeeder extends Seeder
             ('ESTABLECIMIENTO DE SALUD'),
             ('ORGANISMO GUBERNAMENTAL'),
             ('TRABAJO NO RELACIONADO AL SUMAR')");
+    }
+
+    public function update()
+    {
+        \DB::connection('g_plannacer')->statement("update g_plannacer.alumnos set trabaja_en = 'TRABAJO NO RELACIONADO AL SUMAR' where trabaja_en = 'TRABAJO NO RELACIONADO AL SUMAR - ESTUDIA - NO TRABAJA'"); 
     }
 }

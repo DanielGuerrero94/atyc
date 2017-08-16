@@ -15,6 +15,7 @@ class StoredProceduresSeeder extends Seeder
       $this->reporte_2();
       $this->reporte_3();
       $this->reporte_4();      
+      $this->reporte_5();      
     }
 
     /**
@@ -143,33 +144,117 @@ class StoredProceduresSeeder extends Seeder
     public function reporte_4()
     {
       \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_4(
-        IN provincia integer,
-        IN desde date,
-        IN hasta date)
-      RETURNS TABLE(provincia character varying, capacitados bigint, total integer, porcentaje numeric) AS
-      \$BODY\$SELECT P.nombre as provincia,efectores_capacitados.capacitados,total_efectores.total,round(((CAST(efectores_capacitados.capacitados as float)*100)/CAST(total_efectores.total as float))::numeric,2) as porcentaje FROM (
-        SELECT count(subA.capacitados) capacitados
-        FROM (SELECT A.establecimiento1 as capacitados,P.id_provincia as provincia FROM alumnos.alumnos A 
-          INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
-          INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
-          INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
-          WHERE id_trabajo = 2 AND id_convenio = 3 
-          AND C.fecha 
-          BETWEEN desde 
-          AND hasta
-          AND A.id_provincia = provincia
-          GROUP BY A.establecimiento1,P.id_provincia) as subA
-        GROUP BY subA.provincia) as efectores_capacitados,
-      (SELECT suB.total FROM 
-        dblink('dbname=sirge3 port=5432 host=192.6.0.66 user=postgres password=BernardoCafe008',
-          'SELECT cast(count(*) as int) as total,CAST(DG.id_provincia as int) FROM efectores.efectores E
-          INNER JOIN efectores.datos_geograficos DG ON DG.id_efector = E.id_efector
-          GROUP BY DG.id_provincia')
-        AS suB(total int,id_provincia int) 
-        where suB.id_provincia = provincia) as total_efectores,
-      sistema.provincias P WHERE P.id_provincia = provincia\$BODY\$
-      LANGUAGE sql VOLATILE
-      COST 100
-      ROWS 1000;");
+    IN var_provincia integer,
+    IN desde date,
+    IN hasta date)
+  RETURNS TABLE(provincia character varying, capacitados bigint, total bigint, porcentaje numeric) AS
+\$BODY\$
+BEGIN IF var_provincia = 0 THEN
+  RETURN QUERY select p.nombre as provincia,
+case when sub.capacitados is null then 0 
+else sub.capacitados
+end,
+case when sub.total is null then 
+(select count(distinct e.cuie) 
+from efectores.efectores e
+join efectores.datos_geograficos dg using (id_efector)
+where dg.id_provincia::integer = p.id_provincia)
+else sub.total
+end,
+case when sub.capacitados is null then 0 
+else round(sub.capacitados * 100.0 / sub.total,2)
+end as porcentaje 
+from sistema.provincias p 
+left join 
+(select p.id_provincia, count(distinct e.cuie) as capacitados,
+        case when p.id_provincia = 25 then 
+        (select count(*) 
+        from efectores.efectores e)
+        else (select count(distinct e.cuie) 
+        from efectores.efectores e
+        join efectores.datos_geograficos dg using (id_efector)
+  where dg.id_provincia::integer = p.id_provincia) 
+  end as total
+        from sistema.provincias as p
+        left join cursos.cursos as c on c.id_provincia = p.id_provincia
+        left join cursos.cursos_alumnos as ca on ca.id_curso = c.id_curso
+        left join alumnos.alumnos as a on a.id_alumno = ca.id_alumno
+        left join efectores.efectores as e on e.cuie = a.establecimiento1
+        where c.fecha between desde and hasta
+        group by p.id_provincia) as sub on sub.id_provincia = p.id_provincia
+        order by p.id_provincia;
+ELSE RETURN QUERY
+select p.nombre as provincia,
+case when sub.capacitados is null then 0 
+else sub.capacitados
+end,
+case when sub.total is null then 
+(select count(distinct e.cuie) 
+from efectores.efectores e
+join efectores.datos_geograficos dg using (id_efector)
+where dg.id_provincia::integer = p.id_provincia)
+else sub.total
+end,
+case when sub.capacitados is null then 0 
+else round(sub.capacitados * 100.0 / sub.total,2)
+end as porcentaje 
+from sistema.provincias p 
+left join 
+(select p.id_provincia, count(distinct e.cuie) as capacitados,
+        case when p.id_provincia = 25 then 
+        (select count(*) 
+        from efectores.efectores e)
+        else (select count(distinct e.cuie) 
+        from efectores.efectores e
+        join efectores.datos_geograficos dg using (id_efector)
+  where dg.id_provincia::integer = p.id_provincia) 
+  end as total
+        from sistema.provincias as p
+        left join cursos.cursos as c on c.id_provincia = p.id_provincia
+        left join cursos.cursos_alumnos as ca on ca.id_curso = c.id_curso
+        left join alumnos.alumnos as a on a.id_alumno = ca.id_alumno
+        left join efectores.efectores as e on e.cuie = a.establecimiento1
+        where c.fecha between desde and hasta
+        group by p.id_provincia) as sub on sub.id_provincia = p.id_provincia
+        where p.id_provincia = var_provincia
+        order by p.id_provincia;
+END IF;
+END \$BODY\$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;");
+    }
+
+    public function reporte_5()
+    {
+      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_5(
+    IN var_provincia integer,
+    IN desde date,
+    IN hasta date)
+  RETURNS TABLE(provincia character varying, nombre character varying, edicion smallint, fecha date, cantidad_alumnos bigint, tipologia text, tematica character varying, duracion double precision) AS
+\$BODY\$
+BEGIN IF var_provincia = 0 THEN
+  RETURN QUERY SELECT P.nombre as provincia,C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as tipologia,AT.nombre as tematica,C.duracion from cursos.cursos C left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
+    left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
+    inner join sistema.provincias P ON P.id_provincia = C.id_provincia
+    inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
+    inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica
+    where C.fecha between desde and hasta
+    group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre;
+ELSE RETURN QUERY
+SELECT P.nombre as provincia,C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as tipologia,AT.nombre as tematica,C.duracion from cursos.cursos C 
+    left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
+    left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
+    inner join sistema.provincias P ON P.id_provincia = C.id_provincia
+    inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
+    inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica
+    where C.fecha between desde and hasta 
+    and c.id_provincia = var_provincia
+    group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre;
+END IF;
+END \$BODY\$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;");
     }
   }
