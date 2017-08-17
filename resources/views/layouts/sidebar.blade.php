@@ -85,7 +85,7 @@
           </a>
         </li>
         <li>
-          <a href='{{url("/reportes/efectores")}}'>
+          <a href='{{url("/reportes/6")}}'>
             <span>5 - Efectores</span>
           </a>
         </li>

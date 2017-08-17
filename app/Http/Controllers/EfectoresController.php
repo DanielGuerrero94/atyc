@@ -25,6 +25,45 @@ class EfectoresController extends Controller
         ->select('p.descripcion as provincia', 'e.siisa', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'e.domicilio', 'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad', 'e.codigo_postal', 'dg.ciudad');
     }
 
+    public function reporte()
+    {
+        $desde = '2017-01-01';
+        $hasta = '2017-12-31';
+        $provincia = '24';
+
+
+        return DB::table('efectores.efectores as e')
+        ->join('efectores.datos_geograficos as dg', 'dg.id_efector', '=', 'e.id_efector')
+        ->join('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
+        ->join('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
+        ->join('geo.localidades as l', 'l.id', '=', 'dg.id_localidad')
+        ->join('alumnos.alumnos as a', 'a.establecimiento1', '=', 'e.cuie')        
+        ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
+        ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
+        ->rightJoin('sistema.periodos as pe', function ($join){
+            return $join->whereBetween('c.fecha',[DB::raw('to_date(pe.desde::text,\'YYYY-MM-DD\')'),DB::raw('to_date(pe.hasta::text,\'YYYY-MM-DD\')')]);
+        })
+        //->crossJoin('sistema.periodos as pe')
+        ->select('pe.nombre as periodo', 'p.descripcion as provincia', 'e.cuie', 'e.nombre as efector', 'e.denominacion_legal', 'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad', 'c.nombre as accion', 'c.fecha',DB::raw('count(*) as participantes'))
+        //->whereBetween(DB::raw('c.fecha between pe.desde and pe.hasta'))
+        //->where(DB::raw('c.fecha between pe.desde and pe.hasta'))
+        //->where('dg.id_provincia',$provincia)
+        ->groupBy('pe.nombre', 'p.descripcion', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'd.nombre_departamento', 'l.nombre_localidad', 'c.nombre', 'c.fecha');
+
+        /*return DB::table('efectores.efectores as e')
+        ->join('efectores.datos_geograficos as dg', 'dg.id_efector', '=', 'e.id_efector')
+        ->join('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
+        ->join('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
+        ->join('geo.localidades as l', 'l.id', '=', 'dg.id_localidad')
+        ->join('alumnos.alumnos as a', 'a.establecimiento1', '=', 'e.cuie')        
+        ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
+        ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
+        ->select('p.descripcion as provincia', 'e.cuie', 'e.nombre as efector', 'e.denominacion_legal', 'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad', 'c.nombre as accion', 'c.fecha',DB::raw('count(*) as participantes'))
+        ->whereBetween('c.fecha',[$desde,$hasta])
+        ->where('dg.id_provincia',$provincia)
+        ->groupBy('p.descripcion', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'd.nombre_departamento', 'l.nombre_localidad', 'c.nombre', 'c.fecha');*/
+    }
+
     public function getTabla()
     {
         $query = $this->queryLogica();

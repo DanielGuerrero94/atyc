@@ -23,5 +23,6 @@
     "jquery-typeahead": "^2.7.6",
     "tether": "^1.4.0",
     "export-csv": "https://github.com/highcharts/export-csv"
-  }
+  },
+  "private": true
 }

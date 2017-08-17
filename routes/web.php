@@ -147,7 +147,6 @@ Route::group(['middleware' => ['logueado','logging']],function () {
     /*Route::get('reportes/pdf','ReportesController@getPdf');*/
     Route::get('reportes/query', 'ReportesController@queryReporte');
     Route::get('reportes/query/test', 'ReportesController@queryTest');
-    Route::get('reportes/efectores', 'ReportesController@reporte');
     Route::get('reportes/{id_reporte}', 'ReportesController@reporte');
 
     //Encuestas

@@ -77,6 +77,8 @@ class ReportesController extends Controller
         $returns = DB::select($query);
 
         return Datatables::of(collect($returns))->make(true);
+
+        /*return Datatables::of($query)->make(true);*/
     }
 
     private function queryLogica(Request $r)
@@ -116,21 +118,15 @@ class ReportesController extends Controller
 
             $query = "SELECT P.nombre as periodo ,R.*
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R 
-            where P.id_periodo = {$id_periodo}";            
+            where P.id_periodo = {$id_periodo}";    
+
+            /*$query = DB::table("sistema.periodos as pe,reporte_{$id_reporte}({$id_provincia},pe.desde,pe.hasta) as r")
+        ->select('pe.nombre as periodo','r.*')
+        ->where('pe.id_periodo',$id_periodo);  */      
 
         }
 
         return $query;
-    }
-
-    public function queryTest(Request $r)
-    {
-        $query = "SELECT * FROM reporte_".$r->id_reporte.
-        "('".Auth::user()->id_provincia."','".$r->desde."','".$r->hasta."')";
-
-        $returns = DB::select($query);
-
-        return Datatables::of($returns)->make(true);
     }
 
     public function getExcelReporte(Request $r)
@@ -198,5 +194,13 @@ class ReportesController extends Controller
         }
 
         return $query;
+    }
+
+    public function test($id_provincia = '0',$desde = '2014-01-01',$hasta = '2014-12-31',$id_periodo = 4,$id_reporte = 6)
+    {
+        return DB::table("sistema.periodos as pe")
+        ->join(DB::raw("reporte_{$id_reporte}({$id_provincia},pe.desde,pe.hasta) as r"))
+        ->select('pe.nombre as periodo','r.*')
+        ->where('pe.id_periodo',$id_periodo);
     }
 }
