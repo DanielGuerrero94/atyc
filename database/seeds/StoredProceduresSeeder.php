@@ -16,6 +16,7 @@ class StoredProceduresSeeder extends Seeder
       $this->reporte_3();
       $this->reporte_4();      
       $this->reporte_5();      
+      $this->reporte_6();      
     }
 
     /**
@@ -251,6 +252,46 @@ SELECT P.nombre as provincia,C.nombre,C.edicion,C.fecha,count (*) as cantidad_al
     where C.fecha between desde and hasta 
     and c.id_provincia = var_provincia
     group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre;
+END IF;
+END \$BODY\$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;");
+    }
+
+    public function reporte_6()
+    {
+      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_6(
+    IN var_provincia integer,
+    IN var_desde date,
+    IN var_hasta date)
+  RETURNS TABLE(provincia character varying, cuie character, efector character varying, denominacion_legal character varying, departamento character varying, localidad character varying, accion character varying, fecha date, participantes bigint) AS
+\$BODY\$
+BEGIN IF var_provincia = 0 THEN
+RETURN QUERY select p.descripcion as provincia, e.cuie, e.nombre as efector, e.denominacion_legal , d.nombre_departamento as departamento, l.nombre_localidad as localidad, c.nombre as accion, c.fecha, count(*) as participantes 
+ from efectores.efectores as e 
+ inner join efectores.datos_geograficos as dg on dg.id_efector = e.id_efector 
+ inner join geo.provincias as p on p.id_provincia = dg.id_provincia 
+ inner join geo.departamentos as d on d.id = dg.id_departamento 
+ inner join geo.localidades as l on l.id = dg.id_localidad 
+ inner join alumnos.alumnos as a on a.establecimiento1 = e.cuie 
+ inner join cursos.cursos_alumnos as ca on ca.id_alumno = a.id_alumno 
+ inner join cursos.cursos as c on c.id_curso = ca.id_curso 
+ where c.fecha between var_desde and var_hasta
+ group by  p.descripcion, e.cuie, e.nombre, e.denominacion_legal, d.nombre_departamento, l.nombre_localidad, c.nombre, c.fecha;
+ELSE RETURN QUERY
+select p.descripcion as provincia, e.cuie, e.nombre as efector, e.denominacion_legal , d.nombre_departamento as departamento, l.nombre_localidad as localidad, c.nombre as accion, c.fecha, count(*) as participantes 
+ from efectores.efectores as e 
+ inner join efectores.datos_geograficos as dg on dg.id_efector = e.id_efector 
+ inner join geo.provincias as p on p.id_provincia = dg.id_provincia 
+ inner join geo.departamentos as d on d.id = dg.id_departamento 
+ inner join geo.localidades as l on l.id = dg.id_localidad 
+ inner join alumnos.alumnos as a on a.establecimiento1 = e.cuie 
+ inner join cursos.cursos_alumnos as ca on ca.id_alumno = a.id_alumno 
+ inner join cursos.cursos as c on c.id_curso = ca.id_curso 
+ where c.fecha between var_desde and var_hasta
+ and dg.id_provincia::integer = var_provincia
+ group by  p.descripcion, e.cuie, e.nombre, e.denominacion_legal, d.nombre_departamento, l.nombre_localidad, c.nombre, c.fecha;
 END IF;
 END \$BODY\$
   LANGUAGE plpgsql VOLATILE
