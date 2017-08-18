@@ -21,6 +21,8 @@
    <!-- ADMIN-LTE -->
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/dist/css/AdminLTE.min.css")}}">
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/dist/css/skins/_all-skins.min.css")}}">
+  <link rel="stylesheet" type="text/css" href="{{url("/css/atyc.css")}}">
+
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -70,10 +72,10 @@
       <hr>
       <div class="row">
         <div class="col-xs-4 pull-left">
-          <a href={{url("/entrar")}} class="btn btn-primary btn-block btn-flat">Entrar</a>
+          <a href={{url("/entrar")}} class="btn btn-primary btn-block">Entrar</a>
         </div>
         <div class="col-xs-4 pull-right">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Registrar</button>
+          <button type="submit" class="btn btn-primary btn-block">Registrar</button>
         </div>
       </div>
     </form>    

@@ -46,3 +46,7 @@
 .pagination {
   border-radius: 4px !important;
 }
+
+.checkbox {
+  padding-left: 20px;
+}
