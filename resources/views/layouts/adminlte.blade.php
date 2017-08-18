@@ -62,7 +62,7 @@
   <!-- Jquery UI ejemplo -->
   <link rel="stylesheet" href="{{asset("/bower_components/jquery-ui-1.12.1/jquery-ui.min.css")}}">
 
- <link rel="stylesheet" type="text/css" href={{url("/css/atyc.css")}}/>
+ <link rel="stylesheet" type="text/css" href="{{url("/css/atyc.css")}}">
 
   <!-- Scripts -->
   <script>
