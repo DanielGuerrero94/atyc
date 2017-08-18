@@ -24,7 +24,8 @@
     "tether": "1.4.0",
     "export-csv": "https://github.com/highcharts/export-csv",
     "jquery": ">=2.1.4",
-    "bootstrap-tour": "^0.11.0"
+    "bootstrap-tour": "^0.11.0",
+    "jquery-ui": "^1.12.1"
   },
   "private": true
 }
