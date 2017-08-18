@@ -60,7 +60,7 @@
 
   
   <!-- Jquery UI ejemplo -->
-  <link rel="stylesheet" href="{{asset("/bower_components/jquery-ui-1.12.1/jquery-ui.min.css")}}">
+  <link rel="stylesheet" href="{{asset("/bower_components/jquery-ui/themes/jquery-ui.min.css")}}">
 
  <link rel="stylesheet" type="text/css" href="{{url("/css/atyc.css")}}">
 
@@ -102,7 +102,7 @@
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js" ></script>
 
     <!-- full calendar -->
-    <script type="text/javascript" src="{{asset("/bower_components/jquery-ui-1.12.1/jquery-ui.min.js")}}"></script>
+    <script type="text/javascript" src="{{asset("/bower_components/jquery-ui/jquery-ui.min.js")}}"></script>
 
     <!-- time picker -->
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/timepicker/bootstrap-timepicker.min.js")}}"></script>
