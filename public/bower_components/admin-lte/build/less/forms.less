@@ -3,18 +3,22 @@
  * ---------------
  */
 .form-control {
-  .border-radius(@input-radius);
+  .border-radius(@input-radius)!important;  
   box-shadow: none;
   border-color: @gray;
   &:focus {
-    border-color: @light-blue;
+    border-color: @light-blue !important;
     box-shadow: none;
   }
-  &::-moz-placeholder,
-  &:-ms-input-placeholder,
-  &::-webkit-input-placeholder {
+  &::-moz-placeholder {
     color: #bbb;
     opacity: 1;
+  }
+  &:-ms-input-placeholder {
+    color: #bbb;
+  }
+  &::-webkit-input-placeholder {
+    color: #bbb;
   }
 
   &:not(select) {
@@ -29,13 +33,9 @@
     label {
       color: @green;
     }
-    .form-control,
-    .input-group-addon {
-      border-color: @green;
+    .form-control {
+      border-color: @green !important;
       box-shadow: none;
-    }
-    .help-block {
-      color: @green;
     }
   }
 
@@ -43,13 +43,9 @@
     label {
       color: @yellow;
     }
-    .form-control,
-    .input-group-addon {
-      border-color: @yellow;
+    .form-control {
+      border-color: @yellow !important;
       box-shadow: none;
-    }
-    .help-block {
-      color: @yellow;
     }
   }
 
@@ -57,13 +53,9 @@
     label {
       color: @red;
     }
-    .form-control,
-    .input-group-addon {
-      border-color: @red;
+    .form-control {
+      border-color: @red !important;
       box-shadow: none;
-    }
-    .help-block {
-      color: @red;
     }
   }
 }
@@ -76,7 +68,6 @@
     background-color: #fff;
   }
 }
-
 /* button groups */
 .btn-group-vertical {
   .btn {
@@ -92,7 +83,7 @@
 
 /* support Font Awesome icons in form-control */
 .form-control-feedback.fa {
-  line-height: @input-height-base;
+    line-height: @input-height-base;
 }
 
 .input-lg + .form-control-feedback.fa,
@@ -100,7 +91,6 @@
 .form-group-lg .form-control + .form-control-feedback.fa {
   line-height: @input-height-large;
 }
-
 .input-sm + .form-control-feedback.fa,
 .input-group-sm + .form-control-feedback.fa,
 .form-group-sm .form-control + .form-control-feedback.fa {

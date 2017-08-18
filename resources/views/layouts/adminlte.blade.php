@@ -10,7 +10,10 @@
 
   <title>CUS-SUMAR-ATYC</title>
   
-  <!-- Styles -->
+  <link href="{{asset("/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css")}}" rel="stylesheet">
+ 
+
+    <!-- Styles -->
   <link href={{url("/css/app.css")}} rel="stylesheet">
 
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/plugins/datatables/dataTables.bootstrap.css")}}">  
@@ -23,7 +26,7 @@
   <link rel="stylesheet" href="{{ asset ("/bower_components/tether/dist/css/tether.min.css") }}" >
 
   <!-- Bootstrap -->
-  <link rel="stylesheet" href="{{ asset ("/bower_components/admin-lte/bootstrap/css/bootstrap.min.css") }}" >
+<link rel="stylesheet" href="{{ asset ("/bower_components/admin-lte/bootstrap/css/bootstrap.min.css") }}" >  
 
   <!-- time picker -->
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/plugins/timepicker/bootstrap-timepicker.min.css")}}">
@@ -32,7 +35,7 @@
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/plugins/datepicker/datepicker3.css")}}">
 
   <!-- date range picker -->
-  <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/plugins/daterangepicker/daterangepicker.css")}}">
+  <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/plugins/daterangepicker/daterangepicker-bs3.css")}}">
 
   <!-- typeahead -->
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/jquery-typeahead/dist/jquery.typeahead.min.css")}}">
@@ -50,12 +53,16 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
   <!-- datatable reorder -->
-<link href="https://cdn.datatables.net/rowreorder/1.2.0/css/rowReorder.dataTables.min.css" rel="stylesheet" />
+  <link href="https://cdn.datatables.net/rowreorder/1.2.0/css/rowReorder.dataTables.min.css" rel="stylesheet" />
   
   <!-- datatable responsive -->
   <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.dataTables.min.css" rel="stylesheet" />
-<link href="{{asset("/bower_components/bootstrap-tour-0.11.0/build/css/bootstrap-tour.min.css")}}" rel="stylesheet">
-  <link href={{url("/css/elearning.css")}} rel="stylesheet">
+
+  
+  <!-- Jquery UI ejemplo -->
+  <link rel="stylesheet" href="{{asset("/bower_components/jquery-ui-1.12.1/jquery-ui.min.css")}}">
+
+ <link href={{url("/css/atyc.css")}} rel="stylesheet">
 
   <!-- Scripts -->
   <script>
@@ -94,12 +101,6 @@
     <!-- js validate-->
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js" ></script>
 
-    <!-- js dialog -->
-    <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/fullcalendar/moment.js")}}"></script>
-
-    <!-- moment para fullcalendar -->
-    <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/fullcalendar/moment.js")}}"></script>
-
     <!-- full calendar -->
     <script type="text/javascript" src="{{asset("/bower_components/jquery-ui-1.12.1/jquery-ui.min.js")}}"></script>
 
@@ -121,16 +122,13 @@
     <script type="text/javascript" src="{{ asset ("/dist/js/jquery.validate.min.js") }}"></script>
 
     <!-- select 2 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
 
     <!-- datatable buttons -->
-    <script src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.4/js/dataTables.buttons.min.js"></script>
 
     <!-- knob -->
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/knob/jquery.knob.js")}}"></script>
-
-    <!-- Jquery UI ejemplo -->
-    <link rel="stylesheet" href="{{asset("/bower_components/jquery-ui-1.12.1/jquery-ui.min.css")}}">
 
     <!-- Scripts propios -->
     <script type="text/javascript" src="{{asset("/js/elearning.js")}}"></script> 
@@ -142,16 +140,14 @@
 
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/input-mask/jquery.inputmask.date.extensions.js")}}"></script>
 
-
     <!-- datatable reorder -->
     <script type="text/javascript" src="https://cdn.datatables.net/rowreorder/1.2.0/js/dataTables.rowReorder.min.js"></script>
 
     <!-- datatable responsive -->
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
 
-    <script src="{{asset("/bower_components/bootstrap-tour-0.11.0/build/js/bootstrap-tour.min.js")}}"></script>
+    <script type="text/javascript" src="{{asset("/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js")}}"></script>
     
-
   </head>
   <body class="skin-blue sidebar-mini" style="height: auto; min-height: 100%;">
     <div class="wrapper" style="height: auto; min-height: 100%;background-color: #f5f5f5;">
@@ -172,11 +168,11 @@
       </aside>
       <div class="content-wrapper">      
         <section class="content">
-        <div class="alert alert-warning alert-dismissible">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: rgb(0,0,0);">×</button>
-                <h4 style="color: rgb(0,0,0); text-align: center;"><i class="icon fa fa-warning"></i> Version de prueba!</h4>
-                <p style="color: rgb(0,0,0); text-align: center;">Si tiene preguntas,dudas,errores y/o sugerencias envíe un email a sistemasuec@gmail.com.</p>
-              </div>
+          <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: rgb(0,0,0);">×</button>
+            <h4 style="color: rgb(0,0,0); text-align: center;"><i class="icon fa fa-warning"></i> Version de prueba!</h4>
+            <p style="color: rgb(0,0,0); text-align: center;">Si tiene preguntas,dudas,errores y/o sugerencias envíe un email a sistemasuec@gmail.com.</p>
+          </div>
           @yield('content')
         </section>
       </div>
@@ -193,7 +189,7 @@
 
   <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/datepicker/bootstrap-datepicker.js")}}"></script>
 
-  <script src="{{asset("/bower_components/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.es.js")}}" charset="UTF-8"></script>
+  <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.es.js")}}" charset="UTF-8"></script>
 
   <script type="text/javascript" src="{{ asset ("/dist/js/jquery.validate.min.js") }}"></script>
 
@@ -257,8 +253,8 @@
 
   });
 
-      var timer;
-        window.onload = resetTimer;
+  var timer;
+  window.onload = resetTimer;
         // DOM Events
         document.onmousemove = resetTimer;
         document.onkeypress = resetTimer;
@@ -266,16 +262,11 @@
           clearTimeout(timer);
           timer = setTimeout(function() {
             $('#logout').trigger('click');
-          },1000000);  
+          },900000);  
         }
 
-</script>
-<!-- <script>
-window.location.hash="no-back-button";
-window.location.hash="Again-No-back-button";//again because google chrome don't insert first hash into history
-window.onhashchange=function(){window.location.hash="no-back-button";}
-</script>  -->
-@yield('script')
-@stack('moreScripts')
+      </script>
+      @yield('script')
+      @stack('moreScripts')
 
 

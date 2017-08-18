@@ -16,7 +16,7 @@
               <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
                 <div class="typeahead__field ">             
                   <span class="typeahead__query ">
-                    <input class="curso_typeahead " name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
+                    <input class="curso_typeahead form-control" name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
                   </span>
                 </div>
               </div>
@@ -27,7 +27,7 @@
             <div class="form-group col-xs-12 col-md-6">          
               <label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
               <div class="col-md-8 col-xs-9">
-              <input type="number" name="duracion" id="horas" placeholder="Duración en horas"> 
+              <input type="number" class="form-control" name="duracion" id="horas" placeholder="Duración en horas"> 
               </div>
             </div>
             </div>
@@ -35,7 +35,7 @@
             <div class="row">
             <div class="form-group col-xs-12 col-md-6">            
               <label for="fecha" class="control-label col-md-4 col-xs-4">Fecha:</label>
-              <div class="input-group date col-md-8 col-xs-6">
+              <div class="input-group date col-md-8 col-xs-6 ">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>

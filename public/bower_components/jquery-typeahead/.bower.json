@@ -32,7 +32,6 @@
     "commit": "910abc164289a693b0f73609b1faa81b798d3d34"
   },
   "_source": "https://github.com/running-coder/jquery-typeahead.git",
-  "_target": "^2.7.6",
-  "_originalSource": "jquery-typeahead",
-  "_direct": true
+  "_target": "2.7.6",
+  "_originalSource": "jquery-typeahead"
 }

@@ -75,7 +75,7 @@
 						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
 						data: {
-							q: @{{query}};
+							q: "@{{query}}"
 						},
 						error: function(data){
 							console.log("ajax error");
@@ -89,7 +89,7 @@
 						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
 						data: {
-							q: @{{query}};
+							q: "@{{query}}"
 						},
 						error: function(data){
 							console.log("ajax error");
@@ -103,7 +103,7 @@
 						url: "alumnos/typeahead/apellidos",
 						path: "data.info",
 						data: {
-							q: @{{query}};
+							q: "@{{query}}"
 						},
 						error: function(data){
 							console.log("ajax error");
