@@ -60,9 +60,7 @@ class reportesController extends Controller
 
 	private function queryLogica(Request $r)
 	{
-		logger("Reporte: ".json_encode($r->id_reporte));
-		logger("Filtros: ".json_encode($r->filtros));
-		logger("Order By: ".json_encode($r->order_by));
+		logger("Reporte: ".json_encode($r->all(),null,2));
 		//Esta parte me quedo horrible voy a tener que reeverlo porque tengo demasiados if
 		//En el caso que no sea un periodo de los que hay en la tabla le concateno las fechas que me pasaron para la columna periodo
 		

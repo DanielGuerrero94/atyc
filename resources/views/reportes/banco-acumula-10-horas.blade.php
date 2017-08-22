@@ -99,6 +99,7 @@
 					alert('Se descargara pronto.');
 					console.log(data);
 					window.location="descargar/excel/"+data;
+					$("#dialogDownload").remove();
 				},
 				error: function (data) {
 					alert('No se pudo crear el archivo.');
@@ -123,6 +124,7 @@
 					alert('Se descargara pronto.');
 					console.log(data);
 					window.location="descargar/pdf/"+data;
+					$("#dialogDownload").remove();
 				},
 				error: function (data) {
 					alert('No se pudo crear el archivo.');

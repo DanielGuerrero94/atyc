@@ -127,6 +127,8 @@
 		$('.excel').on('click',function (event) {
 			event.preventDefault();
 
+			mostrarDialogDescarga();
+
 			$.ajax({
 				url: 'excel',
 				data: {
@@ -135,10 +137,10 @@
 				},
 				success: function(data){
 					window.location="descargar/excel/"+data;
+					$("#dialogDownload").remove();
 				},
 				error: function (data) {
 					alert('No se pudo crear el archivo.');
-					console.log(data);
 				}
 			});
 

@@ -84,7 +84,7 @@
 			var fecha = $('.fa-calendar').closest('.row');			
 			
 			showCalendarInputs(periodo,fecha);
-		});	
+		});		
 		
 	});
 </script>

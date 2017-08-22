@@ -83,9 +83,7 @@ class ReportesController extends Controller
 
     private function queryLogica(Request $r)
     {
-        logger("Reporte: ".json_encode($r->id_reporte));
-        logger("Filtros: ".json_encode($r->filtros));
-        logger("Order By: ".json_encode($r->order_by));
+        logger("Reporte: ".json_encode($r->only(['id_reporte','filtros','order_by']),2));
 
         $id_reporte = $r->id_reporte;
 

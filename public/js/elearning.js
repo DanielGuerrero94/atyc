@@ -17,3 +17,32 @@ function showCalendarInputs(unInput,otroInput) {
 		otroInput.hide();
 	}
 };
+
+function mostrarDialogDescarga(){
+	
+	jQuery('<div/>', {
+		id: 'dialogDownload',
+		text: ''
+	}).appendTo('.container-fluid');
+	
+	$("#dialogDownload").dialog({
+		title: "Descarga",
+		show: {
+			effect: "fold"
+		},
+		hide: {
+			effect: "fade"
+		},
+		modal: true,
+		width : 360,
+		height : 150,
+		closeOnEscape: true,
+		resizable: false,
+		open: function () {
+			jQuery('<h3/>', {
+				id: 'dialogDownload',
+				text: 'Se descargara pronto.'
+			}).appendTo('#dialogDownload');
+		}
+	});
+}

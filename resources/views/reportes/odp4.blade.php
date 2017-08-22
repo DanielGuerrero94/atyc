@@ -88,8 +88,8 @@
 
 			var filtros = getFiltrosJson();
 			var order_by = $('#reporte-table').DataTable().order();
-			console.log(filtros);
-			console.log(order_by);
+
+			mostrarDialogDescarga();
 
 			$.ajax({
 				url: 'excel',
@@ -99,13 +99,11 @@
 					order_by: order_by
 				},
 				success: function(data){
-					alert('Se descargara pronto.');
-					console.log(data);
 					window.location="descargar/excel/"+data;
+					$("#dialogDownload").remove();
 				},
 				error: function (data) {
 					alert('No se pudo crear el archivo.');
-					console.log(data);
 				}
 			});
 		});
@@ -115,6 +113,8 @@
 			var filtros = getFiltrosJson();
 			var order_by = $('#reporte-table').DataTable().order();			
 
+			mostrarDialogDescarga();
+
 			$.ajax({
 				url: 'pdf',
 				data: {
@@ -123,13 +123,11 @@
 					order_by : order_by					
 				},
 				success: function(data){
-					alert('Se descargara pronto.');
-					console.log(data);
 					window.location="descargar/pdf/"+data;
+					$("#dialogDownload").remove();					
 				},
 				error: function (data) {
 					alert('No se pudo crear el archivo.');
-					console.log(data);
 				}
 			});			
 		});
