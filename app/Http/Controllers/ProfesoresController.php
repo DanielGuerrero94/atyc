@@ -147,7 +147,6 @@ class ProfesoresController extends AbmController
     */
     public function update(Request $request, $id)
     {
-        logger(json_encode($request->all()));
         try {
             $profesor = Profesor::findOrFail($id);            
             if ($request->id_tipo_doc === '6' || $request->id_tipo_doc === '5') {
@@ -173,7 +172,6 @@ class ProfesoresController extends AbmController
                 */
     public function destroy($id)
     {
-        logger($id);
         try {
             return Profesor::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
@@ -233,8 +231,6 @@ class ProfesoresController extends AbmController
 
             return $this->toDatatable($r, $query);
         } else {
-            logger('No paso');
-            logger($v->errors());
             return json_encode($v->errors());
         }
     }

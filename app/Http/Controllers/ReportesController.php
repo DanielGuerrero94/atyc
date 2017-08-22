@@ -130,7 +130,6 @@ class ReportesController extends Controller
     public function getExcelReporte(Request $r)
     {
         $reporte = Reporte::find($r->id_reporte);
-        logger(json_encode($reporte));
         $query_default = $this->queryLogica($r);
         $nombre_reporte = $reporte->view;
 

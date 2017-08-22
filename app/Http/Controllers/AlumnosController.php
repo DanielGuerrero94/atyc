@@ -107,8 +107,6 @@ class AlumnosController extends AbmController
     {
         $v = Validator::make($request->all(), $this->rules);
 
-        logger(json_encode($request->all()));
-
         if (!$v->fails()) {
 
             if ($request->has('pais')) {
@@ -166,8 +164,7 @@ class AlumnosController extends AbmController
     public function edit($id)
     {
         try {
-            $participante = $this->show($id);
-            return view('alumnos/modificar', $participante);
+            return view('alumnos/modificar', $this->show($id));
         } catch (ModelNotFoundException $e) {
             return json_encode('El dato no existe o no tiene permiso para verlo.');
         }

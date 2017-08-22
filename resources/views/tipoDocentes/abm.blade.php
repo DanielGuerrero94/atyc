@@ -7,6 +7,7 @@
 		<table id="table" class="table table-hover">
 			<thead>
 				<tr>
+					<th>Fix</th>
 					<th>Nombre</th>
 					<th>Acciones</th>
 				</tr>

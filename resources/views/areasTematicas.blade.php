@@ -18,6 +18,7 @@
 					<table id="table" class="table table-hover">
 						<thead>
 							<tr>
+								<th>Fix</th>
 								<th>Nombre</th>
 								<th>Acciones</th>
 							</tr>
@@ -43,6 +44,7 @@
 			scrollCollapse: true,
 			ajax : 'areasTematicasTabla',
 			columns: [
+			{ data: 'id_area_tematica'},
 			{ data: 'nombre'},
 			{ data: 'acciones'}
 			]

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\TipoDocente;
+use Datatables;
 
 //Exceptions
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -11,6 +12,8 @@ use Illuminate\Database\QueryException;
 
 class TipoDocentesController extends Controller
 {
+    private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
+
     /**
      * Display a listing of the resource.
      *
@@ -54,11 +57,7 @@ class TipoDocentesController extends Controller
      */
     public function show($id)
     {
-        try {
-            return TipoDocente::findOrFail($id)->toJson();
-        } catch (ModelNotFoundException $e) {
-            return json_encode($e->getMessage());
-        }
+        return array('tipos_docentes' => TipoDocente::findOrFail($id));
     }
 
     /**
@@ -69,7 +68,11 @@ class TipoDocentesController extends Controller
      */
     public function edit($id)
     {
-        return view('tipoDocentes.modificacion');        
+        try {
+            return view('tipoDocentes.modificacion',$this->show($id));   
+        } catch (ModelNotFoundException $e) {
+            return json_encode('El dato no existe o no tiene permiso para verlo.');
+        }     
     }
 
     /**
@@ -100,11 +103,55 @@ class TipoDocentesController extends Controller
     public function destroy($id)
     {
         try {
-            return TipoDocente::findOrFail($id)->delete();
+            return TipoDocente::findOrFail($id)
+            ->delete();
         } catch (ModelNotFoundException $e) {
             return json_encode($e->getMessage());
         } catch (QueryException $e) {
             return json_encode($e->getMessage());
         }
     }
+
+    /**
+     * Devuelve la informacion para abm.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  $request['botones']
+     * @return \Illuminate\Http\Response
+     */
+    public function table(Request $r)
+    {
+        /*
+         * En este caso me puedo permitir usar all para sacar la collection pero
+         * si fueran mas deberia usar DB::table() para que Datatable pueda usar chunk
+         */
+        return $this->toDatatable($r, TipoDocente::all());
+    }
+
+    /**
+     * Devuelve en DataTable los resultados con sus correspondientes acciones.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  $request['botones']
+     * @param  Collection               $resultados
+     * @return \Illuminate\Http\Response
+     */
+    public function toDatatable(Request $r, $resultados)
+    {
+        return Datatables::of($resultados)
+        ->addColumn(
+            'acciones',
+            function ($ret) use ($r) {
+
+                $accion = $r->input('botones');
+
+                $editar = '<a href="'.url('tipoDocentes').'/'.$ret->id_tipo_docente.'/edit'.'"><button data-id="'.$ret->id_tipo_docente.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>';
+
+                $agregar = '<button data-id="'.$ret->id_tipo_docente.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+
+                return $accion == 'agregar'?$agregar:$editar;
+            }
+            )
+        ->make(true);
+    }    
 }

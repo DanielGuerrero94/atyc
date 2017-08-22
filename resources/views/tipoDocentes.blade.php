@@ -17,22 +17,19 @@
 
 	$(document).ready(function(){
 
-		$('[data-toggle="popover"]').popover(); 
-
 		$('#abm .table').DataTable({
 			scrollCollapse: true,
 			ajax : 'tipoDocentes/table',
 			columns: [
+			{ data: 'id_tipo_docente'},
 			{ data: 'nombre'},
-			{ data: 'desde'},
-			{ data: 'hasta'},
 			{ data: 'acciones'}
 			]
 		});
 
-		$('#abm').on('click','#nuevo_periodo',function() {
+		$('#abm').on('click','#nuevo_tipo_docente',function() {
 			$.ajax ({
-				url: 'periodos/create',
+				url: 'tipoDocentes/create',
 				success: function(data){
 					$('#alta').html(data);
 					$('#alta').show();
@@ -44,94 +41,8 @@
 		$('#alta').on('click','#volver',function() {
 			$('#abm').show();
 			$('#alta').hide();
-		});
-
-		/*$('#abm').on('click','.editar',function() {
-			$.ajax ({
-				url: 'periodos/' + $(this).data('id'),
-				success: function(data){
-					$('#alta').html(data);
-					$('#alta').show();
-					$('#abm').hide();
-				}
-			});
-		});*/
-
-		$('#abm').on("click",".eliminar",function(){
-			var periodo = $(this).data('id');
-			var data = '_token='+$('#abm input').first().val();
-
-			jQuery('<div/>', {
-				id: 'dialogABM',
-				text: ''
-			}).appendTo('.container');
-
-			$("#dialogABM").dialog({
-				title: "Verificacion",
-				show: {
-					effect: "fold"
-				},
-				hide: {
-					effect: "fade"
-				},
-				modal: true,
-				width : 360,
-				height : 220,
-				closeOnEscape: true,
-				resizable: false,
-				dialogClass: "alert",
-				open: function () {
-					jQuery('<p/>', {
-						id: 'dialogABM',
-						text: '¿Esta seguro que quiere dar de baja el periodo?'
-					}).appendTo('#dialogABM');
-				},
-				buttons :
-				{
-					"Aceptar" : function () {
-						$(this).dialog("destroy");
-						$("#dialogABM").html("");				
-
-						$.ajax ({
-							url: 'periodos/' + periodo,
-							method: 'delete',
-							data: data,
-							success: function(data){
-								console.log('Se borro el periodo.');
-								location.reload();
-							},
-							error: function (data) {
-								console.log('Hubo un error.');
-								console.log(data);
-							}
-						});
-
-					},
-					"Cancelar" : function () {
-						$(this).dialog("destroy");
-						$("#dialogABM").html("");
-						location.reload("true");
-					}
-				}
-			});			
-		});
-
-		/*$('#alta').on('click','#modificar',function() {
-			$.ajax({				
-				url : 'periodos/' + $(this).data('id'),
-				method : 'put',
-				data : $('form').serialize(),
-				success : function(data){
-					console.log("Success.");
-					location.reload();	
-				},
-				error : function(data){
-					console.log("Error.");
-				}
-			});
-		});*/
+		});	
 
 	});	
-
 </script>
 @endsection

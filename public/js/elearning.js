@@ -37,6 +37,7 @@ function mostrarDialogDescarga(){
 		width : 360,
 		height : 150,
 		closeOnEscape: true,
+		closeText: "Cerrar",
 		resizable: false,
 		open: function () {
 			jQuery('<h3/>', {

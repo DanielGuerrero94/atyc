@@ -83,7 +83,6 @@ class cursosController extends AbmController
      */
     public function store(Request $request)
     {
-    	logger(json_encode($request->all()));
     	$v = Validator::make($request->all(),$this->rules);
     	if(!$v->fails()){
     		$curso = new Curso();
@@ -91,19 +90,16 @@ class cursosController extends AbmController
 
     		if($request->has('alumnos')){
     			$alumnos = explode(',',$request->get('alumnos'));
-    			logger(json_encode($alumnos));
     			$curso->alumnos()->attach($alumnos);
     		}
 
     		if($request->has('profesores')){
     			$profesores = explode(',',$request->get('profesores'));
-    			logger(json_encode($profesores));
     			$curso->profesores()->attach($profesores);				
     		}
 
     	}else{
-    		logger($v->errors());
-    		logger('El curso no paso la verificacion.'); 
+    		return json_encode($v->errors());    		
     	}
     }
 
@@ -496,8 +492,6 @@ class cursosController extends AbmController
 		$filtros = collect($filtros->get('filtros'));
 
 		$data = $this->queryLogica($r,$filtros,null)->get();
-
-		logger(json_encode($data));
 
 		$header = array('Nombre','Fecha','Edicion','Duracion','Area Tematica','Linea Estrategica','Provincia');
 		$column_size =  array(80,25,15,17,60,60,20);

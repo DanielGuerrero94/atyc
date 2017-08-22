@@ -61,7 +61,6 @@ abstract class AbmController extends Controller
 
     public function formularioConFiltros($tabla)
     {
-        logger($tabla);
         return view('formulario', ['columnas' => json_decode($this->filtros($tabla), true)]);
     }
 
