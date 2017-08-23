@@ -1,6 +1,6 @@
-## eLearning
+## Atyc (Asistencia técnica y capacitación)
 
-Sistema de gestion de alumnos,profesores,cursos,encuestas,reportes para las UCGP, desarrollado en php con Laravel.
+- Sistema de gestión de participantes, docentes, acciones de capacitación, encuestas, reportes para las UGSP, desarrollado en php con Laravel.
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img width="150"src="https://laravel.com/laravel.png"></a></p>
 

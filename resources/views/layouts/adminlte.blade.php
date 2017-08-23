@@ -131,7 +131,7 @@
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/knob/jquery.knob.js")}}"></script>
 
     <!-- Scripts propios -->
-    <script type="text/javascript" src="{{asset("/js/elearning.js")}}"></script> 
+    <script type="text/javascript" src="{{asset("/js/atyc.js")}}"></script> 
 
     <!-- Inputmask -->
     <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/input-mask/jquery.inputmask.js")}}"></script>
