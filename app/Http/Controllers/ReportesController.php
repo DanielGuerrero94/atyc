@@ -66,6 +66,8 @@ class ReportesController extends Controller
 
         $data = array_merge($this->getSelectOptions(),$extra);
 
+        logger(json_encode($data));
+
         return view('reportes.'.$reporte->view, $data);
     }
 

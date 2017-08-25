@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Database\Seeder;
@@ -40,6 +41,8 @@ class TrabajosTableSeeder extends Seeder
 
     public function update()
     {
-        \DB::connection('g_plannacer')->statement("update g_plannacer.alumnos set trabaja_en = 'TRABAJO NO RELACIONADO AL SUMAR' where trabaja_en = 'TRABAJO NO RELACIONADO AL SUMAR - ESTUDIA - NO TRABAJA'"); 
+        \DB::connection('g_plannacer')->statement("update g_plannacer.alumnos set trabaja_en = 'TRABAJO NO RELACIONADO AL SUMAR' where trabaja_en = 'TRABAJO NO RELACIONADO AL SUMAR - ESTUDIA - NO TRABAJA'");
+
+        \DB::connection('g_plannacer')->statement("update g_plannacer.alumnos set trabaja_en = 'ESTUDIA/SIN TRABAJO FORMAL' where trabaja_en = 'BENEFICIARIO SUMAR'");  
     }
 }
