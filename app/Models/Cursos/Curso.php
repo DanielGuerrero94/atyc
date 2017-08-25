@@ -32,6 +32,8 @@ class Curso extends Model
     protected $fillable = ['nombre','id_provincia','id_area_tematica',
     'id_linea_estrategica','fecha','duracion','edicion'];
 
+    protected $hidden = ['pivot'];
+
     public function profesores()
     {
         return $this->belongsToMany(

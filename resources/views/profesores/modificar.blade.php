@@ -113,16 +113,7 @@
 				</div>
 			</div>
 			<div class="box-body">
-				<table id="cursos-table" class="table table-hover" data-url="{{url('cursos/profesor')}}">
-					<thead>
-						<tr>
-							<th>Nombre accion</th>
-							<th>Fecha</th>
-							<th>Provincia organizadora</th>
-							<th>Acciones</th>
-						</tr>
-					</thead>
-				</table>
+				<table id="cursos-table" class="table table-hover" data-url="{{url('cursos/profesor')}}"/>
 			</div>
 		</div>
 	</div>
@@ -196,7 +187,7 @@
 					$('#alta').html("");
 					$('#abm').show();
 					$('#filtros').show();
-					location.reload("true");
+					window.location = "{{url('profesores')}}";
 				},
 				error: function (data) {
 					console.log('Error.');
@@ -209,10 +200,10 @@
 		$('.container').find('#cursos-table').DataTable({
 			ajax : $('#cursos-table').data('url') + '/' + profesor,
 			columns: [
-			{ data: 'nombre'},
-			{ data: 'fecha'},
-			{ data: 'provincia.nombre'},				
-			{ data: 'acciones'}
+			{ data: 'nombre', title: 'Nombre accion'},
+			{ data: 'fecha', title: 'Fecha'},
+			{ data: 'provincia.nombre', title: 'Provincia organizadora'},				
+			{ data: 'acciones', title: 'Acciones'}
 			]
 		});
 		

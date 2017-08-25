@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\User;
-use Log;
-use Validator;
 use Datatables;
 
 class GestoresController extends Controller
@@ -55,7 +53,8 @@ class GestoresController extends Controller
         } catch (ModelNotFoundException $e) {
             $gestor = null;
         }
-            return json_encode($gestor);
+        
+        return json_encode($gestor);
     }
 
     /**
@@ -66,7 +65,7 @@ class GestoresController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('profesores/modificar', $this->show($id));
     }
 
     /**

@@ -45,7 +45,7 @@ class ReportesController extends Controller
 
     public function getCursos()
     {
-        return view('reportes.cursos-cantidad-alumnos',$this->getSelectOptions());
+        return $this->reporte(5);
     }
 
     public function efectores(Request $r)
@@ -55,19 +55,18 @@ class ReportesController extends Controller
 
     public function reporte($id_reporte)
     {
-        $reporte = Reporte::find($id_reporte);        
+        $reporte = Reporte::findOrFail($id_reporte);        
 
-        $provincia_usuario = Provincia::find(Auth::user()->id_provincia);
+        $provincia_usuario = Provincia::findOrFail(Auth::user()->id_provincia);
 
         $extra = array(
             'reporte' => $reporte,
             'provincia_usuario' => $provincia_usuario
             );
 
-        return view(
-            'reportes.'.$reporte->view,
-            array_merge($this->getSelectOptions(),$extra)
-            );
+        $data = array_merge($this->getSelectOptions(),$extra);
+
+        return view('reportes.'.$reporte->view, $data);
     }
 
     public function queryReporte(Request $r)
@@ -129,7 +128,7 @@ class ReportesController extends Controller
 
     public function getExcelReporte(Request $r)
     {
-        $reporte = Reporte::find($r->id_reporte);
+        $reporte = Reporte::findOrFail($r->id_reporte);
         $query_default = $this->queryLogica($r);
         $nombre_reporte = $reporte->view;
 

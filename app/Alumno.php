@@ -32,7 +32,9 @@ class Alumno extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre'];    
+    protected $fillable = ['nombre'];
+
+    protected $hidden = ['pivot'];    
 
     public function cursos()
     {

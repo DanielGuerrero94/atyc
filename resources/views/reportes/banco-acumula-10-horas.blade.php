@@ -18,15 +18,7 @@
 						</h3>
 				</div>
 				<div class="box-body">
-					<table id="reporte-table" class="table table-hover">
-						<thead>
-							<tr>
-								<th>Período</th>
-								<th>Provincia</th>
-								<th>Cantidad de alumnos</th>		
-							</tr>
-						</thead>
-					</table>
+					<table id="reporte-table" class="table table-hover"/>
 				</div>
 			</div>
 		</div>
@@ -73,9 +65,9 @@
 				}
 			},
 			columns: [
-			{ data: 'periodo'},
-			{ data: 'provincia'},
-			{ data: 'cantidad_alumnos'}
+			{ data: 'periodo', title: 'Período'},
+			{ data: 'provincia', title: 'Provincia'},
+			{ data: 'cantidad_alumnos', title: 'Cantidad de participantes'}
 			]
 		});
 	

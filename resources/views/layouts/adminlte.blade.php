@@ -11,9 +11,9 @@
   <title>CUS-SUMAR-ATYC</title>
   
   <link href="{{asset("/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css")}}" rel="stylesheet">
- 
 
-    <!-- Styles -->
+
+  <!-- Styles -->
   <link href={{url("/css/app.css")}} rel="stylesheet">
 
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/plugins/datatables/dataTables.bootstrap.css")}}">  
@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="{{ asset ("/bower_components/tether/dist/css/tether.min.css") }}" >
 
   <!-- Bootstrap -->
-<link rel="stylesheet" href="{{ asset ("/bower_components/admin-lte/bootstrap/css/bootstrap.min.css") }}" >  
+  <link rel="stylesheet" href="{{ asset ("/bower_components/admin-lte/bootstrap/css/bootstrap.min.css") }}" >  
 
   <!-- time picker -->
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/plugins/timepicker/bootstrap-timepicker.min.css")}}">
@@ -62,7 +62,7 @@
   <!-- Jquery UI ejemplo -->
   <link rel="stylesheet" href="{{asset("/bower_components/jquery-ui/themes/base/jquery-ui.min.css")}}">
 
- <link rel="stylesheet" type="text/css" href="{{url("/css/atyc.css")}}">
+  <link rel="stylesheet" type="text/css" href="{{url("/css/atyc.css")}}">
 
   <!-- Scripts -->
   <script>
@@ -255,18 +255,22 @@
 
   var timer;
   window.onload = resetTimer;
-        // DOM Events
-        document.onmousemove = resetTimer;
-        document.onkeypress = resetTimer;
-        function resetTimer() {
-          clearTimeout(timer);
-          timer = setTimeout(function() {
-            $('#logout').trigger('click');
-          },900000);  
-        }
+  // DOM Events
+  document.onmousemove = resetTimer;
+  document.onkeypress = resetTimer;
 
-      </script>
-      @yield('script')
-      @stack('moreScripts')
+  function resetTimer() {
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      $.post('{{url('/logout')}}', {_token: $('meta:nth-child(4)').attr('content')}, function(data, textStatus, xhr) {
+        console.log('logout');
+        location.reload();
+      });  
+    },1140000); //19 minutos es 1 menos que en el servidor. 
+  }
+
+</script>
+@yield('script')
+@stack('moreScripts')
 
 

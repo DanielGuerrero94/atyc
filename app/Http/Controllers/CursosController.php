@@ -113,12 +113,12 @@ class cursosController extends AbmController
     {
     	$curso = Curso::select('id_curso','nombre','edicion','duracion','fecha','id_area_tematica','id_linea_estrategica','id_provincia')
     	->with([
-    		'areaTematica',
-    		'lineaEstrategica',
-    		'provincia'
-    		])
+    		'alumnos' => function ($query) {
+    			return $query->select('alumnos.id_alumno','nombres','apellidos','id_tipo_documento','nro_doc','id_provincia');
+    		}])
     	->where('id_curso',$id)
     	->first();
+
 
 		//De la base de datos me viene con '-' y en el orden opuesto
 		//Lo pongo con '/'
@@ -127,7 +127,7 @@ class cursosController extends AbmController
 
     	$curso = array('curso' => $curso);
     	return array_merge($this->getSelectOptions(),$curso);		
-    }
+    }    
 
     /**
      * Show the form for editing the specified resource.
@@ -137,7 +137,7 @@ class cursosController extends AbmController
      */
     public function edit($id)
     {
-    	return view('cursos/modificar',$this->show($id));
+    	return view('cursos/modificacion',$this->show($id));
     }
 
     /**

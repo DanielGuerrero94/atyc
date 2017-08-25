@@ -18,6 +18,7 @@ function showCalendarInputs(unInput,otroInput) {
 	}
 };
 
+//Para reportes
 function mostrarDialogDescarga(){
 	
 	jQuery('<div/>', {
@@ -46,4 +47,24 @@ function mostrarDialogDescarga(){
 			}).appendTo('#dialogDownload');
 		}
 	});
-}
+};
+
+function getFiltrosReportes() {
+	var id_provincia = $('#filtros #provincia :selected').data('id');
+	var id_periodo,desde,hasta;
+
+	if($('#toggle-fecha i').hasClass('fa-toggle-off')){
+		id_periodo = $('#filtros #periodo :selected').data('id');
+	}else{
+		desde = $('#filtros #desde').val();
+		hasta = $('#filtros #hasta').val();
+	}
+
+	return {
+		id_provincia: id_provincia,
+		id_periodo: id_periodo,
+		desde: desde,
+		hasta: hasta
+	};
+};
+

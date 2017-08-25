@@ -23,17 +23,34 @@
 			<div class="box-header">
 				<p>Partipantes en el curso.</p>
 			</div>
+			@if(isset($curso))
+			<div class="box-body">
+			@else
 			<div class="box-body" style="display: none;">
+			@endif
 				<table class="table table-striped" id="alumnos-del-curso">
 					<thead>
 						<tr>
 							<th>Nombre</th>
 							<th>Apellido</th>
 							<th>Documento</th>
-							<th></th>
+							<th>Acciones</th>
 						</tr>
 					</thead>
 					<tbody>
+						@if(isset($curso))
+						@foreach($curso->alumnos as $alumno)
+						<tr>
+							<td>{{$alumno->nombres}}</td>
+							<td>{{$alumno->apellidos}}</td>
+							<td>{{$alumno->nro_doc}}</td>
+							<td>
+									<div class="btn btn-xs btn-info"><a href="alumnos/{{$alumno->id_alumno}}"><i class="fa fa-search" data-id="{{$alumno->id_alumno}}"></i></a></div>
+									<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
+							</td>
+						</tr>
+						@endforeach
+						@endif
 					</tbody>
 				</table>
 			</div>
@@ -122,14 +139,12 @@
 					'<td>'+item.apellidos+'</td>'+
 					'<td>'+item.documentos+'</td>'+
 					'<td>'+
-					'<span class="pull-right-container">'+
-					'<div class="btn btn-xs btn-danger pull-right quitar"><i class="fa fa-minus"></i></div>'+
-					'<div class="btn btn-xs btn-info pull-right"><a href="alumnos/'+item.id+'"><i class="fa fa-search" data-id="'+item.id+'"></i></a></div>'+
-					'</span>'+
+					'<div class="btn btn-xs btn-info "><a href="alumnos/'+item.id+'"><i class="fa fa-search" data-id="'+item.id+'"></i></a></div>'+
+					'<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>'+
 					'</td>'+
 					'</tr>';
 					existe = false;
-					 
+
 					$.each($('#alumnos-del-curso tbody tr .fa-search'),function(k,v){
 						if($(v).data('id') == item.id){
 							existe = true;

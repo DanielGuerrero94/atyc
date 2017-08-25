@@ -1,6 +1,6 @@
 @extends('layouts.adminlte')
 @section('content')
-<div class="container">	
+<div class="container-fluid">	
 	<div class="col-sm-12">
 		<div class="box box-success ">
 			<div class="box-header with-border">
@@ -221,16 +221,7 @@
 				</div>
 			</div>
 			<div class="box-body">
-				<table id="cursos-table" class="table table-hover" data-url="{{url('cursos/alumno')}}">
-					<thead>
-						<tr>
-							<th>Nombre curso</th>
-							<th>Horas duracion</th>
-							<th>Provincia organizadora</th>
-							<th>Acciones</th>
-						</tr>
-					</thead>
-				</table>
+				<table id="cursos-table" class="table table-hover" data-url="{{url('cursos/alumno')}}"/>
 			</div>
 		</div>
 	</div>
@@ -241,7 +232,7 @@
 
 	//Typeahead para campos demasiado grandes como para traer una sola request
 	$.typeahead({
-		input: '.establecimiento_typeahead',
+		input: '#establecimiento',
 		order: "desc",
 		source: {
 			info: {
@@ -312,7 +303,7 @@
 	});			
 
 	$.typeahead({
-		input: '.nombre_organismo_typeahead',
+		input: '#nombre_organismo',
 		order: "desc",
 		source: {
 			info: {
@@ -332,11 +323,11 @@
 
 	$(document).ready(function () {
 
-		$('.container').on("click","#id_tipo_documento",function () {
+		$('.container-fluid').on("click","#id_tipo_documento",function () {
 			console.log($(this).find(":selected").attr("title"));
-			console.log($('.container').find("#id_tipo_documento").attr("title"));
+			console.log($('.container-fluid').find("#id_tipo_documento").attr("title"));
 			$(this).attr("title",$(this).find(":selected").attr("title"));
-			var nacionalidad = $('.container').find('#nacionalidad');
+			var nacionalidad = $('.container-fluid').find('#nacionalidad');
 			if ($(this).val() == '6' || $(this).val() == '5' ) {
 				nacionalidad.show();
 			}
@@ -347,13 +338,13 @@
 
 		//Para setear como seleccionado lo que ya tiene seteado
 
-		$('.container #id_tipo_documento').val($('.container #id_tipo_documento').attr('value'));
+		$('.container-fluid #id_tipo_documento').val($('.container-fluid #id_tipo_documento').attr('value'));
 
 		//Si es un documento extranjero lo que tiene seteado muestro el pais del que corresponde
-		var id_tipo_documento = $('.container #id_tipo_documento').attr('value');
+		var id_tipo_documento = $('.container-fluid #id_tipo_documento').attr('value');
 		if(id_tipo_documento == '6' || id_tipo_documento == '5'){
 			
-			$('.container #pais').parent().parent().parent().parent().show();
+			$('.container-fluid #pais').parent().parent().parent().parent().show();
 		}
 		
 		$('#id_tipo_documento').val($('#id_tipo_documento').attr('value'));
@@ -366,21 +357,21 @@
 
 		var alumno = $('#modificar').data("id");
 
-		$('.container').find('#cursos-table').DataTable({
+		$('.container-fluid').find('#cursos-table').DataTable({
 			ajax : $('#cursos-table').data('url') + '/' + alumno,
 			columns: [
-			{ data: 'nombre'},
-			{ data: 'duracion'},
-			{ data: 'provincia.nombre'},
-			{ data: 'acciones'}
+			{ data: 'nombre', title: 'Nombre acción'},
+			{ data: 'duracion', title: 'Horas duración'},
+			{ data: 'provincia.nombre', title: 'Provincia organizadora'},
+			{ data: 'acciones', title: 'Acciones'}
 			]
 		});
 
-		$('.container').on("click","#modificar",function(){
+		$('.container-fluid').on("click","#modificar",function(){
 			jQuery('<div/>', {
 				id: 'dialogModificacion',
 				text: ''
-			}).appendTo('.container');
+			}).appendTo('.container-fluid');
 
 			$("#dialogModificacion").dialog({
 				title: "Verificacion",

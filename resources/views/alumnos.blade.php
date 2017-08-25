@@ -142,7 +142,7 @@
 			jQuery('<div/>', {
 				id: 'dialogABM',
 				text: ''
-			}).appendTo('.container');
+			}).appendTo('.container-fluid');
 
 			$("#dialogABM").dialog({
 				title: "Verificacion",

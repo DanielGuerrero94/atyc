@@ -110,7 +110,6 @@
 
   $(document).ready(function() {
 
-    //No se porque estoy teniendo que inicializarlo aca si ya se deberia haber inicializado en el layout de adminlte
     $('.datepicker').datepicker({
       format: 'dd/mm/yyyy',
       language: 'es',
@@ -122,25 +121,22 @@
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
 
     $('#alta #tabla-profesores').on('click','.agregar',function () {
-      console.log("Se agrea al curso el alumno con id:");
+      
       var fila = $(this).parent().parent();
       var id = $(this).data('id');
 
-      //fila.hide();      
       fila.find('td:last').remove();
-      console.log(id);
       fila.append(botonQuitar);
-      console.log(fila);
 
       var data = $('#tabla-profesores').DataTable().row(fila).data();      
 
-      console.log(data);   
       $('#tabla-profesores').DataTable().row(fila).remove().draw(false);
       var nueva_fila = $('#tabla-profesores-curso').DataTable().row.add(data).draw(false).row().node();
-      console.log(nueva_fila);
+
       $(nueva_fila).find('td:last').remove();
       $(nueva_fila).append(botonQuitar); 
       $(nueva_fila).find('td:last button').attr('data-id',id);
+
     });
 
     $.typeahead({
@@ -212,13 +208,6 @@
       return $(element).find(':selected').val() !== "Seleccionar";
     }, "Debe seleccionar alguna opcion");    
 
-    /*jQuery.validator.addMethod("fecha", function(value, element) {
-      console.log(value);
-      var l10nES = new Intl.DateTimeFormat("es");
-      console.log(l10nES.format(value));
-      return $(element).val() !== "Seleccionar";
-    }, "No es una fecha valida.");*/
-
     var validator = $('#alta #form-alta').validate({
       rules : {
         nombre : "required",
@@ -273,6 +262,7 @@
         alert('Hay campos que no cumplen con la validacion.');
       }
     });
+
   });
 </script>
 

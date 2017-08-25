@@ -70,8 +70,8 @@
 		</div>
 	</form>
 </div>
-
 <script type="text/javascript">
+	
 	$(document).ready(function() {
 
 		$('#toggle-fecha').on('click',function () {
@@ -84,7 +84,9 @@
 			var fecha = $('.fa-calendar').closest('.row');			
 			
 			showCalendarInputs(periodo,fecha);
-		});		
-		
+			
+		});	
+
 	});
+
 </script>
