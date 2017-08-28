@@ -78,7 +78,7 @@
 					<label for="provincia" class="control-label col-xs-5">Provincia:</label>
 					<div class="col-xs-7">
 						<select class="form-control" id="provincia" name="id_provincia">
-							<option data-id="0">Todas las provincias</option>
+							<option data-id="0" value="0">Todas las provincias</option>
 							@foreach ($provincias as $provincia)
 
 							<option data-id="{{$provincia->id_provincia}}" value="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									

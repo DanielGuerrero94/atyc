@@ -115,7 +115,11 @@ class cursosController extends AbmController
     	->with([
     		'alumnos' => function ($query) {
     			return $query->select('alumnos.id_alumno','nombres','apellidos','id_tipo_documento','nro_doc','id_provincia');
-    		}])
+    		},
+    		'profesores' => function ($query) {
+    			return $query->select('sistema.profesores.id_profesor','nombres','apellidos','id_tipo_documento','nro_doc');
+    		}
+    		])
     	->where('id_curso',$id)
     	->first();
 

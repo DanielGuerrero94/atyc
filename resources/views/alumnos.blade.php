@@ -53,7 +53,7 @@
 			{ data: 'apellidos'},
 			{ data: 'nro_doc'},
 			{ name: 'id_tipo_documento',data: 'tipo_documento.nombre'},
-			{ data: 'provincia.nombre'},
+			{ name: 'id_provincia',data: 'provincia.nombre'},
 			{ data: 'acciones', orderable: false}
 			],
 			responsive: true
@@ -65,7 +65,8 @@
 			.serializeArray();
 		}
 
-		$('#filtros').on('click','#filtrar',function () {	
+		$('#filtros').on('click','#filtrar',function () {
+			console.log(getFiltros());	
 
 			datatable = $('#abm-table').DataTable({
 				destroy: true,
@@ -80,8 +81,8 @@
 				{ data: 'nombres'},
 				{ data: 'apellidos'},
 				{ data: 'nro_doc'},
-				{ data: 'id_tipo_documento',orderable: false},
-				{ data: 'provincia'},
+				{ name: 'id_tipo_documento',data: 'tipo_documento.nombre',orderable: false},
+				{ data: 'provincia.nombre'},
 				{ data: 'acciones', orderable: false}
 				],			
 				rowReorder: {

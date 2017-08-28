@@ -32,15 +32,16 @@ class Alumno extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre'];
+    /*protected $fillable = ['nombres', 'apellidos', 'id_tipo_documento', 'nro_doc', 'pais', 'id_genero', 'id_provincia', 'localidad', 'id_trabajo', 'tipo_organismo', 'organismo', 'tipo_convenio', 'efector', 'establecimiento', 'id_funcion']; */ 
+    protected $fillable = ['nombres', 'apellidos', 'id_tipo_documento', 'nro_doc', 'id_genero', 'id_provincia', 'localidad', 'id_trabajo', 'id_funcion'];  
 
     protected $hidden = ['pivot'];    
 
     public function cursos()
     {
         return $this
-            ->belongsToMany('App\Curso', 'cursos_alumnos', 'id_curso', 'id_alumno')
-            ->withTimestamps();
+        ->belongsToMany('App\Curso', 'cursos_alumnos', 'id_curso', 'id_alumno')
+        ->withTimestamps();
     }
 
     public function provincia()
@@ -51,7 +52,7 @@ class Alumno extends Model
     public function tipoDocumento()
     {
         return $this
-            ->hasOne('App\TipoDocumento', 'id_tipo_documento', 'id_tipo_documento');
+        ->hasOne('App\TipoDocumento', 'id_tipo_documento', 'id_tipo_documento');
     }
 
     public function pais()
@@ -91,7 +92,7 @@ class Alumno extends Model
         $alumno->id_funcion = $r->id_funcion;
         $alumno->id_genero = $r->id_genero;
         $alumno->id_convenio = $r->has('id_convenio')?$r->id_convenio:null;
-          
+
         $alumno->id_pais = $r->has('pais')?$r->pais:null;
         $alumno->organismo1 = $r->has('tipo_organismo')?$r->tipo_organismo:null;
         $alumno->organismo2 = $r->has('organismo')?$r->organismo:null;
@@ -127,7 +128,7 @@ class Alumno extends Model
         //Hasta que no corriga las views para que los datatable no tengan esta columna se le saca el if
         /*if (Auth::user()->id_provincia == 25) {*/
             return $query->leftJoin('sistema.provincias', 'alumnos.id_provincia', '=', 'sistema.provincias.id_provincia')
-                ->select('sistema.provincias.nombre as provincia');            
-        /*}*/
+            ->select('sistema.provincias.nombre as provincia');            
+            /*}*/
+        }
     }
-}

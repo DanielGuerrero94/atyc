@@ -65,6 +65,26 @@ class AlumnosController extends AbmController
     "provincia",
     "acciones"
     ],
+    $update = [
+    'nombres' => 'required|string',
+    'apellidos' => 'required|string',
+    'id_tipo_documento' => 'required|numeric',
+    'id_pais' => 'required_if:id_tipo_documento,5,6',
+    'nro_doc' => 'required|numeric',
+    'localidad' => 'required|string',
+    'id_provincia' => 'required|numeric',
+    'id_trabajo' => 'required|numeric',
+    'id_genero' => 'required|numeric',
+    'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
+    //'establecimiento' => 'required_if:id_trabajo,2|required_if:id_trabajo,2|string',
+    'id_convenio' => 'nullable',
+    'establecimiento1' => 'required_with:id_convenio|string',
+    'organismo1' => 'required_if:id_trabajo,3|string',
+    'organismo2' => 'required_if:id_trabajo,3|string',
+    'email' => 'nullable|email',
+    'tel' => 'nullable',
+    'cel' => 'nullable'
+    ],
     $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
 
     /**
@@ -179,7 +199,15 @@ class AlumnosController extends AbmController
      */
     public function update(Request $request, $id)
     {
-        return Alumno::findOrFail($id)->modificar($request);
+        logger($request->all());
+        $v = Validator::make($request->all(), $this->update);
+
+        if(!$v->fails()){
+            Alumno::findOrFail($id)->update($request->all());
+        } else {
+            logger(json_encode($v->errors()));
+            return json_encode($v->errors());
+        }
     }
 
     /**
@@ -386,7 +414,8 @@ class AlumnosController extends AbmController
         $filtros = collect($r->get('filtros'))
         ->mapWithKeys(function ($item){   
             return [$item['name'] => $item['value']] ;
-        });
+        })->except(['id_provincia']);
+
 
         $order_by = $r->input('order_by',null)?$r->get('order_by'):null;
         

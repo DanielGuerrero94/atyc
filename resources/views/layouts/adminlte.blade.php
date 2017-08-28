@@ -8,7 +8,7 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>CUS-SUMAR-ATYC</title>
+  <title>Sistema Integral de gestión de ATyC</title>
   
   <link href="{{asset("/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css")}}" rel="stylesheet">
 
@@ -154,8 +154,8 @@
       <header class="main-header">
         <!-- Branding Image -->
         <a class="logo" href="{{ url('/dashboard') }}">
-          <span class="logo-mini"><b>A</b>tyc</span>
-          <span class="logo-lg"><b>A</b>tyc</span>
+          <span class="logo-mini"><b>A</b>TyC</span>
+          <span class="logo-lg" style="font-size: 0.6em">Sistema Integral de gestión de <b>A</b>TyC</span>
         </a>      
         <nav class="navbar navbar-static-top" role="navigation">
           @include('layouts.navbar')
@@ -168,11 +168,11 @@
       </aside>
       <div class="content-wrapper">      
         <section class="content">
-          <div class="alert alert-warning alert-dismissible">
+          <!-- <div class="alert alert-warning alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: rgb(0,0,0);">×</button>
             <h4 style="color: rgb(0,0,0); text-align: center;"><i class="icon fa fa-warning"></i> Version de prueba!</h4>
             <p style="color: rgb(0,0,0); text-align: center;">Si tiene preguntas,dudas,errores y/o sugerencias envíe un email a sistemasuec@gmail.com.</p>
-          </div>
+          </div> -->
           @yield('content')
         </section>
       </div>

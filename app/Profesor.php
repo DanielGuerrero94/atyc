@@ -34,6 +34,8 @@ class Profesor extends Model
      */
     protected $fillable = ['nombre'];
 
+    protected $hidden = ['pivot'];    
+
     public function cursos()
     { 
         return $this->belongsToMany('App\Curso', 'cursos.cursos_profesores', 'id_curso', 'id_profesor')->withTimestamps();

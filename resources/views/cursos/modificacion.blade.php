@@ -28,11 +28,20 @@
 									</div>
 								</div>
 								<br>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">          
+                    <label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
+                    <div class="col-md-8 col-xs-9">
+                      <input type="number" class="form-control" name="duracion" id="horas" placeholder="Duración en horas" value="{{$curso->duracion}}"> 
+                    </div>
+                  </div>
+                </div>
+                <br>
 								<div class="row">
 									<div class="form-group col-xs-12 col-md-6">          
-										<label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
+										<label for="edicion" class="control-label col-md-4 col-xs-3">Edición:</label>
 										<div class="col-md-8 col-xs-9">
-											<input type="number" class="form-control" name="duracion" id="horas" placeholder="Duración en horas" value="{{$curso->duracion}}"> 
+											<input type="number" class="form-control" name="edicion" id="edicion" placeholder="Edición de la accion" value="{{$curso->edicion}}" disabled="true"> 
 										</div>
 									</div>
 								</div>
@@ -190,31 +199,6 @@
    	});
    });
 
-   $('#alumnos_del_curso').DataTable({
-   	destroy: true,
-   	ajax : $('#modificar').data('id')+'/alumnos',
-   	columns: [
-   	{ data: 'nombres'},
-   	{ data: 'apellidos'},
-   	{ data: 'id_tipo_documento'},
-   	{ data: 'nro_doc'},
-   	{ data: 'provincia'},
-   	{ data: 'acciones'}
-   	]
-   });
-
-   $('#profesores_del_curso').DataTable({
-   	destroy: true,
-   	ajax : $('#modificar').data('id')+'/profesores',
-   	columns: [
-   	{ data: 'nombres'},
-   	{ data: 'apellidos'},
-   	{ data: 'id_tipo_documento'},
-   	{ data: 'nro_doc'},
-   	{ data: 'acciones'}
-   	]
-   });
-
 });
 </script>
 @endsection
@@ -276,7 +260,7 @@
     });
 
     function getAlumnosSelected() {
-    	return $('#form-alta #alumnos-del-curso .fa-search').map(function(index, val) {
+    	return $('#form-modificacion #alumnos-del-curso .fa-search').map(function(index, val) {
     		return $(val).data('id');
     	});
     }
@@ -288,9 +272,9 @@
     }
 
     function getSelected() {
-    	var id_linea_estrategica = $('#form-alta #linea_estrategica option:selected').data('id');
-    	var id_area_tematica = $('#form-alta #area_tematica option:selected').data('id');
-    	var id_provincia = $('#form-alta #provincia option:selected').data('id');
+    	var id_linea_estrategica = $('#form-modificacion #linea_estrategica option:selected').data('id');
+    	var id_area_tematica = $('#form-modificacion #area_tematica option:selected').data('id');
+    	var id_provincia = $('#form-modificacion #provincia option:selected').data('id');
 
     	var alumnos = getAlumnosSelected();
     	var profesores = getProfesoresSelected();
@@ -318,21 +302,14 @@
     }
 
     function getInput() {         
-    	return $.merge($('#form-alta').serializeArray(),getSelected());
+    	return $.merge($('#form-modificacion').serializeArray(),getSelected());
     }
 
     jQuery.validator.addMethod("selecciono", function(value, element) {
     	return $(element).find(':selected').val() !== "Seleccionar";
-    }, "Debe seleccionar alguna opcion");    
+    }, "Debe seleccionar alguna opcion");   
 
-    /*jQuery.validator.addMethod("fecha", function(value, element) {
-      console.log(value);
-      var l10nES = new Intl.DateTimeFormat("es");
-      console.log(l10nES.format(value));
-      return $(element).val() !== "Seleccionar";
-  }, "No es una fecha valida.");*/
-
-  var validator = $('#alta #form-alta').validate({
+  var validator = $('#alta #form-modificacion').validate({
   	rules : {
   		nombre : "required",
   		duracion : {
@@ -379,9 +356,9 @@
   });
 
   $('#alta').on('click','.store',function() {  
-  	$('#alta #form-alta .nav-tabs').children().first().children().click();
+  	$('#alta #form-modificacion .nav-tabs').children().first().children().click();
   	if(validator.valid()){
-  		$('#alta #form-alta').submit(); 
+  		$('#alta #form-modificacion').submit(); 
   	}else{
   		alert('Hay campos que no cumplen con la validacion.');
   	}
