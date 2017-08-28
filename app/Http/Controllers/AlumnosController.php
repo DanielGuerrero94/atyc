@@ -199,11 +199,10 @@ class AlumnosController extends AbmController
      */
     public function update(Request $request, $id)
     {
-        logger($request->all());
         $v = Validator::make($request->all(), $this->update);
 
         if(!$v->fails()){
-            Alumno::findOrFail($id)->update($request->all());
+            $a = Alumno::findOrFail($id)->update($request->all());
         } else {
             logger(json_encode($v->errors()));
             return json_encode($v->errors());

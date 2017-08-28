@@ -86,9 +86,12 @@
 							<div class="col-sm-7">
 								<select class="form-control" id="provincia" value="{{$alumno->id_provincia}}" name="id_provincia"> 
 
-									@foreach ($provincias as $provincia)								
+									@foreach ($provincias as $provincia)			
+									@if ($alumno->id_provincia == $provincia->id_provincia)					
+									<option value="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}" selected="selected">{{$provincia->nombre}}</option>	
+									@else
 									<option value="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>	
-
+									@endif
 									@endforeach
 								</select>
 							</div>
