@@ -79,8 +79,7 @@
     </div>
   </div>
 </div>
-@endif
-@endif
+
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
   <div class="col-lg-12 col-xs-12">
     <div class="box box-default">
@@ -90,6 +89,8 @@
     </div>
   </div>  
 </div>
+@endif
+@endif
 @endsection
 
 @section('script')
