@@ -81,10 +81,10 @@
 				{ data: 'nombres'},
 				{ data: 'apellidos'},
 				{ data: 'nro_doc'},
-				{ name: 'id_tipo_documento',data: 'tipo_documento.nombre',orderable: false},
-				{ data: 'provincia.nombre'},
+				{ name: 'id_tipo_documento',data: 'id_tipo_documento',orderable: false},
+				{ name: 'id_provincia',data: 'provincia'},
 				{ data: 'acciones', orderable: false}
-				],			
+				],
 				rowReorder: {
 					selector: 'td:nth-child(2)'
 				},
