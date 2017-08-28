@@ -125,6 +125,7 @@ class AlumnosController extends AbmController
      */
     public function store(Request $request)
     {
+        logger('Quiere crear participante con: '.json_encode($request->all()));
         $v = Validator::make($request->all(), $this->rules);
 
         if (!$v->fails()) {
@@ -199,6 +200,7 @@ class AlumnosController extends AbmController
      */
     public function update(Request $request, $id)
     {
+        logger('Quiere actualizar participante {$id} con: '.json_encode($request->all()));
         $v = Validator::make($request->all(), $this->update);
 
         if(!$v->fails()){

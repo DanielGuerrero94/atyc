@@ -89,6 +89,7 @@ class ProfesoresController extends AbmController
     */
     public function store(Request $request)
     {
+        logger('Quiere crear docente con: '.json_encode($request->all()));
         $v = Validator::make($request->all(), $this->rules);
         
         if (!$v->fails()) {
@@ -147,6 +148,7 @@ class ProfesoresController extends AbmController
     */
     public function update(Request $request, $id)
     {
+        logger('Quiere actualizar docente {$id} con: '.json_encode($request->all()));
         try {
             $profesor = Profesor::findOrFail($id);            
             if ($request->id_tipo_doc === '6' || $request->id_tipo_doc === '5') {

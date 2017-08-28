@@ -83,6 +83,7 @@ class cursosController extends AbmController
      */
     public function store(Request $request)
     {
+    	logger('Quiere crear accion con: '.json_encode($request->all()));
     	$v = Validator::make($request->all(),$this->rules);
     	if(!$v->fails()){
     		$curso = new Curso();
@@ -153,6 +154,7 @@ class cursosController extends AbmController
      */
     public function update(Request $request, $id)
     {
+    	logger('Quiere actualizar accion {$id} con: '.json_encode($request->all()));
     	$curso = Curso::findOrFail($id);
 
     	if($request->has('alumnos')){

@@ -66,8 +66,6 @@ class ReportesController extends Controller
 
         $data = array_merge($this->getSelectOptions(),$extra);
 
-        logger(json_encode($data));
-
         return view('reportes.'.$reporte->view, $data);
     }
 
@@ -84,8 +82,6 @@ class ReportesController extends Controller
 
     private function queryLogica(Request $r)
     {
-        logger("Reporte: ".json_encode($r->only(['id_reporte','filtros','order_by']),2));
-
         $id_reporte = $r->id_reporte;
 
         $id_provincia = array_key_exists('id_provincia', $r->filtros)?
