@@ -22,7 +22,7 @@ class EfectoresController extends Controller
         ->leftJoin('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
         ->leftJoin('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
         ->leftJoin('geo.localidades as l', 'l.id', '=', 'dg.id_localidad')
-        ->select('p.descripcion as provincia', 'e.siisa', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'e.domicilio', 'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad', 'e.codigo_postal', 'dg.ciudad');
+        ->select('p.id_provincia','p.descripcion as provincia', 'e.siisa', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'e.domicilio', 'd.id_departamento', 'd.nombre_departamento as departamento', 'l.id_localidad', 'l.nombre_localidad as localidad', 'e.codigo_postal', 'dg.ciudad');
     }
 
     public function reporte()
