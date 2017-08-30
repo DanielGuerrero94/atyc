@@ -11,20 +11,12 @@
 					<h2 class="box-tittle">Gestores</h2>
 				</div>
 				<div class="box-body">
-					<table id="abm-table" class="table table-hover">
-						<thead>
-							<tr>
-								<th>Nombre</th>
-								<th>Email</th>
-								<th>Acciones</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-				<div class="box-footer">
+					<table id="abm-table" class="table table-hover"/>
+				</div>				
+			</div>
+			<div class="box-footer">
 					<a class="pull-right" href="{{url('/registrar')}}">Registrar</a>
 				</div>
-			</div>
 		</div>
 	</div>	
 	<div id="alta" style="display: none;"></div>
@@ -39,9 +31,10 @@
 		$('#abm-table').DataTable({
 			ajax : 'gestores/tabla',
 			columns: [
-			{ data: 'nombre'},
-			{ data: 'email'},
-			{ data: 'acciones'}
+			{ data: 'name', title: 'Usuario'},
+			{ data: 'title', title: 'Descripcion'},
+			{ data: 'email', title: 'Email'},
+			{ data: 'acciones', title: 'Acciones'}
 			]
 		});
 

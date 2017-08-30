@@ -6,6 +6,7 @@ use Closure;
 
 class Logging
 {
+    private $start,$end;
     /**
      * Handle an incoming request.
      *
@@ -24,7 +25,7 @@ class Logging
     {
         $this->end = microtime(true);
 
-        //$this->log($request);
+        $this->log($request);
     }
 
     protected function log($request)
