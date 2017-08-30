@@ -158,14 +158,14 @@ class cursosController extends AbmController
     	$curso = Curso::findOrFail($id);
 
     	if($request->has('alumnos')){
-    		$curso->alumnos()->sync($request->get('alumnos'));
+    		$curso->alumnos()->sync(explode(',', $request->get('alumnos')));
     	}
 
     	if($request->has('profesores')){
-    		$curso->profesores()->sync($request->get('profesores'));
+    		$curso->profesores()->sync(explode(',', $request->get('profesores')));
     	}
     	
-    	$curso->modificar($request);
+    	$curso->update($request->all());
     }
 
     /**

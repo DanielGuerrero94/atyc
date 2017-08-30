@@ -37,171 +37,106 @@
                   </div>
                 </div>
                 <br>
-								<div class="row">
-									<div class="form-group col-xs-12 col-md-6">          
-										<label for="edicion" class="control-label col-md-4 col-xs-3">Edición:</label>
-										<div class="col-md-8 col-xs-9">
-											<input type="number" class="form-control" name="edicion" id="edicion" placeholder="Edición de la accion" value="{{$curso->edicion}}" disabled="true"> 
-										</div>
-									</div>
-								</div>
-								<br>
-								<div class="row">
-									<div class="form-group col-xs-12 col-md-6">            
-										<label for="fecha" class="control-label col-md-4 col-xs-4">Fecha:</label>
-										<div class="input-group date col-md-8 col-xs-6 ">
-											<div class="input-group-addon">
-												<i class="fa fa-calendar"></i>
-											</div>
-											<input type="text" name="fecha" id="fecha" class="form-control pull-right datepicker" value="{{$curso->fecha}}">
-										</div>
-									</div>
-								</div>
-								<div class="row">
-									<div class="form-group col-xs-12 col-md-6">          
-										<label for="area_tematica" class="control-label col-md-4 col-xs-3">Areas Tematicas:</label>
-										<div class="col-md-8 col-xs-9">
-											<select class="form-control" id="area_tematica" name="area_tematica">
-												<option>Seleccionar</option>
-												@foreach ($areas_tematicas as $area)
-												@if ($area->id_area_tematica === $curso->id_area_tematica)
-												<option data-id="{{$area->id_area_tematica}}" selected="selected">{{$area->nombre}}</option>
-												@else
-												<option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
-												@endif	
-												@endforeach
-											</select>          
-										</div>
-									</div>
-								</div>
-								<br>
-								<div class="row">
-									<div class="form-group col-xs-12 col-md-6">          
-										<label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
-										<div class="col-md-8 col-xs-9">
-											<select class="form-control" id="linea_estrategica" name="linea_estrategica">
-												<option>Seleccionar</option>
-												@foreach ($lineas_estrategicas as $linea)
-												@if ($linea->id_linea_estrategica === $curso->id_linea_estrategica)
-												<option data-id="{{$linea->id_linea_estrategica}}" selected="selected">{{$linea->numero}}-{{$linea->nombre}}</option>
-												@else
-												<option data-id="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
-												@endif	
-												@endforeach
-											</select>
-										</div>          
-									</div>
-								</div>
-								<br>
-								<div class="row">
-									<div class="form-group col-xs-12 col-md-6">          
-										<label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
-										<div class="col-md-8 col-xs-9">
-											@if(Auth::user()->id_provincia == 25)
-											<select class="form-control" id="provincia">
-												@foreach ($provincias as $provincia)
-
-												<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>                 
-												@endforeach
-											</select>
-											@else
-											<select class="form-control" id="provincia" name="provincia" disabled>
-												<option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>  
-											</select>
-											@endif
-										</div>        
-									</div>
-								</div>          
-							</div>
-							<div class="tab-pane" id="alumnos">   
-								@include('alumnos.asignacionAlternativa')             
-							</div>
-							<div class="tab-pane" id="profesores">
-								@include('profesores.asignacionAlternativa')          
-							</div>  
-						</form>  
-					</div>
-				</div>
-				<div class="box-body">
-					<div class="btn btn-success pull-right store">Guardar</div>
-				</div>
-			</div>
-		</form>	
-	</div>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">          
+                    <label for="edicion" class="control-label col-md-4 col-xs-3">Edición:</label>
+                    <div class="col-md-8 col-xs-9">
+                      <input type="number" class="form-control" name="edicion" id="edicion" placeholder="Edición de la accion" value="{{$curso->edicion}}" disabled="true"> 
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">            
+                    <label for="fecha" class="control-label col-md-4 col-xs-4">Fecha:</label>
+                    <div class="input-group date col-md-8 col-xs-6 ">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" name="fecha" id="fecha" class="form-control pull-right datepicker" value="{{$curso->fecha}}">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">          
+                    <label for="area_tematica" class="control-label col-md-4 col-xs-3">Areas Tematicas:</label>
+                    <div class="col-md-8 col-xs-9">
+                      <select class="form-control" id="area_tematica" name="area_tematica">
+                        <option>Seleccionar</option>
+                        @foreach ($areas_tematicas as $area)
+                        @if ($area->id_area_tematica === $curso->id_area_tematica)
+                        <option data-id="{{$area->id_area_tematica}}" selected="selected">{{$area->nombre}}</option>
+                        @else
+                        <option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
+                        @endif	
+                        @endforeach
+                      </select>          
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">          
+                    <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
+                    <div class="col-md-8 col-xs-9">
+                      <select class="form-control" id="linea_estrategica" name="linea_estrategica">
+                        <option>Seleccionar</option>
+                        @foreach ($lineas_estrategicas as $linea)
+                        @if ($linea->id_linea_estrategica === $curso->id_linea_estrategica)
+                        <option data-id="{{$linea->id_linea_estrategica}}" selected="selected">{{$linea->numero}}-{{$linea->nombre}}</option>
+                        @else
+                        <option data-id="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
+                        @endif	
+                        @endforeach
+                      </select>
+                    </div>          
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">          
+                    <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
+                    <div class="col-md-8 col-xs-9">
+                      @if(Auth::user()->id_provincia == 25)
+                      <select class="form-control" id="provincia">
+                        @foreach ($provincias as $provincia)
+                        <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>                 
+                        @endforeach
+                      </select>
+                      @else
+                      <select class="form-control" id="provincia" name="provincia" disabled>
+                        <option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>  
+                      </select>
+                      @endif
+                    </div>        
+                  </div>
+                </div>          
+              </div>
+              <div class="tab-pane" id="alumnos">   
+                @include('alumnos.asignacionAlternativa')             
+              </div>
+              <div class="tab-pane" id="profesores">
+                @include('profesores.asignacionAlternativa')          
+              </div>  
+            </form>  
+          </div>
+        </div>
+        <div class="box-body">
+          <a href="{{url('cursos')}}">
+            <div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</div>
+          </a>
+          <button class="btn btn-primary pull-right" id="modificar" title="Modificar"><i class="fa fa-plus" aria-hidden="true"></i>Modificar</button>
+        </div>
+      </div>
+    </form>	
+  </div>
 </div>
 @endsection
+
 @section('script')
 <script type="text/javascript" src="{{asset("/bower_components/admin-lte/plugins/datepicker/bootstrap-datepicker.js")}}"></script>
 
 <script src="{{asset("/bower_components/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.es.js")}}" charset="UTF-8"></script>
-
-<script type="text/javascript">
-	$(document).ready(function() {
-
-		$.typeahead({
-			input: '.nombre_typeahead',
-			order: "desc",
-			source: {
-				info: {
-					ajax: {
-						type: "get",
-						url: "cursos/nombres",
-						path: "data.info"
-					}
-				}
-			},
-			callback: {
-				onInit: function (node) {
-					console.log('Typeahead Initiated on ' + node.selector);
-				}
-			}
-		});
-
-   //Date picker
-   $('#datepicker').datepicker({
-   	format: 'dd/mm/yyyy',
-   	language: 'es',
-   	autoclose: true
-   });
-
-   $(".box-footer").on("click","#volver",function(){
-   	console.log('Se vuelve sin crear el curso.');
-   	$('#alta').html("");
-   	$('#abm').show();
-   	$('#filtros').show();
-   });
-
-   $(".box-footer").on("click","#modificar",function(){
-
-   	var curso = $(this).data('id');
-   	var data = $('#alta form').serialize();
-   	data += '&id_area_tematica='+$('#alta form #area_tematica :selected').data('id');
-   	data += '&id_linea_estrategica='+$('#alta form #linea_estrategica :selected').data('id');
-   	data += '&id_provincia='+$('#alta form #provincia :selected').data('id');
-
-
-   	console.log(data);
-
-   	$.ajax({
-   		url: 'cursos/'+curso,
-   		method: 'put',
-   		data: data,
-   		success: function(data){
-   			console.log('Se modifico el curso correctamente.');
-   			$('#alta').html("");
-   			$('#abm').show();
-   			$('#filtros').show();
-   		},
-   		error: function (data) {
-   			console.log('Hubo un error.');
-   			console.log(data);
-   		}
-   	});
-   });
-
-});
-</script>
-@endsection
 
 <script type="text/javascript">
 
@@ -218,27 +153,22 @@
 
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
 
-    $('#alta #tabla-profesores').on('click','.agregar',function () {
+    $('.container-fluid #tabla-profesores').on('click','.agregar',function () {
     	console.log("Se agrea al curso el alumno con id:");
     	var fila = $(this).parent().parent();
     	var id = $(this).data('id');
 
-      //fila.hide();      
       fila.find('td:last').remove();
-      console.log(id);
       fila.append(botonQuitar);
-      console.log(fila);
 
       var data = $('#tabla-profesores').DataTable().row(fila).data();      
 
-      console.log(data);   
       $('#tabla-profesores').DataTable().row(fila).remove().draw(false);
       var nueva_fila = $('#tabla-profesores-curso').DataTable().row.add(data).draw(false).row().node();
-      console.log(nueva_fila);
       $(nueva_fila).find('td:last').remove();
       $(nueva_fila).append(botonQuitar); 
       $(nueva_fila).find('td:last button').attr('data-id',id);
-  });
+    });
 
     $.typeahead({
     	input: '.curso_typeahead',
@@ -247,7 +177,7 @@
     		info: {
     			ajax: {
     				type: "get",
-    				url: "cursos/nombres",
+    				url: "{{url('cursos/nombres')}}",
     				path: "data.info"
     			}
     		}
@@ -309,59 +239,60 @@
     	return $(element).find(':selected').val() !== "Seleccionar";
     }, "Debe seleccionar alguna opcion");   
 
-  var validator = $('#alta #form-modificacion').validate({
-  	rules : {
-  		nombre : "required",
-  		duracion : {
-  			required: true,
-  			number: true
-  		},
-  		fecha : {
-  			required: true
-  			/*fecha: true*/
-  		},
-  		area_tematica: { selecciono : true},
-  		linea_estrategica: { selecciono : true},
-  		provincia: { selecciono : true},
-  	},
-  	messages:{
-  		nombre : "Campo obligatorio",
-  		duracion : "Campo obligatorio",
-  		fecha : "Campo obligatorio",
-  	},
-  	highlight: function(element)
-  	{
-  		$(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-  	},
-  	success: function(element)
-  	{
-  		$(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
-  	},
-  	submitHandler : function(form){
-  		$.ajax({
-  			method : 'post',
-  			url : 'cursos',
-  			data : getInput(),
-  			success : function(data){
-  				console.log("Success.");
-  				alert("Se crea el curso.");
-  				location.replace('cursos');
-  			},
-  			error : function(data){
-  				console.log("Error.");
-  				alert("No se pudo crear el curso.");
-  			}
-  		});
-  	}
-  });
+    var validator = $('.container-fluid #form-modificacion').validate({
+      rules : {
+        nombre : "required",
+        duracion : {
+          required: true,
+          number: true
+        },
+        fecha : {
+          required: true
+        },
+        area_tematica: { selecciono : true},
+        linea_estrategica: { selecciono : true},
+        provincia: { selecciono : true},
+      },
+      messages:{
+        nombre : "Campo obligatorio",
+        duracion : "Campo obligatorio",
+        fecha : "Campo obligatorio",
+      },
+      highlight: function(element) {
+        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+      },
+      success: function(element) {
+        $(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
+      },
+      submitHandler : function(form) {
 
-  $('#alta').on('click','.store',function() {  
-  	$('#alta #form-modificacion .nav-tabs').children().first().children().click();
-  	if(validator.valid()){
-  		$('#alta #form-modificacion').submit(); 
-  	}else{
-  		alert('Hay campos que no cumplen con la validacion.');
-  	}
+        $.ajax({
+          method : 'put',
+          url : "{{url('cursos')}}" + '/' + "{{$curso->id_curso}}",
+          data : getInput(),
+          success : function(data){
+            console.log("Success.");
+            alert("Se crea el curso.");
+            window.location = "{{url('cursos')}}";
+          },
+          error : function(data){
+            console.log("Error.");
+            alert("No se pudo crear el curso.");
+          }
+        });
+
+      }
+    });
+
+    $('.container-fluid').on('click','#modificar',function() {  
+      $('#container-fluid #form-modificacion .nav-tabs').children().first().children().click();
+      if(validator.valid()){
+        $('#container-fluid #form-modificacion').submit(); 
+      }else{
+        alert('Hay campos que no cumplen con la validacion.');
+      }
+    });
+
   });
-});
 </script>
+@endsection

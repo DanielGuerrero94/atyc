@@ -30,7 +30,7 @@ class Curso extends Model
      * @var array
      */
     protected $fillable = ['nombre','id_provincia','id_area_tematica',
-    'id_linea_estrategica','fecha','duracion','edicion'];
+    'id_linea_estrategica','fecha','duracion'];
 
     protected $hidden = ['pivot'];
 
@@ -95,18 +95,6 @@ class Curso extends Model
         $edicion = Curso::where('nombre', '=', $r->nombre)->count();
 
         $this->edicion = $edicion + 1;
-        $this->save();
-        return $this;
-    }
-
-    public function modificar(Request $r)
-    {
-        $this->nombre = $r->nombre;
-        $this->id_provincia = $r->id_provincia;
-        $this->id_area_tematica = $r->id_area_tematica;
-        $this->id_linea_estrategica = $r->id_linea_estrategica;
-        $this->fecha = $r->fecha;
-        $this->duracion = $r->duracion;
         $this->save();
         return $this;
     }

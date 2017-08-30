@@ -72,10 +72,10 @@
           </div>
         </div>
       </form>
-      <hr>
+      <!-- <hr>
       <div class="social-auth-links text-center">
         <a href={{url("/registrar")}} class="text-center">Registrarse</a>
-      </div>
+      </div> -->
       <!-- jQuery 2.2.3 -->
       <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js") }}"></script>
       <!-- Bootstrap 3.3.6 -->

@@ -45,7 +45,7 @@
 							<td>{{$profesor->apellidos}}</td>
 							<td>{{$profesor->nro_doc}}</td>
 								<td>
-									<div class="btn btn-xs btn-info"><a href="alumnos/{{$profesor->id_alumno}}"><i class="fa fa-search" data-id="{{$profesor->id_alumno}}"></i></a></div>
+									<div class="btn btn-xs btn-info"><a href="{{url('profesores/'.$profesor->id_profesor)}}"><i class="fa fa-search" data-id="{{$profesor->id_alumno}}"></i></a></div>
 									<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
 								</td>
 							</tr>
@@ -87,7 +87,7 @@
 					Nombres: {
 						display: 'apellidos',
 						ajax:{
-							url: "profesores/typeahead",
+							url: "{{url('profesores/typeahead')}}",
 							path: "data.info",
 							data: function(query){
 								q: query;
@@ -101,7 +101,7 @@
 					Apellidos: {
 						display: 'apellidos',
 						ajax: {
-							url: "profesores/typeahead",
+							url: "{{url('profesores/typeahead')}}",
 							path: "data.info",
 							data: function(query){
 								q: query;
@@ -115,7 +115,7 @@
 					Documentos: {
 						display: 'documentos',
 						ajax:{
-							url: "profesores/typeahead",
+							url: "{{url('profesores/typeahead')}}",
 							path: "data.info",
 							data: function(query){
 								q: query;
@@ -148,7 +148,7 @@
 							if($(v).data('id') == item.id){
 								existe = true;
 							}
-						});alta
+						});
 
 						if(!existe){
 							$('#profesores-del-curso tbody').append(profesor);	

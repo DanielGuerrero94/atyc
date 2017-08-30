@@ -27,6 +27,7 @@
 		$('.table').DataTable({
 			destroy: true,
 			responsive: true,
+			searchable: false,
 			ajax : 'efectores/tabla',
 			columns: [
 			{ name: 'id_provincia', data: 'provincia', title: 'Provincia',searchable: false, orderable: false},

@@ -45,7 +45,7 @@
 							<td>{{$alumno->apellidos}}</td>
 							<td>{{$alumno->nro_doc}}</td>
 							<td>
-									<div class="btn btn-xs btn-info"><a href="alumnos/{{$alumno->id_alumno}}"><i class="fa fa-search" data-id="{{$alumno->id_alumno}}"></i></a></div>
+									<div class="btn btn-xs btn-info"><a href="{{url('alumnos/'.$alumno->id_alumno)}}"><i class="fa fa-search" data-id="{{$alumno->id_alumno}}"></i></a></div>
 									<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
 							</td>
 						</tr>
@@ -83,13 +83,13 @@
 			},
 			dropdownFilter: "Filtro",
 			emptyTemplate: function(){
-				return '<tr><td><a href="alumnos"><i class="fa fa-plus text-green"></i><span>Crear participante</span></a></td></tr>';
+				return '<tr><td><a href="{{url("alumnos")}}"><i class="fa fa-plus text-green"></i><span>Crear participante</span></a></td></tr>';
 			},
 			source: {
 				Nombres: {
 					display: 'apellidos',
 					ajax:{
-						url: "alumnos/typeahead/apellidos",
+						url: "{{url('alumnos/typeahead/apellidos')}}",
 						path: "data.info",
 						data: {
 							q: "@{{query}}"
@@ -103,7 +103,7 @@
 				Apellidos: {
 					display: 'apellidos',
 					ajax: {
-						url: "alumnos/typeahead/apellidos",
+						url: "{{url('alumnos/typeahead/apellidos')}}",
 						path: "data.info",
 						data: {
 							q: "@{{query}}"
@@ -117,7 +117,7 @@
 				Documentos: {
 					display: 'documentos',
 					ajax:{
-						url: "alumnos/typeahead/apellidos",
+						url: "{{url('alumnos/typeahead/apellidos')}}",
 						path: "data.info",
 						data: {
 							q: "@{{query}}"
