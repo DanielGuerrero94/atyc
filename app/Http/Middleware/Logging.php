@@ -36,26 +36,29 @@ class Logging
         $method = $request->getMethod();
         $ip = $request->getClientIp();
         $user = $request->user();
-        logger(json_encode($user));
+        //logger(json_encode($user));
         //Saco de la request los datos que me trae el datatable de jquery
+	/*
         $query = $request->except([
             'draw','columns','order','start','length','search','_'
         ]);
+	*/
 
         $json = array(
             'ip' => $ip,
-            'user' => $user->id,
+            'userid' => $user->id,
+	    'username' => $user->name,
             'method' => $method,
             'url' => $url,
             'query' => $request->all(),
             'duration' => $duration
         );
 
-        $query = json_encode($query);
+        //$query = json_encode($query);
 
-        $log = "{$ip} user:{$user->name} {$method}@{$url} query:{$query} - {$duration}ms";        
+        //$log = "{$ip} user:{$user->name} {$method}@{$url} query:{$query} - {$duration}ms";        
 
-        logger($log);
+        //logger($log);
         logger(json_encode($json));
     }
 }
