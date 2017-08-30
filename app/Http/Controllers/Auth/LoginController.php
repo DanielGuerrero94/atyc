@@ -38,8 +38,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        Log::debug(json_encode(Auth::user()));
-        Log::debug(json_encode(request()->ip()));
+        logger(json_encode(request()->ip()));
         $this->middleware('guest', ['except' => 'logout']);
     }
 
@@ -63,6 +62,7 @@ class LoginController extends Controller
      */
     protected function credentials(Request $request)
     {
-        return $request->only(strtolower($this->username()), 'password');
+	$request['name'] = strtolower($request->name);
+        return $request->only($this->username(), 'password');
     }
 }
