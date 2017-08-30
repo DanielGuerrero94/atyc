@@ -171,7 +171,7 @@
           <div class="alert alert-warning alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color: rgb(0,0,0);">×</button>
             <h4 style="color: rgb(0,0,0); text-align: center;"><i class="icon fa fa-warning"></i> Version beta</h4>
-            <p style="color: rgb(0,0,0); text-align: center;">Si tiene preguntas,dudas,errores y/o sugerencias envíe un email a sistemasuec@gmail.com.</p>
+            <p style="color: rgb(0,0,0); text-align: center;">Si tiene preguntas, dudas, errores y/o sugerencias envíe un email a sistemasuec@gmail.com</p>
           </div>
           @yield('content')
         </section>
