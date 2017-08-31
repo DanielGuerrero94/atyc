@@ -119,6 +119,8 @@ Route::group(['middleware' => ['logueado','logging']],function () {
     Route::get('cursos/provincias/{id}', 'CursosController@getAlumnosDeCursosPorProvincia');
     Route::get('cursos/{id}/alumnos', 'CursosController@getAlumnos');
     Route::get('cursos/{id}/profesores', 'CursosController@getProfesores');
+    Route::get('cursos/{id}/excel', 'CursosController@getCompletoExcel');
+    Route::get('cursos/{id}/show', 'CursosController@show');
     Route::get('cursos/{id}', 'CursosController@edit');
 
     Route::post('cursos', 'CursosController@store');

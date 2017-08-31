@@ -6,7 +6,9 @@ use Closure;
 
 class Logging
 {
-    private $start,$end;
+    private $start;
+    private $end;
+
     /**
      * Handle an incoming request.
      *
@@ -31,34 +33,23 @@ class Logging
     protected function log($request)
     {
         $duration = $this->end - $this->start;
+
         //Le saco el http://*/atyc/public
         $url = substr($request->url(),strpos($request->url(),'atyc')+12);
         $method = $request->getMethod();
         $ip = $request->getClientIp();
         $user = $request->user();
-        //logger(json_encode($user));
-        //Saco de la request los datos que me trae el datatable de jquery
-	/*
-        $query = $request->except([
-            'draw','columns','order','start','length','search','_'
-        ]);
-	*/
 
         $json = array(
             'ip' => $ip,
             'userid' => $user->id,
-	    'username' => $user->name,
+	        'username' => $user->name,
             'method' => $method,
             'url' => $url,
             'query' => $request->all(),
             'duration' => $duration
         );
 
-        //$query = json_encode($query);
-
-        //$log = "{$ip} user:{$user->name} {$method}@{$url} query:{$query} - {$duration}ms";        
-
-        //logger($log);
         logger(json_encode($json));
     }
 }

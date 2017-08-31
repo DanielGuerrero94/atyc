@@ -9,6 +9,7 @@
 						<li class="active"><a href="#inicial" data-toggle="tab">Inicial</a></li>
 						<li><a href="#alumnos" data-toggle="tab">Participantes</a></li>
 						<li><a href="#profesores" data-toggle="tab">Docentes</a></li>
+            <li class="pull-right" title="Descargar"><a href="{{url('cursos') . '/' . $curso->id_curso . '/excel'}}"><div class="btn btn-default"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i> Excel</div></a></li>
 					</ul>
 					<div class="tab-content">
 						<div class="active tab-pane" id="inicial">

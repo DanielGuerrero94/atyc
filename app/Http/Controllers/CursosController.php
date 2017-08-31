@@ -130,8 +130,7 @@ class cursosController extends AbmController
     	$f = explode("-",$curso->fecha);
     	$curso->fecha = $f[2].'/'.$f[1].'/'.$f[0];
 
-    	$curso = array('curso' => $curso);
-    	return array_merge($this->getSelectOptions(),$curso);		
+    	return array('curso' => $curso);		
     }    
 
     /**
@@ -142,7 +141,7 @@ class cursosController extends AbmController
      */
     public function edit($id)
     {
-    	return view('cursos/modificacion',$this->show($id));
+    	return view('cursos/modificacion',array_merge($this->getSelectOptions(),$this->show($id)));
     }
 
     /**
@@ -472,7 +471,7 @@ class cursosController extends AbmController
 		$path = "acciones_".date("Y-m-d_H:i:s");
 
 		Excel::create($path, function ($excel) use ($datos){
-			$excel->sheet('Reporte', function ($sheet) use ($datos){
+			$excel->sheet('Acciones', function ($sheet) use ($datos){
 				$sheet->setHeight(1, 20);
 				$sheet->loadView('excel.cursos', $datos);
 			});
@@ -544,5 +543,23 @@ class cursosController extends AbmController
 		->store('xls');
 
 		return $path;
+	}
+
+	public function getCompletoExcel(Request $r,$id)
+	{
+		$datos = array('curso' => Curso::findOrFail($id));
+		$path = "accion_completa_".date("Y-m-d_H:i:s");
+		
+		Excel::create($path, function ($excel) use ($datos){
+
+			$excel->sheet('Accion', function ($sheet) use ($datos){
+				$sheet->setHeight(1, 20);
+				$sheet->loadView('excel.cursoCompleto', $datos);
+			});
+
+		})
+		->store('xls');
+
+		return response()->download(__DIR__."/../../../storage/exports/{$path}.xls");		
 	}
 }
