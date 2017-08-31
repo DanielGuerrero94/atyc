@@ -637,11 +637,17 @@
 				cel : {
 					number: true
 				},
-				id_genero: { selecciono : true},
-				funcion: { selecciono : true},
+				id_genero: { 
+					required: true,
+					selecciono : true
+				},
+				id_funcion: { selecciono : true},
 				organismo: { selecciono : true},
 				tipo_organismo: { selecciono : true},
-				trabaja_en: { selecciono : true},
+				id_trabajo: { 
+					required: true,
+					selecciono : true
+				},
 			},
 			messages:{
 				nombres : "Campo obligatorio",
