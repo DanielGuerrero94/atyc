@@ -47,8 +47,19 @@
 		<th class="table-header">Nombres</th>
 		<th class="table-header">Apellidos</th>
 		<th class="table-header">Tipo de documento</th>
-		<th class="table-header">Numero de documento</th>
+		<th class="table-header">Número de documento</th>
+		<th class="table-header">Genero</th>
 		<th class="table-header">Jurisdicción</th>
+		<th class="table-header">Localidad</th>
+		<th class="table-header">Trabajo</th>
+		<th class="table-header">Efector</th>
+		<th class="table-header">Establecimiento</th>
+		<th class="table-header">Tipo de organismo</th>
+		<th class="table-header">Organismo</th>
+		<th class="table-header">Rol</th>
+		<th class="table-header">Email</th>
+		<th class="table-header">Tel</th>
+		<th class="table-header">Cel</th>
 	</tr>
 	@foreach($curso->alumnos as $alumno)
 	<tr>
@@ -56,7 +67,18 @@
 		<td>{{$alumno->apellidos}}</td>
 		<td>{{$alumno->tipoDocumento->nombre}}</td>
 		<td>{{$alumno->nro_doc}}</td>
+		<td>{{$alumno->genero->nombre}}</td>
 		<td>{{$alumno->provincia->nombre}}</td>
+		<td>{{$alumno->localidad}}</td>
+		<td>{{$alumno->trabajo->nombre}}</td>
+		<td>{{$alumno->establecimiento1}}</td>
+		<td>{{$alumno->establecimiento2}}</td>
+		<td>{{$alumno->organismo1}}</td>
+		<td>{{$alumno->organismo2}}</td>
+		<td>{{$alumno->funcion->nombre}}</td>
+		<td>{{$alumno->email}}</td>
+		<td>{{$alumno->tel}}</td>
+		<td>{{$alumno->cel}}</td>
 	</tr>
 	@endforeach
 </table>
@@ -68,6 +90,10 @@
 		<th class="table-header">Apellidos</th>
 		<th class="table-header">Tipo de documento</th>
 		<th class="table-header">Numero de documento</th>
+		<th class="table-header">Tipo de docente</th>
+		<th class="table-header">Email</th>
+		<th class="table-header">Tel</th>
+		<th class="table-header">Cel</th>
 	</tr>
 	@foreach($curso->profesores as $profesor)
 	<tr>
@@ -75,6 +101,10 @@
 		<td>{{$profesor->apellidos}}</td>
 		<td>{{$profesor->tipoDocumento->nombre}}</td>
 		<td>{{$profesor->nro_doc}}</td>
+		<td>{{$profesor->tipoDocente->nombre}}</td>
+		<td>{{$profesor->email}}</td>
+		<td>{{$profesor->tel}}</td>
+		<td>{{$profesor->cel}}</td>
 	</tr>
 	@endforeach
 </table>

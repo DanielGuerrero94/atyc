@@ -5,11 +5,13 @@
 		<div class="box box-success ">
 			<div class="box-header with-border">
 				<h2 class="box-title">Participante</h2>
-				<div class="box-tools pull-right">
-					<button type="button" class="btn btn-box-tool" data-widget="collapse">
-						<i class="fa fa-minus"></i>
+				<!-- <div class="box-tools pull-right">
+					<button type="button" class="btn btn-box-tool btn-default" title="Datos del participante y las acciones que realizo">
+						<a href="{{url('cursos') . '/' . $alumno->id_alumno . '/excel'}}">
+							<i class="fa fa-file-excel-o text-success" aria-hidden="true"> Descargar</i> 
+						</a>
 					</button>
-				</div>
+				</div> -->
 			</div>
 			<div class="box-body">
 				<form class="form form-modificacion" role="form">
@@ -171,7 +173,7 @@
 										@endif
 										<label for="tipo_convenio" class="control-label col-xs-4">Tipo convenio:</label>
 										<div class="col-xs-8">
-										@if(isset($alumno->establecimiento1))
+											@if(isset($alumno->establecimiento1))
 											<input name="id_convenio" type="checkbox" id="tipo_convenio" checked="true">Convenio con el programa CUS SUMAR
 											@else
 											<input name="id_convenio" type="checkbox" id="tipo_convenio">Convenio con el programa CUS SUMAR
@@ -252,12 +254,10 @@
 												</div>
 											</div>
 										</form>
-									</div>		
-
-
+									</div>
 									<div class="box-footer">
-										<a href="{{url()->previous()}}"><button class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</button></a>
-										<button class="btn btn-primary pull-right" id="modificar" title="Modificar" data-id="{{$alumno->id_alumno}}"><i class="fa fa-plus" aria-hidden="true"></i>Modificar</button>
+										<a href="{{url()->previous()}}"><button class="btn btn-warning" id="volver" title="Volver a la lista"><i class="fa fa-undo" aria-hidden="true"></i> Volver</button></a>
+										<button class="btn btn-primary pull-right" id="modificar" title="Guardar modificaciones" data-id="{{$alumno->id_alumno}}"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</button>
 									</div>
 								</div> 
 							</div>

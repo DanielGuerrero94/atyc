@@ -483,7 +483,7 @@ class AlumnosController extends AbmController
             $path,
             function ($excel) use ($datos) {
                 $excel->sheet(
-                    'Reporte',
+                    'Participantes',
                     function ($sheet) use ($datos) {
                         $sheet->setHeight(1, 20);
                         $sheet->loadView('excel.alumnos', $datos);
@@ -560,5 +560,28 @@ class AlumnosController extends AbmController
             ->where('id_tipo_documento', $r->input('id_tipo_documento'))
             ->count() != 0
             );
+    }
+
+    public function getExcelCompleto(Request $r,$id)
+    {
+        $datos = array('participante' => Alumno::findOrFail($id));
+        $path = "participante_completo_".date("Y-m-d_H:i:s");
+        
+        Excel::create($path, function ($excel) use ($datos){
+
+            $excel->sheet('Participante', function ($sheet) use ($datos){
+                $sheet->setHeight(1, 20);
+                $sheet->loadView('excel.participanteCompleto', $datos);
+            });
+
+            $excel->sheet('Acciones', function ($sheet) use ($datos){
+                $sheet->setHeight(1, 20);
+                $sheet->loadView('excel.acciones', $datos);
+            });
+
+        })
+        ->store('xls');
+
+        return response()->download(__DIR__."/../../../storage/exports/{$path}.xls");
     }
 }

@@ -560,6 +560,6 @@ class cursosController extends AbmController
 		})
 		->store('xls');
 
-		return response()->download(__DIR__."/../../../storage/exports/{$path}.xls");		
+		return response()->download(__DIR__."/../../../storage/exports/{$path}.xls")->deleteFileAfterSend(true);		
 	}
 }
