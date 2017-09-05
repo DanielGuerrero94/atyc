@@ -12,14 +12,13 @@
 				</div>
 				<div class="box-body">
 					<table id="abm-table" class="table table-hover"/>
-				</div>				
-			</div>
-			<div class="box-footer">
+					<div class="box-footer">
 					<a class="pull-right" href="{{url('/registrar')}}">Registrar</a>
 				</div>
+				</div>			
+			</div>			
 		</div>
-	</div>	
-	<div id="alta" style="display: none;"></div>
+	</div>
 </div>
 @endsection
 

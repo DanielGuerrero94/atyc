@@ -1,0 +1,10 @@
+.table-header, p {
+	font-size: 10px; 
+	font-weight: bold; 
+	text-align: center;
+	background-color: #dee4e5;
+}
+
+td {
+	font-size: 9px;
+}

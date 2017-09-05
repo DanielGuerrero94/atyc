@@ -54,6 +54,9 @@ Route::get('dashboard/draw/heats', 'DashboardController@heats');
 
 //Logueado
 Route::group(['middleware' => ['logueado','logging']],function () {
+    //Redis
+    Route::get('redis/usuarios','RedisController@usuarios');
+
     //Log
     Route::resource('log', 'LogController');
 
