@@ -26,26 +26,33 @@
 			</div>
 			<hr>
 			<div class="row">
-				<div class="form-group col-sm-4">  		  		
-					<label for="localidad" class="control-label col-xs-5">Localidad</label>
-					<div class="col-xs-7">
-						<input class="form-control" id="localidad" name="localidad">
-					</div>
-				</div>					
-				@if(Auth::user()->id_provincia == 25)
+			@if(Auth::user()->id_provincia == 25)
 				<div class="form-group col-sm-4">
 					<label for="provincia" class="control-label col-xs-5">Provincia:</label>
 					<div class="col-xs-7">
 						<select class="form-control" id="provincia" name="id_provincia">
-							<option data-id="0" value="0">Todas las provincias</option>
-							@foreach ($provincias as $provincia)
-
-							<option data-id="{{$provincia->id_provincia}}" value="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
+							<option value="0">Todas las provincias</option>
+							@foreach (App\Provincia::all() as $provincia)
+							<option value="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>	
 							@endforeach
 						</select>
 					</div>
 				</div>
-				@endif					
+				@endif
+				<div class="form-group col-sm-4">  		  		
+					<label for="departamento" class="control-label col-xs-5">Departamento</label>
+					<div class="col-xs-7">
+						<select class="form-control" id="departamento" name="id_departamento">
+							<option value="0">Todos los departamentos</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group col-sm-4">  		  		
+					<label for="localidad" class="control-label col-xs-5">Localidad</label>
+					<div class="col-xs-7">
+						<input class="form-control" id="localidad" name="localidad" disabled="true">
+					</div>
+				</div>								
 			</div>
 			<div class="box-footer">		
 				<div class="btn btn-info pull-right" id="filtrar"><i class="fa fa-filter"></i>Filtrar</div>	
@@ -53,3 +60,36 @@
 		</form>
 	</div>
 </div>
+<script type="text/javascript">
+	$(document).ready(function() {
+		{{-- Esta funcion es solo para aquel que pueda ver otras provincias, verifica si tiene que traer el departamento de esa provincia --}}
+		$('#filtros').on('click', '#provincia', function(event) {
+			event.preventDefault();
+			console.log('selecciona provincia');
+		});
+
+		$('#filtros').on('click', '#departamento', function(event) {
+			event.preventDefault();
+			console.log('selecciona departamento tiene que ir a buscar localidades');
+			$.get("{{url('efectores/provincias')}}" + "/" + $('#provincia').val() + "/departamentos", function(data) {
+				console.log("success");
+				console.log(data);
+			});
+			$.ajax({
+				url: "{{url('efectores/provincias')}}" + "/" + $('#provincia').val() + "/departamentos"
+			})
+			.done(function(data) {
+				console.log("success");
+				console.log("success");
+				console.log(data);
+			})
+			.fail(function() {
+				console.log("error");
+			})
+			.always(function() {
+				console.log("complete");
+			});
+			
+		});
+	});
+</script>
