@@ -2,7 +2,11 @@
 
 @section('content')
 <div class="container">
-	<div id="filtros" style="display: none;"></div>
+	<div class="row ">
+		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+			@include('efectores.filtros')
+		</div>
+	</div>
 	<div id="abm">
 		<div class="col-md-12">
 			<div class="box box-info ">

@@ -10,19 +10,50 @@ use Datatables;
 
 class EfectoresController extends Controller
 {
+    private $filters_map = [
+    'id_provincia' => 'p',
+    'descripcion' => 'p',
+    'siisa' => 'e',
+    'cuie' => 'e',
+    'nombre' => 'e',
+    'denominacion_legal' => 'e',
+    'domicilio' => 'e',
+    'id_departamento' => 'd',
+    'nombre_departamento' => 'd',
+    'id_localidad' => 'l',
+    'nombre_localidad' => 'l',
+    'codigo_postal' => 'e',
+    'ciudad' => 'dg',
+    ];
+
     public function get()
     {
         return view('efectores');
     }
 
-    public function queryLogica()
+    public function queryLogica(Request $r)
     {
-        return DB::table('efectores.efectores as e')
+        $query = DB::table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'dg.id_efector', '=', 'e.id_efector')
         ->leftJoin('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
         ->leftJoin('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
         ->leftJoin('geo.localidades as l', 'l.id', '=', 'dg.id_localidad')
         ->select('p.id_provincia','p.descripcion as provincia', 'e.siisa', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'e.domicilio', 'd.id_departamento', 'd.nombre_departamento as departamento', 'l.id_localidad', 'l.nombre_localidad as localidad', 'e.codigo_postal', 'dg.ciudad');
+
+        foreach ($r->filtros as $key => $value) {
+            $query = $query->where($this->columna($key), $value);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Inicial de la tabla y el nombre de la columna segun el key del filtro que le pasen
+     * @return string
+     */
+    public function columna($key)
+    {
+        return $this->filters_map[$key].$key;    
     }
 
     public function reporte()
@@ -66,7 +97,7 @@ class EfectoresController extends Controller
 
     public function getTabla()
     {
-        $query = $this->queryLogica();
+        $query = $this->queryLogica(null);
 
         return Datatables::of($query)
         ->addColumn('acciones', function ($ret) {
@@ -151,7 +182,7 @@ class EfectoresController extends Controller
 
     public function historialCursos($cuie)
     {
-        $efector = $this->queryLogica();
+        $efector = $this->queryLogica(null);
 
         $provincia = Auth::user()->id_provincia;
 
@@ -185,12 +216,18 @@ class EfectoresController extends Controller
     }
 
     /**
-     * Podria ser mas especifico y armar una regex para las letras que hay en los cuies no para todas  
+     * Regex de los caracteres de cuie posibles
      * 
      * @param 
      */
     public function esCuie($string)
     {
         return preg_match('/[A-HJ-NP-Z][0-9]{5}/', $string);
+    }
+
+    public function efectoresSegunProvincia($id_provincia)
+    {
+        $request = new Illuminate\Http\Request(array('filtros' => array('id_provincia' => $id_provincia)));        
+        return $this->queryLogica($request)->get();
     }
 }
