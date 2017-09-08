@@ -141,7 +141,7 @@ class cursosController extends AbmController
      */
     public function edit($id)
     {
-    	return view('cursos/modificacion',array_merge($this->getSelectOptions(),$this->show($id)));
+    	return view('cursos.modificacion',array_merge($this->getSelectOptions(),$this->show($id)));
     }
 
     /**

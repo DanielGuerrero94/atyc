@@ -141,16 +141,13 @@ class AlumnosController extends AbmController
                 if ($cuie) {
                     $request->efector = $cuie;            
                 } else {
-                    return array(
-                        'status' => false,
-                        'error' => 'No existe el efector'
-                        );
+                    return response('No existe el efector',400);
                 }           
             }
-
             Alumno::crear($request);
+            return response('Se creo',200);
         } else {
-            return json_encode($v->errors());
+            return response($v->errors(),400);
         }
     }
 
@@ -331,9 +328,19 @@ class AlumnosController extends AbmController
      *
      * @return \Illuminate\Http\Response
      */
-    public function getApellidos()
+    public function getApellidos(Request $r)
     {
-        $alumno = Alumno::select('id_alumno', 'nombres', 'apellidos', 'nro_doc')
+        logger(json_encode($r->all()));
+        $alumno = Alumno::select('id_alumno', 'nombres', 'apellidos', 'nro_doc');
+
+        if(is_numeric($r->input('q'))) {
+            $alumno = $alumno->where('nro_doc','like',$r->input('q') . '%');
+        } else {
+            $alumno = $alumno->where('nombres','ilike', '%' . $r->input('q') . '%')
+            ->orWhere('apellidos','ilike', '%' . $r->input('q') . '%');
+        }
+
+        $alumno = $alumno
         ->segunProvincia()
         ->get()
         ->map(function ($item, $key) {

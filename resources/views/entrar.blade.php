@@ -77,7 +77,7 @@
         <a href={{url("/registrar")}} class="text-center">Registrarse</a>
       </div> -->
       <!-- jQuery 2.2.3 -->
-      <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js") }}"></script>
+      <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/jQuery/jQuery-2.1.4.min.js") }}"></script>
       <!-- Bootstrap 3.3.6 -->
       <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/bootstrap/js/bootstrap.min.js") }}" ></script>
       <!-- iCheck -->

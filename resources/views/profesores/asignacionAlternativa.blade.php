@@ -21,7 +21,7 @@
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="box box-default no-padding">
 			<div class="box-header">
-				<p>Docentes a cargo del curso.</p> 
+				<p>Docentes a cargo del curso - Cantidad: <b><span id="contador-docentes"></span></b></p>
 			</div>
 			@if(isset($curso))
 			<div class="box-body">
@@ -41,9 +41,9 @@
 							@if(isset($curso))
 							@foreach($curso->profesores as $profesor)
 							<tr>
-							<td>{{$profesor->nombres}}</td>
-							<td>{{$profesor->apellidos}}</td>
-							<td>{{$profesor->nro_doc}}</td>
+								<td>{{$profesor->nombres}}</td>
+								<td>{{$profesor->apellidos}}</td>
+								<td>{{$profesor->nro_doc}}</td>
 								<td>
 									<div class="btn btn-xs btn-info"><a href="{{url('profesores/'.$profesor->id_profesor)}}"><i class="fa fa-search" data-id="{{$profesor->id_alumno}}"></i></a></div>
 									<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
@@ -57,113 +57,125 @@
 			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
-		$(document).ready(function() {
-			$.typeahead({
-				input: '.profesores_typeahead',
-				maxItem: 10,
-				order: "desc",
-				dynamic: true,
-				delay: 500,
-				backdrop: {
-					"background-color": "#fff"
+</div>
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		//Inicial
+		refreshCounter();
+
+		$.typeahead({
+			input: '.profesores_typeahead',
+			maxItem: 10,
+			order: "desc",
+			dynamic: true,
+			delay: 500,
+			backdrop: {
+				"background-color": "#fff"
+			},
+			template: function (query, item) {
+				return '<tr>'+				
+				'<td>'+
+				item.nombres+
+				' '+
+				item.apellidos+
+				' '+				
+				item.documentos+
+				'</td>'+
+				'</tr>';
+			},
+			dropdownFilter: "Filtro",
+			emptyTemplate: function(){
+				return '<tr><td><a href="profesores"><i class="fa fa-plus text-green"></i><span>Crear docente</span></a></td></tr>';
+			},
+			source: {
+				Nombres: {
+					display: 'apellidos',
+					ajax:{
+						url: "{{url('profesores/typeahead')}}",
+						path: "data.info",
+						data: function(query){
+							q: query;
+						},
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
+					}
 				},
-				template: function (query, item) {
-					return '<tr>'+				
+				Apellidos: {
+					display: 'apellidos',
+					ajax: {
+						url: "{{url('profesores/typeahead')}}",
+						path: "data.info",
+						data: function(query){
+							q: query;
+						},
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
+					}
+				},
+				Documentos: {
+					display: 'documentos',
+					ajax:{
+						url: "{{url('profesores/typeahead')}}",
+						path: "data.info",
+						data: function(query){
+							q: query;
+						},
+						error: function(data){
+							console.log("ajax error");
+							console.log(data);
+						}
+					}
+				}
+			},
+			callback: {
+				onInit: function (node) {
+					console.log('Typeahead Initiated on ' + node.selector);
+				},
+				onClick: function (node,  a, item, event) {
+					profesor = '<tr>'+
+					'<td>'+item.nombres+'</td>'+
+					'<td>'+item.apellidos+'</td>'+
+					'<td>'+item.documentos+'</td>'+
 					'<td>'+
-					item.nombres+
-					' '+
-					item.apellidos+
-					' '+				
-					item.documentos+
+					'<span class="pull-right-container">'+
+					'<div class="btn btn-xs btn-danger pull-right quitar"><i class="fa fa-minus"></i></div>'+
+					'<div class="btn btn-xs btn-info"><a href="profesores/'+item.id+'"><i class="fa fa-search" data-id="'+item.id+'"></i></a></div>'+
+					'</span>'+
 					'</td>'+
 					'</tr>';
-				},
-				dropdownFilter: "Filtro",
-				emptyTemplate: function(){
-					return '<tr><td><a href="profesores"><i class="fa fa-plus text-green"></i><span>Crear docente</span></a></td></tr>';
-				},
-				source: {
-					Nombres: {
-						display: 'apellidos',
-						ajax:{
-							url: "{{url('profesores/typeahead')}}",
-							path: "data.info",
-							data: function(query){
-								q: query;
-							},
-							error: function(data){
-								console.log("ajax error");
-								console.log(data);
-							}
+					existe = false;
+					$.each($('#profesores-del-curso tbody tr .fa-search'),function(k,v){
+						if($(v).data('id') == item.id){
+							existe = true;
 						}
-					},
-					Apellidos: {
-						display: 'apellidos',
-						ajax: {
-							url: "{{url('profesores/typeahead')}}",
-							path: "data.info",
-							data: function(query){
-								q: query;
-							},
-							error: function(data){
-								console.log("ajax error");
-								console.log(data);
-							}
-						}
-					},
-					Documentos: {
-						display: 'documentos',
-						ajax:{
-							url: "{{url('profesores/typeahead')}}",
-							path: "data.info",
-							data: function(query){
-								q: query;
-							},
-							error: function(data){
-								console.log("ajax error");
-								console.log(data);
-							}
-						}
+					});
+
+					if(!existe){
+						$('#profesores-del-curso tbody').append(profesor);	
+						$('#profesores-del-curso').closest('div').show();
+						refreshCounter();						
 					}
-				},
-				callback: {
-					onInit: function (node) {
-						console.log('Typeahead Initiated on ' + node.selector);
-					},
-					onClick: function (node,  a, item, event) {
-						profesor = '<tr>'+
-						'<td>'+item.nombres+'</td>'+
-						'<td>'+item.apellidos+'</td>'+
-						'<td>'+item.documentos+'</td>'+
-						'<td>'+
-						'<span class="pull-right-container">'+
-						'<div class="btn btn-xs btn-danger pull-right quitar"><i class="fa fa-minus"></i></div>'+
-						'<div class="btn btn-xs btn-info pull-right"><a href="profesores/'+item.id+'"><i class="fa fa-search" data-id="'+item.id+'"></i></a></div>'+
-						'</span>'+
-						'</td>'+
-						'</tr>';
-						existe = false;
-						$.each($('#profesores-del-curso tbody tr .fa-search'),function(k,v){
-							if($(v).data('id') == item.id){
-								existe = true;
-							}
-						});
-
-						if(!existe){
-							$('#profesores-del-curso tbody').append(profesor);	
-							$('#profesores-del-curso').closest('div').show();						
-						}
-						$('#profesores .profesores_typeahead').val('');
-					}
-				},
-				debug: true
-			});
-
-			$('#profesores-del-curso').on('click','.quitar', function(event) {
-				this.closest('tr').remove();  
-			});
-
+					$('#profesores .profesores_typeahead').val('');
+				}
+			},
+			debug: true
 		});
 
-	</script>
+		$('#profesores-del-curso').on('click','.quitar', function(event) {
+			this.closest('tr').remove();
+			refreshCounter();
+		});
+
+		function refreshCounter() {
+			let count = $('#profesores-del-curso tbody').children().length;
+			$('#contador-docentes').html(count);
+		}
+
+	});
+
+</script>

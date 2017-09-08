@@ -80,7 +80,6 @@
 			})
 			.done(function(data) {
 				console.log("success");
-				console.log("success");
 				console.log(data);
 			})
 			.fail(function() {

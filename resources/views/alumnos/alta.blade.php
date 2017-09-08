@@ -227,108 +227,96 @@
 	$(document).ready(function () {
 
 		//Typeahead para campos demasiado grandes como para traer una sola request
-		$.typeahead({
-			input: '.establecimiento_typeahead',
-			order: "desc",
-			dynamic: true,
-			source: {
-				info: {
-					ajax: {
-						url: "alumnos/establecimientos",
-						path: "data.info",						
-						data: {
-							q: "@{{query}}"
-						},
-						success: function(data){
-							console.log("ajax success");
-							console.log(data);							
-						},
-						error: function(data){
-							console.log("ajax error");
-							console.log(data);
-						}
-					}
-				}
-			},
-			callback: {
-				onInit: function (node) {
-					console.log('Typeahead Initiated on ' + node.selector);
-				}
-			}
-		});
+		function iniciarEstablecimientosTypeahead () {
 
-		$.typeahead({
-			input: '.pais_typeahead',
-			order: "desc",
-			source: {
-				info: {
-					ajax: {
-						url: "paises/nombres",
-						path: "data.info",						
-						data: {
-							q: "@{{query}}"
-						},
-						error: function(data){
-							console.log("ajax error");
-							console.log(data);
-						}
-					}
-				}
-			},
-			callback: {
-				onInit: function (node) {
-					console.log('Typeahead Initiated on ' + node.selector);
-				}
-			}
-		});		
-
-		var efectores_typeahead = $.typeahead({
-			input: '.efectores_typeahead',
-			maxItem: 15,
-			order: "desc",
-			dynamic: true,
-			hint: true,
-			backdrop: {
-				"background-color": "#fff"
-			},
-			dropdownFilter: "Filtro",
-			emptyTemplate: 'No hay resultados',
-			source: {
-				nombre: {
-					ajax: {
-						url: "efectores/nombres/typeahead",
-						path: "data.nombres",						
-						data: {
-							q: "@{{query}}",
-							id_provincia: $('#alta #form-alta #provincia').val()
-						},
-						error: function(data){
-							console.log("ajax error");
-							console.log(data);
+			$.typeahead({
+				input: '.establecimiento_typeahead',
+				order: "desc",
+				dynamic: true,
+				source: {
+					info: {
+						ajax: {
+							url: "alumnos/establecimientos",
+							path: "data.info",						
+							data: {
+								q: "@{{query}}"
+							},
+							success: function(data){
+								console.log("ajax success");
+								console.log(data);							
+							},
+							error: function(data){
+								console.log("ajax error");
+								console.log(data);
+							}
 						}
 					}
 				},
-				cuie: {
-					ajax: {
-						url: "efectores/cuies/typeahead",
-						path: "data.cuies",						
-						data: {
-							q: "@{{query}}",
-							id_provincia: $('#alta #form-alta #provincia').val()
-						},
-						error: function(data){
-							console.log("ajax error");
-							console.log(data);
-						}
+				callback: {
+					onInit: function (node) {
+						console.log('Typeahead Initiated on ' + node.selector);
 					}
-				},
-			},
-			callback: {
-				onInit: function (node) {
-					console.log('Typeahead Initiated on ' + node.selector);
 				}
-			}
-		});	
+			});
+
+		}
+
+		function iniciarEfectoresTypeahead () {
+
+			$.typeahead({
+				input: '.efectores_typeahead',
+				maxItem: 15,
+				order: "desc",
+				dynamic: true,
+				hint: true,
+				backdrop: {
+					"background-color": "#fff"
+				},
+				dropdownFilter: "Filtro",
+				emptyTemplate: 'No hay resultados',
+				source: {
+					nombre: {
+						ajax: {
+							url: "efectores/nombres/typeahead",
+							path: "data.nombres",						
+							data: {
+								q: "@{{query}}",
+								id_provincia: $('#alta #form-alta #provincia').val()
+							},
+							error: function(data){
+								console.log("ajax error");
+								console.log(data);
+							}
+						}
+					},
+					cuie: {
+						ajax: {
+							url: "efectores/cuies/typeahead",
+							path: "data.cuies",						
+							data: {
+								q: "@{{query}}",
+								id_provincia: $('#alta #form-alta #provincia').val()
+							},
+							error: function(data){
+								console.log("ajax error");
+								console.log(data);
+							}
+						}
+					},
+				},
+				callback: {
+					onInit: function (node) {
+						console.log('Typeahead Initiated on ' + node.selector);
+					}
+				}
+			});
+			
+		}
+
+		$('#alta').on('click', '', function(event) {
+			event.preventDefault();
+			/* Act on the event */
+		});					
 
 		$.typeahead({
 			input: '.nombre_organismo_typeahead',
@@ -384,7 +372,6 @@
 		$('#alta').on('click', '#ver_efectores', function(event) {
 			event.preventDefault();			
 		});
-
 
 		var establecimiento = $('#alta').find('#establecimiento').closest('.form-group');
 		var efectores = $('#alta').find('#efectores').closest('.form-group');
@@ -488,6 +475,32 @@
 			if ($(this).val() == 5 || $(this).val() == 6 ) {
 				nacionalidad.show();
 				$('#pais').attr('disabled',false);
+
+				$.typeahead({
+					input: '.pais_typeahead',
+					order: "desc",
+					source: {
+						info: {
+							ajax: {
+								url: "paises/nombres",
+								path: "data.info",						
+								data: {
+									q: "@{{query}}"
+								},
+								error: function(data){
+									console.log("ajax error");
+									console.log(data);
+								}
+							}
+						}
+					},
+					callback: {
+						onInit: function (node) {
+							console.log('Typeahead Initiated on ' + node.selector);
+						}
+					}
+				});
+
 			}
 			else {
 				nacionalidad.hide();
@@ -670,19 +683,17 @@
 			},
 			submitHandler : function(form){
 				$.ajax({
-					url: 'alumnos',
+					url: "{{url('alumnos')}}",
 					type: 'POST',						
 					data: getInput(),
 					complete: function(xhr, textStatus) {
 						console.log('ajax complete');
 					},
-					success: function(data, textStatus, xhr) {
-						console.log('Se creo');
-						console.log(data);
-						location.reload();
+					success: function(data, textStatus, xhr) {						
+						location.reload();			
 					},
 					error: function(xhr, textStatus, errorThrown) {
-						console.log('Fallo');
+						alert(xhr.responseText);
 					}
 				});
 			}	

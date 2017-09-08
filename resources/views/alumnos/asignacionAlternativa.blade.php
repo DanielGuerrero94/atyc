@@ -2,12 +2,12 @@
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<form role="form">
 			<div class="row">
-				<div class="form-group">          
+				<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">          
 					<label for="alumno" class="control-label col-xs-2 col-sm-2 col-md-2 col-lg-2">Buscar participante:</label>
 					<div class="typeahead__container col-xs-10 col-sm-10 col-md-10 col-lg-10">
 						<div class="typeahead__field">             
 							<span class="typeahead__query">
-								<input class="alumnos_typeahead form-control" name="alumno" type="search" placeholder="Nombre, Apellido, Número de documento" autocomplete="off" id="alumno">
+								<input class="alumnos_typeahead form-control" name="alumno" type="search" placeholder="Número de documento" autocomplete="off" id="alumno">
 							</span>
 						</div>
 					</div>
@@ -21,7 +21,7 @@
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 		<div class="box box-default no-padding">
 			<div class="box-header">
-				<p>Partipantes en el curso.</p>
+				<p>Partipantes en el curso - Cantidad: <b><span id="contador-participantes"></span></b></p>
 			</div>
 			@if(isset($curso))
 			<div class="box-body">
@@ -60,13 +60,15 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		//Inicial
+		refreshCounter();
 
 		$.typeahead({
 			input: '.alumnos_typeahead',
 			maxItem: 10,
 			order: "desc",
 			dynamic: true,
-			delay: 500,
+			delay: 400,
 			backdrop: {
 				"background-color": "#fff"
 			},
@@ -81,39 +83,10 @@
 				'</td>'+
 				'</tr>';
 			},
-			dropdownFilter: "Filtro",
 			emptyTemplate: function(){
 				return '<tr><td><a href="{{url("alumnos")}}"><i class="fa fa-plus text-green"></i><span>Crear participante</span></a></td></tr>';
 			},
 			source: {
-				Nombres: {
-					display: 'apellidos',
-					ajax:{
-						url: "{{url('alumnos/typeahead/apellidos')}}",
-						path: "data.info",
-						data: {
-							q: "@{{query}}"
-						},
-						error: function(data){
-							console.log("ajax error");
-							console.log(data);
-						}
-					}
-				},
-				Apellidos: {
-					display: 'apellidos',
-					ajax: {
-						url: "{{url('alumnos/typeahead/apellidos')}}",
-						path: "data.info",
-						data: {
-							q: "@{{query}}"
-						},
-						error: function(data){
-							console.log("ajax error");
-							console.log(data);
-						}
-					}
-				},
 				Documentos: {
 					display: 'documentos',
 					ajax:{
@@ -127,7 +100,7 @@
 							console.log(data);
 						}
 					}
-				}
+				}				
 			},
 			callback: {
 				onInit: function (node) {
@@ -154,6 +127,7 @@
 					if(!existe){
 						$('#alumnos-del-curso tbody').append(alumno);			
 						$('#alumnos-del-curso').closest('div').show();
+						refreshCounter();
 					}
 					$('#alumnos .alumnos_typeahead').val('');
 				}
@@ -161,9 +135,15 @@
 			debug: true
 		});
 
-		$('#alumnos-del-curso').on('click','.quitar', function(event) {
+		$('#alumnos-del-curso').on('click','.quitar', function(event) {			
 			this.closest('tr').remove();  
+			refreshCounter();
 		});
+
+		function refreshCounter() {
+			let count = $('#alumnos-del-curso tbody').children().length;
+			$('#contador-participantes').html(count);
+		}
 
 	});
 

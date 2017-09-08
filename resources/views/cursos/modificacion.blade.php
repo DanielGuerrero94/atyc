@@ -6,9 +6,15 @@
 			<div class="box">
 				<div class="nav-tabs-custom">
 					<ul class="nav nav-tabs">
-						<li class="active"><a href="#inicial" data-toggle="tab">Inicial</a></li>
-						<li><a href="#alumnos" data-toggle="tab">Participantes</a></li>
-						<li><a href="#profesores" data-toggle="tab">Docentes</a></li>
+						<li class="active">
+              <a href="#inicial" data-toggle="tab">Inicial</a>
+            </li>
+            <li>
+              <a href="#alumnos" data-toggle="tab">Participantes</a>
+            </li>
+            <li>
+              <a href="#profesores" data-toggle="tab">Docentes</a>
+            </li>
             <li class="pull-right" title="Descargar">
               <a href="{{url('cursos') . '/' . $curso->id_curso . '/excel'}}">
                 <div class="btn btn-default">
@@ -19,124 +25,132 @@
           </ul>
           <div class="tab-content">
             <div class="active tab-pane" id="inicial">
-             <form class="form-modificacion">
-              {{ csrf_field() }}
-              {{ method_field('PUT') }}
-              <div class="row">
-               <div class="form-group col-xs-12 col-md-6">       
-                <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
-                <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
-                 <div class="typeahead__field ">             
-                  <span class="typeahead__query ">
-                   <input class="curso_typeahead form-control" name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" value="{{$curso->nombre}}">
-                 </span>
-               </div>
-             </div>
-           </div>
-         </div>
-         <br>
-         <div class="row">
-          <div class="form-group col-xs-12 col-md-6">          
-            <label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
-            <div class="col-md-8 col-xs-9">
-              <input type="number" class="form-control" name="duracion" id="horas" placeholder="Duración en horas" value="{{$curso->duracion}}"> 
-            </div>
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="form-group col-xs-12 col-md-6">          
-            <label for="edicion" class="control-label col-md-4 col-xs-3">Edición:</label>
-            <div class="col-md-8 col-xs-9">
-              <input type="number" class="form-control" name="edicion" id="edicion" placeholder="Edición de la accion" value="{{$curso->edicion}}" disabled="true"> 
-            </div>
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="form-group col-xs-12 col-md-6">            
-            <label for="fecha" class="control-label col-md-4 col-xs-4">Fecha:</label>
-            <div class="input-group date col-md-8 col-xs-6 ">
-              <div class="input-group-addon">
-                <i class="fa fa-calendar"></i>
+              <form class="form-modificacion">
+                {{ csrf_field() }}
+                {{ method_field('PUT') }}
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">       
+                    <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
+                    <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
+                      <div class="typeahead__field ">             
+                        <span class="typeahead__query ">
+                          <input class="curso_typeahead form-control" name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" value="{{$curso->nombre}}">
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">          
+                    <label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
+                    <div class="col-md-8 col-xs-9">
+                      <input type="number" class="form-control" name="duracion" id="horas" placeholder="Duración en horas" value="{{$curso->duracion}}"> 
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">          
+                    <label for="edicion" class="control-label col-md-4 col-xs-3">Edición:</label>
+                    <div class="col-md-8 col-xs-9">
+                      <input type="number" class="form-control" name="edicion" id="edicion" placeholder="Edición de la accion" value="{{$curso->edicion}}" disabled="true"> 
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">            
+                    <label for="fecha" class="control-label col-md-4 col-xs-4">Fecha:</label>
+                    <div class="input-group date col-md-8 col-xs-6 ">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" name="fecha" id="fecha" class="form-control pull-right datepicker" value="{{$curso->fecha}}">
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">          
+                    <label for="area_tematica" class="control-label col-md-4 col-xs-3">Areas Tematicas:</label>
+                    <div class="col-md-8 col-xs-9">
+                      <select class="form-control" id="area_tematica" name="area_tematica">
+                        <option>Seleccionar</option>
+                        @foreach ($areas_tematicas as $area)
+                        @if ($area->id_area_tematica === $curso->id_area_tematica)
+                        <option data-id="{{$area->id_area_tematica}}" selected="selected">{{$area->nombre}}</option>
+                        @else
+                        <option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
+                        @endif	
+                        @endforeach
+                      </select>          
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">          
+                    <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
+                    <div class="col-md-8 col-xs-9">
+                      <select class="form-control" id="linea_estrategica" name="linea_estrategica">
+                        <option>Seleccionar</option>
+                        @foreach ($lineas_estrategicas as $linea)
+                        @if ($linea->id_linea_estrategica === $curso->id_linea_estrategica)
+                        <option data-id="{{$linea->id_linea_estrategica}}" selected="selected">{{$linea->numero}}-{{$linea->nombre}}</option>
+                        @else
+                        <option data-id="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
+                        @endif	
+                        @endforeach
+                      </select>
+                    </div>          
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="form-group col-xs-12 col-md-6">          
+                    <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
+                    <div class="col-md-8 col-xs-9">
+                      @if(Auth::user()->id_provincia == 25)
+                      <select class="form-control" id="provincia">
+                        @foreach ($provincias as $provincia)
+                        @if ($provincia->id_provincia === $curso->id_provincia)
+                        <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}" selected="selected">{{$provincia->nombre}}</option>
+                        @else
+                        <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>
+                        @endif                 
+                        @endforeach
+                      </select>
+                      @else
+                      <select class="form-control" id="provincia" name="provincia" disabled>
+                        @foreach ($provincias as $provincia)
+                        @if ($provincia->id_provincia === $curso->id_provincia)
+                        <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}" selected="selected">{{$provincia->nombre}}</option>
+                        @endif   
+                        @endforeach 
+                      </select>
+                      @endif
+                    </div>        
+                  </div>
+                </div>          
               </div>
-              <input type="text" name="fecha" id="fecha" class="form-control pull-right datepicker" value="{{$curso->fecha}}">
-            </div>
+              <div class="tab-pane" id="alumnos">   
+                @include('alumnos.asignacionAlternativa')             
+              </div>
+              <div class="tab-pane" id="profesores">
+                @include('profesores.asignacionAlternativa')          
+              </div>  
+            </form>  
+          </div>
+          <div class="box-body">
+            <a href="{{url('cursos')}}">
+              <div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i> Volver</div>
+            </a>
+            <button class="btn btn-primary pull-right" id="modificar" title="Modificar"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</button>
           </div>
         </div>
-        <div class="row">
-          <div class="form-group col-xs-12 col-md-6">          
-            <label for="area_tematica" class="control-label col-md-4 col-xs-3">Areas Tematicas:</label>
-            <div class="col-md-8 col-xs-9">
-              <select class="form-control" id="area_tematica" name="area_tematica">
-                <option>Seleccionar</option>
-                @foreach ($areas_tematicas as $area)
-                @if ($area->id_area_tematica === $curso->id_area_tematica)
-                <option data-id="{{$area->id_area_tematica}}" selected="selected">{{$area->nombre}}</option>
-                @else
-                <option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
-                @endif	
-                @endforeach
-              </select>          
-            </div>
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="form-group col-xs-12 col-md-6">          
-            <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
-            <div class="col-md-8 col-xs-9">
-              <select class="form-control" id="linea_estrategica" name="linea_estrategica">
-                <option>Seleccionar</option>
-                @foreach ($lineas_estrategicas as $linea)
-                @if ($linea->id_linea_estrategica === $curso->id_linea_estrategica)
-                <option data-id="{{$linea->id_linea_estrategica}}" selected="selected">{{$linea->numero}}-{{$linea->nombre}}</option>
-                @else
-                <option data-id="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
-                @endif	
-                @endforeach
-              </select>
-            </div>          
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="form-group col-xs-12 col-md-6">          
-            <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
-            <div class="col-md-8 col-xs-9">
-              @if(Auth::user()->id_provincia == 25)
-              <select class="form-control" id="provincia">
-                @foreach ($provincias as $provincia)
-                <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>                 
-                @endforeach
-              </select>
-              @else
-              <select class="form-control" id="provincia" name="provincia" disabled>
-                <option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>  
-              </select>
-              @endif
-            </div>        
-          </div>
-        </div>          
       </div>
-      <div class="tab-pane" id="alumnos">   
-        @include('alumnos.asignacionAlternativa')             
-      </div>
-      <div class="tab-pane" id="profesores">
-        @include('profesores.asignacionAlternativa')          
-      </div>  
-    </form>  
+    </form>	
   </div>
-</div>
-<div class="box-body">
-  <a href="{{url('cursos')}}">
-    <div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i> Volver</div>
-  </a>
-  <button class="btn btn-primary pull-right" id="modificar" title="Modificar"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</button>
-</div>
-</div>
-</form>	
-</div>
 </div>
 @endsection
 
@@ -174,7 +188,7 @@
       var nueva_fila = $('#tabla-profesores-curso').DataTable().row.add(data).draw(false).row().node();
       $(nueva_fila).find('td:last').remove();
       $(nueva_fila).append(botonQuitar); 
-      $(nueva_fila).find('td:last button').attr('data-id',id);
+      $(nueva_fila).find('td:last button').attr('data-id',id);      
     });
 
     $.typeahead({
@@ -279,12 +293,12 @@
           data : getInput(),
           success : function(data){
             console.log("Success.");
-            alert("Se crea el curso.");
+            alert("Se modifico la acción.");
             window.location = "{{url('cursos')}}";
           },
           error : function(data){
             console.log("Error.");
-            alert("No se pudo crear el curso.");
+            alert("No se pudo modificar la acción.");
           }
         });
 
@@ -293,6 +307,7 @@
 
     $('.container-fluid').on('click','#modificar',function() {  
       $('#container-fluid #form-modificacion .nav-tabs').children().first().children().click();
+
       if(validator.valid()){
         $('#container-fluid #form-modificacion').submit(); 
       }else{
