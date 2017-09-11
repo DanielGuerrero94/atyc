@@ -330,14 +330,17 @@ class AlumnosController extends AbmController
      */
     public function getApellidos(Request $r)
     {
-        logger(json_encode($r->all()));
         $alumno = Alumno::select('id_alumno', 'nombres', 'apellidos', 'nro_doc');
 
         if(is_numeric($r->input('q'))) {
             $alumno = $alumno->where('nro_doc','like',$r->input('q') . '%');
         } else {
-            $alumno = $alumno->where('nombres','ilike', '%' . $r->input('q') . '%')
-            ->orWhere('apellidos','ilike', '%' . $r->input('q') . '%');
+            $nombres = explode(' ',$r->input('q'));
+
+            foreach ($nombres as $key => $nombre) {
+                $alumno = $alumno->orWhere('nombres','ilike', "%{$nombre}%")
+                ->orWhere('apellidos','ilike', "%{$nombre}%");
+            }            
         }
 
         $alumno = $alumno
