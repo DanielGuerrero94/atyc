@@ -144,8 +144,8 @@ class AlumnosController extends AbmController
                     return response('No existe el efector',400);
                 }           
             }
-            Alumno::crear($request);
-            return response('Se creo',200);
+            $alumno = Alumno::crear($request);
+            return response(['message' => 'Se creo','id' => $alumno->id],200);
         } else {
             return response($v->errors(),400);
         }

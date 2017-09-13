@@ -24,8 +24,7 @@
             </li>
           </ul>
           <div class="tab-content">
-            <div class="active tab-pane" id="inicial">
-              <form class="form-modificacion">
+              <div class="active tab-pane" id="inicial">
                 {{ csrf_field() }}
                 {{ method_field('PUT') }}
                 <div class="row">
@@ -131,26 +130,26 @@
                       @endif
                     </div>        
                   </div>
-                </div>          
+                </div>  
+
               </div>
               <div class="tab-pane" id="alumnos">   
                 @include('alumnos.asignacionAlternativa')             
               </div>
-              <div class="tab-pane" id="profesores">
-                @include('profesores.asignacionAlternativa')          
-              </div>  
-            </form>  
-          </div>
-          <div class="box-body">
-            <a href="{{url('cursos')}}">
-              <div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i> Volver</div>
-            </a>
-            <button class="btn btn-primary pull-right" id="modificar" title="Modificar"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</button>
-          </div>
+            <!-- <div class="tab-pane" id="profesores">
+              @include('profesores.asignacionAlternativa')          
+            </div>  --> 
+        </div>
+        <div class="box-body">
+          <a href="{{url('cursos')}}">
+            <div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i> Volver</div>
+          </a>
+          <div class="btn btn-primary pull-right" id="modificar" title="Modificar"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</div>
         </div>
       </div>
-    </form>	
-  </div>
+    </div>
+  </form>	
+</div>
 </div>
 @endsection
 
@@ -162,6 +161,7 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
+    console.log(getInput());
 
     //No se porque estoy teniendo que inicializarlo aca si ya se deberia haber inicializado en el layout de adminlte
     $('.datepicker').datepicker({
@@ -288,8 +288,8 @@
       submitHandler : function(form) {
 
         $.ajax({
-          method : 'put',
           url : "{{url('cursos')}}" + '/' + "{{$curso->id_curso}}",
+          method : 'put',
           data : getInput(),
           success : function(data){
             console.log("Success.");
@@ -306,10 +306,10 @@
     });
 
     $('.container-fluid').on('click','#modificar',function() {  
-      $('#container-fluid #form-modificacion .nav-tabs').children().first().children().click();
+      $('.container-fluid #form-modificacion .nav-tabs').children().first().children().click();
 
       if(validator.valid()){
-        $('#container-fluid #form-modificacion').submit(); 
+        $('.container-fluid #form-modificacion').submit(); 
       }else{
         alert('Hay campos que no cumplen con la validacion.');
       }

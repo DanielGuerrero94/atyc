@@ -99,10 +99,10 @@
         </div>  
         </form>  
       </div>
-    </div>
-    <div class="box-body">
+      <div class="box-body">
       <div class="btn btn-success pull-right store">Guardar</div>
     </div>
+    </div>    
   </div>
 </form>
 

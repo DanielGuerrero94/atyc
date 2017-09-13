@@ -209,13 +209,6 @@
 			})
 		});
 
-		$("#alta").on("click","#volver",function(){
-			console.log('Se vuelve sin crear el usuario.');
-			$('#alta').html("");
-			$('#abm').show();
-			$('#filtros .box').show();
-		});
-
 		$('#limpiar').on("click",function(){
 			console.log('voy a borrar');
 			$('.form-control').val('');

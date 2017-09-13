@@ -13,7 +13,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div id="alta" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">
+		<div id="alta-accion" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">
 		</div>
 	</div>
 </div>
@@ -160,20 +160,20 @@
 		$('#alta_curso').on("click",function(){
 
 			$.ajax({
-				url: 'cursos/alta',
+				url: "{{url('cursos/alta')}}",
 				method: 'get',
 				success: function(data){
-					$('#alta').html(data);
-					$('#alta').show();
+					$('#alta-accion').html(data);
+					$('#alta-accion').show();
 					$('#filtros').hide();
 					$('#abm').hide();
 				}
 			});
 		});
 
-		$("#alta").on("click","#volver",function(){
+		$("#alta-accion").on("click","#volver",function(){
 			console.log('Se vuelve sin crear el curso.');
-			$('#alta').html("");
+			$('#alta-accion').html("");
 			$('#abm').show();
 			$('#filtros').show();
 		});
@@ -249,7 +249,7 @@
 			});
 		});
 
-		$('#alta').on('click','#modificar',function() {
+		$('#alta-accion').on('click','#modificar',function() {
 
 			var curso = $(this).data('id');
 

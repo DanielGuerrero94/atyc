@@ -153,7 +153,7 @@ class cursosController extends AbmController
      */
     public function update(Request $request, $id)
     {
-    	logger('Quiere actualizar accion {$id} con: '.json_encode($request->all()));
+    	logger("Quiere actualizar accion {$id} con: ".json_encode($request->all()));
     	$curso = Curso::findOrFail($id);
 
     	if($request->has('alumnos')){

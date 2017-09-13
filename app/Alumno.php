@@ -103,7 +103,8 @@ class Alumno extends Model
         $alumno->establecimiento2 = $r->has('establecimiento')?
         $r->establecimiento:null;
 
-        return $alumno->save();
+        $alumno->save();
+        return $alumno->id_alumno;
     }
 
     /**
