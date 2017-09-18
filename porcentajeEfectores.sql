@@ -1,4 +1,4 @@
-﻿select substring(c.fecha::character varying from 1 for 7) as periodo,c.id_provincia,count(distinct e.cuie) as capacitados,
+﻿SELECT substring(c.fecha::character varying from 1 for 7) as periodo,c.id_provincia,count(distinct e.cuie) as capacitados,
 (select case when count(distinct ee.cuie) = 0 
 then (select count(distinct cuie) 
 from efectores.efectores

@@ -13,9 +13,11 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\GetFile::class,
+        \App\Console\Commands\GetFileCommand::class,
         \App\Console\Commands\EntityMakeCommand::class,
         \App\Console\Commands\ViewMakeCommand::class,
+        \App\Console\Commands\GetLogCommand::class,
+        \App\Console\Commands\RecreateRequestCommand::class,        
     ];
 
     /**
@@ -27,7 +29,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function (){
-            $path = __DIR__.'/../../storage/exports/*';
+            $path = env('APP_PATH').'storage/exports/*';
             system("rm {$path}");
         })->everyMinute();
 

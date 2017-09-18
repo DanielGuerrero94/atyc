@@ -61,9 +61,8 @@
 
 							@endforeach
 						</select>
-
 					</div>
-				</div>						
+				</div>								
 			</div>	
 			<hr>
 			<div class="row">
@@ -150,11 +149,11 @@
 			</div>
 			<br>
 			<div class="row">
-				<div class="form-group col-xs-12 col-sm-6" id="efectores_field" style="display: none;">          
+				<div class="form-group col-xs-12 col-sm-6" style="display: none;">          
 					<label for="efectores" class="control-label col-xs-4">Efectores:</label>
 					<div class="typeahead__container col-xs-8">
-						<div class="typeahead__field">         
-							<span class="typeahead__query">
+						<div class="typeahead__field ">         
+							<span class="typeahead__query ">
 								<input class="efectores_typeahead form-control" name="efector" type="search" placeholder="Buscar..." autocomplete="off" id="efectores" disabled>
 							</span>
 						</div>
@@ -163,11 +162,11 @@
 				<button type="button" class="btn btn-default" id="ver_efectores" style="display: none;">Ver todos</button>
 			</div>
 			<div class="row">
-				<div class="form-group col-xs-12 col-sm-6" id="establecimiento_field" style="display: none">          
+				<div class="form-group col-xs-12 col-sm-6" style="display: none">          
 					<label for="establecimiento" class="control-label col-xs-4">Establecimiento:</label>
 					<div class="typeahead__container col-xs-8">
-						<div class="typeahead__field">             
-							<span class="typeahead__query">
+						<div class="typeahead__field ">             
+							<span class="typeahead__query ">
 								<input class="establecimiento_typeahead form-control" name="establecimiento" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="establecimiento" disabled>
 							</span>
 						</div>
@@ -222,12 +221,13 @@
 	</div>		
 </div> 
 
-<script type="text/javascript">
 
+
+<script type="text/javascript">
+	
 	$(document).ready(function () {
 		
 	//Typeahead para campos demasiado grandes como para traer una sola request
-	function iniciarEstablecimientosTypeahead () {
 		
 		$.typeahead({
 			input: '.establecimiento_typeahead',
@@ -259,9 +259,6 @@
 			}
 		});
 		
-	}
-	
-	function iniciarEfectoresTypeahead () {
 		
 		$.typeahead({
 			input: '.efectores_typeahead',
@@ -309,9 +306,7 @@
 					console.log('Typeahead Initiated on ' + node.selector);
 				}
 			}
-		});
-		
-	}				
+		});			
 	
 	$.typeahead({
 		input: '.nombre_organismo_typeahead',
@@ -347,17 +342,7 @@
 	
 	$('#alta').on('click', '#provincia', function(event) {
 		event.preventDefault();
-
-		if ($('#efectores_field').is(':hidden')) {
-			$('#establecimiento_field').empty();
-			$('<label for="establecimiento" class="control-label col-xs-4">Establecimiento:</label><div class="typeahead__container col-xs-8"><div class="typeahead__field"><span class="typeahead__query"><input class="establecimiento_typeahead form-control" name="establecimiento" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" id="establecimiento"></span></div></div>').appendTo('#establecimiento_field');
-			iniciarEstablecimientosTypeahead();
-		} else {
-			$('#efectores_field').empty();
-			$('<label for="efectores" class="control-label col-xs-4">Efectores:</label><div class="typeahead__container col-xs-8"><div class="typeahead__field"><span class="typeahead__query"><input class="efectores_typeahead form-control" name="efector" type="search" placeholder="Buscar..." autocomplete="off" id="efectores"></span></div></div>').appendTo('#efectores_field');
-			iniciarEfectoresTypeahead();
-		}
-		
+		console.log($(this).val());
 	});
 	
 	/*Funciones para que aparezcan o desaparezcan campos en el
@@ -393,8 +378,6 @@
 			console.log('asd');
 			tipo_convenio.show();				
 			establecimiento.show();
-			iniciarEstablecimientosTypeahead();				
-			iniciarEfectoresTypeahead();
 			$('#establecimiento').attr('disabled',false);
 			tipo_organismo.hide();
 			nombre_organismo.hide();
@@ -434,12 +417,13 @@
 	
 	$('#alta').on('change','.checkbox',function () {			
 		
-		if (efectores.is(':hidden')) {		
+		if(efectores.is(':hidden')){
 			efectores.show();
 			establecimiento.hide();
 			$('#efectores').attr('disabled',false);
 			$('#establecimiento').attr('disabled',true);
-		} else {
+		}
+		else{
 			establecimiento.show();	
 			efectores.hide();
 			$('#establecimiento').attr('disabled',false);

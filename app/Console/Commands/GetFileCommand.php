@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class GetFile extends Command
+class GetFileCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -12,14 +12,14 @@ class GetFile extends Command
      * @var string
      */
     protected $signature = 'get:file 
-        {name : Name of de file}';
+        {name : Name of the file}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Consigue un archivo por sftp';
+    protected $description = 'Gets a file with sftp';
 
     /**
      * Create a new command instance.
