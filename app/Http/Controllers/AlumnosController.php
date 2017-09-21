@@ -145,7 +145,7 @@ class AlumnosController extends AbmController
                 }           
             }
             $alumno = Alumno::crear($request);
-            return response(['message' => 'Se creo','id' => $alumno->id],200);
+            return response(['message' => 'Se creo'],200);
         } else {
             return response($v->errors(),400);
         }

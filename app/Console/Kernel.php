@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\ViewMakeCommand::class,
         \App\Console\Commands\GetLogCommand::class,
         \App\Console\Commands\RecreateRequestCommand::class,        
+        \App\Console\Commands\Test::class,
     ];
 
     /**

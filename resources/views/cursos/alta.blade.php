@@ -79,7 +79,7 @@
                     @if(Auth::user()->id_provincia == 25)
                     <select class="form-control" id="provincia">
                       @foreach ($provincias as $provincia)                
-                      <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>             
+                      <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>           
                       @endforeach
                     </select>
                     @else

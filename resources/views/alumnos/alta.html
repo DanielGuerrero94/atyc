@@ -551,7 +551,7 @@
 	var esNumero = new RegExp(/^[1-9]\d*$/i);	
 	
 		//Pregunta si el alta se esta dando desde el abm de participantes o desde el de acciones
-		if ($('#cargando-participante').length) {
+		/*if ($('#cargando-participante').length) {
 
 			function backToCreate () {
 				$('.container-fluid #alta-accion').closest('.row').show();
@@ -563,7 +563,7 @@
 				alert(data);
 			}
 
-		} else {
+		} else {*/
 
 			function backToCreate () {
 				$('#alta').html("");
@@ -574,8 +574,8 @@
 			function transitionAfterSubmit(data) {
 				location.reload();
 			}
-			
-		}	
+		/*	
+		}	*/
 		
 		$("#alta").on("click","#volver",backToCreate);
 		
@@ -634,7 +634,8 @@
 				nombre_organismo : "required",
 				nro_doc : {
 					required: true,
-					number: true
+					number: true,
+					minlength: 8
 				},
 				tel : {
 					number: true
