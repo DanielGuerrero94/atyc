@@ -60,7 +60,7 @@
 		</div>
 	</div>
 </form>
-@section('script')
+@push('scripts')
 <script type="text/javascript">
 	$(document).ready(function() {
 	//Inicial
@@ -228,4 +228,4 @@
 });
 
 </script>
-@endsection
+@endpush

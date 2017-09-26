@@ -95,7 +95,9 @@
           <div class="tab-pane" id="alumnos">   
             @include('alumnos.asignacionAlternativa')             
           </div>
-          {{-- <div class="tab-pane" id="profesores">         @include('profesores.asignacionAlternativa')                  </div> --}}  
+          {{-- <div class="tab-pane" id="profesores">
+            @include('profesores.asignacionAlternativa')
+          </div>   --}}
         </div> 
       </div>      
     </div>

@@ -147,6 +147,8 @@
     <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
 
     <script type="text/javascript" src="{{asset("/bower_components/bootstrap-tour/build/js/bootstrap-tour.min.js")}}"></script>
+
+    @stack('scripts')
     
   </head>
   <body class="skin-blue sidebar-mini" style="height: auto; min-height: 100%;">
