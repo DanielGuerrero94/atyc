@@ -30,7 +30,7 @@ class Curso extends Model
      * @var array
      */
     protected $fillable = ['nombre','id_provincia','id_area_tematica',
-    'id_linea_estrategica','fecha','duracion'];
+    'id_linea_estrategica','fecha','duracion','edicion'];
 
     protected $hidden = ['pivot'];
 
@@ -92,6 +92,8 @@ class Curso extends Model
         para saber que edicion es,
         podria ser un trigger en insert*/
 
+        /*La ocurrencia del curso tiene que contarla por provincia que organiza*/
+
         $edicion = Curso::where('nombre', '=', $r->nombre)->count();
 
         $this->edicion = $edicion + 1;
@@ -136,5 +138,10 @@ class Curso extends Model
         if ($id_provincia != 25) {
             return $query->where('cursos.id_provincia', $id_provincia);
         }
+    }
+
+    public function getFechaAttribute($value)
+    {
+        return implode('/', array_reverse(explode("-",$value)));
     }
 }

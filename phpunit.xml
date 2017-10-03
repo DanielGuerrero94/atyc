@@ -8,13 +8,13 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          stopOnFailure="false">
-    <testsuites>
-        <testsuite name="Application Test Suite">
-            <directory suffix="Test.php">./tests</directory>
-        </testsuite>
+    <testsuites>        
         <testsuite name="Controller Test Suite">
             <directory suffix="ControllerTest.php">./tests/controllers</directory>
         </testsuite>
+        <!-- <testsuite name="Application Test Suite">
+            <directory suffix="Test.php">./tests</directory>
+        </testsuite> -->
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

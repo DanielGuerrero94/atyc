@@ -62,7 +62,7 @@ class cursosController extends AbmController
      */
 	public function index()
 	{
-		return json_encode(Curso::all());
+		return Curso::all();
 	}
 
     /**
@@ -123,12 +123,6 @@ class cursosController extends AbmController
     		])
     	->where('id_curso',$id)
     	->first();
-
-
-		//De la base de datos me viene con '-' y en el orden opuesto
-		//Lo pongo con '/'
-    	$f = explode("-",$curso->fecha);
-    	$curso->fecha = $f[2].'/'.$f[1].'/'.$f[0];
 
     	return array('curso' => $curso);		
     }    
@@ -294,9 +288,8 @@ class cursosController extends AbmController
 		->join('sistema.provincias','sistema.provincias.id_provincia','=','alumnos.id_provincia')
 		->join('sistema.tipos_documentos','sistema.tipos_documentos.id_tipo_documento','=','alumnos.alumnos.id_tipo_documento')
 		->select('alumnos.id_alumno','nombres','apellidos','sistema.tipos_documentos.nombre as tipo_doc','nro_doc','sistema.provincias.nombre as provincia')
-		->get();
-
-		$returns = collect($curso)->map(function ($item,$key){
+		->get()
+		->map(function ($item,$key){
 			return array('id_alumno' => $item['id_alumno'],
 				'nombres' => $item['nombres'],
 				'apellidos' => $item['apellidos'],
@@ -305,11 +298,11 @@ class cursosController extends AbmController
 				'provincia' => $item['provincia']);
 		});
 
-		return Datatables::of($returns)
+		return Datatables::of($curso)
 		->addColumn('acciones' , function($ret){
 			return '<a href="'.url('alumnos/'.$ret['id_alumno']).'"><button data-id="'.$ret['id_alumno'].'" class="btn btn-info btn-xs ver" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
 		})            
-		->make(true); 		
+		->make(true);
 	}
 
 	public function getCountAlumnos(Request $r,$id)
