@@ -26,46 +26,46 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class AlumnosController extends AbmController
 {
     private $rules = [
-    'nombres' => 'required|string',
-    'apellidos' => 'required|string',
-    'id_tipo_documento' => 'required|numeric',
-    'pais' => 'required_if:id_tipo_documento,5,6',
-    'nro_doc' => 'required|numeric',
-    'localidad' => 'required|string',
-    'id_provincia' => 'required|numeric',
-    'id_trabajo' => 'required|numeric',
-    'id_genero' => 'required|numeric',
-    'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
+        'nombres' => 'required|string',
+        'apellidos' => 'required|string',
+        'id_tipo_documento' => 'required|numeric',
+        'pais' => 'required_if:id_tipo_documento,5,6',
+        'nro_doc' => 'required|numeric',
+        'localidad' => 'required|string',
+        'id_provincia' => 'required|numeric',
+        'id_trabajo' => 'required|numeric',
+        'id_genero' => 'required|numeric',
+        'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
     //'establecimiento' => 'required_if:id_trabajo,2|required_if:id_trabajo,2|string',
-    'tipo_convenio' => 'nullable',
-    'efector' => 'required_with:tipo_convenio|string',
-    'tipo_organismo' => 'required_if:id_trabajo,3|string',
-    'nombre_organismo' => 'required_if:id_trabajo,3|string',
-    'email' => 'nullable|email',
-    'tel' => 'nullable',
-    'cel' => 'nullable'
+        'tipo_convenio' => 'nullable',
+        'efector' => 'required_with:tipo_convenio|string',
+        'tipo_organismo' => 'required_if:id_trabajo,3|string',
+        'nombre_organismo' => 'required_if:id_trabajo,3|string',
+        'email' => 'nullable|email',
+        'tel' => 'nullable',
+        'cel' => 'nullable'
     ],
     $filters = [
-    'nombres' => 'string',
-    'apellidos' => 'string',
-    'id_tipo_documento' => 'numeric',
-    'id_provincia' => 'numeric',
-    'id_genero' => 'numeric',
-    'cel' => 'numeric',
-    'tel' => 'numeric',
+        'nombres' => 'string',
+        'apellidos' => 'string',
+        'id_tipo_documento' => 'numeric',
+        'id_provincia' => 'numeric',
+        'id_genero' => 'numeric',
+        'cel' => 'numeric',
+        'tel' => 'numeric',
     'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
     'localidad' => 'string',
     'nro_doc' => 'numeric'
-    ],
-    $campos = [
+],
+$campos = [
     "nombres",
     "apellidos",
     "id_tipo_documento",
     "nro_doc",
     "provincia",
     "acciones"
-    ],
-    $update = [
+],
+$update = [
     'nombres' => 'required|string',
     'apellidos' => 'required|string',
     'id_tipo_documento' => 'required|numeric',
@@ -84,8 +84,8 @@ class AlumnosController extends AbmController
     'email' => 'nullable|email',
     'tel' => 'nullable',
     'cel' => 'nullable'
-    ],
-    $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
+],
+$botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
 
     /**
      * View para abm.
@@ -104,7 +104,7 @@ class AlumnosController extends AbmController
      */
     public function index()
     {
-        return json_encode(Alumno::all());
+        return Alumno::all();
     }
 
     /**
@@ -128,27 +128,25 @@ class AlumnosController extends AbmController
         logger('Quiere crear participante con: '.json_encode($request->all()));
         $v = Validator::make($request->all(), $this->rules);
 
-        if (!$v->fails()) {
+        if ($v->fails()) return response($v->errors(),400);
 
-            if ($request->has('pais')) {
-                $id_pais = Pais::select('id_pais')->where('nombre', $request->pais)->get('id_pais')->first();
-                $request->pais = $id_pais;
-            }
-
-            if ($request->has('efector')) {
-                $con = new EfectoresController();            
-                $cuie = $con->findCuie($request->efector);
-                if ($cuie) {
-                    $request->efector = $cuie;            
-                } else {
-                    return response('No existe el efector',400);
-                }           
-            }
-            $alumno = Alumno::crear($request);
-            return response(['message' => 'Se creo'],200);
-        } else {
-            return response($v->errors(),400);
+        if ($request->has('pais')) {
+            $id_pais = Pais::select('id_pais')->where('nombre', $request->pais)->get('id_pais')->first();
+            $request->pais = $id_pais;
         }
+
+        if ($request->has('efector')) {
+            $con = new EfectoresController();            
+            $cuie = $con->findCuie($request->efector);
+            if ($cuie) {
+                $request->efector = $cuie;            
+            } else {
+                return response('No existe el efector',400);
+            }           
+        }
+
+        $alumno = Alumno::crear($request);
+        return response(['message' => 'Se creo'],200);
     }
 
     /**
@@ -184,7 +182,7 @@ class AlumnosController extends AbmController
         try {
             return view('alumnos/modificar', $this->show($id));
         } catch (ModelNotFoundException $e) {
-            return json_encode('El dato no existe o no tiene permiso para verlo.');
+            return 'El dato no existe o no tiene permiso para verlo.';
         }
     }
 
@@ -197,14 +195,13 @@ class AlumnosController extends AbmController
      */
     public function update(Request $request, $id)
     {
-        logger('Quiere actualizar participante {$id} con: '.json_encode($request->all()));
+        logger("Quiere actualizar participante {$id} con: ".json_encode($request->all()));
         $v = Validator::make($request->all(), $this->update);
 
         if(!$v->fails()){
             $a = Alumno::findOrFail($id)->update($request->all());
         } else {
-            logger(json_encode($v->errors()));
-            return json_encode($v->errors());
+            return $v->errors();
         }
     }
 
@@ -237,10 +234,10 @@ class AlumnosController extends AbmController
         $returns = Alumno::select('id_alumno', 'nombres', 'apellidos', 'nro_doc', 'alumnos.id_provincia', 'alumnos.id_tipo_documento')
         ->with(
             [
-            'tipoDocumento',
-            'provincia'
+                'tipoDocumento',
+                'provincia'
             ]
-            )
+        )
         ->segunProvincia();
 
         return  $this->toDatatable($r, $returns);
@@ -288,7 +285,7 @@ class AlumnosController extends AbmController
             'funciones' => $funciones,
             'organismos' => $organismos,
             'generos' => $generos
-            );
+        );
     }
 
     /* Metodos Typeahead */
@@ -352,7 +349,7 @@ class AlumnosController extends AbmController
                 'nombres' => $item->nombres,
                 'apellidos' => $item->apellidos,
                 'documentos' => $item->nro_doc
-                );
+            );
         });
         return $this->typeaheadResponse($alumno);
     }
@@ -407,7 +404,7 @@ class AlumnosController extends AbmController
             'sistema.tipos_documentos.nombre as id_tipo_documento',
             'nro_doc',
             'sistema.provincias.nombre as provincia'
-            );                        
+        );                        
 
         foreach ($filtros as $key => $value) {
             if ($this->filters[$key] == 'string'){
@@ -462,7 +459,7 @@ class AlumnosController extends AbmController
 
                 return $accion == 'agregar'?$agregar:$editarYEliminar;
             }
-            )
+        )
         ->make(true);
     }
 
@@ -498,9 +495,9 @@ class AlumnosController extends AbmController
                         $sheet->setHeight(1, 20);
                         $sheet->loadView('excel.alumnos', $datos);
                     }
-                    );
+                );
             }
-            )
+        )
         ->store('xls');
 
         return $path;
@@ -540,7 +537,7 @@ class AlumnosController extends AbmController
                     array_push($alumno, $item->provincia);
                     return $alumno;
                 }
-                );
+            );
         } else {
             $mapped = $data->map(
                 function ($item, $key) {
@@ -551,7 +548,7 @@ class AlumnosController extends AbmController
                     array_push($alumno, $item->nro_doc);
                     return $alumno;
                 }
-                );    
+            );    
         }
 
         return Pdf::save($header, $column_size, 13, $mapped);
@@ -569,7 +566,7 @@ class AlumnosController extends AbmController
             'existe' => Alumno::where('nro_doc', $r->input('nro_doc'))
             ->where('id_tipo_documento', $r->input('id_tipo_documento'))
             ->count() != 0
-            );
+        );
     }
 
     public function getExcelCompleto(Request $r,$id)

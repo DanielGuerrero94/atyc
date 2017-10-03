@@ -20,27 +20,27 @@ class cursosController extends AbmController
 {
 	private 
 	$rules = [
-	'nombre' => 'required|string',
-	'duracion' => 'required|numeric',
-	'fecha' => 'required',
-	'id_area_tematica' => 'required|numeric',
-	'id_linea_estrategica' => 'required|numeric',
-	'id_provincia' => 'required|numeric'
+		'nombre' => 'required|string',
+		'duracion' => 'required|numeric',
+		'fecha' => 'required',
+		'id_area_tematica' => 'required|numeric',
+		'id_linea_estrategica' => 'required|numeric',
+		'id_provincia' => 'required|numeric'
 	], 
 	$filters = [
-	'nombre' => 'string',
-	'duracion' => 'numeric',
-	'edicion' => 'numeric',
-	'id_provincia' => 'numeric',
-	'id_linea_estrategica' => 'numeric',
-	'id_area_tematica' => 'numeric',
-	'id_periodo' => 'numeric',
-	'desde' => 'string',
-	'hasta' => 'string'
+		'nombre' => 'string',
+		'duracion' => 'numeric',
+		'edicion' => 'numeric',
+		'id_provincia' => 'numeric',
+		'id_linea_estrategica' => 'numeric',
+		'id_area_tematica' => 'numeric',
+		'id_periodo' => 'numeric',
+		'desde' => 'string',
+		'hasta' => 'string'
 	], 
 	$botones = [
-	'fa fa-pencil-square-o',
-	'fa fa-trash-o'
+		'fa fa-pencil-square-o',
+		'fa fa-trash-o'
 	];
 
 	//Lo tengo aca pero lo podria tener en otra clase porque lo pueden llegar a usar todas las tablas porque estan en latin1 pero lo muestro en utf-8
@@ -83,25 +83,32 @@ class cursosController extends AbmController
      */
     public function store(Request $request)
     {
-    	logger('Quiere crear accion con: '.json_encode($request->all()));
-    	$v = Validator::make($request->all(),$this->rules);
-    	if(!$v->fails()){
-    		$curso = new Curso();
-    		$curso->crear($request);
+    	$data = $request->all();
+    	logger('Quiere crear accion con: '.json_encode($data));
+    	$v = Validator::make($data,$this->rules);
+    	if ($v->fails()) return $v->errors();
 
-    		if($request->has('alumnos')){
-    			$alumnos = explode(',',$request->get('alumnos'));
-    			$curso->alumnos()->attach($alumnos);
-    		}
+    	//Calculo la edicion del curso, despues puede ser un trigger before insert
+    	$edicion = Curso::where([
+    		['nombre', '=', $request->nombre],
+    		['id_provincia', '=', $request->id_provincia],
+    	])
+    	->count();
 
-    		if($request->has('profesores')){
-    			$profesores = explode(',',$request->get('profesores'));
-    			$curso->profesores()->attach($profesores);				
-    		}
+    	$data = array_merge($data, ['edicion' => $edicion++]);
+    	$curso = Curso::create($data);
 
-    	}else{
-    		return json_encode($v->errors());    		
+    	if($request->has('alumnos')){
+    		$alumnos = explode(',',$request->get('alumnos'));
+    		$curso->alumnos()->attach($alumnos);
     	}
+
+    	if($request->has('profesores')){
+    		$profesores = explode(',',$request->get('profesores'));
+    		$curso->profesores()->attach($profesores);				
+    	}
+
+    	return $curso->id_curso;   	
     }
 
     /**
@@ -120,7 +127,7 @@ class cursosController extends AbmController
     		'profesores' => function ($query) {
     			return $query->select('sistema.profesores.id_profesor','nombres','apellidos','id_tipo_documento','nro_doc');
     		}
-    		])
+    	])
     	->where('id_curso',$id)
     	->first();
 
@@ -196,7 +203,7 @@ class cursosController extends AbmController
 			'areaTematica',
 			'lineaEstrategica',
 			'provincia'
-			])
+		])
 		->segunProvincia();	
 
 		return $this->toDatatable($request,$query); 	

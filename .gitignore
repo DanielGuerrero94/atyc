@@ -6,3 +6,4 @@ public/bower_components/*
 public/*.pdf
 /node_modules
 .vscode/
+*.log
