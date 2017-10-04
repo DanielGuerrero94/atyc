@@ -4,21 +4,21 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class TestingCommand extends Command
+class GetFileCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'test';
+    protected $signature = 'Get file';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Consigue un archivo por sftp';
 
     /**
      * Create a new command instance.
@@ -37,6 +37,9 @@ class TestingCommand extends Command
      */
     public function handle()
     {
-        echo "hello";
+        system(
+            'sshpass -p \''.env('SSH_PASS').'\' sftp administrador@192.6.0.224 << EOF 
+            get /var/www/html/sirge3/storage/uploads/prestaciones/59382d6275518.txt'
+        );
     }
 }

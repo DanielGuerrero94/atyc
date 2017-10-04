@@ -12,10 +12,10 @@ class EntityMakeCommand extends Command
      * @var string
      */
     protected $signature = 'make:entity 
-        {name : Name of the entity}
-        {plural=s : Plural}
-        {--c|complete : Create with model,controller,migration,seeder,faker,test,etc...}
-        {--R|rollback : Remove all files created for the entity}';
+    {name : Name of the entity}
+    {plural=s : Plural}
+    {--c|complete : Create with model,controller,migration,seeder,faker,test,etc...}
+    {--R|rollback : Remove all files created for the entity}';
 
     /**
      * The console command description.
@@ -32,25 +32,74 @@ class EntityMakeCommand extends Command
     public function handle()
     {
         $name = $this->argument('name');
-        if ($this->option('complete')) {            
-            system('php artisan make:view '.$name.$this->argument('plural'));
-            $name = ucfirst($name);
-            system('php artisan make:model -mcr '.$name);
-            system('php artisan make:test '.$name.'Test');
-            system('php artisan make:seeder '.$name.'Seeder');
-            $this->info('Entity created successfully.');
+        $plural = $this->argument('plural');
+
+        if ($this->option('complete')) {
+
+            $this->complete();
+
         } elseif ($this->option('rollback')) {
-            system('php artisan make:view -R '.$name.$this->argument('plural'));
-            system('cd database/migrations/ && ls | grep '
-                .$name
-                .$this->argument('plural')
-                .' | xargs rm');
-            $name = ucfirst($name);
-            system('rm app/'.$name.'.php');
-            system('rm app/Http/Controllers/'.$name.'Controller.php');
-            system('rm database/seeds/'.$name.'Seeder.php');
-            system('rm tests/'.$name.'Test.php');
-            $this->info('Entity erased successfully.');
+
+            $this->rollback();
+
         }       
+    }
+
+    protected function complete()
+    {
+        $name = $this->argument('name');
+        $plural = $this->argument('plural');
+
+        $this->call('make:view', [
+            'name' => $name.$plural,
+        ]);            
+
+        $name = ucfirst($name);
+
+        $this->call('make:model', [
+            'name' => $name,
+            '--migration' => true,
+            '--controller' => true,
+            '--resource' => true,
+        ]);
+
+        $this->call('make:test', [
+            'name' => $name.'Test',
+        ]);
+
+        $this->call('make:seeder', [
+            'name' => $name.'Seeder',
+        ]);
+
+        $this->info('Entity created successfully.');
+    }
+
+    protected function rollback()
+    {
+        $name = $this->argument('name');
+        $plural = $this->argument('plural');
+
+        $this->call('make:view', [
+            'name' => $name.$plural,
+            '--rollback' => true,
+        ]);
+
+        system(
+            "ls database/migrations/ | ".
+            "grep {$name}{$plural} | xargs rm"
+        );
+
+        $this->info('Migration erased successfully.');
+
+        $name = ucfirst($name);
+
+        system(
+            "rm app/{$name}.php ".
+            "app/Http/Controllers/{$name}Controller.php ".
+            "database/seeds/{$name}Seeder.php ".
+            "tests/{$name}Test.php"
+        );
+
+        $this->info('Entity erased successfully.');
     }
 }

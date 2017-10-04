@@ -28,7 +28,7 @@ class ViewMakeCommand extends Command
      * 
      * @var array
      */
-    private $files = ['abm','alta','baja','modificacion','filtros'];
+    protected $files = ['abm','alta','baja','modificacion','filtros'];
 
     /**
      * Create a new command instance.
@@ -47,9 +47,7 @@ class ViewMakeCommand extends Command
      */
     public function handle()
     {
-        $files = ['abm','alta','baja','modificacion','filtros'];
-        $base_path = 'resources/views/';
-        $path = $base_path.$this->argument('name');
+        $path = 'resources/views/'.$this->argument('name');
 
         if ($this->option('rollback')) {
             system('rm -rf '.$path);
@@ -57,7 +55,7 @@ class ViewMakeCommand extends Command
         } else {
             system('mkdir '.$path);
 
-            foreach ($files as $file) {
+            foreach ($this->files as $file) {
                 system('touch '.$path.'/'.$file.'.blade.php');
             }
             $this->info('Views folder created successfully.');

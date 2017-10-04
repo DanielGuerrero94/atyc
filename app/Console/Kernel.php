@@ -13,10 +13,12 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\GetFile::class,
+        \App\Console\Commands\ControllerTestMakeCommand::class,                
         \App\Console\Commands\EntityMakeCommand::class,
+        \App\Console\Commands\GetFileCommand::class,
+        \App\Console\Commands\GetLogCommand::class,
+        \App\Console\Commands\TestCommand::class,                
         \App\Console\Commands\ViewMakeCommand::class,
-        \App\Console\Commands\GetLogCommand::class,        
     ];
 
     /**

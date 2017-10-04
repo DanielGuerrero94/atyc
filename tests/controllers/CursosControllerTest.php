@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 
-class CursosControllerTest extends TestCase
+class AccionesControllerTest extends TestCase
 {
 
     protected $controller;
