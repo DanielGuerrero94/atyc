@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
+use Illuminate\Console\GeneratorCommand;
 
-class ViewMakeCommand extends Command
+class ViewMakeCommand extends GeneratorCommand
 {
     /**
      * The name and signature of the console command.
@@ -12,15 +12,32 @@ class ViewMakeCommand extends Command
      * @var string
      */
     protected $signature = 'make:view
-        {name : The name of the view folder}
-        {--R|rollback : Delete view folder}';
+    {name : The name of the view folder}
+    {--R|rollback : Delete view folder}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create a new view folder';
+    protected $description = 'Create CRUD views for model';
+
+    /**
+     * The type of class being generated.
+     *
+     * @var string
+     */
+    protected $type = 'Model Views';
+
+    /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    protected function getStub() 
+    {
+        return __DIR__.'/stubs/model.stub';
+    }
 
     /**
      * Default files.
@@ -28,17 +45,7 @@ class ViewMakeCommand extends Command
      * 
      * @var array
      */
-    protected $files = ['abm','alta','baja','modificacion','filtros'];
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $filenames = ['abm','alta','baja','modificacion','filtros'];
 
     /**
      * Execute the console command.
@@ -55,7 +62,7 @@ class ViewMakeCommand extends Command
         } else {
             system('mkdir '.$path);
 
-            foreach ($this->files as $file) {
+            foreach ($this->filenames as $file) {
                 system('touch '.$path.'/'.$file.'.blade.php');
             }
             $this->info('Views folder created successfully.');

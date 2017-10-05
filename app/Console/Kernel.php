@@ -17,7 +17,6 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\EntityMakeCommand::class,
         \App\Console\Commands\GetFileCommand::class,
         \App\Console\Commands\GetLogCommand::class,
-        \App\Console\Commands\TestCommand::class,                
         \App\Console\Commands\ViewMakeCommand::class,
     ];
 

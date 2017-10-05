@@ -61,12 +61,18 @@ Route::group(['middleware' => ['logueado','logging']],function () {
     Route::resource('log', 'LogController');
 
     //Descarga
-    Route::get('reportes/descargar/excel/{nombre_archivo}', 'DescargasController@excel');
-    Route::get('descargar/excel/{nombre_archivo}', 'DescargasController@excel');
-    Route::get('alumnos/descargar/excel/{nombre_archivo}', 'DescargasController@excel');
+    Route::get(
+        'reportes/descargar/excel/{nombre_archivo}',
+        'DescargasController@excel'
+    );
+    Route::get('descargar/excel/{nombre_archivo}',
+        'DescargasController@excel');
+    Route::get('alumnos/descargar/excel/{nombre_archivo}',
+        'DescargasController@excel');
 
     Route::get('descargar/pdf/{nombre_archivo}', 'DescargasController@pdf');
-    Route::get('reportes/descargar/pdf/{nombre_archivo}', 'DescargasController@pdf_reportes');
+    Route::get('reportes/descargar/pdf/{nombre_archivo}',
+        'DescargasController@pdf_reportes');
     Route::get('alumnos/descargar/pdf/{nombre_archivo}', 'DescargasController@pdf_alumnos');
 
     //Alumnos

@@ -4,17 +4,19 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
+use App\Http\Controllers\DummyClasssController;
+use App\DummyClasss;
 
 class DummyClassControllerTest extends TestCase
 {
 	protected $model;
 	protected $controller;
 
-	public function setUp()
+	public function setUp(DummyClasss $model,DummyClasssController $controller)
     {
         parent::setUp();
-        $this->controller = new App\Http\Controllers\DummyClasssController();
-        $this->model = new App\DummyClass();
+        $this->model = new $model();
+        $this->controller = new $controller();
     }
 
     /**

@@ -14,5 +14,14 @@ use Illuminate\Foundation\Inspiring;
 */
 
 Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
+	$this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('test:make-model {name}', function () {
+	$this->call('make:model', [
+		'name' => $this->argument('name'),
+		'--migration' => true,
+		'--resource' => true,
+		'--controller' => true,
+	]);
+})->describe('Command for testing.');

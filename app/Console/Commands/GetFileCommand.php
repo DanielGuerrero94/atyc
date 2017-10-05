@@ -11,7 +11,7 @@ class GetFileCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'Get file';
+    protected $signature = 'get:file';
 
     /**
      * The console command description.
