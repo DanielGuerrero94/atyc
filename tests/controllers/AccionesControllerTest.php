@@ -37,12 +37,11 @@ class AccionesControllerTest extends TestCase
     /**
      * Return date with the correct format. "16/10/2013"
      *
-     * @test
      * @return void
      */
     public function showCorrectDateFormat()
     {
-        $curso = $this->controller->show(23);
+        $curso = $this->controller->show(1);
         $curso = json_decode($curso['curso'],true);
         $fecha = $curso['fecha'];
 
@@ -53,7 +52,6 @@ class AccionesControllerTest extends TestCase
      * Return 
      * Depende de base de datos
      * 
-     * @test
      * @dataProvider accionesRequestProvider
      * @return void
      */

@@ -1,3 +1,0 @@
-el reporte de cursos no imprime los excel y pdf
-el pdf tiene una hoja demas al principio
-arreglar la modificacion de alumno

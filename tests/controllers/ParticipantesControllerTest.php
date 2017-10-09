@@ -43,6 +43,7 @@ class ParticipantesControllerTest extends TestCase
     public function create(Request $request)
     {
     	//$participante = $this->controller->store($request);
-        $this->assertNull(null);
+        //$this->assertNull(null);
+        $this->assertTrue(true);
     }
 }

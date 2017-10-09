@@ -15,7 +15,7 @@ class AreasTematicasController extends Controller
      */
     public function index()
     {
-        return json_encode(AreaTematica::all());
+        return AreaTematica::all();
     }
 
     /**
@@ -110,8 +110,7 @@ class AreasTematicasController extends Controller
      */
     public function getTabla()
     {
-        $returns = AreaTematica::all();
-        return Datatables::of($returns)
+        return Datatables::of($this->index())
         ->addColumn(
             'acciones',
             function ($ret) {

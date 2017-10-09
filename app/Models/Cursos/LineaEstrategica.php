@@ -27,23 +27,4 @@ class LineaEstrategica extends Model
      * @var array
      */
     protected $fillable = ['nombre','numero'];
-
-    public static function table()
-    {
-        return LineaEstrategica::all();
-    }
-
-    public function crear(Request $r)
-    {
-        $this->nombre = $r->nombre;
-        $this->numero = $r->numero;
-        $this->save();
-    }
-
-    public function modificar(Request $r)
-    {
-        $this->nombre = $r->nombre;
-        $this->numero = $r->numero;
-        $this->save();
-    }
 }

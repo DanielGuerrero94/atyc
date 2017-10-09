@@ -70,8 +70,8 @@ $factory->define(App\Convenio::class, function (Faker\Generator $faker) {
 /** linea estrategica */
 $factory->define(App\Models\Cursos\LineaEstrategica::class, function (Faker\Generator $faker) {
 	return [
-	'numero' => substr($faker->name,0,4),
-	'nombre' => substr($faker->name,0,4)
+	'numero' => substr($faker->unique()->name,0,4),
+	'nombre' => substr($faker->unique()->name,0,4)
 	];
 });
 

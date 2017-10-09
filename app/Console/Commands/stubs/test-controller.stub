@@ -5,26 +5,64 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DummyClasssController;
-use App\DummyClasss;
+use App\DummyClass;
 
 class DummyClassControllerTest extends TestCase
 {
 	protected $model;
 	protected $controller;
 
-	public function setUp(DummyClasss $model,DummyClasssController $controller)
+	public function setUp()
     {
         parent::setUp();
-        $this->model = new $model();
-        $this->controller = new $controller();
+        $this->model = new DummyClass;
+        $this->controller = new DummyClasssController;
+    }
+
+    public function DummyClassDataProvider()
+    {
+        $this->refreshApplication();
+
+        return factory(App\DummyClass::class, 3)
+        ->create()
+        ->map(function($model){
+            return [new Illuminate\Http\Request($model->toArray())];
+        })
+        ->all();
     }
 
     /**
      * A basic test example.
      *
+     * @dataProvider DummyClassDataProvider
+     * @test
      * @return void
      */
-    public function testExample()
+    public function store(Request $request)
+    {
+        $model_instance_id = $this->controller->store($request);
+        $this->assertTrue(is_numeric($model_instance_id));
+    }
+
+    /**
+     * A basic test example.
+     *
+     * @test
+     * @return void
+     */
+    public function show(Request $request)
+    {
+        $this->assertTrue(true);
+    }
+
+    /**
+     * A basic test example.
+     *
+     * @dataProvider DummyClassDataProvider
+     * @test
+     * @return void
+     */
+    public function update(Request $request)
     {
         $this->assertTrue(true);
     }

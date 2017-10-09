@@ -15,7 +15,7 @@ class LineasEstrategicasController extends Controller
      */
     public function index()
     {
-        return json_encode(LineaEstrategica::all());
+        return LineaEstrategica::all();
     }
 
     /**
@@ -36,8 +36,7 @@ class LineasEstrategicasController extends Controller
      */
     public function store(Request $request)
     {
-        $linea = new LineaEstrategica();
-        $linea->crear($request);
+        return LineaEstrategica::create($request->all())->id_linea_estrategica;
     }
 
     /**
@@ -48,8 +47,7 @@ class LineasEstrategicasController extends Controller
      */
     public function show($id)
     {
-        $linea = LineaEstrategica::find($id);
-        return array('linea' => $linea);
+        return ['linea' =>  LineaEstrategica::findOrFail($id)];
     }
 
     /**
@@ -60,7 +58,7 @@ class LineasEstrategicasController extends Controller
      */
     public function edit($id)
     {
-        return view('lineasEstrategicas/modificar', $this->show($id));
+        return view('lineasEstrategicas.modificar', $this->show($id));
     }
 
     /**
@@ -72,8 +70,7 @@ class LineasEstrategicasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $linea = LineaEstrategica::find($id);
-        $linea->modificar($request);
+        return LineaEstrategica::findOrFail($id)->update($request->all());
     }
 
     /**
@@ -84,7 +81,7 @@ class LineasEstrategicasController extends Controller
      */
     public function destroy($id)
     {
-        LineaEstrategica::find($id)->delete();
+        return LineaEstrategica::findOrFail($id)->delete();
     }
 
     /**
@@ -104,8 +101,7 @@ class LineasEstrategicasController extends Controller
      */
     public function getTabla()
     {
-        $returns = LineaEstrategica::table();
-        return Datatables::of($returns)
+        return Datatables::of($this->index())
         ->addColumn(
             'acciones',
             function ($ret) {
