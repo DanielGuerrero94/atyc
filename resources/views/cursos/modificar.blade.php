@@ -172,7 +172,7 @@
 
    $(".box-footer").on("click","#volver",function(){
    	console.log('Se vuelve sin crear el curso.');
-   	$('#alta').html("");
+   	$('#alta-accion').html("");
    	$('#abm').show();
    	$('#filtros').show();
    });
@@ -180,10 +180,10 @@
    $(".box-footer").on("click","#modificar",function(){
 
    	var curso = $(this).data('id');
-   	var data = $('#alta form').serialize();
-   	data += '&id_area_tematica='+$('#alta form #area_tematica :selected').data('id');
-   	data += '&id_linea_estrategica='+$('#alta form #linea_estrategica :selected').data('id');
-   	data += '&id_provincia='+$('#alta form #provincia :selected').data('id');
+   	var data = $('#alta-accion form').serialize();
+   	data += '&id_area_tematica='+$('#alta-accion form #area_tematica :selected').data('id');
+   	data += '&id_linea_estrategica='+$('#alta-accion form #linea_estrategica :selected').data('id');
+   	data += '&id_provincia='+$('#alta-accion form #provincia :selected').data('id');
 
 
    	console.log(data);
@@ -194,7 +194,7 @@
    		data: data,
    		success: function(data){
    			console.log('Se modifico el curso correctamente.');
-   			$('#alta').html("");
+   			$('#alta-accion').html("");
    			$('#abm').show();
    			$('#filtros').show();
    		},

@@ -1,111 +1,113 @@
 <form id="form-alta">
-  <div class="box">
-    <div class="nav-tabs-custom">
-      <ul class="nav nav-tabs">
-        <li class="active"><a href="#inicial" data-toggle="tab">Inicial</a></li>
-        <li><a href="#alumnos" data-toggle="tab">Participantes</a></li>
-        <li><a href="#profesores" data-toggle="tab">Docentes</a></li>
-      </ul>
-      <div class="tab-content">
-        <div class="active tab-pane" id="inicial">
-          <form class="form-alta">
-            {{ csrf_field() }}
-            <div class="row">
-            <div class="form-group col-xs-12 col-md-6">       
-              <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
-              <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
-                <div class="typeahead__field ">             
-                  <span class="typeahead__query ">
-                    <input class="curso_typeahead form-control" name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
-                  </span>
-                </div>
-              </div>
-            </div>
-            </div>
-            <br>
-            <div class="row">
-            <div class="form-group col-xs-12 col-md-6">          
-              <label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
-              <div class="col-md-8 col-xs-9">
-              <input type="number" class="form-control" name="duracion" id="horas" placeholder="Duración en horas"> 
-              </div>
-            </div>
-            </div>
-            <br>
-            <div class="row">
-            <div class="form-group col-xs-12 col-md-6">            
-              <label for="fecha" class="control-label col-md-4 col-xs-4">Fecha:</label>
-              <div class="input-group date col-md-8 col-xs-6 ">
-                <div class="input-group-addon">
-                  <i class="fa fa-calendar"></i>
-                </div>
-                <input type="text" name="fecha" id="fecha" class="form-control pull-right datepicker">
-              </div>
-            </div>
-            </div>
-            <div class="row">
-              <div class="form-group col-xs-12 col-md-6">          
-              <label for="area_tematica" class="control-label col-md-4 col-xs-3">Areas Tematicas:</label>
-              <div class="col-md-8 col-xs-9">
-              <select class="form-control" id="area_tematica" name="area_tematica">
-                <option>Seleccionar</option>
-                @foreach ($areas_tematicas as $area)
-                <option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
-                @endforeach
-              </select>          
-              </div>
-            </div>
-            </div>
-            <br>
-            <div class="row">
-            <div class="form-group col-xs-12 col-md-6">          
-              <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
-              <div class="col-md-8 col-xs-9">
-              <select class="form-control" id="linea_estrategica" name="linea_estrategica">
-                <option>Seleccionar</option>
-                @foreach ($lineas_estrategicas as $linea)
-                <option data-id="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
-                @endforeach
-              </select>
-              </div>          
-            </div>
-            </div>
-            <br>
-            <div class="row">
-            <div class="form-group col-xs-12 col-md-6">          
-              <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
-              <div class="col-md-8 col-xs-9">
-              @if(Auth::user()->id_provincia == 25)
-              <select class="form-control" id="provincia">
-                @foreach ($provincias as $provincia)
-                
-                <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>                 
-                @endforeach
-              </select>
-              @else
-              <select class="form-control" id="provincia" name="provincia" disabled>
-                <option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>  
-              </select>
-              @endif
-              </div>        
-            </div>
-            </div>          
-        </div>
-        <div class="tab-pane" id="alumnos">   
-         @include('alumnos.asignacionAlternativa')             
-        </div>
-        <div class="tab-pane" id="profesores">
-         @include('profesores.asignacionAlternativa')          
-        </div>  
-        </form>  
-      </div>
-    </div>
+  <div class="box box-solid">
     <div class="box-body">
-      <div class="btn btn-success pull-right store">Guardar</div>
+      <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#inicial" data-toggle="tab">Inicial</a></li>
+          <li><a href="#alumnos" data-toggle="tab">Participantes</a></li>
+          <li><a href="#profesores" data-toggle="tab">Docentes</a></li>
+        </ul>
+        <div class="tab-content">
+          <div class="active tab-pane" id="inicial">
+            <form>
+              {{ csrf_field() }}
+              <div class="row">
+                <div class="form-group col-xs-12 col-md-6">       
+                  <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
+                  <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
+                    <div class="typeahead__field ">             
+                      <span class="typeahead__query ">
+                        <input class="curso_typeahead form-control" name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="form-group col-xs-12 col-md-6">          
+                  <label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
+                  <div class="col-md-8 col-xs-9">
+                    <input type="number" class="form-control" name="duracion" id="horas" placeholder="Duración en horas"> 
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="form-group col-xs-12 col-md-6">            
+                  <label for="fecha" class="control-label col-md-4 col-xs-4">Fecha:</label>
+                  <div class="input-group date col-md-8 col-xs-6 ">
+                    <div class="input-group-addon">
+                      <i class="fa fa-calendar"></i>
+                    </div>
+                    <input type="text" name="fecha" id="fecha" class="form-control pull-right datepicker">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-xs-12 col-md-6">          
+                  <label for="area_tematica" class="control-label col-md-4 col-xs-3">Areas Tematicas:</label>
+                  <div class="col-md-8 col-xs-9">
+                    <select class="form-control" id="area_tematica" name="area_tematica">
+                      <option>Seleccionar</option>
+                      @foreach ($areas_tematicas as $area)
+                      <option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
+                      @endforeach
+                    </select>          
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="form-group col-xs-12 col-md-6">          
+                  <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
+                  <div class="col-md-8 col-xs-9">
+                    <select class="form-control" id="linea_estrategica" name="linea_estrategica">
+                      <option>Seleccionar</option>
+                      @foreach ($lineas_estrategicas as $linea)
+                      <option data-id="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
+                      @endforeach
+                    </select>
+                  </div>          
+                </div>
+              </div>
+              <br>
+              <div class="row">
+                <div class="form-group col-xs-12 col-md-6">          
+                  <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
+                  <div class="col-md-8 col-xs-9">
+                    @if(Auth::user()->id_provincia == 25)
+                    <select class="form-control" id="provincia">
+                      @foreach ($provincias as $provincia)                
+                      <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>           
+                      @endforeach
+                    </select>
+                    @else
+                    <select class="form-control" id="provincia" name="provincia" disabled>
+                      <option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>  
+                    </select>
+                    @endif
+                  </div>        
+                </div>
+              </div>          
+            </form>  
+          </div>
+          <div class="tab-pane" id="alumnos">   
+            @include('alumnos.asignacionAlternativa')             
+          </div>
+          {{-- <div class="tab-pane" id="profesores">
+            @include('profesores.asignacionAlternativa')
+          </div>   --}}
+        </div> 
+      </div>      
+    </div>
+    <div class="box-footer">
+      <div class="btn btn-success pull-right store">Guardar</div>             
     </div>
   </div>
 </form>
 
+@section('script')
 <script type="text/javascript">
 
   $(document).ready(function() {
@@ -121,7 +123,7 @@
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
 
     $('#alta #tabla-profesores').on('click','.agregar',function () {
-      
+
       var fila = $(this).parent().parent();
       var id = $(this).data('id');
 
@@ -265,9 +267,4 @@
 
   });
 </script>
-
-
-
-
-
-
+@endsection

@@ -18,6 +18,9 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\GetFileCommand::class,
         \App\Console\Commands\GetLogCommand::class,
         \App\Console\Commands\ViewMakeCommand::class,
+        \App\Console\Commands\GetLogCommand::class,
+        \App\Console\Commands\RecreateRequestCommand::class,        
+        \App\Console\Commands\Test::class,
     ];
 
     /**
@@ -29,7 +32,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function (){
-            $path = __DIR__.'/../../storage/exports/*';
+            $path = env('APP_PATH').'storage/exports/*';
             system("rm {$path}");
         })->everyMinute();
 

@@ -11,14 +11,15 @@ class GetFileCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'get:file';
+    protected $signature = 'get:file 
+        {name : Name of the file}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Consigue un archivo por sftp';
+    protected $description = 'Gets a file with sftp';
 
     /**
      * Create a new command instance.
@@ -37,9 +38,10 @@ class GetFileCommand extends Command
      */
     public function handle()
     {
+        $name = $this->argument('name');
         system(
             'sshpass -p \''.env('SSH_PASS').'\' sftp administrador@192.6.0.224 << EOF 
-            get /var/www/html/sirge3/storage/uploads/prestaciones/59382d6275518.txt'
+            get /var/www/html/sirge3/storage/uploads/prestaciones/'.$name
         );
     }
 }

@@ -45,7 +45,7 @@
 								<td>{{$profesor->apellidos}}</td>
 								<td>{{$profesor->nro_doc}}</td>
 								<td>
-									<div class="btn btn-xs btn-info"><a href="{{url('profesores/'.$profesor->id_profesor)}}"><i class="fa fa-search" data-id="{{$profesor->id_alumno}}"></i></a></div>
+									<div class="btn btn-xs btn-info"><a href="{{url('/profesores/'.$profesor->id_profesor)}}"><i class="fa fa-search" data-id="{{$profesor->id_alumno}}"></i></a></div>
 									<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
 								</td>
 							</tr>
@@ -58,6 +58,7 @@
 		</div>
 	</div>
 </div>
+@section('script')
 <script type="text/javascript">
 
 	$(document).ready(function() {
@@ -179,3 +180,4 @@
 	});
 
 </script>
+@endsection
