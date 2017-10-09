@@ -1,5 +1,6 @@
 .env
 vendor/
+bin/
 storage/exports/
 composer.lock
 public/bower_components/*

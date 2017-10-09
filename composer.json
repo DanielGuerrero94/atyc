@@ -6,7 +6,7 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.3.*",
+        "laravel/framework": "5.3.31",
         "yajra/laravel-datatables-oracle": "v6.24.4",
         "phenx/php-font-lib": "0.4",
         "dompdf/dompdf": "v0.7.0",
@@ -23,7 +23,8 @@
         "doctrine/dbal": "v2.5",
         "phpunit/phpunit": "~5.0",
         "symfony/css-selector": "v3.2.4",
-        "symfony/dom-crawler": "v3.2.4"
+        "symfony/dom-crawler": "v3.2.4",
+        "phpspec/phpspec": "v3.*"
     },
     "autoload": {
         "classmap": [
@@ -36,7 +37,8 @@
     "autoload-dev": {
         "classmap": [
             "tests/TestCase.php"
-        ]
+        ],
+        "psr-0": {"": "src"}
     },
     "scripts": {
         "post-root-package-install": [
@@ -55,6 +57,7 @@
         ]
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "bin-dir": "bin"
     }
 }
