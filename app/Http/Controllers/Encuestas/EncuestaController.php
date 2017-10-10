@@ -16,7 +16,7 @@ class EncuestaController extends Controller
      */
     public function index()
     {
-        return json_encode(Encuesta::all());
+        return Encuesta::all();
     }
 
     /**
@@ -89,7 +89,7 @@ class EncuestaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function g_plannacer()
+    public function gPlannacer()
     {
         return view('encuestas.g_plannacer');
     }
@@ -99,7 +99,7 @@ class EncuestaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function google_form()
+    public function googleForm()
     {
         return view('encuestas.google_form');
     }
@@ -130,7 +130,7 @@ class EncuestaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function g_plannacerDatos()
+    public function gPlannacerDatos()
     {
         /*$var = Encuesta::select('pregunta.descripcion','id_respuesta',DB::raw('sum(cantidad) as cantidad'))
         ->with([
@@ -142,7 +142,8 @@ class EncuestaController extends Controller
         ->get();*/
 
         $encuestas = \DB::select(
-            'select p.descripcion as pregunta,r.descripcion as respuesta,sum(cantidad) as cantidad from encuestas.encuestas e
+            'select p.descripcion as pregunta,r.descripcion as respuesta,sum(cantidad) as cantidad 
+            from encuestas.encuestas e
             join encuestas.preguntas p using(id_pregunta)
             join encuestas.respuestas r using(id_respuesta)
             group by p.descripcion,r.id_respuesta
@@ -161,8 +162,8 @@ class EncuestaController extends Controller
             function ($value, $item) use (&$ultimo, &$datos, &$ret) {
                 if ($value->pregunta != $ultimo) {
                     $array =  array(
-                    'pregunta' => $value->pregunta,
-                    'datos' => $datos);
+                        'pregunta' => $value->pregunta,
+                        'datos' => $datos);
                     array_push($ret, $array);
                     $ultimo = $value->pregunta;
                     $datos = array();
@@ -176,9 +177,12 @@ class EncuestaController extends Controller
                 return $ret;
             }
         );
-                
+        
 
-        /*$asd = array('pregunta' => '1- LOS CONTENIDOS TEORICOS Y EL MATERIAL DIDACTICO OFRECIDO FUERON:','datos' => [12,12,14,98,47]);*/
+        /*
+        $asd = array('pregunta' => '1- LOS CONTENIDOS TEORICOS Y EL MATERIAL DIDACTICO OFRECIDO FUERON:',
+        'datos' => [12,12,14,98,47]);
+        */
 
         $r = array(
             'preguntas' => $ret);

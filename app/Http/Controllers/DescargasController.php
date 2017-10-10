@@ -82,23 +82,31 @@ class DescargasController extends Controller
         //
     }
 
-    public function excel(Request $r, $nombre_archivo)
+    public function excel($nombre_archivo)
     {
-        return response()->download(__DIR__."/../../../storage/exports/{$nombre_archivo}.xls")->deleteFileAfterSend(true);
+        return response()
+        ->download(storage_path("exports/{$nombre_archivo}.xls"))
+        ->deleteFileAfterSend(true);
     }
 
-    public function pdf(Request $r, $nombre_archivo)
+    public function pdf($nombre_archivo)
     {
-        return response()->download(__DIR__."/../../../storage/exports/{$nombre_archivo}.pdf")->deleteFileAfterSend(true);
+        return response()
+        ->download(storage_path("exports/{$nombre_archivo}.pdf"))
+        ->deleteFileAfterSend(true);
     }
 
-    public function pdf_reportes(Request $r, $nombre_archivo)
+    public function pdfReportes($nombre_archivo)
     {
-        return response()->download(__DIR__."/../../../public/{$nombre_archivo}.pdf")->deleteFileAfterSend(true);
+        return response()
+        ->download(public_path("{$nombre_archivo}.pdf"))
+        ->deleteFileAfterSend(true);
     }
 
-    public function pdf_alumnos(Request $r, $nombre_archivo)
+    public function pdfAlumnos($nombre_archivo)
     {
-        return response()->download(__DIR__."/../../../storage/app/{$nombre_archivo}.pdf")->deleteFileAfterSend(true);
+        return response()
+        ->download(storage_path("app/{$nombre_archivo}.pdf"))
+        ->deleteFileAfterSend(true);
     }
 }

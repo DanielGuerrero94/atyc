@@ -32,71 +32,79 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class AlumnosController extends AbmController
 {
     /**
-     * undocumented class variable
+     * Rules for the validator
      *
      * @var string
      **/
     private $rules = [
-    'nombres' => 'required|string',
-    'apellidos' => 'required|string',
-    'id_tipo_documento' => 'required|numeric',
-    'pais' => 'required_if:id_tipo_documento,5,6',
-    'nro_doc' => 'required|numeric',
-    'localidad' => 'required|string',
-    'id_provincia' => 'required|numeric',
-    'id_trabajo' => 'required|numeric',
-    'id_genero' => 'required|numeric',
-    'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
+        'nombres' => 'required|string',
+        'apellidos' => 'required|string',
+        'id_tipo_documento' => 'required|numeric',
+        'pais' => 'required_if:id_tipo_documento,5,6',
+        'nro_doc' => 'required|numeric',
+        'localidad' => 'required|string',
+        'id_provincia' => 'required|numeric',
+        'id_trabajo' => 'required|numeric',
+        'id_genero' => 'required|numeric',
+        'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
     //'establecimiento' => 'required_if:id_trabajo,2|required_if:id_trabajo,2|string',
-    'tipo_convenio' => 'nullable',
-    'efector' => 'required_with:tipo_convenio|string',
-    'tipo_organismo' => 'required_if:id_trabajo,3|string',
-    'nombre_organismo' => 'required_if:id_trabajo,3|string',
-    'email' => 'nullable|email',
-    'tel' => 'nullable',
-    'cel' => 'nullable'
-    ],
-    $filters = [
-    'nombres' => 'string',
-    'apellidos' => 'string',
-    'id_tipo_documento' => 'numeric',
-    'id_provincia' => 'numeric',
-    'id_genero' => 'numeric',
-    'cel' => 'numeric',
-    'tel' => 'numeric',
-    'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
-    'localidad' => 'string',
-    'nro_doc' => 'numeric'
-    ],
-    $campos = [
-    "nombres",
-    "apellidos",
-    "id_tipo_documento",
-    "nro_doc",
-    "provincia",
-    "acciones"
-    ],
-    $update = [
-    'nombres' => 'required|string',
-    'apellidos' => 'required|string',
-    'id_tipo_documento' => 'required|numeric',
-    'id_pais' => 'required_if:id_tipo_documento,5,6',
-    'nro_doc' => 'required|numeric',
-    'localidad' => 'required|string',
-    'id_provincia' => 'required|numeric',
-    'id_trabajo' => 'required|numeric',
-    'id_genero' => 'required|numeric',
-    'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
+        'tipo_convenio' => 'nullable',
+        'efector' => 'required_with:tipo_convenio|string',
+        'tipo_organismo' => 'required_if:id_trabajo,3|string',
+        'nombre_organismo' => 'required_if:id_trabajo,3|string',
+        'email' => 'nullable|email',
+        'tel' => 'nullable',
+        'cel' => 'nullable'
+    ];
+
+    private $filters = [
+        'nombres' => 'string',
+        'apellidos' => 'string',
+        'id_tipo_documento' => 'numeric',
+        'id_provincia' => 'numeric',
+        'id_genero' => 'numeric',
+        'cel' => 'numeric',
+        'tel' => 'numeric',
+    //Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
+        'email' => 'string',
+        'localidad' => 'string',
+        'nro_doc' => 'numeric'
+    ];
+
+    private $campos = [
+        "nombres",
+        "apellidos",
+        "id_tipo_documento",
+        "nro_doc",
+        "provincia",
+        "acciones"
+    ];
+
+    private $update = [
+        'nombres' => 'required|string',
+        'apellidos' => 'required|string',
+        'id_tipo_documento' => 'required|numeric',
+        'id_pais' => 'required_if:id_tipo_documento,5,6',
+        'nro_doc' => 'required|numeric',
+        'localidad' => 'required|string',
+        'id_provincia' => 'required|numeric',
+        'id_trabajo' => 'required|numeric',
+        'id_genero' => 'required|numeric',
+        'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
     //'establecimiento' => 'required_if:id_trabajo,2|required_if:id_trabajo,2|string',
-    'id_convenio' => 'nullable',
-    'establecimiento1' => 'required_with:id_convenio|string',
-    'organismo1' => 'required_if:id_trabajo,3|string',
-    'organismo2' => 'required_if:id_trabajo,3|string',
-    'email' => 'nullable|email',
-    'tel' => 'nullable',
-    'cel' => 'nullable'
-    ],
-    $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
+        'id_convenio' => 'nullable',
+        'establecimiento1' => 'required_with:id_convenio|string',
+        'organismo1' => 'required_if:id_trabajo,3|string',
+        'organismo2' => 'required_if:id_trabajo,3|string',
+        'email' => 'nullable|email',
+        'tel' => 'nullable',
+        'cel' => 'nullable'
+    ];
+
+    private $botones = [
+        'fa fa-pencil-square-o',
+        'fa fa-trash-o'
+    ];
 
     /**
      * View para abm.
@@ -243,11 +251,18 @@ class AlumnosController extends AbmController
      */
     public function getTabla(Request $r)
     {
-        $returns = Alumno::select('id_alumno', 'nombres', 'apellidos', 'nro_doc', 'alumnos.id_provincia', 'alumnos.id_tipo_documento')
+        $returns = Alumno::select(
+            'id_alumno',
+            'nombres',
+            'apellidos',
+            'nro_doc',
+            'alumnos.id_provincia',
+            'alumnos.id_tipo_documento'
+        )
         ->with(
             [
-            'tipoDocumento',
-            'provincia'
+                'tipoDocumento',
+                'provincia'
             ]
         )
         ->segunProvincia();
@@ -297,7 +312,7 @@ class AlumnosController extends AbmController
             'funciones' => $funciones,
             'organismos' => $organismos,
             'generos' => $generos
-            );
+        );
     }
 
     /* Metodos Typeahead */
@@ -361,7 +376,7 @@ class AlumnosController extends AbmController
                 'nombres' => $item->nombres,
                 'apellidos' => $item->apellidos,
                 'documentos' => $item->nro_doc
-                );
+            );
         });
         return $this->typeaheadResponse($alumno);
     }
@@ -469,9 +484,14 @@ class AlumnosController extends AbmController
 
                 $accion = $r->input('botones');
 
-                $editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_alumno.'"><button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_alumno.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
+                $editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_alumno.'"><button data-id="'.$ret->id_alumno.
+                '" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].
+                '" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_alumno.
+                '" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].
+                '" aria-hidden="true"></i></button>';
 
-                $agregar = '<button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+                $agregar = '<button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs agregar" '.
+                'title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
                 return $accion == 'agregar'?$agregar:$editarYEliminar;
             }
@@ -582,7 +602,7 @@ class AlumnosController extends AbmController
             'existe' => Alumno::where('nro_doc', $r->input('nro_doc'))
             ->where('id_tipo_documento', $r->input('id_tipo_documento'))
             ->count() != 0
-            );
+        );
     }
 
     public function getExcelCompleto(Request $r, $id)

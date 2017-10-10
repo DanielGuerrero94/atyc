@@ -16,6 +16,7 @@ class GenerosTableSeeder extends Seeder
             ('Masculino'),
             ('Femenino'),
             ('Otro')
-        ");
+        "
+        );
     }
 }

@@ -20,9 +20,3 @@ class TiposDocumentosTableSeeder extends Seeder
             ('DEX','Documento extranjero');");
     }
 }
-
-
-
-
-
-

@@ -38,7 +38,21 @@ class EfectoresController extends Controller
         ->leftJoin('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
         ->leftJoin('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
         ->leftJoin('geo.localidades as l', 'l.id', '=', 'dg.id_localidad')
-        ->select('p.id_provincia', 'p.descripcion as provincia', 'e.siisa', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'e.domicilio', 'd.id_departamento', 'd.nombre_departamento as departamento', 'l.id_localidad', 'l.nombre_localidad as localidad', 'e.codigo_postal', 'dg.ciudad')
+        ->select(
+            'p.id_provincia',
+            'p.descripcion as provincia',
+            'e.siisa',
+            'e.cuie',
+            'e.nombre',
+            'e.denominacion_legal',
+            'e.domicilio',
+            'd.id_departamento',
+            'd.nombre_departamento as departamento',
+            'l.id_localidad',
+            'l.nombre_localidad as localidad',
+            'e.codigo_postal',
+            'dg.ciudad'
+        )
         ->where('e.id_estado', 1);
 
         foreach ($filtros as $key => $value) {
@@ -77,14 +91,36 @@ class EfectoresController extends Controller
         ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
         ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
         ->rightJoin('sistema.periodos as pe', function ($join) {
-            return $join->whereBetween('c.fecha', [DB::raw('to_date(pe.desde::text,\'YYYY-MM-DD\')'),DB::raw('to_date(pe.hasta::text,\'YYYY-MM-DD\')')]);
+            return $join->whereBetween('c.fecha', [DB::raw('to_date(pe.desde::text,\'YYYY-MM-DD\')'),
+                DB::raw('to_date(pe.hasta::text,\'YYYY-MM-DD\')')]);
         })
         //->crossJoin('sistema.periodos as pe')
-        ->select('pe.nombre as periodo', 'p.descripcion as provincia', 'e.cuie', 'e.nombre as efector', 'e.denominacion_legal', 'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad', 'c.nombre as accion', 'c.fecha', DB::raw('count(*) as participantes'))
+        ->select(
+            'pe.nombre as periodo',
+            'p.descripcion as provincia',
+            'e.cuie',
+            'e.nombre as efector',
+            'e.denominacion_legal',
+            'd.nombre_departamento as departamento',
+            'l.nombre_localidad as localidad',
+            'c.nombre as accion',
+            'c.fecha',
+            DB::raw('count(*) as participantes')
+        )
         //->whereBetween(DB::raw('c.fecha between pe.desde and pe.hasta'))
         //->where(DB::raw('c.fecha between pe.desde and pe.hasta'))
         //->where('dg.id_provincia',$provincia)
-        ->groupBy('pe.nombre', 'p.descripcion', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'd.nombre_departamento', 'l.nombre_localidad', 'c.nombre', 'c.fecha');
+        ->groupBy(
+            'pe.nombre',
+            'p.descripcion',
+            'e.cuie',
+            'e.nombre',
+            'e.denominacion_legal',
+            'd.nombre_departamento',
+            'l.nombre_localidad',
+            'c.nombre',
+            'c.fecha'
+        );
 
         /*return DB::table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'dg.id_efector', '=', 'e.id_efector')
@@ -94,10 +130,13 @@ class EfectoresController extends Controller
         ->join('alumnos.alumnos as a', 'a.establecimiento1', '=', 'e.cuie')        
         ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
         ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
-        ->select('p.descripcion as provincia', 'e.cuie', 'e.nombre as efector', 'e.denominacion_legal', 'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad', 'c.nombre as accion', 'c.fecha',DB::raw('count(*) as participantes'))
+        ->select('p.descripcion as provincia', 'e.cuie', 'e.nombre as efector', 'e.denominacion_legal',
+        'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad', 'c.nombre as accion', 'c.fecha',
+        DB::raw('count(*) as participantes'))
         ->whereBetween('c.fecha',[$desde,$hasta])
         ->where('dg.id_provincia',$provincia)
-        ->groupBy('p.descripcion', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'd.nombre_departamento', 'l.nombre_localidad', 'c.nombre', 'c.fecha');*/
+        ->groupBy('p.descripcion', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'd.nombre_departamento',
+        'l.nombre_localidad', 'c.nombre', 'c.fecha');*/
     }
 
     public function getTabla(Request $r)
@@ -106,7 +145,8 @@ class EfectoresController extends Controller
 
         return Datatables::of($query)
         ->addColumn('acciones', function ($ret) {
-            $ver_historial = '<a href="efectores/'.$ret->cuie.'/cursos"><button class="btn btn-info" title="Historial"><i class="fa fa-calendar" aria-hidden="true"></i> Historial</button></a>';
+            $ver_historial = '<a href="efectores/'.$ret->cuie.'/cursos"><button class="btn btn-info" '.
+            'title="Historial"><i class="fa fa-calendar" aria-hidden="true"></i> Historial</button></a>';
             return $ver_historial;
         })
         ->make(true);
@@ -244,7 +284,8 @@ class EfectoresController extends Controller
         $query = $this->queryLogica($r, $filtros);
         return Datatables::of($query)
         ->addColumn('acciones', function ($ret) {
-            $ver_historial = '<a href="efectores/'.$ret->cuie.'/cursos"><button class="btn btn-info" title="Historial"><i class="fa fa-calendar" aria-hidden="true"></i> Historial</button></a>';
+            $ver_historial = '<a href="efectores/'.$ret->cuie.'/cursos"><button class="btn btn-info" '.
+            'title="Historial"><i class="fa fa-calendar" aria-hidden="true"></i> Historial</button></a>';
             return $ver_historial;
         })
         ->make(true);

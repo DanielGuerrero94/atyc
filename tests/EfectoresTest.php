@@ -8,13 +8,13 @@ use DB;
 
 class EfectoresTest extends TestCase
 {
-	private $controller;
+    private $controller;
 
-	public function setUp()
-	{
-		parent::setUp();
-		$this->controller = new App\Http\Controllers\EfectoresController();
-	}
+    public function setUp()
+    {
+        parent::setUp();
+        $this->controller = new App\Http\Controllers\EfectoresController();
+    }
 
     /**
      * A basic test example.
@@ -28,6 +28,8 @@ class EfectoresTest extends TestCase
 
     public function testDevuelveEfectores()
     {
-    	$this->assertNotNull($this->controller->queryLogica(new Request(array('filtros' => array('id_provincia' => 12)))), 'No devolvio efectores');
+        $this->assertNotNull($this->controller->queryLogica(
+            new Request(['filtros' => ['id_provincia' => 12]])
+        ), 'No devolvio efectores');
     }
 }

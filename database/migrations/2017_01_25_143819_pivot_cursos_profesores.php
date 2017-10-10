@@ -18,7 +18,6 @@ class PivotCursosProfesores extends Migration
             $table->integer('id_profesor');//FK
             $table->timestamps();
         });
-
     }
 
     /**

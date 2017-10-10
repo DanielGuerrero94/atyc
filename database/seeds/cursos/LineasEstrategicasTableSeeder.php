@@ -13,18 +13,19 @@ class LineasEstrategicasTableSeeder extends Seeder
     {
         $this->insert();
 
-        $this->alterSequence();    
+        $this->alterSequence();
     }
 
     /**
      * Migro los datos desde la otra tabla.
-     * 
+     *
      * @return void
      */
     public function insert()
-    { 
+    {
         \DB::statement("INSERT INTO cursos.lineas_estrategicas(id_linea_estrategica,numero,nombre) 
-            (SELECT sub.id as id_linea_estrategica,substring(sub.lineas_estrategicas,7,3) as numero,substring(sub.lineas_estrategicas,13) as nombre 
+            (SELECT sub.id as id_linea_estrategica,substring(sub.lineas_estrategicas,7,3) as numero,
+            substring(sub.lineas_estrategicas,13) as nombre 
             FROM dblink('dbname=elearning port=5432 
             host=192.6.0.66 user=postgres password=BernardoCafe008',
             'SELECT id,lineas_estrategicas FROM g_plannacer.lineas_estrategicas')
@@ -33,7 +34,7 @@ class LineasEstrategicasTableSeeder extends Seeder
 
     /**
      * Busco el ultimo id de la tabla migrada para setear start en la sequence de la nueva tabla.
-     * 
+     *
      * @return void
      */
     public function alterSequence()

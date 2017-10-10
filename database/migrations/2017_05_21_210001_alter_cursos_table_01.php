@@ -28,7 +28,7 @@ class AlterCursosTable01 extends Migration
     public function down()
     {
         Schema::table('cursos.cursos', function (Blueprint $table) {
-           $table->dropForeign('cursos_cursos_id_provincia_foreign');
+            $table->dropForeign('cursos_cursos_id_provincia_foreign');
             $table->dropForeign('cursos_cursos_id_area_tematica_foreign');
             $table->dropForeign('cursos_cursos_id_linea_estrategica_foreign');
         });

@@ -14,8 +14,8 @@ class CreateLineasEstrategicasTable extends Migration
     public function up()
     {
         Schema::create('cursos.lineas_estrategicas', function (Blueprint $table) {
-            $table->increments('id_linea_estrategica');            
-            $table->string('numero',4);
+            $table->increments('id_linea_estrategica');
+            $table->string('numero', 4);
             $table->string('nombre');
             $table->timestamps();
             $table->softDeletes();

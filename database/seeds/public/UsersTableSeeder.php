@@ -27,7 +27,8 @@ class UsersTableSeeder extends Seeder
             ('San Juan','sanjuan',11,'sanjuan@sanjuan.com','".bcrypt('sanjuan001')."',now(),now()),
             ('San Luis','sanluis',12,'sanluis@sanluis.com','".bcrypt('sanluis001')."',now(),now()),
             ('Santa Fe','santafe',13,'santafe@santafe.com','".bcrypt('santafe001')."',now(),now()),
-            ('Santiago del Estero','santiagodelestero',14,'santiagodelestero@santiagodelestero.com','".bcrypt('santiagodelestero001')."',now(),now()),
+            ('Santiago del Estero','santiagodelestero',14,'santiagodelestero@santiagodelestero.com','".
+            bcrypt('santiagodelestero001')."',now(),now()),
             ('Tucumán','tucuman',15,'tucuman@tucuman.com','".bcrypt('tucuman001')."',now(),now()),
             ('Chaco','chaco',16,'chaco@chaco.com','".bcrypt('chaco001')."',now(),now()),
             ('Chubut','chubut',17,'chubut@chubut.com','".bcrypt('chubut001')."',now(),now()),
@@ -37,7 +38,8 @@ class UsersTableSeeder extends Seeder
             ('Neuquen','neuquen',21,'neuquen@neuquen.com','".bcrypt('neuquen001')."',now(),now()),
             ('Río Negro','rionegro',22,'rionegro@rionegro.com','".bcrypt('rionegro001')."',now(),now()),
             ('Santa Cruz','santacruz',23,'santacruz@santacruz.com','".bcrypt('santacruz001')."',now(),now()),
-            ('Tierra del Fuego','tierradelfuego',24,'tierradelfuego@tierradelfuego.com','".bcrypt('tierradelfuego001')."',now(),now()),
+            ('Tierra del Fuego','tierradelfuego',24,'tierradelfuego@tierradelfuego.com','".bcrypt('tierradelfuego001').
+            "',now(),now()),
             ('UEC','uec',25,'uec@uec.com','".bcrypt('uec001')."',now(),now()),
             ('Paola','paola',25,'paola@paola.com','".bcrypt('paola007')."',now(),now())");
     }

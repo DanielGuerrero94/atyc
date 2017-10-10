@@ -5,7 +5,7 @@ namespace App\DataTables;
 use App\periodo;
 use Yajra\Datatables\Services\DataTable;
 
-class periodoDataTable extends DataTable
+class PeriodoDataTable extends DataTable
 {
     /**
      * Display ajax response.

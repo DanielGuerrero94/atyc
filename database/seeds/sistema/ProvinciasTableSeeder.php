@@ -10,7 +10,7 @@ class ProvinciasTableSeeder extends Seeder
      * @return void
      */
     public function run()
-    {      
+    {
         $this->insert();
 
         $this->alterSequence();
@@ -18,7 +18,7 @@ class ProvinciasTableSeeder extends Seeder
 
     /**
      * Migro los datos desde la otra tabla.
-     * 
+     *
      * @return void
      */
     public function insert()
@@ -33,7 +33,7 @@ class ProvinciasTableSeeder extends Seeder
 
     /**
      * Busco el ultimo id de la tabla migrada para setear start en la sequence de la nueva tabla.
-     * 
+     *
      * @return void
      */
     public function alterSequence()

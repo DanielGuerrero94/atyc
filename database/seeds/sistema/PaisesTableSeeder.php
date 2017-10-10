@@ -11,7 +11,7 @@ class PaisesTableSeeder extends Seeder
      */
     public function run()
     {
-    	\DB::statement("INSERT INTO sistema.paises(nombre) values
+        \DB::statement("INSERT INTO sistema.paises(nombre) values
     		('Abjasia'),
     		('Acrotiri y Dhekelia'),
     		('Afganistán'),

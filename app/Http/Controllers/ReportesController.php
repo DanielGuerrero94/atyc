@@ -40,7 +40,7 @@ class ReportesController extends Controller
         return array(
             'provincias' => $provincias,
             'periodos' => $periodos
-            );
+        );
     }
 
     public function getCursos()
@@ -62,7 +62,7 @@ class ReportesController extends Controller
         $extra = array(
             'reporte' => $reporte,
             'provincia_usuario' => $provincia_usuario
-            );
+        );
 
         $data = array_merge($this->getSelectOptions(), $extra);
 
@@ -99,7 +99,8 @@ class ReportesController extends Controller
             FROM reporte_{$r->id_reporte}('{$id_provincia}','{$desde}','{$hasta}')";
         } elseif ($id_reporte == '5' and $id_periodo == '0') {
             $query = "SELECT P.nombre as periodo ,R.* 
-            FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R order by P.id_periodo,R.provincia,R.nombre,R.edicion";
+            FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R 
+            order by P.id_periodo,R.provincia,R.nombre,R.edicion";
         } elseif ($id_periodo == '0') {
             $query = "SELECT P.nombre as periodo ,R.* 
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R";
@@ -108,9 +109,12 @@ class ReportesController extends Controller
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R 
             where P.id_periodo = {$id_periodo}";
 
-            /*$query = DB::table("sistema.periodos as pe,reporte_{$id_reporte}({$id_provincia},pe.desde,pe.hasta) as r")
-        ->select('pe.nombre as periodo','r.*')
-        ->where('pe.id_periodo',$id_periodo);  */
+            /*
+            $query = DB::table("sistema.periodos as pe,reporte_{$id_reporte}
+            ({$id_provincia},pe.desde,pe.hasta) as r")
+            ->select('pe.nombre as periodo','r.*')
+            ->where('pe.id_periodo',$id_periodo);  
+            */
         }
 
         return $query;
@@ -165,7 +169,12 @@ class ReportesController extends Controller
     public function reporte5($id_provincia = '0', $desde = '2014-01-01', $hasta = '2014-12-31')
     {
         $query = DB::table('sistema.provincias as p')
-        ->leftJoin('efectores.datos_geograficos as dg', DB::raw('dg.id_provincia::integer'), '=', 'p.id_provincia')
+        ->leftJoin(
+            'efectores.datos_geograficos as dg',
+            DB::raw('dg.id_provincia::integer'),
+            '=',
+            'p.id_provincia'
+        )
         ->join('efectores.efectores as e', 'e.id_efector', '=', 'dg.id_efector')
         ->join('efectores.compromiso_gestion as cg', 'cg.id_efector', '=', 'e.id_efector')
         ->join('alumnos.alumnos as a', 'a.establecimiento1', '=', 'e.cuie')
@@ -180,13 +189,5 @@ class ReportesController extends Controller
         }
 
         return $query;
-    }
-
-    public function test($id_provincia = '0', $desde = '2014-01-01', $hasta = '2014-12-31', $id_periodo = 4, $id_reporte = 6)
-    {
-        return DB::table("sistema.periodos as pe")
-        ->join(DB::raw("reporte_{$id_reporte}({$id_provincia},pe.desde,pe.hasta) as r"))
-        ->select('pe.nombre as periodo', 'r.*')
-        ->where('pe.id_periodo', $id_periodo);
     }
 }

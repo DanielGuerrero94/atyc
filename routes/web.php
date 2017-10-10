@@ -53,9 +53,9 @@ Route::get('dashboard/draw/heats', 'DashboardController@heats');
 */
 
 //Logueado
-Route::group(['middleware' => ['logueado','logging']],function () {
+Route::group(['middleware' => ['logueado','logging']], function () {
     //Redis
-    Route::get('redis/usuarios','RedisController@usuarios');
+    Route::get('redis/usuarios', 'RedisController@usuarios');
 
     //Log
     Route::resource('log', 'LogController');
@@ -65,15 +65,21 @@ Route::group(['middleware' => ['logueado','logging']],function () {
         'reportes/descargar/excel/{nombre_archivo}',
         'DescargasController@excel'
     );
-    Route::get('descargar/excel/{nombre_archivo}',
-        'DescargasController@excel');
-    Route::get('alumnos/descargar/excel/{nombre_archivo}',
-        'DescargasController@excel');
+    Route::get(
+        'descargar/excel/{nombre_archivo}',
+        'DescargasController@excel'
+    );
+    Route::get(
+        'alumnos/descargar/excel/{nombre_archivo}',
+        'DescargasController@excel'
+    );
 
     Route::get('descargar/pdf/{nombre_archivo}', 'DescargasController@pdf');
-    Route::get('reportes/descargar/pdf/{nombre_archivo}',
-        'DescargasController@pdf_reportes');
-    Route::get('alumnos/descargar/pdf/{nombre_archivo}', 'DescargasController@pdf_alumnos');
+    Route::get(
+        'reportes/descargar/pdf/{nombre_archivo}',
+        'DescargasController@pdfReportes'
+    );
+    Route::get('alumnos/descargar/pdf/{nombre_archivo}', 'DescargasController@pdfAlumnos');
 
     //Alumnos
     Route::get('alumnos', 'AlumnosController@get');
@@ -142,7 +148,7 @@ Route::group(['middleware' => ['logueado','logging']],function () {
     Route::get('curso/{id}', 'CursosController@getByID');
     Route::get('users/{id}/alumnos', 'CursosController@getAlumnos');
 
-    /* 
+    /*
      * Filtros para todas las abms
      * Route::get('filtros/{tabla}', 'AbmController@filtros');
      * Route::get('formularioConFiltros/{tabla}', 'AbmController@formularioConFiltros'); 
@@ -151,7 +157,7 @@ Route::group(['middleware' => ['logueado','logging']],function () {
     //Reportes
     Route::get('reportes', 'ReportesController@get');
     Route::get('reportes/cursos', 'ReportesController@getCursos');
-    Route::get('reportes/cursos/provincias/{id}/count', 'CursosController@getCountAlumnos');    
+    Route::get('reportes/cursos/provincias/{id}/count', 'CursosController@getCountAlumnos');
     Route::get('reportes/excel', 'ReportesController@getExcelReporte');
     Route::get('reportes/excel6', 'CursosController@getExcelReporte');
     Route::get('reportes/pdf', 'ReportesController@getPDFReporte');
@@ -161,9 +167,9 @@ Route::group(['middleware' => ['logueado','logging']],function () {
     Route::get('reportes/{id_reporte}', 'ReportesController@reporte');
 
     //Encuestas
-    Route::get('encuestas/g_plannacer', 'Encuestas\EncuestaController@g_plannacer');
-    Route::get('encuestas/g_plannacer/datos', 'Encuestas\EncuestaController@g_plannacerDatos');
-    Route::get('encuestas/google_form', 'Encuestas\EncuestaController@google_form');
+    Route::get('encuestas/g_plannacer', 'Encuestas\EncuestaController@gPlannacer');
+    Route::get('encuestas/g_plannacer/datos', 'Encuestas\EncuestaController@gPlannacerDatos');
+    Route::get('encuestas/google_form', 'Encuestas\EncuestaController@googleForm');
     Route::get('encuestas/survey', 'Encuestas\EncuestaController@survey');
     Route::get('encuestas/grafico', 'Encuestas\EncuestaController@grafico');
     Route::resource('encuestas', 'Encuestas\EncuestaController');
@@ -238,8 +244,7 @@ Route::group(['middleware' => ['logueado','logging']],function () {
 
         //Efectores
         Route::get('efectores', 'EfectoresController@get');
-        Route::get('efectores/tabla', 'EfectoresController@getTabla');       
+        Route::get('efectores/tabla', 'EfectoresController@getTabla');
         Route::get('efectores/{cuie}/cursos', 'EfectoresController@historialCursos');
-
     });
 });

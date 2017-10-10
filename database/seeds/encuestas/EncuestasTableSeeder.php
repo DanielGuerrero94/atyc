@@ -13,17 +13,18 @@ class EncuestasTableSeeder extends Seeder
     {
         $this->insert();
 
-        $this->alterSequence();    
+        $this->alterSequence();
     }
 
     /**
      * Migro los datos desde la otra tabla.
-     * 
+     *
      * @return void
      */
     public function insert()
     {
-        \DB::statement("INSERT INTO encuestas.encuestas (id_encuesta,id_curso,id_pregunta,id_respuesta,cantidad,created_at,updated_at)
+        \DB::statement("INSERT INTO encuestas.encuestas (id_encuesta,id_curso,id_pregunta,id_respuesta,cantidad,
+            created_at,updated_at)
         (SELECT
         sub.id as id_encuesta, 
         sub.curso as id_curso,
@@ -47,7 +48,7 @@ class EncuestasTableSeeder extends Seeder
 
     /**
      * Busco el ultimo id de la tabla migrada para setear start en la sequence de la nueva tabla.
-     * 
+     *
      * @return void
      */
     public function alterSequence()

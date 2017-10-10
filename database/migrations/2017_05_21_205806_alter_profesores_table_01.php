@@ -27,7 +27,7 @@ class AlterProfesoresTable01 extends Migration
      */
     public function down()
     {
-        Schema::table('sistema.profesores', function (Blueprint $table) {            
+        Schema::table('sistema.profesores', function (Blueprint $table) {
             $table->dropForeign('sistema_profesores_id_tipo_documento_foreign');
             $table->dropForeign('sistema_profesores_id_pais_foreign');
         });

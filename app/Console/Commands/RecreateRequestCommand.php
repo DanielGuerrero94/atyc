@@ -41,7 +41,7 @@ class RecreateRequestCommand extends Command
      */
     public function handle()
     {
-        $f = fopen(env('APP_PATH').'storage/logs/production/create-participante-2017-09-08.log', 'r');
+        $f = fopen(base_path('storage/logs/production/create-participante-2017-09-08.log'), 'r');
         $json_request = json_decode(fgets($f), 1);
         $c = new \App\Http\Controllers\AlumnosController();
         $requests = [];

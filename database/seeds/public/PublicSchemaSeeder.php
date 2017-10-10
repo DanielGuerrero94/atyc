@@ -10,7 +10,7 @@ class PublicSchemaSeeder extends Seeder
      * @return void
      */
     public function run()
-    {        
+    {
         $this->call(UsersTableSeeder::class);
         //$this->call(RolesTableSeeder::class);
     }

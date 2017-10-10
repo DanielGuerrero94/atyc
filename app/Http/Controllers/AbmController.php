@@ -52,7 +52,8 @@ abstract class AbmController extends Controller
     }
 
     /**
-     *   Quiero agregar que columnas de la tabla necesitan tranformarse en un cuadro de seleccion e ir a buscar en la tabla los valores que corresponda
+     * Quiero agregar que columnas de la tabla necesitan tranformarse en un cuadro de seleccion e ir a buscar en
+     * la tabla los valores que corresponda
      */
 
     public function tiposDocumentos()

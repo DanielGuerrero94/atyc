@@ -15,7 +15,7 @@ class AreaTematicaTest extends TestCase
 
     /**
      * A basic test example.
-     * 
+     *
      * @test
      * @dataProvider mockAreas
      * @param array $attributes
@@ -31,19 +31,19 @@ class AreaTematicaTest extends TestCase
 
     /**
      * Pruebo que los controllers tengan todo los metodos probados
-     * 
+     *
      * @test
      * @return void
      */
     public function tienenTestsTodosLosMetodos()
     {
-        $this->assertTrue(true,'message');
+        $this->assertTrue(true, 'message');
     }
 
     /**
      * Fails on the store method of the controller
      * because does not have the required columns
-     * 
+     *
      * @test
      * @dataProvider invalidRequests
      * @expectedException Illuminate\Database\QueryException
@@ -52,7 +52,7 @@ class AreaTematicaTest extends TestCase
     public function storesFails($request)
     {
         $areaController = new App\Http\Controllers\AreasTematicasController();
-        $areaController->store($request);            
+        $areaController->store($request);
     }
 
     public static function mockAreas()
@@ -67,20 +67,18 @@ class AreaTematicaTest extends TestCase
     public static function validRequests()
     {
         return array(
-            array(new Request([],array('nombre' => 'primero'))),
-            array(new Request([],array('nombre' => 'segundo'))),
-            array(new Request([],array('nombre' => 'tercero')))
+            array(new Request([], array('nombre' => 'primero'))),
+            array(new Request([], array('nombre' => 'segundo'))),
+            array(new Request([], array('nombre' => 'tercero')))
         );
     }
 
     public static function invalidRequests()
     {
         return array(
-            array(new Request([],array('qwe' => 'random'))),
-            array(new Request([],array('a' => '23-12-1234'))),
-            array(new Request([],array('dw' => 3)))
+            array(new Request([], array('qwe' => 'random'))),
+            array(new Request([], array('a' => '23-12-1234'))),
+            array(new Request([], array('dw' => 3)))
         );
     }
-
-    
 }

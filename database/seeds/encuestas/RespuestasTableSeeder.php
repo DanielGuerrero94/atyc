@@ -28,6 +28,6 @@ class RespuestasTableSeeder extends Seeder
         'select respuesta from g_plannacer.encuestas
         group by respuesta
         order by count(*) desc')
-        AS sub(respuesta character varying(50)))");        
+        AS sub(respuesta character varying(50)))");
     }
 }

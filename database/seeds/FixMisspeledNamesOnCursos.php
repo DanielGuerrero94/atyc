@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class fix_misspeled_names_on_cursos extends Seeder
+class FixMisspeledNamesOnCursos extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +11,8 @@ class fix_misspeled_names_on_cursos extends Seeder
      */
     public function run()
     {
-    	/*Lista de similares
+        /*
+        Lista de similares
         Hay que revisar que despues los reportes no den mal por eso
         "Abordaje Integral de los adolescentes"
         "Abordaje Integral de los Adolescentes"
@@ -43,6 +44,7 @@ class fix_misspeled_names_on_cursos extends Seeder
         "Auditoría Médica"
         "Auitoria Médica"
         "bajas tasas de inscritos mensuales con CEB"
-        "Baja tasas de inscriptos mensuales con CEB"*/
+        "Baja tasas de inscriptos mensuales con CEB"
+        */
     }
 }

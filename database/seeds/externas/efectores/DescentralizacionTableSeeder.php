@@ -10,7 +10,7 @@ class DescentralizacionTableSeeder extends Seeder
      * @return void
      */
     public function run()
-    {        
+    {
         \DB::statement("
         CREATE FOREIGN TABLE IF NOT EXISTS efectores.descentralizacion
         (

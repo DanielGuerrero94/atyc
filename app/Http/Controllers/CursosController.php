@@ -100,7 +100,9 @@ class CursosController extends AbmController
         logger('Quiere crear accion con: '.json_encode($data));
         $v = Validator::make($data, $this->rules);
 
-        if ($v->fails()) return $v->errors();
+        if ($v->fails()) {
+            return $v->errors();
+        }
 
         //Calculo la edicion del curso, despues puede ser un trigger before insert
         $edicion = Curso::where([
@@ -133,13 +135,35 @@ class CursosController extends AbmController
      */
     public function show($id)
     {
-        $curso = Curso::select('id_curso', 'nombre', 'edicion', 'duracion', 'fecha', 'id_area_tematica', 'id_linea_estrategica', 'id_provincia')
+        $curso = Curso::select(
+            'id_curso',
+            'nombre',
+            'edicion',
+            'duracion',
+            'fecha',
+            'id_area_tematica',
+            'id_linea_estrategica',
+            'id_provincia'
+        )
         ->with([
             'alumnos' => function ($query) {
-                return $query->select('alumnos.id_alumno', 'nombres', 'apellidos', 'id_tipo_documento', 'nro_doc', 'id_provincia');
+                return $query->select(
+                    'alumnos.id_alumno',
+                    'nombres',
+                    'apellidos',
+                    'id_tipo_documento',
+                    'nro_doc',
+                    'id_provincia'
+                );
             },
             'profesores' => function ($query) {
-                return $query->select('sistema.profesores.id_profesor', 'nombres', 'apellidos', 'id_tipo_documento', 'nro_doc');
+                return $query->select(
+                    'sistema.profesores.id_profesor',
+                    'nombres',
+                    'apellidos',
+                    'id_tipo_documento',
+                    'nro_doc'
+                );
             }
         ])
         ->where('id_curso', $id)
@@ -211,7 +235,16 @@ class CursosController extends AbmController
      */
     public function getTabla(Request $request)
     {
-        $query = Curso::select('id_curso', 'nombre', 'fecha', 'edicion', 'duracion', 'id_area_tematica', 'id_linea_estrategica', 'id_provincia')
+        $query = Curso::select(
+            'id_curso',
+            'nombre',
+            'fecha',
+            'edicion',
+            'duracion',
+            'id_area_tematica',
+            'id_linea_estrategica',
+            'id_provincia'
+        )
         ->with([
             'areaTematica',
             'lineaEstrategica',
@@ -232,7 +265,8 @@ class CursosController extends AbmController
 
         return Datatables::of($returns)
         ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="'.$this->botones['buscar'].'" aria-hidden="true"></i></button></a>';
+            return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver">'.
+            '<i class="'.$this->botones['buscar'].'" aria-hidden="true"></i></button></a>';
         })->make(true);
     }
 
@@ -246,7 +280,8 @@ class CursosController extends AbmController
 
         return Datatables::of($returns)
         ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="'.$this->botones['buscar'].'" aria-hidden="true"></i></button></a>';
+            return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver">'.
+            '<i class="'.$this->botones['buscar'].'" aria-hidden="true"></i></button></a>';
         })->make(true);
     }
 
@@ -280,8 +315,19 @@ class CursosController extends AbmController
 		->select('sistema.profesores.id_profesor','nombres','apellidos','profesores.tipoDocumento.nombre','nro_doc')
 		->get();*/
         ->profesores()
-        ->join('sistema.tipos_documentos', 'sistema.tipos_documentos.id_tipo_documento', '=', 'sistema.profesores.id_tipo_documento')
-        ->select('profesores.id_profesor', 'nombres', 'apellidos', 'sistema.tipos_documentos.nombre as tipo_doc', 'nro_doc')
+        ->join(
+            'sistema.tipos_documentos',
+            'sistema.tipos_documentos.id_tipo_documento',
+            '=',
+            'sistema.profesores.id_tipo_documento'
+        )
+        ->select(
+            'profesores.id_profesor',
+            'nombres',
+            'apellidos',
+            'sistema.tipos_documentos.nombre as tipo_doc',
+            'nro_doc'
+        )
         ->get();
 
         $returns = collect($curso)->map(function ($item, $key) {
@@ -294,7 +340,9 @@ class CursosController extends AbmController
 
         return Datatables::of($returns)
         ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('profesores/'.$ret['id_profesor']).'"><button data-id="'.$ret['id_profesor'].'" class="btn btn-info btn-xs ver" title="Ver"><i class="'.$this->botones['editar'].'" aria-hidden="true"></i></button></a>';
+            return '<a href="'.url('profesores/'.$ret['id_profesor']).'"><button data-id="'.$ret['id_profesor'].
+            '" class="btn btn-info btn-xs ver" title="Ver"><i class="'.$this->botones['editar'].
+            '" aria-hidden="true"></i></button></a>';
         })
         ->make(true);
     }
@@ -304,8 +352,20 @@ class CursosController extends AbmController
         $curso = Curso::findOrFail($id)
         ->alumnos()
         ->join('sistema.provincias', 'sistema.provincias.id_provincia', '=', 'alumnos.id_provincia')
-        ->join('sistema.tipos_documentos', 'sistema.tipos_documentos.id_tipo_documento', '=', 'alumnos.alumnos.id_tipo_documento')
-        ->select('alumnos.id_alumno', 'nombres', 'apellidos', 'sistema.tipos_documentos.nombre as tipo_doc', 'nro_doc', 'sistema.provincias.nombre as provincia')
+        ->join(
+            'sistema.tipos_documentos',
+            'sistema.tipos_documentos.id_tipo_documento',
+            '=',
+            'alumnos.alumnos.id_tipo_documento'
+        )
+        ->select(
+            'alumnos.id_alumno',
+            'nombres',
+            'apellidos',
+            'sistema.tipos_documentos.nombre as tipo_doc',
+            'nro_doc',
+            'sistema.provincias.nombre as provincia'
+        )
         ->get()
         ->map(function ($item, $key) {
             return array('id_alumno' => $item['id_alumno'],
@@ -318,7 +378,9 @@ class CursosController extends AbmController
 
         return Datatables::of($curso)
         ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('alumnos/'.$ret['id_alumno']).'"><button data-id="'.$ret['id_alumno'].'" class="btn btn-info btn-xs ver" title="Ver"><i class="'.$this->botones['buscar'].'" aria-hidden="true"></i></button></a>';
+            return '<a href="'.url('alumnos/'.$ret['id_alumno']).'"><button data-id="'.$ret['id_alumno'].
+            '" class="btn btn-info btn-xs ver" title="Ver"><i class="'.$this->botones['buscar'].
+            '" aria-hidden="true"></i></button></a>';
         })
         ->make(true);
     }
@@ -336,7 +398,8 @@ class CursosController extends AbmController
 
     private function queryCountAlumnos(Request $r, $id_provincia)
     {
-        $query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos.cursos C 
+        $query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as 
+        linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos.cursos C 
         left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
         left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
         inner join sistema.provincias P ON P.id_provincia = C.id_provincia
@@ -371,16 +434,16 @@ class CursosController extends AbmController
      */
     private function getSelectOptions()
     {
-        $areas = Cache::remember('areas', 5, function() {
+        $areas = Cache::remember('areas', 5, function () {
             return AreaTematica::orderBy('nombre')->get();
         });
-        $lineas = Cache::remember('lineas', 5, function() {
+        $lineas = Cache::remember('lineas', 5, function () {
             return LineaEstrategica::orderBy('numero')->get();
         });
-        $provincias = Cache::remember('provincias', 5, function() {
+        $provincias = Cache::remember('provincias', 5, function () {
             return Provincia::orderBy('nombre')->get();
         });
-        $periodos = Cache::remember('periodos', 5, function() {
+        $periodos = Cache::remember('periodos', 5, function () {
             return Periodo::all();
         });
         return [
@@ -398,8 +461,18 @@ class CursosController extends AbmController
             return $value != "" && $value != "0";
         });
 
-        $query = Curso::leftJoin('cursos.areas_tematicas', 'cursos.cursos.id_area_tematica', '=', 'cursos.areas_tematicas.id_area_tematica')
-        ->leftJoin('cursos.lineas_estrategicas', 'cursos.cursos.id_linea_estrategica', '=', 'cursos.lineas_estrategicas.id_linea_estrategica')
+        $query = Curso::leftJoin(
+            'cursos.areas_tematicas',
+            'cursos.cursos.id_area_tematica',
+            '=',
+            'cursos.areas_tematicas.id_area_tematica'
+        )
+        ->leftJoin(
+            'cursos.lineas_estrategicas',
+            'cursos.cursos.id_linea_estrategica',
+            '=',
+            'cursos.lineas_estrategicas.id_linea_estrategica'
+        )
         ->leftJoin('sistema.provincias', 'cursos.cursos.id_provincia', '=', 'sistema.provincias.id_provincia')
         ->select(
             'cursos.cursos.id_curso',
@@ -461,9 +534,14 @@ class CursosController extends AbmController
 
             $accion = $r->has('botones')?$r->botones:null;
 
-            $editarYEliminar = '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones['editar'].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_curso.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones['eliminar'].'" aria-hidden="true"></i></button>';
+            $editarYEliminar = '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button data-id="'.$ret->id_curso.
+            '" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones['editar'].
+            '" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_curso.
+            '" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones['eliminar'].
+            '" aria-hidden="true"></i></button>';
             
-            $agregar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="'.$this->botones['agregar'].'" aria-hidden="true"></i></button>';
+            $agregar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs agregar" '.
+            'title="Agregar"><i class="'.$this->botones['agregar'].'" aria-hidden="true"></i></button>';
 
             return $accion == 'agregar'?$agregar:$editarYEliminar;
         })
@@ -539,7 +617,11 @@ class CursosController extends AbmController
      */
     public function getExcelReporte(Request $r)
     {
-        $id_provincia = array_key_exists('id_provincia', $r->filtros)?$r->filtros['id_provincia']:Auth::user()->id_provincia;
+        if (array_key_exists('id_provincia', $r->filtros)) {
+            $id_provincia = $r->filtros['id_provincia'];
+        } else {
+            $id_provincia = Auth::user()->id_provincia;
+        }
         $data = DB::select($this->queryCountAlumnos($r, $id_provincia));
         $data = collect($data);
         $datos = ['cursos' => $data];
@@ -557,15 +639,15 @@ class CursosController extends AbmController
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response xls file
      **/
     public function getCompletoExcel($id)
     {
         $datos = ['curso' => Curso::findOrFail($id)];
-        $path = "accion_completa_".date("Y-m-d_H:i:s");        
+        $path = "accion_completa_".date("Y-m-d_H:i:s");
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('Accion', function ($sheet) use ($datos) {
                 $sheet->setHeight(1, 20);

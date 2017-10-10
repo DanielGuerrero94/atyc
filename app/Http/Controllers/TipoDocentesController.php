@@ -12,7 +12,10 @@ use Illuminate\Database\QueryException;
 
 class TipoDocentesController extends Controller
 {
-    private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
+    private $botones = [
+        'fa fa-pencil-square-o',
+        'fa fa-trash-o'
+    ];
 
     /**
      * Display a listing of the resource.
@@ -88,9 +91,9 @@ class TipoDocentesController extends Controller
             return TipoDocente::findOrFail($id)
             ->update($request->all());
         } catch (ModelNotFoundException $e) {
-            return json_encode($e->getMessage());
+            return $e->getMessage();
         } catch (QueryException $e) {
-            return json_encode($e->getMessage());
+            return $e->getMessage();
         }
     }
 
@@ -145,9 +148,12 @@ class TipoDocentesController extends Controller
 
                 $accion = $r->input('botones');
 
-                $editar = '<a href="'.url('tipoDocentes').'/'.$ret->id_tipo_docente.'/edit'.'"><button data-id="'.$ret->id_tipo_docente.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>';
+                $editar = '<a href="'.url('tipoDocentes').'/'.$ret->id_tipo_docente.'/edit'.'"><button data-id="'.
+                $ret->id_tipo_docente.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.
+                $this->botones[0].'" aria-hidden="true"></i></button></a>';
 
-                $agregar = '<button data-id="'.$ret->id_tipo_docente.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+                $agregar = '<button data-id="'.$ret->id_tipo_docente.'" class="btn btn-info btn-xs agregar" '.
+                'title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
                 return $accion == 'agregar'?$agregar:$editar;
             }

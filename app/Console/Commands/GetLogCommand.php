@@ -3,7 +3,7 @@
  * Command to make posible to get the log file parsed
  *
  * @package Commands
- * @author Daniel Guerrero 
+ * @author Daniel Guerrero
  **/
 
 namespace App\Console\Commands;
@@ -40,7 +40,7 @@ class GetLogCommand extends Command
         $day = $this->argument('day') === 'today'?date("Y-m-d"):$this->argument('day');
         $model = $this->option('model');
 
-        $folder = env('APP_PATH').'storage/logs/production';
+        $folder = base_path('storage/logs/production');
         $log_file_name = "laravel-{$day}.log";
 
         if ($this->option('delete')) {
@@ -50,7 +50,7 @@ class GetLogCommand extends Command
         if (!file_exists("{$folder}/{$log_file_name}")) {
             system(
                 "sshpass -p '".env('SSH_PASS')."' sftp ".env('SSH_USER_PROD')."@".env('SSH_IP_PROD')." << EOF 
-                get ".env('APP_PATH')."storage/logs/{$log_file_name}"
+                get ".base_path("storage/logs/{$log_file_name}")
             );
             system(
                 "mv {$log_file_name} {$folder}"
@@ -72,7 +72,8 @@ class GetLogCommand extends Command
                 $this->info('CRUD json file created');
             } else {
                 system(
-                    "grep -P 'crear\ {$model}' {$folder}/{$log_file_name} | "."sed 's/^.*crear\ {$model}.*:\ //g' > {$folder}/create-{$model}-{$day}.log"
+                    "grep -P 'crear\ {$model}' {$folder}/{$log_file_name} | ".
+                    "sed 's/^.*crear\ {$model}.*:\ //g' > {$folder}/create-{$model}-{$day}.log"
                 );
                 system(
                     "grep -P 'actualizar\ {$model}' {$folder}/{$log_file_name} | ".

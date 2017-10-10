@@ -15,7 +15,7 @@ class CreateTiposDocumentosTable extends Migration
     {
         Schema::create('sistema.tipos_documentos', function (Blueprint $table) {
             $table->increments('id_tipo_documento');
-            $table->string('nombre',10)->unique();
+            $table->string('nombre', 10)->unique();
             $table->string('titulo');
         });
     }

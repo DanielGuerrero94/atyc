@@ -28,7 +28,6 @@ class PreguntasTableSeeder extends Seeder
         'select pregunta from g_plannacer.encuestas
         group by pregunta
         order by count(*) desc')
-        AS sub(pregunta character varying(100)))"); 
-        
+        AS sub(pregunta character varying(100)))");
     }
 }

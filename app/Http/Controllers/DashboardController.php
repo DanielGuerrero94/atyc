@@ -81,8 +81,17 @@ class DashboardController extends Controller
     private function porcentajeTematica()
     {
         $cursos = Curso::query()
-        ->join('cursos.lineas_estrategicas', 'cursos.id_linea_estrategica', '=', 'cursos.lineas_estrategicas.id_linea_estrategica')
-        ->select(DB::raw('CONCAT(cursos.lineas_estrategicas.numero,\' - \',cursos.lineas_estrategicas.nombre) as label'), DB::raw('count(*) as value'))
+        ->join(
+            'cursos.lineas_estrategicas',
+            'cursos.id_linea_estrategica',
+            '=',
+            'cursos.lineas_estrategicas.id_linea_estrategica'
+        )
+        ->select(
+            DB::raw('CONCAT(cursos.lineas_estrategicas.numero,
+        \' - \',cursos.lineas_estrategicas.nombre) as label'),
+            DB::raw('count(*) as value')
+        )
         ->groupBy('cursos.lineas_estrategicas.nombre', 'cursos.lineas_estrategicas.numero')
         ->get();
         
@@ -111,12 +120,14 @@ class DashboardController extends Controller
 
     private function accionesPorAnioYMes()
     {
-        $acciones = \DB::select("(select extract(year from fecha) as anio,extract(month from fecha) as mes,count(*) as cantidad from cursos.cursos
+        $acciones = \DB::select("(select extract(year from fecha) as anio,extract(month from fecha) as mes,
+            count(*) as cantidad from cursos.cursos
             where fecha > '2013-01-01'
             group by extract(year from fecha),extract(month from fecha)
             order by extract(year from fecha),extract(month from fecha))
             union all
-            (select max(extract(year from fecha)),generate_series((select extract(month from max(fecha))::numeric) + 1,12),0 from cursos.cursos)");
+            (select max(extract(year from fecha)),generate_series(
+            (select extract(month from max(fecha))::numeric) + 1,12),0 from cursos.cursos)");
 
         $colores = ['#d0d1e6','#a6bddb','#67a9cf','#3690c0','#02818a','#016c59','#014636'];
 
@@ -182,7 +193,8 @@ class DashboardController extends Controller
 
     private function accionesInformadasEsteAnio()
     {
-        $acciones = \DB::select("(select id_provincia,extract(month from fecha) as mes,count(*) as cantidad from cursos.cursos 
+        $acciones = \DB::select("(select id_provincia,extract(month from fecha) as mes,
+            count(*) as cantidad from cursos.cursos 
             where extract(year from fecha) = extract(year from now())
             and id_provincia <> 25
             group by id_provincia,extract(month from fecha)

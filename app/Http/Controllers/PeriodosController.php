@@ -130,9 +130,12 @@ class PeriodosController extends Controller
 
                 $accion = $r->input('botones');
 
-                $editar = '<a href="'.url('periodos').'/'.$ret->id_periodo.'/edit'.'"><button data-id="'.$ret->id_periodo.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>';
+                $editar = '<a href="'.url('periodos').'/'.$ret->id_periodo.'/edit'.'"><button data-id="'.
+                $ret->id_periodo.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].
+                '" aria-hidden="true"></i></button></a>';
 
-                $agregar = '<button data-id="'.$ret->id_periodo.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+                $agregar = '<button data-id="'.$ret->id_periodo.'" class="btn btn-info btn-xs agregar" '.
+                'title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
                 return $accion == 'agregar'?$agregar:$editar;
             }

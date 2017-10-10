@@ -19,6 +19,6 @@ actividades de capacitación con más de 10 horas acumuladas\"','odp4'),
         ('Total staff institucional','total-staff-institucional'),
         ('Porcentaje de efectores capacitados con modalidad presencial','porcentaje-efectores'),
         ('Cantidad de participantes por acción de capacitación','cursos-cantidad-alumnos'),
-        ('Acciones con participantes de efectores','acciones-efectores')");        
+        ('Acciones con participantes de efectores','acciones-efectores')");
     }
-}      
+}

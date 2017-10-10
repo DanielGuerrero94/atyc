@@ -18,6 +18,7 @@ class TiposDocentesTableSeeder extends Seeder
             ('Tutor'),
             ('Mentor'),
             ('Observador')
-        ");
+        "
+        );
     }
 }

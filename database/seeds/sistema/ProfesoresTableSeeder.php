@@ -10,8 +10,8 @@ class ProfesoresTableSeeder extends Seeder
      * @return void
      */
     public function run()
-    {      
-        $this->updateTableToMigrate();      
+    {
+        $this->updateTableToMigrate();
 
         $this->insert();
 
@@ -20,7 +20,7 @@ class ProfesoresTableSeeder extends Seeder
 
     /**
      * Corre unos updates para que los campos matcheen al momento del insert.
-     * 
+     *
      * @return void
      */
     public function updateTableToMigrate()
@@ -30,12 +30,13 @@ class ProfesoresTableSeeder extends Seeder
 
     /**
      * Migro los datos desde la otra tabla.
-     * 
+     *
      * @return void
      */
     public function insert()
     {
-        \DB::statement("INSERT INTO sistema.profesores (id_profesor,nombres,apellidos,id_tipo_documento,nro_doc,email,cel,tel)
+        \DB::statement("INSERT INTO sistema.profesores (id_profesor,nombres,apellidos,id_tipo_documento,nro_doc,email,
+            cel,tel)
             (SELECT
             sub.id as id_profesor, 
             sub.nombres,
@@ -62,7 +63,7 @@ class ProfesoresTableSeeder extends Seeder
 
     /**
      * Busco el ultimo id de la tabla migrada para setear start en la sequence de la nueva tabla.
-     * 
+     *
      * @return void
      */
     public function alterSequence()
@@ -75,4 +76,3 @@ class ProfesoresTableSeeder extends Seeder
         \DB::statement("ALTER SEQUENCE sistema.profesores_id_profesor_seq RESTART");
     }
 }
-

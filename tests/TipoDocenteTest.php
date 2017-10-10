@@ -45,12 +45,12 @@ class TipoDocenteTest extends TestCase
      * Create model with request
      *
      * @param Request $r
-     * @test 
+     * @test
      * @dataProvider tiposDocentesRequest
      * @return void
      */
     public function create(Request $r)
-    {        
+    {
         $controller = new TipoDocentesController();
 
         $id = $controller->store($r)->id_tipo_docente;
@@ -63,18 +63,18 @@ class TipoDocenteTest extends TestCase
      * Update model with request
      *
      * @param Request $r
-     * @test 
+     * @test
      * @depends create
      * @dataProvider updateTiposDocentesRequest
      * @return void
      */
     public function update(Request $r)
-    {        
+    {
         $controller = new TipoDocentesController();
         $id = $controller->store($r)->id_tipo_docente;
 
         $antes = TipoDocente::find($id)->first()->nombre;
-        $controller->update($r,$id);
+        $controller->update($r, $id);
         $despues = TipoDocente::find($id)->nombre;
         $this->assertFalse($antes === $despues, 'Son iguales no se hizo el update');
     }
@@ -82,15 +82,14 @@ class TipoDocenteTest extends TestCase
     /**
      * SoftDelete on model
      *
-     * @test 
+     * @test
      * @depends update
      */
     public function destroy()
     {
         $controller = new TipoDocentesController();
 
-        collect($this->stacks())->each(function ($item,$key) use ($controller)
-        {
+        collect($this->stacks())->each(function ($item, $key) use ($controller) {
             $controller->destroy($item);
         });
 

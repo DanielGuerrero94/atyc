@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $path = env('APP_PATH').'storage/exports/*';
+            $path = base_path('storage/exports/*');
             system("rm {$path}");
         })->everyMinute();
 

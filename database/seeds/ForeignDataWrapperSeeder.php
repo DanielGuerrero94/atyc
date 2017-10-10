@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class ForeignDataWrapperSeeder extends Seeder 
+class ForeignDataWrapperSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,24 +18,24 @@ class ForeignDataWrapperSeeder extends Seeder
         $user = env('SERVER_USER');
         $password = env('SERVER_PASSWORD');
 
-        if($host && $dbname && $port){
+        if ($host && $dbname && $port) {
             \DB::statement("
         CREATE SERVER {$name} 
         FOREIGN DATA WRAPPER postgres_fdw 
         OPTIONS (host '{$host}', dbname '{$dbname}', port '{$port}')
         ;");
-        }else{
+        } else {
             echo 'No se pudo crear el server';
         }
 
-        if($user && $password){
+        if ($user && $password) {
             \DB::statement("
         CREATE USER MAPPING FOR postgres 
         SERVER {$name} 
         OPTIONS (user '{$user}', password '{$password}')
         ;");
-        }else{
+        } else {
             echo 'No se pudo crear el mapping para el usuario';
-        }              
+        }
     }
 }

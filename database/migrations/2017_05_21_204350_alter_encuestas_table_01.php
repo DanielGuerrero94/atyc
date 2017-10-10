@@ -29,7 +29,7 @@ class AlterEncuestasTable01 extends Migration
     public function down()
     {
         Schema::table('encuestas.encuestas', function (Blueprint $table) {
-            //$table->dropIndex('encuestas_encuestas_id_curso_index');            
+            //$table->dropIndex('encuestas_encuestas_id_curso_index');
             $table->dropForeign('encuestas_encuestas_id_curso_foreign');
             $table->dropForeign('encuestas_encuestas_id_pregunta_foreign');
             $table->dropForeign('encuestas_encuestas_id_respuesta_foreign');

@@ -21,29 +21,33 @@ class ProfesoresController extends AbmController
 {
 
     private $rules = [
-    'nombres' => 'required|string',
-    'apellidos' => 'required|string',
-    'id_tipo_documento' => 'required|numeric',
-    'id_tipo_docente' => 'required|numeric',
-    'pais' => 'required_if:id_tipo_documento,5,6',
-    'nro_doc' => 'required|numeric',
-    'email' => 'nullable|email',
-    'tel' => 'nullable|numeric',
-    'cel' => 'nullable|numeric'
-    ],
-    $filters = [
-    'nombres' => 'string',
-    'apellidos' => 'string',
-    'id_tipo_documento' => 'numeric',
-    'id_tipo_docente' => 'numeric',
-    'cel' => 'numeric',
-    'tel' => 'numeric',//11
-    'email' => 'string',//Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
-    'nro_doc' => 'numeric'
-    ],
-    $botones = [
-    'fa fa-pencil-square-o',
-    'fa fa-trash-o'
+        'nombres' => 'required|string',
+        'apellidos' => 'required|string',
+        'id_tipo_documento' => 'required|numeric',
+        'id_tipo_docente' => 'required|numeric',
+        'pais' => 'required_if:id_tipo_documento,5,6',
+        'nro_doc' => 'required|numeric',
+        'email' => 'nullable|email',
+        'tel' => 'nullable|numeric',
+        'cel' => 'nullable|numeric'
+    ];
+
+    private $filters = [
+        'nombres' => 'string',
+        'apellidos' => 'string',
+        'id_tipo_documento' => 'numeric',
+        'id_tipo_docente' => 'numeric',
+        'cel' => 'numeric',
+    //11
+        'tel' => 'numeric',
+    //Tiene que ser string porque si en el filtro no quieren ponerlo completo yo lo comparo con un ilike
+        'email' => 'string',
+        'nro_doc' => 'numeric'
+    ];
+
+    private $botones = [
+        'fa fa-pencil-square-o',
+        'fa fa-trash-o'
     ];
 
     public function query($query)
@@ -68,7 +72,7 @@ class ProfesoresController extends AbmController
     */
     public function index()
     {
-        return json_encode(Profesor::all());
+        return Profesor::all();
     }
 
     /**
@@ -100,7 +104,7 @@ class ProfesoresController extends AbmController
                 array(
                     'status' => false,
                     'error' => $v->errors()
-                    )
+                )
             );
         }
     }
@@ -195,8 +199,18 @@ class ProfesoresController extends AbmController
 
     private function queryLogica(Request $r, $filtros)
     {
-        $query = Profesor::leftJoin('sistema.tipos_documentos', 'sistema.profesores.id_tipo_documento', '=', 'sistema.tipos_documentos.id_tipo_documento')
-        ->leftJoin('sistema.tipos_docentes', 'sistema.profesores.id_tipo_docente', '=', 'sistema.tipos_docentes.id_tipo_docente')
+        $query = Profesor::leftJoin(
+            'sistema.tipos_documentos',
+            'sistema.profesores.id_tipo_documento',
+            '=',
+            'sistema.tipos_documentos.id_tipo_documento'
+        )
+        ->leftJoin(
+            'sistema.tipos_docentes',
+            'sistema.profesores.id_tipo_docente',
+            '=',
+            'sistema.tipos_docentes.id_tipo_docente'
+        )
         ->select(
             'sistema.profesores.id_profesor',
             'sistema.profesores.nombres',
@@ -223,25 +237,24 @@ class ProfesoresController extends AbmController
     public function getFiltrado(Request $r)
     {
         $filtros = collect($r->get('filtros'))
-            ->mapWithKeys(function ($item) {
-                return [$item['name'] => $item['value']] ;
-            });
+        ->mapWithKeys(function ($item) {
+            return [$item['name'] => $item['value']] ;
+        });
 
         $v = Validator::make($filtros->all(), $this->filters);
-        if (!$v->fails()) {
-            $query = $this->queryLogica($r, $filtros);
 
-            return $this->toDatatable($r, $query);
-        } else {
-            return json_encode($v->errors());
+        if ($v->fails()) {
+            return $v->errors();
         }
+        
+        $query = $this->queryLogica($r, $filtros);
+        return $this->toDatatable($r, $query);
     }
 
     /**
      * Devuelve en DataTable los resultados con sus correspondientes acciones.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  $request['botones']
      * @param  Collection               $resultados
      * @return \Illuminate\Http\Response
      */
@@ -254,9 +267,14 @@ class ProfesoresController extends AbmController
 
                 $accion = $r->has('botones')?$r->botones:null;
 
-                $editarYEliminar = '<a href="'.url('profesores').'/'.$ret->id_profesor.'"><button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_profesor.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
+                $editarYEliminar = '<a href="'.url('profesores').'/'.$ret->id_profesor.'"><button data-id="'.
+                $ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].
+                '" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_profesor.
+                '" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].
+                '" aria-hidden="true"></i></button>';
 
-                $agregar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+                $agregar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs agregar" '.
+                'title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
                 return $accion == 'agregar'?$agregar:$editarYEliminar;
             }
@@ -267,7 +285,7 @@ class ProfesoresController extends AbmController
     /**
      * Opciones para los selects del front end.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function getSelectOptions()
     {
@@ -279,10 +297,10 @@ class ProfesoresController extends AbmController
             return TipoDocente::all();
         });
 
-        return array(
+        return [
             'tipoDocumento' => $tipoDocumentos,
             'tipoDocente' => $tipoDocentes
-            );
+        ];
     }
 
     /**
@@ -296,7 +314,8 @@ class ProfesoresController extends AbmController
         ->get()
         ->map(
             function ($item, $key) {
-                return array('id' => $item->id_profesor,'nombres' => $item->nombres,'apellidos' => $item->apellidos,'documentos' => $item->nro_doc);
+                return array('id' => $item->id_profesor,'nombres' => $item->nombres,'apellidos' => $item->apellidos,
+                    'documentos' => $item->nro_doc);
             }
         );
         return $this->typeaheadResponse($profesor);
@@ -315,9 +334,9 @@ class ProfesoresController extends AbmController
     public function getExcel(Request $r)
     {
         $filtros = collect($r->get('filtros'))
-            ->mapWithKeys(function ($item) {
-                return [$item['name'] => $item['value']] ;
-            });
+        ->mapWithKeys(function ($item) {
+            return [$item['name'] => $item['value']] ;
+        });
 
         $data = $this->queryLogica($r, $filtros)->get();
         $datos = ['profesores' => $data];
@@ -353,9 +372,9 @@ class ProfesoresController extends AbmController
     public function getPDF(Request $r)
     {
         $filtros = collect($r->get('filtros'))
-            ->mapWithKeys(function ($item) {
-                return [$item['name'] => $item['value']] ;
-            });
+        ->mapWithKeys(function ($item) {
+            return [$item['name'] => $item['value']] ;
+        });
 
         $data = $this->queryLogica($r, $filtros)->get();
         $header = array('Nombres','Apellidos','Tipo doc','Nro doc');
