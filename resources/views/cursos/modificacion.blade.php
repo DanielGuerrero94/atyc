@@ -134,10 +134,10 @@
 
               </div>
               <div class="tab-pane" id="alumnos">   
-                @include('alumnos.asignacionAlternativa')             
+                @include('alumnos.asignacion')             
               </div>
             <!-- <div class="tab-pane" id="profesores">
-              @include('profesores.asignacionAlternativa')          
+              @include('profesores.asignacion')          
             </div>  --> 
         </div>
         <div class="box-body">

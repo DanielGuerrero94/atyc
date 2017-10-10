@@ -1,4 +1,10 @@
 <?php
+/**
+ * CursosController deberia llamar AccionesController
+ *
+ * @package Controllers
+ * @author Daniel Guerrero
+ **/
 
 namespace App\Http\Controllers;
 
@@ -15,9 +21,15 @@ use Validator;
 use Datatables;
 use Excel;
 use PDF;
+use Cache;
 
-class cursosController extends AbmController
+class CursosController extends AbmController
 {
+    /**
+     * Rules for validate the request
+     *
+     * @var array
+     **/
     private $rules = [
         'nombre' => 'required|string',
         'duracion' => 'required|numeric',
@@ -25,8 +37,14 @@ class cursosController extends AbmController
         'id_area_tematica' => 'required|numeric',
         'id_linea_estrategica' => 'required|numeric',
         'id_provincia' => 'required|numeric'
-    ],
-    $filters = [
+    ];
+
+    /**
+     * Filter rules
+     *
+     * @var array
+     **/
+    private $filters = [
         'nombre' => 'string',
         'duracion' => 'numeric',
         'edicion' => 'numeric',
@@ -36,26 +54,19 @@ class cursosController extends AbmController
         'id_periodo' => 'numeric',
         'desde' => 'string',
         'hasta' => 'string'
-    ],
-    $botones = [
-        'fa fa-pencil-square-o',
-        'fa fa-trash-o'
     ];
 
-    //Lo tengo aca pero lo podria tener en otra clase porque lo pueden llegar a usar todas las tablas porque estan en latin1 pero lo muestro en utf-8
-
-    //En el caso que pase todo a eloquent puedo seguir el caso ejemplo del model efector que esta en el sirge, usando getAttribute y setAttribute para poder hacerlo directamente asi
-    public static function convertToUtf8($string)
-    {
-        return $converted = iconv('latin1', 'utf-8', $string);
-    }
-
-
-    //Para ahorrarme escribir siempre que connection usar
-    public function query($query)
-    {
-        return DB::connection('g_plannacer')->select($query);
-    }
+    /**
+     * Icono de botones
+     *
+     * @var array
+     **/
+    private $botones = [
+        'editar' => 'fa fa-pencil-square-o',
+        'eliminar' => 'fa fa-trash-o',
+        'buscar' => 'fa fa-search',
+        'agregar' => 'fa fa-plus-circle'
+    ];
 
     /**
      * Display a listing of the resource.
@@ -88,9 +99,8 @@ class cursosController extends AbmController
         $data = $request->all();
         logger('Quiere crear accion con: '.json_encode($data));
         $v = Validator::make($data, $this->rules);
-        if ($v->fails()) {
-            return $v->errors();
-        }
+
+        if ($v->fails()) return $v->errors();
 
         //Calculo la edicion del curso, despues puede ser un trigger before insert
         $edicion = Curso::where([
@@ -197,7 +207,6 @@ class cursosController extends AbmController
      * Devuelve la informacion para abm.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  $request['botones']
      * @return \Illuminate\Http\Response
      */
     public function getTabla(Request $request)
@@ -223,7 +232,7 @@ class cursosController extends AbmController
 
         return Datatables::of($returns)
         ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
+            return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="'.$this->botones['buscar'].'" aria-hidden="true"></i></button></a>';
         })->make(true);
     }
 
@@ -237,7 +246,7 @@ class cursosController extends AbmController
 
         return Datatables::of($returns)
         ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
+            return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver"><i class="'.$this->botones['buscar'].'" aria-hidden="true"></i></button></a>';
         })->make(true);
     }
 
@@ -285,7 +294,7 @@ class cursosController extends AbmController
 
         return Datatables::of($returns)
         ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('profesores/'.$ret['id_profesor']).'"><button data-id="'.$ret['id_profesor'].'" class="btn btn-info btn-xs ver" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
+            return '<a href="'.url('profesores/'.$ret['id_profesor']).'"><button data-id="'.$ret['id_profesor'].'" class="btn btn-info btn-xs ver" title="Ver"><i class="'.$this->botones['editar'].'" aria-hidden="true"></i></button></a>';
         })
         ->make(true);
     }
@@ -309,14 +318,14 @@ class cursosController extends AbmController
 
         return Datatables::of($curso)
         ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('alumnos/'.$ret['id_alumno']).'"><button data-id="'.$ret['id_alumno'].'" class="btn btn-info btn-xs ver" title="Ver"><i class="fa fa-search" aria-hidden="true"></i></button></a>';
+            return '<a href="'.url('alumnos/'.$ret['id_alumno']).'"><button data-id="'.$ret['id_alumno'].'" class="btn btn-info btn-xs ver" title="Ver"><i class="'.$this->botones['buscar'].'" aria-hidden="true"></i></button></a>';
         })
         ->make(true);
     }
 
-    public function getCountAlumnos(Request $r, $id)
+    public function getCountAlumnos(Request $request, $id)
     {
-        $query = $this->queryCountAlumnos($r, $id);
+        $query = $this->queryCountAlumnos($request, $id);
 
         $cursos = DB::select($query);
         $cursos = collect($cursos);
@@ -325,14 +334,14 @@ class cursosController extends AbmController
         ->make(true);
     }
 
-    public function queryCountAlumnos(Request $r, $id_provincia)
+    private function queryCountAlumnos(Request $r, $id_provincia)
     {
         $query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos.cursos C 
-		left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
-		left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
-		inner join sistema.provincias P ON P.id_provincia = C.id_provincia
-		inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
-		inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica";
+        left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
+        left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
+        inner join sistema.provincias P ON P.id_provincia = C.id_provincia
+        inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
+        inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica";
 
         if ($id_provincia !== '0' and $id_provincia !== 25) {
             $query .= " WHERE C.id_provincia = '".$id_provincia."'";
@@ -358,20 +367,28 @@ class cursosController extends AbmController
     /**
      * Opciones para los selects del front end.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
-    public function getSelectOptions()
+    private function getSelectOptions()
     {
-        $areas = AreaTematica::orderBy('nombre')->get();
-        $lineas = LineaEstrategica::orderBy('numero')->get();
-        $provincias = Provincia::orderBy('nombre')->get();
-        $periodos = Periodo::all();
-
-        return array(
+        $areas = Cache::remember('areas', 5, function() {
+            return AreaTematica::orderBy('nombre')->get();
+        });
+        $lineas = Cache::remember('lineas', 5, function() {
+            return LineaEstrategica::orderBy('numero')->get();
+        });
+        $provincias = Cache::remember('provincias', 5, function() {
+            return Provincia::orderBy('nombre')->get();
+        });
+        $periodos = Cache::remember('periodos', 5, function() {
+            return Periodo::all();
+        });
+        return [
             'areas_tematicas' => $areas,
             'lineas_estrategicas' => $lineas,
             'provincias' => $provincias,
-            'periodos' => $periodos);
+            'periodos' => $periodos
+        ];
     }
 
     private function queryLogica(Request $r, $filtros, $orderBy)
@@ -398,7 +415,7 @@ class cursosController extends AbmController
 
         foreach ($filtered as $key => $value) {
             if ($key == 'nombre') {
-                $query = $query->where('cursos.cursos.'.$key, 'ilike', '%'.$value.'%');
+                $query = $query->where('cursos.cursos.'.$key, 'ilike', "%{$value}%");
             } elseif ($key == 'desde') {
                 $query = $query->where('cursos.cursos.fecha', '>', $value);
             } elseif ($key == 'hasta') {
@@ -408,7 +425,7 @@ class cursosController extends AbmController
                 $query = $query->where('cursos.cursos.fecha', '>', $periodo->desde);
                 $query = $query->where('cursos.cursos.fecha', '<', $periodo->hasta);
             } else {
-                $query = $query->where('cursos.cursos.'.$key, '=', $value);
+                $query = $query->where('cursos.cursos.'.$key, $value);
             }
         }
 
@@ -434,8 +451,7 @@ class cursosController extends AbmController
      * Devuelve en DataTable los resultados con sus correspondientes acciones.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  $request['botones']
-     * @param  Collection  $resultados
+     * @param  \Illuminate\Support\Collection  $resultados
      * @return \Illuminate\Http\Response
      */
     public function toDatatable(Request $r, $resultados)
@@ -445,9 +461,9 @@ class cursosController extends AbmController
 
             $accion = $r->has('botones')?$r->botones:null;
 
-            $editarYEliminar = '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_curso.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].'" aria-hidden="true"></i></button>';
-
-            $agregar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
+            $editarYEliminar = '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones['editar'].'" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_curso.'" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones['eliminar'].'" aria-hidden="true"></i></button>';
+            
+            $agregar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs agregar" title="Agregar"><i class="'.$this->botones['agregar'].'" aria-hidden="true"></i></button>';
 
             return $accion == 'agregar'?$agregar:$editarYEliminar;
         })
@@ -459,10 +475,7 @@ class cursosController extends AbmController
      * Guarda el resultado en un .xls
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  array filtros
-     * @param  array order_by
-     * @return \Illuminate\Http\Response
-     * @return string path al archivo generado
+     * @return \Illuminate\Http\Response  path al archivo generado
      */
     public function getExcel(Request $r)
     {
@@ -491,10 +504,7 @@ class cursosController extends AbmController
      * Guarda el resultado en un .pdf
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  array filtros
-     * @param  array order_by
-     * @return \Illuminate\Http\Response
-     * @return string path al archivo generado
+     * @return \Illuminate\Http\Response  path al archivo generado
      */
     public function getPDF(Request $r)
     {
@@ -507,17 +517,16 @@ class cursosController extends AbmController
         $column_size =  array(80,25,15,17,60,60,20);
 
         $mapped = $data->map(function ($item, $key) {
-            $curso = array();
-            array_push($curso, $item->nombre);
-            array_push($curso, $item->fecha);
-            array_push($curso, $item->edicion);
-            array_push($curso, $item->duracion);
-            array_push($curso, $item->area_tematica);
-            array_push($curso, $item->linea_estrategica);
-            array_push($curso, $item->provincia);
-            return $curso;
+            return [
+                $item->nombre,
+                $item->fecha,
+                $item->edicion,
+                $item->duracion,
+                $item->area_tematica,
+                $item->linea_estrategica,
+                $item->provincia
+            ];
         });
-
         return PDF::save($header, $column_size, 10, $mapped);
     }
 
@@ -526,10 +535,7 @@ class cursosController extends AbmController
      * Guarda el resultado en un .xls
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  array filtros
-     * @param  array order_by
-     * @return \Illuminate\Http\Response
-     * @return string path al archivo generado
+     * @return \Illuminate\Http\Response path al archivo generado
      */
     public function getExcelReporte(Request $r)
     {
@@ -550,20 +556,23 @@ class cursosController extends AbmController
         return $path;
     }
 
-    public function getCompletoExcel(Request $r, $id)
+    /**
+     * 
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response xls file
+     **/
+    public function getCompletoExcel($id)
     {
-        $datos = array('curso' => Curso::findOrFail($id));
-        $path = "accion_completa_".date("Y-m-d_H:i:s");
-        
+        $datos = ['curso' => Curso::findOrFail($id)];
+        $path = "accion_completa_".date("Y-m-d_H:i:s");        
         Excel::create($path, function ($excel) use ($datos) {
-
             $excel->sheet('Accion', function ($sheet) use ($datos) {
                 $sheet->setHeight(1, 20);
                 $sheet->loadView('excel.cursoCompleto', $datos);
             });
         })
         ->store('xls');
-
-        return response()->download(__DIR__."/../../../storage/exports/{$path}.xls")->deleteFileAfterSend(true);
+        return response()->download(storage_path("exports/{$path}.xls"))->deleteFileAfterSend(true);
     }
 }

@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Interface ABM/CRUD
+ *
+ * @package Interfaces
+ * @author Daniel Guerrero
+ **/
 namespace App\Http\Controllers\Interfaces;
 
 interface ABM

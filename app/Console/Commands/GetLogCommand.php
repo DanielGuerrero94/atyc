@@ -1,4 +1,10 @@
 <?php
+/**
+ * Command to make posible to get the log file parsed
+ *
+ * @package Commands
+ * @author Daniel Guerrero 
+ **/
 
 namespace App\Console\Commands;
 

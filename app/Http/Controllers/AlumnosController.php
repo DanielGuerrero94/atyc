@@ -1,4 +1,10 @@
 <?php
+/**
+ * AlumnosController se deberia llamar ParticipantesController
+ *
+ * @package Controllers
+ * @author Daniel Guerrero
+ **/
 
 namespace App\Http\Controllers;
 
@@ -25,6 +31,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AlumnosController extends AbmController
 {
+    /**
+     * undocumented class variable
+     *
+     * @var string
+     **/
     private $rules = [
     'nombres' => 'required|string',
     'apellidos' => 'required|string',

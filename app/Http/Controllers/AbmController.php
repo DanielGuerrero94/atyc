@@ -19,25 +19,14 @@ abstract class AbmController extends Controller
 
     public function filtros($tabla)
     {
-        /*$query = "SELECT column_name
-        FROM information_schema.columns
-        WHERE table_schema = 'g_plannacer'
-        AND table_name   = '".$tabla."';";
-
-        $ret = collect($this->query($query));*/
-
         $r = DB::select(
             "SELECT column_name
             FROM information_schema.columns
             WHERE table_schema = 'public'
-            AND table_name   = '".$tabla."';"
+            AND table_name   = '{$tabla}';"
         );
         
-        /*logger("Query:".json_encode($r));*/
-
         $ret = collect($r);
-
-        /*        logger(json_encode($ret));*/
 
         $filtered = $ret->filter(
             function ($value, $key) {
@@ -54,9 +43,7 @@ abstract class AbmController extends Controller
             }
         );
 
-        /*        logger(json_encode($ret));*/
-
-        return json_encode($filtered);
+        return $filtered;
     }
 
     public function formularioConFiltros($tabla)
@@ -70,7 +57,7 @@ abstract class AbmController extends Controller
 
     public function tiposDocumentos()
     {
-        return json_encode(TipoDocumento::all());
+        return TipoDocumento::all();
     }
 
     public function filtrar(Request $r)
