@@ -43,7 +43,7 @@ class FuncionesController extends Controller
     public function store(Request $request)
     {
         try {
-            return Periodo::create($request->only(['nombre']));            
+            return Periodo::create($request->only(['nombre']));
         } catch (Illuminate\Database\QueryException $e) {
             return json_encode($e->message);
         }
@@ -69,8 +69,8 @@ class FuncionesController extends Controller
     public function edit($id)
     {
         try {
-            return view('funciones.modificacion',$this->show($id));
-        }  catch (ModelNotFoundException $e) {
+            return view('funciones.modificacion', $this->show($id));
+        } catch (ModelNotFoundException $e) {
             return json_encode($e->getMessage());
         }
     }
@@ -87,7 +87,7 @@ class FuncionesController extends Controller
         try {
             return Funcion::findOrFail($id)
             ->update($request->all());
-        }  catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return json_encode($e->getMessage());
         }
     }
@@ -103,7 +103,7 @@ class FuncionesController extends Controller
         try {
             return Funcion::findOrFail($id)
             ->delete();
-        }  catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return json_encode($e->getMessage());
         }
     }
@@ -143,7 +143,7 @@ class FuncionesController extends Controller
 
                 return $accion == 'agregar'?$agregar:$editar;
             }
-            )
+        )
         ->make(true);
     }
 }

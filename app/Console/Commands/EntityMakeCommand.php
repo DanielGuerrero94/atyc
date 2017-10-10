@@ -35,14 +35,10 @@ class EntityMakeCommand extends Command
         $plural = $this->argument('plural');
 
         if ($this->option('complete')) {
-
             $this->complete();
-
         } elseif ($this->option('rollback')) {
-
             $this->rollback();
-
-        }       
+        }
     }
 
     protected function complete()
@@ -52,7 +48,7 @@ class EntityMakeCommand extends Command
 
         $this->call('make:view', [
             'name' => $name.$plural,
-        ]);            
+        ]);
 
         $name = ucfirst($name);
 

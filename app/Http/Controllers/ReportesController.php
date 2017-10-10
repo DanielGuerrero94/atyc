@@ -49,13 +49,13 @@ class ReportesController extends Controller
     }
 
     public function efectores(Request $r)
-    {     
+    {
         return $this->reporte(6);
     }
 
     public function reporte($id_reporte)
     {
-        $reporte = Reporte::findOrFail($id_reporte);        
+        $reporte = Reporte::findOrFail($id_reporte);
 
         $provincia_usuario = Provincia::findOrFail(Auth::user()->id_provincia);
 
@@ -64,7 +64,7 @@ class ReportesController extends Controller
             'provincia_usuario' => $provincia_usuario
             );
 
-        $data = array_merge($this->getSelectOptions(),$extra);
+        $data = array_merge($this->getSelectOptions(), $extra);
 
         return view('reportes.'.$reporte->view, $data);
     }
@@ -89,36 +89,28 @@ class ReportesController extends Controller
 
         if (array_key_exists('id_periodo', $r->filtros)) {
             $id_periodo = $r->filtros['id_periodo'];
-        } else if (array_key_exists('desde', $r->filtros) && array_key_exists('hasta', $r->filtros)) {
+        } elseif (array_key_exists('desde', $r->filtros) && array_key_exists('hasta', $r->filtros)) {
             $desde = $r->filtros['desde'];
             $hasta = $r->filtros['hasta'];
         }
 
         if (!array_key_exists('id_periodo', $r->filtros)) {
-
             $query = "SELECT CONCAT('{$desde}'::date,'/','{$hasta}'::date) as periodo,* 
             FROM reporte_{$r->id_reporte}('{$id_provincia}','{$desde}','{$hasta}')";
-
         } elseif ($id_reporte == '5' and $id_periodo == '0') {
-
             $query = "SELECT P.nombre as periodo ,R.* 
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R order by P.id_periodo,R.provincia,R.nombre,R.edicion";
-
         } elseif ($id_periodo == '0') {
-
             $query = "SELECT P.nombre as periodo ,R.* 
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R";
-
         } else {
-
             $query = "SELECT P.nombre as periodo ,R.*
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R 
-            where P.id_periodo = {$id_periodo}";    
+            where P.id_periodo = {$id_periodo}";
 
             /*$query = DB::table("sistema.periodos as pe,reporte_{$id_reporte}({$id_provincia},pe.desde,pe.hasta) as r")
         ->select('pe.nombre as periodo','r.*')
-        ->where('pe.id_periodo',$id_periodo);  */      
-
+        ->where('pe.id_periodo',$id_periodo);  */
         }
 
         return $query;
@@ -170,31 +162,31 @@ class ReportesController extends Controller
         return $path;
     }
 
-    public function reporte5($id_provincia = '0',$desde = '2014-01-01',$hasta = '2014-12-31')
+    public function reporte5($id_provincia = '0', $desde = '2014-01-01', $hasta = '2014-12-31')
     {
         $query = DB::table('sistema.provincias as p')
-        ->leftJoin('efectores.datos_geograficos as dg',DB::raw('dg.id_provincia::integer'),'=','p.id_provincia')
-        ->join('efectores.efectores as e','e.id_efector','=','dg.id_efector')
-        ->join('efectores.compromiso_gestion as cg','cg.id_efector','=','e.id_efector')
-        ->join('alumnos.alumnos as a','a.establecimiento1','=','e.cuie')
-        ->join('cursos.cursos_alumnos as ca','ca.id_alumno','=','a.id_alumno')
-        ->join('cursos.cursos as c','c.id_curso','=','c.id_curso')
-        ->select('p.nombre as provincia',DB::raw('count(distinct e.cuie) as capacitados'))
-        ->whereBetween('c.fecha',[$desde,$hasta])
+        ->leftJoin('efectores.datos_geograficos as dg', DB::raw('dg.id_provincia::integer'), '=', 'p.id_provincia')
+        ->join('efectores.efectores as e', 'e.id_efector', '=', 'dg.id_efector')
+        ->join('efectores.compromiso_gestion as cg', 'cg.id_efector', '=', 'e.id_efector')
+        ->join('alumnos.alumnos as a', 'a.establecimiento1', '=', 'e.cuie')
+        ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
+        ->join('cursos.cursos as c', 'c.id_curso', '=', 'c.id_curso')
+        ->select('p.nombre as provincia', DB::raw('count(distinct e.cuie) as capacitados'))
+        ->whereBetween('c.fecha', [$desde,$hasta])
         ->groupBy('p.nombre');
 
         if ($id_provincia != '0') {
-            $query = $query->where('p.id_provincia',$id_provincia);
+            $query = $query->where('p.id_provincia', $id_provincia);
         }
 
         return $query;
     }
 
-    public function test($id_provincia = '0',$desde = '2014-01-01',$hasta = '2014-12-31',$id_periodo = 4,$id_reporte = 6)
+    public function test($id_provincia = '0', $desde = '2014-01-01', $hasta = '2014-12-31', $id_periodo = 4, $id_reporte = 6)
     {
         return DB::table("sistema.periodos as pe")
         ->join(DB::raw("reporte_{$id_reporte}({$id_provincia},pe.desde,pe.hasta) as r"))
-        ->select('pe.nombre as periodo','r.*')
-        ->where('pe.id_periodo',$id_periodo);
+        ->select('pe.nombre as periodo', 'r.*')
+        ->where('pe.id_periodo', $id_periodo);
     }
 }

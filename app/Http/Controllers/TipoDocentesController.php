@@ -69,10 +69,10 @@ class TipoDocentesController extends Controller
     public function edit($id)
     {
         try {
-            return view('tipoDocentes.modificacion',$this->show($id));   
+            return view('tipoDocentes.modificacion', $this->show($id));
         } catch (ModelNotFoundException $e) {
             return json_encode('El dato no existe o no tiene permiso para verlo.');
-        }     
+        }
     }
 
     /**
@@ -91,7 +91,7 @@ class TipoDocentesController extends Controller
             return json_encode($e->getMessage());
         } catch (QueryException $e) {
             return json_encode($e->getMessage());
-        }    
+        }
     }
 
     /**
@@ -151,7 +151,7 @@ class TipoDocentesController extends Controller
 
                 return $accion == 'agregar'?$agregar:$editar;
             }
-            )
+        )
         ->make(true);
-    }    
+    }
 }

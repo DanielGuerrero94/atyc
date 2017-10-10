@@ -52,7 +52,6 @@ class GetLogCommand extends Command
         }
 
         if ($this->option('complete')) {
-
             if ($this->option('model') === 'all') {
                 system(
                     "grep 'crear' {$folder}/{$log_file_name} > {$folder}/create-{$day}.log"
@@ -79,9 +78,7 @@ class GetLogCommand extends Command
                 );
 
                 $this->info("CRUD json file created for {$model}");
-            }          
-
-        }       
-
+            }
+        }
     }
 }

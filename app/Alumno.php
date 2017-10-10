@@ -32,10 +32,10 @@ class Alumno extends Model
      *
      * @var array
      */
-    /*protected $fillable = ['nombres', 'apellidos', 'id_tipo_documento', 'nro_doc', 'pais', 'id_genero', 'id_provincia', 'localidad', 'id_trabajo', 'tipo_organismo', 'organismo', 'tipo_convenio', 'efector', 'establecimiento', 'id_funcion']; */ 
-    protected $fillable = ['nombres', 'apellidos', 'id_tipo_documento', 'nro_doc', 'id_genero', 'id_provincia', 'localidad', 'id_trabajo', 'id_funcion'];  
+    /*protected $fillable = ['nombres', 'apellidos', 'id_tipo_documento', 'nro_doc', 'pais', 'id_genero', 'id_provincia', 'localidad', 'id_trabajo', 'tipo_organismo', 'organismo', 'tipo_convenio', 'efector', 'establecimiento', 'id_funcion']; */
+    protected $fillable = ['nombres', 'apellidos', 'id_tipo_documento', 'nro_doc', 'id_genero', 'id_provincia', 'localidad', 'id_trabajo', 'id_funcion'];
 
-    protected $hidden = ['pivot'];    
+    protected $hidden = ['pivot'];
 
     public function cursos()
     {
@@ -108,28 +108,28 @@ class Alumno extends Model
     }
 
     /**
-     * Define si tiene que buscar solo para la provincia 
-     * de la que es el usuario o buscar para todas 
-     * 
+     * Define si tiene que buscar solo para la provincia
+     * de la que es el usuario o buscar para todas
+     *
      */
     public function scopeSegunProvincia($query)
     {
         $id_provincia = Auth::user()->id_provincia;
-        if ($id_provincia != 25) {           
+        if ($id_provincia != 25) {
             return $query->where('alumnos.id_provincia', $id_provincia);
         }
     }
 
     /**
-     * Si hace el join con la provincia o no 
-     * 
+     * Si hace el join con la provincia o no
+     *
      */
     public function scopeMostrarProvincia($query)
     {
         //Hasta que no corriga las views para que los datatable no tengan esta columna se le saca el if
         /*if (Auth::user()->id_provincia == 25) {*/
             return $query->leftJoin('sistema.provincias', 'alumnos.id_provincia', '=', 'sistema.provincias.id_provincia')
-            ->select('sistema.provincias.nombre as provincia');            
+            ->select('sistema.provincias.nombre as provincia');
             /*}*/
-        }
     }
+}

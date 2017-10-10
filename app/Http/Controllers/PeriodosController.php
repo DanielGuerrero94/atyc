@@ -18,7 +18,7 @@ class PeriodosController extends Controller
     public function index()
     {
         return view('periodos');
-    }    
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -39,7 +39,7 @@ class PeriodosController extends Controller
     public function store(Request $request)
     {
         try {
-            return Periodo::create($request->only(['nombre','desde','hasta']));            
+            return Periodo::create($request->only(['nombre','desde','hasta']));
         } catch (Illuminate\Database\QueryException $e) {
             return json_encode($e->message);
         }
@@ -56,7 +56,7 @@ class PeriodosController extends Controller
         try {
             return array(
                 'periodo' => Periodo::findOrFail($id)
-                );            
+                );
         } catch (ModelNotFoundException $e) {
             return json_encode($e->message);
         }
@@ -70,7 +70,7 @@ class PeriodosController extends Controller
      */
     public function edit($id)
     {
-        return view('periodos.modificar',$this->show($id));
+        return view('periodos.modificar', $this->show($id));
     }
 
     /**
@@ -136,7 +136,7 @@ class PeriodosController extends Controller
 
                 return $accion == 'agregar'?$agregar:$editar;
             }
-            )
+        )
         ->make(true);
     }
 }

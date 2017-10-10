@@ -35,7 +35,7 @@ class Logging
         $duration = $this->end - $this->start;
 
         //Le saco el http://*/atyc/public
-        $url = substr($request->url(),strpos($request->url(),'atyc')+12);
+        $url = substr($request->url(), strpos($request->url(), 'atyc')+12);
         $method = $request->getMethod();
         $ip = $request->getClientIp();
         $user = $request->user();
@@ -43,7 +43,7 @@ class Logging
         $json = array(
             'ip' => $ip,
             'userid' => $user->id,
-	        'username' => $user->name,
+            'username' => $user->name,
             'method' => $method,
             'url' => $url,
             'query' => $request->all(),

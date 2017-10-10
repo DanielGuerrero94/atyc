@@ -46,21 +46,21 @@ class DashboardController extends Controller
     {
         return array(
             'porcentajeTematica' => $this->porcentajeTematica()
-            );            
+            );
     }
 
     public function areas()
     {
         return array(
             'accionesPorAnioYMes' => $this->accionesPorAnioYMes()
-            );    
+            );
     }
 
     public function heats()
     {
         return array(
             'accionesReportadas' => $this->accionesInformadasEsteAnio()
-            );        
+            );
     }
 
     public function trees()
@@ -68,7 +68,7 @@ class DashboardController extends Controller
         return array(
             'accionesPorTipologia' => $this->accionesPorTipologia(),
             'accionesPorTematica' => $this->accionesPorTematica()
-            );            
+            );
     }
 
     private function getCountTable($table)
@@ -90,16 +90,16 @@ class DashboardController extends Controller
             function ($carry, $value) {
                 return $carry + $value->value;
             }
-            );
+        );
 
         $data = array();
 
         $cursos->each(
             function ($value, $item) use ($total, &$data) {
-                $array = array('name' => $value->label,'y' => round($value->value * 100 / $total,2));
+                $array = array('name' => $value->label,'y' => round($value->value * 100 / $total, 2));
                 array_push($data, $array);
             }
-            );
+        );
 
         return array(
             array(
@@ -122,7 +122,7 @@ class DashboardController extends Controller
 
         return collect($acciones)
         ->groupBy('anio')
-        ->map(function ($acciones,$anio) use (&$colores){
+        ->map(function ($acciones, $anio) use (&$colores) {
             return array(
                 'name' => $anio,
                 'data' => array_map(function ($dato) {
@@ -145,7 +145,7 @@ class DashboardController extends Controller
         $contadorColores = 0;
 
         return collect($acciones)
-        ->map(function ($accion) use (&$contadorColores){
+        ->map(function ($accion) use (&$contadorColores) {
             $contadorColores++;
             return array(
                 'name' => $accion->tipo,
@@ -168,7 +168,7 @@ class DashboardController extends Controller
         $contadorColores = 0;
 
         return collect($acciones)
-        ->map(function ($accion) use (&$contadorColores){
+        ->map(function ($accion) use (&$contadorColores) {
             $contadorColores++;
             return array(
                 'name' => $accion->tematica,

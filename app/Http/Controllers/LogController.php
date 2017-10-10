@@ -27,7 +27,7 @@ class LogController extends Controller
                     'path' => request()->path(),
                     'request' => request()->all(),
                     'user' => Auth::guest()?'guest':Auth::user()
-                ]    
+                ]
             )
         );
 

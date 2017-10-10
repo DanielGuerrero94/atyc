@@ -28,11 +28,10 @@ class CacheRefresh
     {
         logger(json_encode($event));
 
-        if($event->key == 'trabajos'){
+        if ($event->key == 'trabajos') {
             logger('tiro count a la tabla');
             logger($event->value->count());
             logger(json_encode($event));
         }
-        
     }
 }

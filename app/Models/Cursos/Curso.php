@@ -120,6 +120,6 @@ class Curso extends Model
 
     public function getFechaAttribute($value)
     {
-        return implode('/', array_reverse(explode("-",$value)));
+        return implode('/', array_reverse(explode("-", $value)));
     }
 }

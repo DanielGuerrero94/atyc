@@ -34,7 +34,7 @@ class ViewMakeCommand extends GeneratorCommand
      *
      * @return string
      */
-    protected function getStub() 
+    protected function getStub()
     {
         return __DIR__.'/stubs/model.stub';
     }
@@ -42,7 +42,7 @@ class ViewMakeCommand extends GeneratorCommand
     /**
      * Default files.
      * Deberia agregarle los stub.
-     * 
+     *
      * @var array
      */
     protected $filenames = ['abm','alta','baja','modificacion','filtros'];

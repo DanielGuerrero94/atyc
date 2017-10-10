@@ -13,13 +13,13 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        \App\Console\Commands\ControllerTestMakeCommand::class,                
+        \App\Console\Commands\ControllerTestMakeCommand::class,
         \App\Console\Commands\EntityMakeCommand::class,
         \App\Console\Commands\GetFileCommand::class,
         \App\Console\Commands\GetLogCommand::class,
         \App\Console\Commands\ViewMakeCommand::class,
         \App\Console\Commands\GetLogCommand::class,
-        \App\Console\Commands\RecreateRequestCommand::class,        
+        \App\Console\Commands\RecreateRequestCommand::class,
         \App\Console\Commands\Test::class,
     ];
 
@@ -31,12 +31,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(function (){
+        $schedule->call(function () {
             $path = env('APP_PATH').'storage/exports/*';
             system("rm {$path}");
         })->everyMinute();
 
-        $schedule->call(function (){
+        $schedule->call(function () {
             system('date=$(date +%T); file="$date.txt"; echo $file | xargs touch');
         })->everyMinute();
     }

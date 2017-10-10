@@ -101,7 +101,7 @@ class ProfesoresController extends AbmController
                     'status' => false,
                     'error' => $v->errors()
                     )
-                );
+            );
         }
     }
 
@@ -122,7 +122,7 @@ class ProfesoresController extends AbmController
                 $nombre_pais = $pais->nombre;
             }
             $profesor = array('profesor' => $profesor,'pais' => $nombre_pais);
-            return array_merge($profesor, $this->getSelectOptions());            
+            return array_merge($profesor, $this->getSelectOptions());
         } catch (ModelNotFoundException $e) {
             return json_encode($e->message);
         }
@@ -150,7 +150,7 @@ class ProfesoresController extends AbmController
     {
         logger('Quiere actualizar docente {$id} con: '.json_encode($request->all()));
         try {
-            $profesor = Profesor::findOrFail($id);            
+            $profesor = Profesor::findOrFail($id);
             if ($request->id_tipo_doc === '6' || $request->id_tipo_doc === '5') {
                 $request->pais = Pais::select('id')->where('nombre', '=', $request->pais)->get('id')->first();
                 $request->pais = $request->pais['id'];
@@ -158,7 +158,7 @@ class ProfesoresController extends AbmController
             return $profesor->modificar($request);
         } catch (ModelNotFoundException $e) {
             return json_encode($e->message);
-        }        
+        }
     }
 
     /*ebsas1
@@ -207,7 +207,7 @@ class ProfesoresController extends AbmController
             'sistema.profesores.tel',
             'sistema.profesores.cel',
             'sistema.tipos_docentes.nombre as tipo_docente'
-            );
+        );
 
         foreach ($filtros as $key => $value) {
             if ($key == 'nombres' || $key == 'apellidos' || $key == 'email') {
@@ -223,7 +223,7 @@ class ProfesoresController extends AbmController
     public function getFiltrado(Request $r)
     {
         $filtros = collect($r->get('filtros'))
-            ->mapWithKeys(function ($item){   
+            ->mapWithKeys(function ($item) {
                 return [$item['name'] => $item['value']] ;
             });
 
@@ -260,7 +260,7 @@ class ProfesoresController extends AbmController
 
                 return $accion == 'agregar'?$agregar:$editarYEliminar;
             }
-            )
+        )
         ->make(true);
     }
 
@@ -298,7 +298,7 @@ class ProfesoresController extends AbmController
             function ($item, $key) {
                 return array('id' => $item->id_profesor,'nombres' => $item->nombres,'apellidos' => $item->apellidos,'documentos' => $item->nro_doc);
             }
-            );
+        );
         return $this->typeaheadResponse($profesor);
     }
 
@@ -315,7 +315,7 @@ class ProfesoresController extends AbmController
     public function getExcel(Request $r)
     {
         $filtros = collect($r->get('filtros'))
-            ->mapWithKeys(function ($item){   
+            ->mapWithKeys(function ($item) {
                 return [$item['name'] => $item['value']] ;
             });
 
@@ -332,9 +332,9 @@ class ProfesoresController extends AbmController
                         $sheet->setHeight(1, 20);
                         $sheet->loadView('excel.profesores', $datos);
                     }
-                    );
+                );
             }
-            )
+        )
         ->store('xls');
 
         return $path;
@@ -353,7 +353,7 @@ class ProfesoresController extends AbmController
     public function getPDF(Request $r)
     {
         $filtros = collect($r->get('filtros'))
-            ->mapWithKeys(function ($item){   
+            ->mapWithKeys(function ($item) {
                 return [$item['name'] => $item['value']] ;
             });
 
@@ -370,7 +370,7 @@ class ProfesoresController extends AbmController
                 array_push($profesor, $item->nro_doc);
                 return $profesor;
             }
-            );
+        );
 
         return Pdf::save($header, $column_size, 14, $mapped);
     }
@@ -386,6 +386,6 @@ class ProfesoresController extends AbmController
         return json_encode(
             Profesor::where('nro_doc', $documento)
             ->get()->count() != 0
-            );
+        );
     }
 }

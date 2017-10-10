@@ -14,7 +14,7 @@ class ProvinciasController extends Controller
      */
     public function index()
     {
-        return json_encode(Provincia::all());
+        return Provincia::all();
     }
 
     /**
@@ -34,20 +34,20 @@ class ProvinciasController extends Controller
             'status' => true,
             'error' => null,
             'data' => array(
-                'localidades' => $this->getLocalidades($r->id_provincia,$r->q)
+                'localidades' => $this->getLocalidades($r->id_provincia, $r->q)
                 )
             );
     }
 
-    public function getLocalidades($id_provincia,$typed)
+    public function getLocalidades($id_provincia, $typed)
     {
         $query = \DB::table('geo.localidades')
-        ->select('id','nombre_localidad')
-        ->where('nombre_localidad','ilike','%'.$typed.'%');
+        ->select('id', 'nombre_localidad')
+        ->where('nombre_localidad', 'ilike', "%{$typed}%");
 
-        if ($id_provincia != 0){
+        if ($id_provincia != 0) {
             $id_provincia = $id_provincia < 10?"0".strval($id_provincia):strval($id_provincia);
-            $query = $query->where('id_provincia',$id_provincia);
+            $query = $query->where('id_provincia', $id_provincia);
         }
 
         return $query->get()->toArray();

@@ -41,14 +41,14 @@ class RecreateRequestCommand extends Command
      */
     public function handle()
     {
-        $f = fopen(env('APP_PATH').'storage/logs/production/create-participante-2017-09-08.log','r');
-        $json_request = json_decode(fgets($f),1);
+        $f = fopen(env('APP_PATH').'storage/logs/production/create-participante-2017-09-08.log', 'r');
+        $json_request = json_decode(fgets($f), 1);
         $c = new \App\Http\Controllers\AlumnosController();
         $requests = [];
         while ($json_request) {
             $r = new \Illuminate\Http\Request($json_request);
             array_push($requests, $r);
-            $json_request = json_decode(fgets($f),1);
+            $json_request = json_decode(fgets($f), 1);
         }
 
         foreach ($requests as $request) {

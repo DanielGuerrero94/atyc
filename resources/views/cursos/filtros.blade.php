@@ -11,21 +11,18 @@
 	<div class="box-body">
 		<form id="form-filtros">
 			<div class="row">
-
 				<div class="form-group col-sm-4">  		  		
 					<label for="nombre" class="control-label col-xs-5">Nombre</label>
 					<div class="col-xs-7">
 						<input class="form-control" id="nombre" name="nombre">
 					</div>
 				</div>						
-
 				<div class="form-group col-sm-4">  		  		
 					<label for="duracion" class="control-label col-xs-5">Duracion</label>
 					<div class="col-xs-7">
 						<input class="form-control" id="duracion" name="duracion" type="number">
 					</div>
 				</div>			
-
 				<div class="form-group col-sm-4">  		  		
 					<label for="edicion" class="control-label col-xs-5">Edicion</label>
 					<div class="col-xs-7">
@@ -56,7 +53,6 @@
 						</select>          
 					</div>
 				</div>
-
 				<div class="form-group col-sm-4">          
 					<label class="control-label col-xs-5" for="area_tematica">Areas Tematicas:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
@@ -77,8 +73,7 @@
 						<select class="form-control" id="periodo">
 							<option data-id="0" title="Todos los períodos">Todos los períodos</option>
 							@foreach ($periodos as $periodo)
-
-							<option data-id="{{$periodo->id_periodo}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>									
+							<option data-id="{{$periodo->id_periodo}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>
 							@endforeach
 						</select>
 					</div>

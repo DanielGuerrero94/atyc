@@ -50,7 +50,6 @@ class GestoresController extends Controller
     {
         try {
             $gestor = User::findOrFail($id);
-
         } catch (ModelNotFoundException $e) {
             $gestor = null;
         }
