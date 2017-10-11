@@ -6,6 +6,7 @@
           <li class="active"><a href="#inicial" data-toggle="tab">Inicial</a></li>
           <li><a href="#alumnos" data-toggle="tab">Participantes</a></li>
           <li><a href="#profesores" data-toggle="tab">Docentes</a></li>
+          <li class="navbar-right"><div class="btn btn-success store">Guardar</div></li>
         </ul>
         <div class="tab-content">
           <div class="active tab-pane" id="inicial">
@@ -34,7 +35,7 @@
               </div>
               <br>
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">            
+                <div class="form-group col-xs-12 col-md-6">
                   <label for="fecha" class="control-label col-md-4 col-xs-4">Fecha:</label>
                   <div class="input-group date col-md-8 col-xs-6 ">
                     <div class="input-group-addon">
@@ -77,7 +78,7 @@
                   <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
                   <div class="col-md-8 col-xs-9">
                     @if(Auth::user()->id_provincia == 25)
-                    <select class="form-control" id="provincia">
+                    <select class="form-control" id="provincia" name="provincia">
                       @foreach ($provincias as $provincia)                
                       <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>           
                       @endforeach
@@ -95,19 +96,15 @@
           <div class="tab-pane" id="alumnos">   
             @include('alumnos.asignacion')             
           </div>
-          {{-- <div class="tab-pane" id="profesores">
+          <div class="tab-pane" id="profesores">
             @include('profesores.asignacion')
-          </div>   --}}
+          </div>
         </div> 
       </div>      
-    </div>
-    <div class="box-footer">
-      <div class="btn btn-success pull-right store">Guardar</div>             
     </div>
   </div>
 </form>
 
-@section('script')
 <script type="text/javascript">
 
   $(document).ready(function() {
@@ -122,7 +119,7 @@
 
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
 
-    $('#alta #tabla-profesores').on('click','.agregar',function () {
+    $('#alta-accion #tabla-profesores').on('click','.agregar',function () {
 
       var fila = $(this).parent().parent();
       var id = $(this).data('id');
@@ -210,16 +207,17 @@
       return $(element).find(':selected').val() !== "Seleccionar";
     }, "Debe seleccionar alguna opcion");    
 
-    var validator = $('#alta #form-alta').validate({
+    var validator = $('#alta-accion #form-alta').validate({
       rules : {
-        nombre : "required",
+        nombre : {
+          required: true
+        },
         duracion : {
           required: true,
           number: true
         },
         fecha : {
           required: true
-          /*fecha: true*/
         },
         area_tematica: { selecciono : true},
         linea_estrategica: { selecciono : true},
@@ -256,10 +254,10 @@
       }
     });
 
-    $('#alta').on('click','.store',function() {  
-      $('#alta #form-alta .nav-tabs').children().first().children().click();
+    $('#alta-accion').on('click','.store',function() {  
+      $('#alta-accion .nav-tabs').children().first().children().click();
       if(validator.valid()){
-        $('#alta #form-alta').submit(); 
+        $('#alta-accion #form-alta').submit(); 
       }else{
         alert('Hay campos que no cumplen con la validacion.');
       }
@@ -267,4 +265,9 @@
 
   });
 </script>
-@endsection
+
+{{-- Script asignacion alumnos --}}
+@include('alumnos.asignacion-script')
+
+{{-- Script para asignacion de docentes --}}
+@include('profesores.asignacion-script')

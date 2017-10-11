@@ -109,9 +109,9 @@ class CursosController extends AbmController
             ['nombre', '=', $request->nombre],
             ['id_provincia', '=', $request->id_provincia],
         ])
-        ->count();
+        ->count() + 1;
 
-        $data = array_merge($data, ['edicion' => $edicion++]);
+        $data = array_merge($data, ['edicion' => $edicion]);
         $curso = Curso::create($data);
 
         if ($request->has('alumnos')) {
@@ -197,10 +197,16 @@ class CursosController extends AbmController
 
         if ($request->has('alumnos')) {
             $curso->alumnos()->sync(explode(',', $request->get('alumnos')));
+        } else {            
+            logger("Se deja el curso sin participantes");
+            $curso->alumnos()->detach();                
         }
 
         if ($request->has('profesores')) {
-            $curso->profesores()->sync(explode(',', $request->get('profesores')));
+            $curso->profesores()->sync(explode(',', $request->get('profesores')));              
+        } else {            
+            logger("Se deja el curso sin docentes");
+            $curso->profesores()->detach();                
         }
         
         $curso->update($request->all());

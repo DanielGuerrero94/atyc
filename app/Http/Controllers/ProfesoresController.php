@@ -310,7 +310,20 @@ class ProfesoresController extends AbmController
      */
     public function getTypeahead(Request $r)
     {
-        $profesor = Profesor::select('id_profesor', 'nombres', 'apellidos', 'nro_doc')
+        $profesor = Profesor::select('id_profesor', 'nombres', 'apellidos', 'nro_doc');
+
+        if (is_numeric($r->input('q'))) {
+            $profesor = $profesor->where('nro_doc', 'like', $r->input('q') . '%');
+        } else {
+            $nombres = explode(' ', $r->input('q'));
+
+            foreach ($nombres as $key => $value) {
+                $profesor = $profesor->orWhere('nombres', 'ilike', "%{$value}%")
+                ->orWhere('apellidos', 'ilike', "%{$value}%");
+            }
+        }
+
+        $profesor = $profesor
         ->get()
         ->map(
             function ($item, $key) {

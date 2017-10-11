@@ -460,3 +460,4 @@
 
 </script>
 @endsection
+@stack('more-scripts')

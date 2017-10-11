@@ -361,9 +361,9 @@ class AlumnosController extends AbmController
         } else {
             $nombres = explode(' ', $r->input('q'));
 
-            foreach ($nombres as $key => $nombre) {
-                $alumno = $alumno->orWhere('nombres', 'ilike', "%{$nombre}%")
-                ->orWhere('apellidos', 'ilike', "%{$nombre}%");
+            foreach ($nombres as $key => $value) {
+                $alumno = $alumno->orWhere('nombres', 'ilike', "%{$value}%")
+                ->orWhere('apellidos', 'ilike', "%{$value}%");
             }
         }
 
