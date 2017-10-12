@@ -1,9 +1,9 @@
 <form id="form-alta">
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
-      <li class="active"><a href="#inicial" data-toggle="tab">Inicial</a></li>
-      <li><a href="#alumnos" data-toggle="tab">Participantes</a></li>
-      <li><a href="#profesores" data-toggle="tab">Docentes</a></li>
+      <li id="tab-accion" class="active"><a href="#inicial" data-toggle="tab">Inicial</a></li>
+      <li id="tab-participante"><a href="#alumnos" data-toggle="tab">Participantes</a></li>
+      <li id="tab-docente"><a href="#profesores" data-toggle="tab">Docentes</a></li>
       <li class="navbar-right"><div class="btn btn-success store">Guardar</div></li>
     </ul>
     <div class="tab-content">
@@ -111,6 +111,30 @@
       format: 'dd/mm/yyyy',
       language: 'es',
       autoclose: true,
+    });
+
+    $('.container-fluid').on('click', '.nav-tabs #tab-participante', function(event) {
+      event.preventDefault();
+
+      jQuery('<li/>', {
+        id: 'tab-tutorial',
+        class: 'navbar-right'
+      }).appendTo('.container-fluid .nav-tabs');
+
+      jQuery('<a/>', {
+        id: 'tutorial-alta-inline',
+        class: 'fa fa-question-circle-o',
+        href: '#',
+        title: 'Tutorial',
+        css: 'text-decoration: none;',
+        html: ' Tutorial '
+      }).appendTo('.container-fluid #tab-tutorial');
+
+    });
+
+    $('.container-fluid').on('click', '.nav-tabs #tab-accion,.nav-tabs #tab-docente', function(event) {
+      event.preventDefault();
+      $('#tab-tutorial').remove();
     });
 
     $(".js-example-basic-single").select2();    

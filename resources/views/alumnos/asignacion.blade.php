@@ -13,9 +13,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
-					<a href="#" onclick="event.preventDefault()" id="tutorial-alta-inline" title="Tutorial" class="pull-right fa fa-question-circle-o" style="text-decoration: none;"> Tutorial </a>
-					</div>
 				</div>
 			</form>
 		</div>	

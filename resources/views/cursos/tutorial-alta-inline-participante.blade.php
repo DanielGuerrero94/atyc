@@ -12,6 +12,7 @@ $('.container-fluid').on('click', '#tutorial-alta-inline', function(event) {
 			title: "Asignacion participante",
 			content: "Si el participante no se encuentra lo puede crear sin perder el estado actual de la creacion de la accion.",
 			placement: 'bottom',
+			prev: -1,
 			onShown: function () {
 				$('#busqueda-participantes input').val('Cualquier participante que no exista.');
 				$('#busqueda-participantes .alumnos_typeahead').trigger(jQuery.Event("input"));
@@ -24,13 +25,15 @@ $('.container-fluid').on('click', '#tutorial-alta-inline', function(event) {
 			element: ".container-fluid",
 			title: "Creacion de participante",
 			content: "Puede crear el participante en este formulario.",
-			placement: 'left'
+			placement: 'left',
+			prev: -1
 		},
 		{
 			element: ".container-fluid #alta #form-alta #crear",
 			title: "Creacion de participante",
 			content: "Al crear el participante volvera a la carga de la accion.",
 			placement: 'top',
+			prev: -1,
 			onNext: function () {
 				$('.container-fluid #alta #form-alta #volver').click();
 			}
@@ -39,7 +42,8 @@ $('.container-fluid').on('click', '#tutorial-alta-inline', function(event) {
 			element: "#alta-accion",
 			title: "Asignacion de participante",
 			content: "El participante creado se asigna directamente a la accion.",
-			placement: 'top'
+			placement: 'top',
+			prev: -1
 		}
 		],		
 		onStart: function () {
