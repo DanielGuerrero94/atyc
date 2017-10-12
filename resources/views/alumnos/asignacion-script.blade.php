@@ -17,7 +17,8 @@
       return '<tr><td> <b>Nombre: </b>'+item.nombres+' '+item.apellidos+' -- <b>Documento: </b> '+item.documentos+'</td></tr>';
     },
     emptyTemplate: function(){
-      return '<tr><td><span>Crear participante <div class="btn btn-xs btn-default" id="alta_participante_dialog"><i class="fa fa-plus text-green"></i></div></span></td></tr>';
+      /*return '<tr><td><span>Crear participante <div class="btn btn-xs btn-default" id="alta_participante_dialog"><i class="fa fa-plus text-green"></i></div></span></td></tr>';*/
+      return '<tr><td><a href="{{url('alumnos')}}"><i class="fa fa-plus text-green"></i><span>Crear participante</span></a></td></tr>';
     },
     source: {
       Nombres: {

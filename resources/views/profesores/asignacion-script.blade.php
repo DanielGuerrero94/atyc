@@ -26,7 +26,7 @@
       },
       dropdownFilter: "Filtro",
       emptyTemplate: function(){
-        return '<tr><td><a href="profesores"><i class="fa fa-plus text-green"></i><span>Crear docente</span></a></td></tr>';
+        return '<tr><td><a href="{{url('profesores')}}"><i class="fa fa-plus text-green"></i><span>Crear docente</span></a></td></tr>';
       },
       source: {
         Nombres: {
