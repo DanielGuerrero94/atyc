@@ -116,7 +116,7 @@
 					<div class="col-xs-8">
 						<select class="form-control" id="tipo_organismo" name="organismo">
 
-							<option>Seleccionar</option>
+							<option value="0">Seleccionar</option>
 
 							@foreach ($organismos as $organismo)
 
@@ -531,10 +531,10 @@
 	};
 	
 	function getSelected() {
-		var id_tipo_documento = $('#form-alta #id_tipo_documento :selected').data('id');
-		var id_provincia = $('#form-alta #provincia :selected').data('id');
-		var id_trabajo = $('#form-alta #trabaja_en :selected').data('id');
-		var id_funcion = $('#form-alta #funcion :selected').data('id');
+		var id_tipo_documento = $('#alta #form-alta #id_tipo_documento :selected').data('id');
+		var id_provincia = $('#alta #form-alta #provincia :selected').data('id');
+		var id_trabajo = $('#alta #form-alta #trabaja_en :selected').data('id');
+		var id_funcion = $('#alta #form-alta #funcion :selected').data('id');
 		
 		return [
 		{	
@@ -556,7 +556,7 @@
 	}
 	
 	function getInput() {					
-		return $.merge($('#form-alta').serializeArray(),getSelected());
+		return $.merge($('#alta #form-alta').serializeArray(),getSelected());
 	}						
 	
 	jQuery.validator.addMethod("selecciono", function(value, element) {
@@ -567,16 +567,19 @@
 	var esNumero = new RegExp(/^[1-9]\d*$/i);	
 	
 		//Pregunta si el alta se esta dando desde el abm de participantes o desde el de acciones
-		if ($('#cargando-participante').length) {
+		if ($('.container-fluid #creando-participante').length) {
 
 			function backToCreate () {
+				$('.container-fluid #creando-participante').remove();
 				$('.container-fluid #alta-accion').closest('.row').show();
-				$('.container-fluid #creando-participante').empty();
-				$('.container-fluid #alta').empty();
+				$('.container-fluid #alta').remove();
 			}
 			
 			function transitionAfterSubmit(data) {
-				alert(data);
+				$('.container-fluid #creando-participante').remove();
+				$('.container-fluid #alta-accion').closest('.row').show();
+				$('.container-fluid #alta').remove();
+				agregarParticipante(data.data.nombres, data.data.apellidos, data.data.nro_doc, data.data.id_alumno);
 			}
 
 		} else {
@@ -594,6 +597,36 @@
 		}	
 		
 		$("#alta").on("click","#volver",backToCreate);
+
+		function agregarParticipante(nombres, apellidos, documentos, id) {
+			alumno = '<tr>'+
+			'<td>'+nombres+'</td>'+
+			'<td>'+apellidos+'</td>'+
+			'<td>'+documentos+'</td>'+
+			'<td>'+
+			'<div class="btn btn-xs btn-info "><a href="{{url('/alumnos')}}/'+id+'"><i class="fa fa-search" data-id="'+id+'"></i></a></div>'+
+			'<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>'+
+			'</td>'+
+			'</tr>';
+			existe = false;
+
+			$.each($('#alumnos-del-curso tbody tr .fa-search'),function(k,v){
+				if($(v).data('id') == id){
+					existe = true;
+				}
+			});
+
+			if(!existe){
+				$('#alumnos-del-curso tbody').append(alumno);     
+				$('#alumnos-del-curso').closest('div').show();
+				refreshCounter();
+			}
+		}
+
+		function refreshCounter() {
+			let count = $('#alumnos-del-curso tbody').children().length;
+			$('#contador-participantes').html(count);
+		}
 		
 		var validator = $('#alta #form-alta').validate({
 			onfocusout: function () {

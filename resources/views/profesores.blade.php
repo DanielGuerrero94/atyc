@@ -2,7 +2,6 @@
 
 @section('content')
 <div class="container-fluid">
-	<!-- <button type="button" class="btn btn-default" id="tutorial">Tutorial</button> -->
 	<div class="row">		
 		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
 			@include('profesores.filtros')
@@ -32,7 +31,7 @@
 
 	$(document).ready(function(){		
 
-		@include('profesores.tutorial-base.blade.php')
+		@include('profesores.tutorial-base')
 
 		$('#abm').on('click','.filter',function () {			
 			$('#filtros .box').show();

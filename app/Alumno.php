@@ -104,7 +104,7 @@ class Alumno extends Model
         $r->establecimiento:null;
 
         $alumno->save();
-        return $alumno->id_alumno;
+        return $alumno;
     }
 
     /**

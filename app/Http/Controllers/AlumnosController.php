@@ -163,8 +163,9 @@ class AlumnosController extends AbmController
                 }
             }
             $alumno = Alumno::crear($request);
-            return response(['message' => 'Se creo'], 200);
+            return response(['message' => 'Se creo','data' => $alumno->toArray()], 200);
         } else {
+            Log::warning("No se pudo crear el alumno: ".json_encode($v->errors()));
             return response($v->errors(), 400);
         }
     }

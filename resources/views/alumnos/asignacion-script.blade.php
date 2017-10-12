@@ -17,8 +17,8 @@
       return '<tr><td> <b>Nombre: </b>'+item.nombres+' '+item.apellidos+' -- <b>Documento: </b> '+item.documentos+'</td></tr>';
     },
     emptyTemplate: function(){
-      /*return '<tr><td><span>Crear participante <div class="btn btn-xs btn-default" id="alta_participante_dialog"><i class="fa fa-plus text-green"></i></div></span></td></tr>';*/
-      return '<tr><td><a href="{{url('alumnos')}}"><i class="fa fa-plus text-green"></i><span>Crear participante</span></a></td></tr>';
+      return '<tr><td><span>Crear participante <div class="btn btn-xs btn-default" id="alta_participante_dialog"><i class="fa fa-plus text-green"></i></div></span></td></tr>';
+      /*return '<tr><td><a href="{{url('alumnos')}}"><i class="fa fa-plus text-green"></i><span>Crear participante</span></a></td></tr>';*/
     },
     source: {
       Nombres: {
@@ -78,23 +78,27 @@
         console.log('Typeahead Initiated on ' + node.selector);
       },
       onClick: function (node, a, item, event) {
-        console.log(node);
-        console.log(a);
-        console.log(item);
-        console.log(event);
-        alumno = '<tr>'+
-        '<td>'+item.nombres+'</td>'+
-        '<td>'+item.apellidos+'</td>'+
-        '<td>'+item.documentos+'</td>'+
+        agregarParticipante(item.nombres, item.apellidos, item.documentos, item.id);        
+        $('#alumnos .alumnos_typeahead').val('');
+      }
+    },
+    debug: true
+  }); 
+
+  function agregarParticipante(nombres, apellidos, documentos, id) {
+    alumno = '<tr>'+
+        '<td>'+nombres+'</td>'+
+        '<td>'+apellidos+'</td>'+
+        '<td>'+documentos+'</td>'+
         '<td>'+
-        '<div class="btn btn-xs btn-info "><a href="{{url('/alumnos')}}/'+item.id+'"><i class="fa fa-search" data-id="'+item.id+'"></i></a></div>'+
+        '<div class="btn btn-xs btn-info "><a href="{{url('/alumnos')}}/'+id+'"><i class="fa fa-search" data-id="'+id+'"></i></a></div>'+
         '<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>'+
         '</td>'+
         '</tr>';
         existe = false;
         
         $.each($('#alumnos-del-curso tbody tr .fa-search'),function(k,v){
-          if($(v).data('id') == item.id){
+          if($(v).data('id') == id){
             existe = true;
           }
         });
@@ -104,11 +108,7 @@
           $('#alumnos-del-curso').closest('div').show();
           refreshCounter();
         }
-        $('#alumnos .alumnos_typeahead').val('');
-      }
-    },
-    debug: true
-  }); 
+  }
   
   $('.container-fluid').on('click', '#alta_participante_dialog', function(event) {
     event.preventDefault();
