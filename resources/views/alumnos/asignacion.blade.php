@@ -8,7 +8,7 @@
 						<div class="typeahead__container col-xs-10 col-sm-10 col-md-10 col-lg-10">
 							<div class="typeahead__field">             
 								<span class="typeahead__query">
-									<input class="alumnos_typeahead form-control" name="alumno" type="search" placeholder="Número de documento, nombres, apellido -- Min 4 caracteres" autocomplete="off" id="alumno"/>
+									<input class="alumnos_typeahead form-control" name="alumno" type="search" placeholder="Número de documento, nombres, apellido -- Min 3 caracteres" autocomplete="off" id="alumno"/>
 								</span>
 							</div>
 						</div>

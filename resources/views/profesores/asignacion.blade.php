@@ -3,15 +3,15 @@
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form role="form">
 				<div class="row" id="busqueda-docentes">
-					<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">          
+					<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">  
 						<label for="profesor" class="control-label col-xs-2 col-sm-2 col-md-2 col-lg-2">Buscar docente:</label>
 						<div class="typeahead__container col-xs-10 col-sm-10 col-md-10 col-lg-10">
 							<div class="typeahead__field">             
 								<span class="typeahead__query">
-									<input class="profesores_typeahead form-control" name="profesor" type="search" placeholder="Nombre, Apellido, Número de documento" autocomplete="off" id="profesor">
+									<input class="profesores_typeahead form-control" name="profesor" type="search" placeholder="Número de documento, nombres, apellido -- Min 3 caracteres" autocomplete="off" id="profesor">
 								</span>
 							</div>
-						</div>
+						</div> 
 					</div> 
 				</div>
 			</form>

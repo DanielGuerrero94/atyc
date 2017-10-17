@@ -6,7 +6,7 @@
   $.typeahead({
     input: '.alumnos_typeahead',
     maxItem: 10,
-    minLength: 4,
+    minLength: 3,
     order: "desc",
     dynamic: true,
     delay: 400,
@@ -14,11 +14,10 @@
       "background-color": "#fff"
     },
     template: function (query, item) {
-      return '<tr><td> <b>Nombre: </b>'+item.nombres+' '+item.apellidos+' -- <b>Documento: </b> '+item.documentos+'</td></tr>';
+      return '<tr><td><b>Nombre: </b>'+item.nombres+' '+item.apellidos+' -- <b>Documento: </b>'+item.documentos+'</td></tr>';
     },
     emptyTemplate: function(){
-      return '<tr><td><span>Crear participante <div class="btn btn-xs btn-default" id="alta_participante_dialog"><i class="fa fa-plus text-green"></i></div></span></td></tr>';
-      /*return '<tr><td><a href="{{url('alumnos')}}"><i class="fa fa-plus text-green"></i><span>Crear participante</span></a></td></tr>';*/
+      return '<tr><td><button type="button" class="btn btn-outline" id="alta_participante_dialog"><i class="fa fa-plus text-green"></i><b>  Crear participante </b></button></td></tr>';
     },
     source: {
       Nombres: {

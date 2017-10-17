@@ -7,26 +7,18 @@
     $.typeahead({
       input: '.profesores_typeahead',
       maxItem: 10,
+      minLength: 3,
       order: "desc",
       dynamic: true,
-      delay: 500,
+      delay: 400,
       backdrop: {
         "background-color": "#fff"
       },
       template: function (query, item) {
-        return '<tr>'+        
-        '<td>'+
-        item.nombres+
-        ' '+
-        item.apellidos+
-        ' '+        
-        item.documentos+
-        '</td>'+
-        '</tr>';
+        return '<tr><td>'+item.nombres+' '+item.apellidos+' '+item.documentos+'</td></tr>';
       },
-      dropdownFilter: "Filtro",
       emptyTemplate: function(){
-        return '<tr><td><a href="{{url('profesores')}}"><i class="fa fa-plus text-green"></i><span>Crear docente</span></a></td></tr>';
+        return '<tr><td><button type="button" class="btn btn-outline" id="alta_docente_dialog"><i class="fa fa-plus text-green"></i><b>  Crear docente </b></button></td></tr>';        
       },
       source: {
         Nombres: {
