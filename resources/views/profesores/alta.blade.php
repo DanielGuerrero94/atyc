@@ -1,5 +1,5 @@
 <div class="box box-success">
-	<div class="box-header">Alta de docente</div>
+	<div class="box-header with-border">Alta de docente</div>
 	<div class="box-body">
 		<form id="form-alta">
 			{{ csrf_field() }}
@@ -19,10 +19,10 @@
 				<div class="form-group col-sm-6">
 					<label class="control-label col-xs-4" for="id_tipo_documento">Tipo de Documento:</label>
 					<div class="col-xs-8">
-						<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad">
+						<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" name="id_tipo_documento">
 							@foreach ($tipoDocumento as $documento)
 							
-							<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>					
+							<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}" value="{{$documento->id_tipo_documento}}">{{$documento->nombre}}</option>					
 							@endforeach
 						</select>
 					</div>
@@ -30,7 +30,7 @@
 				<div class="form-group col-sm-6">
 					<label class="control-label col-xs-4" for="nro_doc">Nro doc:</label>
 					<div class="col-xs-8">
-						<input name="nro_doc" type="text" class="form-control" id="nro_doc">
+						<input name="nro_doc" type="number" class="form-control" id="nro_doc">
 					</div>
 				</div>
 
@@ -50,10 +50,10 @@
 				<div class="form-group col-sm-6">
 					<label class="control-label col-xs-4" for="id_tipo_docente">Tipo de docente:</label>
 					<div class="col-xs-8">
-						<select class="form-control" id="id_tipo_docente">
+						<select class="form-control" id="id_tipo_docente" name="id_tipo_docente">
 							@foreach ($tipoDocente as $tipo)
 							
-							<option data-id="{{$tipo->id_tipo_docente}}">{{$tipo->nombre}}</option>				 
+							<option data-id="{{$tipo->id_tipo_docente}}" value="{{$tipo->id_tipo_docente}}">{{$tipo->nombre}}</option>				 
 							
 							@endforeach
 						</select>
@@ -84,8 +84,8 @@
 		</form>
 	</div>
 	<div class="box-footer">
-		<div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo"></i>Volver</div>
-		<button type="submit" class="btn btn-success pull-right" id="crear" title="Alta"><i class="fa fa-plus"></i>Alta</button>
+		<div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo"></i> Volver</div>
+		<button type="submit" class="btn btn-success pull-right" id="crear" title="Alta"><i class="fa fa-plus"></i> Alta</button>
 	</div>
 </div> 
 
@@ -124,54 +124,125 @@
 			}			
 		});
 
-		$('#alta').on("click","#volver",function () {
-			console.log("Vuelve sin crear el profesor");
-			$("#alta").hide();
-			$("#filtros").show();
-			$("#abm").show();
-		});
+		//Pregunta si el alta se esta dando desde el abm de participantes o desde el de acciones
+		if ($('.container-fluid #creando-docente').length) {
 
-		function getSelected() {
-			var id_tipo_documento = $('#form-alta #id_tipo_documento :selected').data('id');
-			var id_tipo_docente = $('#form-alta #id_tipo_docente :selected').data('id');
-			return [{
-				name: 'id_tipo_documento',
-				value: id_tipo_documento
-			},
-			{
-				name: 'id_tipo_docente',
-				value: id_tipo_docente
-			}];
+			function backToCreate () {
+				$('.container-fluid #creando-docente').remove();
+				$('.container-fluid #alta-accion').closest('.row').show();
+				$('.container-fluid #alta').remove();
+			}
+			
+			function transitionAfterSubmit(data) {
+				$('.container-fluid #creando-docente').remove();
+				$('.container-fluid #alta-accion').closest('.row').show();
+				$('.container-fluid #alta').remove();
+				console.log("Se intenta agregar al docente a la accion.");
+				agregarDocente(data.nombres, data.apellidos, data.nro_doc, data.id_profesor);
+			}
+
+		} else {
+
+			function backToCreate () {
+				console.log("Vuelve sin crear al docente");
+				$("#alta").hide();
+				$("#filtros").show();
+				$("#abm").show();
+			}
+			
+			function transitionAfterSubmit(data) {
+				location.reload();
+			}
+			
+		}
+
+		/*Validaciones*/
+		var tieneAlMenosSieteDigitos = new RegExp(/^\d{7,9}$/);
+
+		jQuery.validator.addMethod("noExiste", function(value, element) {
+			console.log(value);
+			console.log(tieneAlMenosSieteDigitos.test(value));
+			if (tieneAlMenosSieteDigitos.test(value)) {
+				let noExiste;
+				$.ajax({
+					async: false,
+					url : 'profesores/documentos',
+					data : {
+						nro_doc: value
+					},
+					success : function(data){
+						noExiste = !data.existe;
+					},
+					error : function(data){
+						alert("Fallo la request ajax para validacion de documento.");
+						noExiste = false;
+					}
+				});
+				return noExiste;				
+			}
+		}, "El documento ya esta registrado.");
+
+		jQuery.validator.addMethod("alMenosSieteDigitos", function(value, element) {
+			return tieneAlMenosSieteDigitos.test(value);
+		}, "El documento tiene que tener al menos siete digitos.");		
+
+		jQuery.validator.addMethod("requerido", function(value, element) {
+			return value != "";
+		}, "Campo obligatorio");	
+
+		$('#alta').on("click","#volver",backToCreate);
+
+		function agregarDocente(nombres, apellidos, documentos, id) {
+			docente = '<tr>'+
+			'<td>'+nombres+'</td>'+
+			'<td>'+apellidos+'</td>'+
+			'<td>'+documentos+'</td>'+
+			'<td>'+
+			'<div class="btn btn-xs btn-info "><a href="{{url('/profesores')}}/'+id+'"><i class="fa fa-search" data-id="'+id+'"></i></a></div>'+
+			'<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>'+
+			'</td>'+
+			'</tr>';
+			existe = false;
+
+			$.each($('#profesores-del-curso tbody tr .fa-search'),function(k,v){
+				if($(v).data('id') == id){
+					existe = true;
+				}
+			});
+
+			if(!existe){
+				console.log("No esta en la tabla entonces se agrega.");
+				$('#profesores-del-curso tbody').append(docente);     
+				$('#profesores-del-curso').closest('div').show();
+				refreshCounter();
+			}
+		}
+
+		function refreshCounter() {
+			let count = $('#profesores-del-curso tbody').children().length;
+			$('#contador-docentes').html(count);
 		}
 
 		function getInput() {					
-			return $.merge($('#form-alta').serializeArray(),getSelected());
+			return $('#alta #form-alta').serializeArray().filter(function(v){return v.value != ""});
 		}
 
 		var validator = $('#alta #form-alta').validate({
 			debug: true,				
 			rules : {
-				nombres : {
-					required: true
-				},
-				apellidos : {
-					required: true
-				},
+				nombres : {required: true},
+				apellidos : {required: true},
 				nro_doc : {
-					required: true,
-					number: true
+					requerido: true,
+					alMenosSieteDigitos: true,
+					noExiste: true
 				},
-				tel : {
-					number: true
-				},
-				cel : {
-					number: true
-				},
+				tel : {number: true},
+				cel : {number: true},
 			},
 			messages:{
 				nombres : "Campo obligatorio",
 				apellidos : "Campo obligatorio",
-				nro_doc : "Tiene que ser un numero",
 				tel : "Tiene que ser un numero",
 				cel : "Tiene que ser un numero"
 			},
@@ -183,56 +254,27 @@
 			{
 				$(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
 			},
-			onfocusout: function () {
-				var form = $('#alta #form-alta');
-				var nro_doc = form.find('#nro_doc');
-
-				if( form.find('#id_tipo_documento').val() == 'DNI' 
-					&& nro_doc.val() != ''
-					&& !nro_doc.closest('.form-group').hasClass('has-success')){
-
-					$.ajax({
-						method : 'get',
-						url : 'profesores/documentos/'+nro_doc.val(),
-						success : function(data){
-							if(data == "true"){
-								console.log("El documento ya esta registrado.");
-								nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
-								if(!nro_doc.parent().find('span').length){
-									nro_doc.parent().append("<span class=\"help-block\">El numero de documento ya esta registrado</span>");	
-								}						
-							}
-							else{
-								nro_doc.parent().find('span').remove();
-								nro_doc.closest('.form-group').removeClass('has-error').addClass('has-success');	
-							}
-						},
-						error : function(data){
-							console.log("Fallo la request ajax para validacion de documento.");
-						}
-					});
+			submitHandler : function(form){
+				$.ajax({
+					url: 'profesores',
+					type: 'POST',						
+					data: getInput(),
+					complete: function(xhr, textStatus) {
+						console.log('ajax complete');
+					},
+					success: function(data, textStatus, xhr) {
+						console.log("Se creo el docente y devolvio: " + data);
+						transitionAfterSubmit(data);
+					},
+					error: function(xhr, textStatus, errorThrown) {
+						alert('No se pudo dar de alta el profesor.');
+					}
+				});
 			}	
-		},
-		submitHandler : function(form){
-			$.ajax({
-				url: 'profesores',
-				type: 'POST',						
-				data: getInput(),
-				complete: function(xhr, textStatus) {
-					console.log('ajax complete');
-				},
-				success: function(data, textStatus, xhr) {
-					console.log('Se creo');
-					location.reload();
-				},
-				error: function(xhr, textStatus, errorThrown) {
-					alert('No se pudo dar de alta el profesor.');
-				}
-			});
-		}	
-	});
+		});
 
-		$('#alta').on('click','#crear',function() {			
+		$('#alta').on('click','#crear',function(e) {
+			e.preventDefault();		
 			if(validator.valid()){
 				$('#alta #form-alta').submit();	
 			}

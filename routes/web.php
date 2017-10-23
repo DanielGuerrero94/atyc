@@ -110,7 +110,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('profesores/filtrado', 'ProfesoresController@getFiltrado');
     Route::get('profesores/excel', 'ProfesoresController@getExcel');
     Route::get('profesores/pdf', 'ProfesoresController@getPdf');
-    Route::get('profesores/documentos/{documento}', 'ProfesoresController@checkDocumentos');
+    Route::get('profesores/documentos', 'ProfesoresController@checkDocumentos');
     Route::get('profesores/typeahead', 'ProfesoresController@getTypeahead');
     Route::get('profesores/{id}', 'ProfesoresController@edit');
 

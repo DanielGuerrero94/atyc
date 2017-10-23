@@ -40,7 +40,7 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">El servidor esta en mantenimiento.</div>
+                <div class="title" style="color: #000000;">El servidor esta en mantenimiento.</div>
             </div>
         </div>
     </body>

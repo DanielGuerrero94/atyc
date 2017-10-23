@@ -159,11 +159,11 @@ class AlumnosController extends AbmController
                 if ($cuie) {
                     $request->efector = $cuie;
                 } else {
-                    return response('No existe el efector', 400);
+                    return response(['error' =>'No existe el efector'], 400);
                 }
             }
             $alumno = Alumno::crear($request);
-            return response(['message' => 'Se creo','data' => $alumno->toArray()], 200);
+            return response(['data' => $alumno->toArray()], 200);
         } else {
             Log::warning("No se pudo crear el alumno: ".json_encode($v->errors()));
             return response($v->errors(), 400);
@@ -187,8 +187,11 @@ class AlumnosController extends AbmController
             $pais = Pais::find($alumno->id_pais);
             $nombre_pais = $pais->nombre;
         }
-        $array = array('alumno' => $alumno,'pais' => $nombre_pais);
-        return array_merge($array, $this->getSelectOptions());
+
+        return [
+            'alumno' => $alumno,
+            'pais' => $nombre_pais
+        ];
     }
 
     /**
@@ -200,7 +203,7 @@ class AlumnosController extends AbmController
     public function edit($id)
     {
         try {
-            return view('alumnos/modificar', $this->show($id));
+            return view('alumnos/modificar', array_merge($this->show($id), $this->getSelectOptions()));
         } catch (ModelNotFoundException $e) {
             return json_encode('El dato no existe o no tiene permiso para verlo.');
         }
@@ -222,7 +225,7 @@ class AlumnosController extends AbmController
             $a = Alumno::findOrFail($id)->update($request->all());
         } else {
             logger(json_encode($v->errors()));
-            return json_encode($v->errors());
+            return $v->errors();
         }
     }
 
@@ -239,7 +242,7 @@ class AlumnosController extends AbmController
             ->findOrFail($id)
             ->delete();
         } catch (ModelNotFoundException $e) {
-            return json_encode($e->message);
+            return $e->message;
         }
     }
 
@@ -355,31 +358,25 @@ class AlumnosController extends AbmController
      */
     public function getApellidos(Request $r)
     {
-        $alumno = Alumno::select('id_alumno', 'nombres', 'apellidos', 'nro_doc');
+        $query = Alumno::select('id_alumno as id', 'nombres', 'apellidos', 'nro_doc as documentos');
 
-        if (is_numeric($r->input('q'))) {
-            $alumno = $alumno->where('nro_doc', 'like', $r->input('q') . '%');
+        $typed = $r->input('q');
+        if (is_numeric($typed)) {
+            $query = $query->whereRaw("nro_doc ~* '^{$typed}'");
         } else {
-            $nombres = explode(' ', $r->input('q'));
+            $nombres = explode(' ', $typed);
 
             foreach ($nombres as $key => $value) {
-                $alumno = $alumno->orWhere('nombres', 'ilike', "%{$value}%")
-                ->orWhere('apellidos', 'ilike', "%{$value}%");
+                $query = $query->orWhereRaw("nombres ~* '{$value}'")
+                ->orWhereRaw("apellidos ~* '{$value}'");
             }
         }
 
-        $alumno = $alumno
+        $matchs = $query
         ->segunProvincia()
-        ->get()
-        ->map(function ($item, $key) {
-            return array(
-                'id' => $item->id_alumno,
-                'nombres' => $item->nombres,
-                'apellidos' => $item->apellidos,
-                'documentos' => $item->nro_doc
-            );
-        });
-        return $this->typeaheadResponse($alumno);
+        ->get();
+
+        return $this->typeaheadResponse($matchs);
     }
 
     /**
@@ -440,7 +437,7 @@ class AlumnosController extends AbmController
 
         foreach ($filtros as $key => $value) {
             if ($this->filters[$key] == 'string') {
-                $query = $query->where('alumnos.alumnos.'.$key, 'ilike', '%'.$value.'%');
+                $query = $query->whereRaw("alumnos.alumnos.{$key} ~* '{$value}'");
             } else {
                 $query = $query->where('alumnos.'.$key, $value);
             }
@@ -464,7 +461,7 @@ class AlumnosController extends AbmController
             $query = $this->queryLogica($r, $filtros, $order_by);
             return $this->toDatatable($r, $query);
         } else {
-            return json_encode($v->errors());
+            return $v->errors();
         }
     }
 
@@ -505,8 +502,6 @@ class AlumnosController extends AbmController
      * Guarda el resultado en un .xls
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  array filtros
-     * @param  array order_by
      * @return \Illuminate\Http\Response
      * @return string path al archivo generado
      */
@@ -545,8 +540,6 @@ class AlumnosController extends AbmController
      * Guarda el resultado en un .pdf
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  array filtros
-     * @param  array order_by
      * @return \Illuminate\Http\Response
      * @return string path al archivo generado
      */
@@ -559,51 +552,55 @@ class AlumnosController extends AbmController
 
         $data = $this->queryLogica($r, $filtros, null)->get();
 
-        $header = array('Nombres','Apellidos','Tipo Doc','Nro Doc');
-        $column_size = array(56,56,20,30,33);
+        $header = ['Nombres','Apellidos','Tipo Doc','Nro Doc'];
 
         if (Auth::user()->id_provincia == 25) {
             array_push($header, 'Provincia');
-            $mapped = $data->map(
+            $data = $data->map(
                 function ($item, $key) {
-                    $alumno = array();
-                    array_push($alumno, $item->nombres);
-                    array_push($alumno, $item->apellidos);
-                    array_push($alumno, $item->id_tipo_documento);
-                    array_push($alumno, $item->nro_doc);
-                    array_push($alumno, $item->provincia);
-                    return $alumno;
+                    return [
+                        $item->nombres,
+                        $item->apellidos,
+                        $item->id_tipo_documento,
+                        $item->nro_doc,
+                        $item->provincia,
+                    ];
                 }
             );
         } else {
-            $mapped = $data->map(
+            $data = $data->map(
                 function ($item, $key) {
-                    $alumno = array();
-                    array_push($alumno, $item->nombres);
-                    array_push($alumno, $item->apellidos);
-                    array_push($alumno, $item->id_tipo_documento);
-                    array_push($alumno, $item->nro_doc);
-                    return $alumno;
+                    return [
+                        $item->nombres,
+                        $item->apellidos,
+                        $item->id_tipo_documento,
+                        $item->nro_doc,
+                    ];
                 }
             );
         }
 
-        return Pdf::save($header, $column_size, 13, $mapped);
+        return $this->toPdf($header,$data);
+    }
+
+    private function toPdf($header,$data)
+    {
+        $column_size = [56,56,20,30,33];
+        return Pdf::save($header, $column_size, 13, $data);
     }
 
     /**
      * Verifica si el numero de documento existe.
      *
-     * @param  string $documento
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function checkDocumentos(Request $r)
     {
-        return array(
+        return [
             'existe' => Alumno::where('nro_doc', $r->input('nro_doc'))
-            ->where('id_tipo_documento', $r->input('id_tipo_documento'))
             ->count() != 0
-        );
+        ];
     }
 
     public function getExcelCompleto(Request $r, $id)

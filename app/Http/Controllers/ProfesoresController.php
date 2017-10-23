@@ -96,17 +96,11 @@ class ProfesoresController extends AbmController
         logger('Quiere crear docente con: '.json_encode($request->all()));
         $v = Validator::make($request->all(), $this->rules);
         
-        if (!$v->fails()) {
-            $profesor = new Profesor();
-            return $profesor->crear($request);
-        } else {
-            return json_encode(
-                array(
-                    'status' => false,
-                    'error' => $v->errors()
-                )
-            );
-        }
+        if ($v->fails()) return response($v->errors(), 400);
+
+        $docente = new Profesor();
+        $docente = $docente->crear($request);
+        return response($docente->toArray(), 200);
     }
 
     /**
@@ -117,19 +111,12 @@ class ProfesoresController extends AbmController
         */
     public function show($id)
     {
-        try {
-            $profesor = Profesor::with(['tipoDocente'])->findOrFail($id);
-            $nombre_pais = null;
-            $id_tipo_documento = $profesor->id_tipo_documento;
-            if ($id_tipo_documento === 6 || $id_tipo_documento === 5) {
-                $pais = Pais::find($profesor->id_pais);
-                $nombre_pais = $pais->nombre;
-            }
-            $profesor = array('profesor' => $profesor,'pais' => $nombre_pais);
-            return array_merge($profesor, $this->getSelectOptions());
-        } catch (ModelNotFoundException $e) {
-            return json_encode($e->message);
-        }
+        $profesor = Profesor::with(['tipoDocente'])->findOrFail($id);
+        $r = [
+            'profesor' => $profesor,
+            'pais' => $profesor->getNombrePais()
+        ];
+        return array_merge($r, $this->getSelectOptions());
     }
 
     /**
@@ -165,30 +152,22 @@ class ProfesoresController extends AbmController
         }
     }
 
-    /*ebsas1
-                1234
-                sistemasuec 
-                $uMaR2017*/
-
     /**
-                * Remove the specified resource from storage.
-                *
-                * @param  int $id
-                * @return \Illuminate\Http\Response
-                */
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
-        try {
-            return Profesor::findOrFail($id)->delete();
-        } catch (ModelNotFoundException $e) {
-            return json_encode($e->message());
-        }
+        return Profesor::findOrFail($id)->delete();
     }
+
     /**
-                    * Devuelve la informacion para abm.
-                    *
-                    * @return \Illuminate\Http\Response
-                    */
+     * Devuelve la informacion para abm.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getTabla(Request $r)
     {
         $query = Profesor::select('id_profesor', 'nombres', 'apellidos', 'nro_doc', 'id_tipo_documento')
@@ -304,34 +283,31 @@ class ProfesoresController extends AbmController
     }
 
     /**
-     * Apellidos de los profesores para el typeahead.
+     * Buscar por numero de documento, nombres y apellidos de los docentes.
      *
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function getTypeahead(Request $r)
     {
-        $profesor = Profesor::select('id_profesor', 'nombres', 'apellidos', 'nro_doc');
+        $query = Profesor::select('id_profesor as id', 'nombres', 'apellidos', 'nro_doc as documentos');
 
-        if (is_numeric($r->input('q'))) {
-            $profesor = $profesor->where('nro_doc', 'like', $r->input('q') . '%');
+        $typed = $r->input('q');
+        if (is_numeric($typed)) {
+            $query = $query->whereRaw("CAST(nro_doc as character varying) ~ '^{$typed}'");
         } else {
-            $nombres = explode(' ', $r->input('q'));
+            $nombres = explode(' ', $typed);
 
             foreach ($nombres as $key => $value) {
-                $profesor = $profesor->orWhere('nombres', 'ilike', "%{$value}%")
-                ->orWhere('apellidos', 'ilike', "%{$value}%");
+                $query = $query->orWhereRaw("nombres ~* '{$value}'")
+                ->orWhereRaw("apellidos ~* '{$value}'");
             }
         }
 
-        $profesor = $profesor
-        ->get()
-        ->map(
-            function ($item, $key) {
-                return array('id' => $item->id_profesor,'nombres' => $item->nombres,'apellidos' => $item->apellidos,
-                    'documentos' => $item->nro_doc);
-            }
-        );
-        return $this->typeaheadResponse($profesor);
+        $matchs = $query
+        ->get();
+
+        return $this->typeaheadResponse($matchs);
     }
 
     /**
@@ -339,10 +315,7 @@ class ProfesoresController extends AbmController
      * Guarda el resultado en un .xls
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  array filtros
-     * @param  array order_by
-     * @return \Illuminate\Http\Response
-     * @return string path al archivo generado
+     * @return \Illuminate\Http\Response string path al archivo generado
      */
     public function getExcel(Request $r)
     {
@@ -377,10 +350,7 @@ class ProfesoresController extends AbmController
      * Guarda el resultado en un .pdf
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  array filtros
-     * @param  array order_by
-     * @return \Illuminate\Http\Response
-     * @return string path al archivo generado
+     * @return \Illuminate\Http\Response string path al archivo generado
      */
     public function getPDF(Request $r)
     {
@@ -395,12 +365,12 @@ class ProfesoresController extends AbmController
 
         $mapped = $data->map(
             function ($item, $key) {
-                $profesor = array();
-                array_push($profesor, $item->nombres);
-                array_push($profesor, $item->apellidos);
-                array_push($profesor, $item->tipo_doc);
-                array_push($profesor, $item->nro_doc);
-                return $profesor;
+                return [
+                    $item->nombres,
+                    $item->apellidos,
+                    $item->tipo_doc,
+                    $item->nro_doc
+                ];
             }
         );
 
@@ -410,14 +380,14 @@ class ProfesoresController extends AbmController
     /**
      * Verifica si el numero de documento existe.
      *
-     * @param  string $documento
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function checkDocumentos($documento)
+    public function checkDocumentos(Request $r)
     {
-        return json_encode(
-            Profesor::where('nro_doc', $documento)
-            ->get()->count() != 0
-        );
+        return [
+            'existe' => Profesor::where('nro_doc', $r->input('nro_doc'))
+            ->count() != 0
+        ];
     }
 }

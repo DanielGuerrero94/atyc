@@ -85,28 +85,32 @@
   }); 
 
   function agregarParticipante(nombres, apellidos, documentos, id) {
+    if(existsInTable(id)) {
+      return;
+    }
+
     alumno = '<tr>'+
-        '<td>'+nombres+'</td>'+
-        '<td>'+apellidos+'</td>'+
-        '<td>'+documentos+'</td>'+
-        '<td>'+
-        '<div class="btn btn-xs btn-info "><a href="{{url('/alumnos')}}/'+id+'"><i class="fa fa-search" data-id="'+id+'"></i></a></div>'+
-        '<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>'+
-        '</td>'+
-        '</tr>';
-        existe = false;
-        
-        $.each($('#alumnos-del-curso tbody tr .fa-search'),function(k,v){
-          if($(v).data('id') == id){
-            existe = true;
-          }
-        });
-        
-        if(!existe){
-          $('#alumnos-del-curso tbody').append(alumno);     
-          $('#alumnos-del-curso').closest('div').show();
-          refreshCounter();
-        }
+    '<td>'+nombres+'</td>'+
+    '<td>'+apellidos+'</td>'+
+    '<td>'+documentos+'</td>'+
+    '<td>'+
+    '<div class="btn btn-xs btn-info "><a href="{{url('/alumnos')}}/'+id+'"><i class="fa fa-search" data-id="'+id+'"></i></a></div>'+
+    '<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>'+
+    '</td>'+
+    '</tr>';
+    $('#alumnos-del-curso tbody').append(alumno);     
+    $('#alumnos-del-curso').closest('div').show();
+    refreshCounter();
+  }
+
+  function existsInTable(id) {
+    existe = false;
+    $.each($('#alumnos-del-curso tbody tr .fa-search'),function(k,v){
+      if($(v).data('id') == id){
+        existe = true;
+      }
+    });
+    return existe;
   }
   
   $('.container-fluid').on('click', '#alta_participante_dialog', function(event) {

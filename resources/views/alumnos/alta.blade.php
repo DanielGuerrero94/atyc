@@ -114,7 +114,7 @@
 				<div class="form-group col-xs-12 col-sm-6" style="display: none;">
 					<label for="tipo_organismo" class="control-label col-xs-4">Organismo:</label>
 					<div class="col-xs-8">
-						<select class="form-control" id="tipo_organismo" name="organismo">
+						<select class="form-control" id="tipo_organismo" name="tipo_organismo">
 
 							<option value="0">Seleccionar</option>
 
@@ -487,49 +487,7 @@
 		}			
 	});
 	
-	/*funciones abm*/
-	
-	function getCreateJson() {
-		var nombres = $('#nombres')	.val();
-		var apellidos = $('#apellidos').val();
-		var id_tipo_documento = $('#id_tipo_documento option:selected').data('id');
-		var id_genero = $('#id_genero option:selected').val();
-		var nro_doc = $('#nro_doc').val();
-		var email = $('#email').val();
-		var cel = $('#cel').val();
-		var tel = $('#tel').val();
-		var localidad = $('#localidad').val();
-		var id_provincia = $('#provincia option:selected').data('id');
-		
-		var form = $('#alta #form-alta');
-		var provincia = form.find('#provincia :selected').data('id');
-		var trabaja_en = form.find('#trabaja_en :selected').data('id');
-		var funcion = form.find('#funcion :selected').data('id');
-		var token = form.find('input').val();
-		
-		var serializado = $('#alta :input').not(':hidden').serialize();
-		
-		serializado += '&id_tipo_doc='+id_tipo_documento;
-		serializado += '&id_provincia='+provincia;
-		serializado += '&id_trabaja_en='+trabaja_en;
-		serializado += '&funcion='+funcion;
-		serializado += '&_token='+token;
-		console.log(serializado);
-		
-		return data = {
-			nombres: nombres,
-			apellidos: apellidos,
-			id_tipo_documento: id_tipo_documento,
-			id_genero: id_genero,
-			nro_doc: nro_doc,
-			email: email,
-			cel: cel,
-			tel: tel,
-			localidad: localidad,
-			id_provincia: id_provincia
-		};
-	};
-	
+	/*funciones abm*/	
 	function getSelected() {
 		var id_tipo_documento = $('#alta #form-alta #id_tipo_documento :selected').data('id');
 		var id_provincia = $('#alta #form-alta #provincia :selected').data('id');
@@ -559,12 +517,42 @@
 		return $.merge($('#alta #form-alta').serializeArray(),getSelected());
 	}						
 	
+	/*Validaciones*/
+	var tieneAlMenosSieteDigitos = new RegExp(/^\d{7,9}$/);
+
+	jQuery.validator.addMethod("noExiste", function(value, element) {
+		if (tieneAlMenosSieteDigitos.test(value)) {
+			let noExiste;
+			$.ajax({
+				async: false,
+				url : 'alumnos/documentos',
+				data : {
+					nro_doc: value
+				},
+				success : function(data){
+					noExiste = !data.existe;
+				},
+				error : function(data){
+					alert("Fallo la request ajax para validacion de documento.");
+					noExiste = false;
+				}
+			});
+			return noExiste;				
+		}
+	}, "El documento ya esta registrado.");
+
+	jQuery.validator.addMethod("alMenosSieteDigitos", function(value, element) {
+		return tieneAlMenosSieteDigitos.test(value);
+	}, "No es un documento valido.");		
+
+	jQuery.validator.addMethod("requerido", function(value, element) {
+		return value != "";
+	}, "Campo obligatorio");
+
 	jQuery.validator.addMethod("selecciono", function(value, element) {
 		sel = $(element).find(':selected').val();
 		return sel !== "Seleccionar" && sel != 0;
 	}, "Debe seleccionar alguna opcion.");		
-	
-	var esNumero = new RegExp(/^[1-9]\d*$/i);	
 	
 		//Pregunta si el alta se esta dando desde el abm de participantes o desde el de acciones
 		if ($('.container-fluid #creando-participante').length) {
@@ -599,7 +587,7 @@
 		$("#alta").on("click","#volver",backToCreate);
 
 		function agregarParticipante(nombres, apellidos, documentos, id) {
-			alumno = '<tr>'+
+			participante = '<tr>'+
 			'<td>'+nombres+'</td>'+
 			'<td>'+apellidos+'</td>'+
 			'<td>'+documentos+'</td>'+
@@ -617,7 +605,7 @@
 			});
 
 			if(!existe){
-				$('#alumnos-del-curso tbody').append(alumno);     
+				$('#alumnos-del-curso tbody').append(participante);     
 				$('#alumnos-del-curso').closest('div').show();
 				refreshCounter();
 			}
@@ -628,76 +616,27 @@
 			$('#contador-participantes').html(count);
 		}
 		
-		var validator = $('#alta #form-alta').validate({
-			onfocusout: function () {
-				var form = $('#alta #form-alta');
-				var nro_doc = form.find('#nro_doc');
-				var id_tipo_documento = form.find('#id_tipo_documento').val();
-				
-				if (esNumero.test(nro_doc.val())) {
-					
-					$.ajax({
-						url : 'alumnos/documentos',
-						data: {
-							nro_doc: nro_doc.val(),
-							id_tipo_documento: id_tipo_documento
-						},
-						success : function(data){
-							
-							if (data.existe) {
-								
-								nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
-								
-								if (!nro_doc.parent().find('span').length) {
-									
-									nro_doc.parent().append('<span class="help-block">El numero de documento ya esta registrado</span>');	
-								}		
-								
-							} else {
-								console.log("El documento no esta.");
-								nro_doc.parent().find('span').remove();
-								nro_doc.closest('.form-group').removeClass('has-error').addClass('has-success');	
-							}
-							
-						},
-						error : function(data){
-							console.log("Fallo la request ajax para validacion de documento.");
-						}
-					});
-					
-				} else {
-					
-					nro_doc.closest('.form-group').addClass('has-error').removeClass('has-success');
-					
-					if(!nro_doc.parent().find('span').length){
-						nro_doc.parent().append('<span class="help-block">Tiene que ingresar un numero de documento</span>');	
-					}
-				}	
-			},	
+		var validator = $('#alta #form-alta').validate({			
 			rules : {
-				nombres : "required",
-				apellidos : "required",
-				localidad : "required",
-				establecimiento : "required",
-				efector : "required",
-				nombre_organismo : "required",
+				nombres : {required: true},
+				apellidos : {required: true},
+				localidad : {required: true},
+				establecimiento : {required: true},
+				efector : {required: true},
+				nombre_organismo : {required: true},
 				nro_doc : {
-					required: true,
-					number: true
+					requerido: true,
+					alMenosSieteDigitos: true,
+					noExiste: true
 				},
-				tel : {
-					number: true
-				},
-				cel : {
-					number: true
-				},
+				tel : {number: true},
+				cel : {number: true},
 				id_genero: { 
 					required: true,
 					selecciono : true
 				},
-				id_funcion: { selecciono : true},
-				organismo: { selecciono : true},
-				tipo_organismo: { selecciono : true},
+				id_funcion: {selecciono : true},
+				tipo_organismo: {selecciono : true},
 				id_trabajo: { 
 					required: true,
 					selecciono : true
@@ -710,7 +649,6 @@
 				establecimiento : "Campo obligatorio",
 				efector : "Campo obligatorio",
 				nombre_organismo : "Campo obligatorio",
-				nro_doc : "Tiene que ser un numero",
 				tel : "Tiene que ser un numero",
 				cel : "Tiene que ser un numero"
 			},

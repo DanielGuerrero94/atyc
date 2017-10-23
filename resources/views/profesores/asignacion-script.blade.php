@@ -15,7 +15,7 @@
         "background-color": "#fff"
       },
       template: function (query, item) {
-        return '<tr><td>'+item.nombres+' '+item.apellidos+' '+item.documentos+'</td></tr>';
+        return '<tr><td><b>Nombre: </b>'+item.nombres+' '+item.apellidos+' -- <b>Documento: </b>'+item.documentos+'</td></tr>';
       },
       emptyTemplate: function(){
         return '<tr><td><button type="button" class="btn btn-outline" id="alta_docente_dialog"><i class="fa fa-plus text-green"></i><b>  Crear docente </b></button></td></tr>';        
@@ -97,6 +97,40 @@
       debug: true
     });
 
+    $('.container-fluid').on('click', '#alta_docente_dialog', function(event) {
+      event.preventDefault();
+
+      $.ajax({
+        url: "{{url('profesores/alta')}}",
+        success: function (response) {
+          console.log('success');
+
+          $('.container-fluid #alta-accion').closest('.row').slideUp(450);
+
+        //Creo animacion de creando
+        jQuery('<div/>', {
+          id: 'creando-docente',
+          class: 'row',
+          css: 'z-index: 1000;',
+          html: '<h3 style="text-align: center;">(Alta de acción en progreso) <i class="fa fa-cog fa-spin fa-2x fa-fw margin-bottom"></i> Creando Docente</h3>'
+        }).appendTo('.container-fluid');
+
+        //Creo div para el form de alta de docente
+        jQuery('<div/>', {
+          id: 'alta',
+          text: '',
+          css: 'z-index: 1000;'
+        }).appendTo('.container-fluid');
+        $('#alta').html(response);              
+        
+      },
+      error: function (response) {
+        console.log('error');
+      }
+    });  
+    });          
+
+
     $('#profesores-del-curso').on('click','.quitar', function(event) {
       this.closest('tr').remove();
       refreshCounter();
@@ -108,5 +142,4 @@
     }
 
   });
-
 </script>

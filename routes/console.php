@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Foundation\Inspiring;
+use Illuminate\Http\Request;
+use App\Http\Controllers\AlumnosController;
+use App\Alumno;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +27,22 @@ Artisan::command('test:make-model {name}', function () {
 		'--resource' => true,
 		'--controller' => true,
 	]);
+})->describe('Command for testing.');
+
+Artisan::command('test:apellidosTypea {typeahead}', function () {
+	$c = new AlumnosController();
+	$r = new Request(['q' => $this->argument('typeahead')]);
+	$this->comment(json_encode($r->all()));
+	Auth::attempt(['name' => 'uec', 'password' => 'uec001']);
+	$this->info($c->getApellidos($r));
+})->describe('Command for testing.');
+
+Artisan::command('test:show {id_participante}', function () {
+	Auth::attempt(['name' => 'uec', 'password' => 'uec001']);
+	/*Auth::attempt(['name' => 'jujuy', 'password' => 'jujuy001']);*/
+	$c = new AlumnosController();
+	
+	$participante = $c->show($this->argument('id_participante'));
+
+	$this->comment(json_encode($participante));
 })->describe('Command for testing.');

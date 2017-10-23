@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Auth;
+use Pais;
 
 class Profesor extends Model
 {
@@ -97,5 +98,16 @@ class Profesor extends Model
     private function esExtranjero(Request $request)
     {
         return $request->has('pais') && ($request->id_tipo_documento == 5 || $request->id_tipo_documento == 6);
+    }
+
+    public function getNombrePais()
+    {
+        $nombre_pais = null;
+
+        if ($this->id_tipo_documento == 5 || $this->id_tipo_documento == 6) {
+            $pais = Pais::findOrFail($this->id_pais);
+            $nombre_pais = $pais->nombre;
+        }
+        return $nombre_pais;
     }
 }
