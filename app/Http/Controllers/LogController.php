@@ -104,4 +104,24 @@ class LogController extends Controller
     {
         //
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function log($date)
+    {
+        $requests = [];
+        $filename = storage_path("/logs/laravel-{$date}.log");
+
+        $f = fopen($filename, 'r');
+
+        while (!feof($f)) {
+            $line = fgets($f);
+            array_push($requests,$line);
+        }
+        return $requests;
+    }
 }

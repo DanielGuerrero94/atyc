@@ -246,5 +246,8 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('efectores', 'EfectoresController@get');
         Route::get('efectores/tabla', 'EfectoresController@getTabla');
         Route::get('efectores/{cuie}/cursos', 'EfectoresController@historialCursos');
+
+        //Logs
+        Route::get('logs/mostrar/{date}','LogController@log');
     });
 });
