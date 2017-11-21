@@ -496,13 +496,13 @@ class CursosController extends AbmController
             if ($key == 'nombre') {
                 $query = $query->where('cursos.cursos.'.$key, 'ilike', "%{$value}%");
             } elseif ($key == 'desde') {
-                $query = $query->where('cursos.cursos.fecha', '>', $value);
+                $query = $query->where('cursos.cursos.fecha', '>=', $value);
             } elseif ($key == 'hasta') {
-                $query = $query->where('cursos.cursos.fecha', '<', $value);
+                $query = $query->where('cursos.cursos.fecha', '<=', $value);
             } elseif ($key == 'id_periodo') {
                 $periodo = Periodo::find($value);
-                $query = $query->where('cursos.cursos.fecha', '>', $periodo->desde);
-                $query = $query->where('cursos.cursos.fecha', '<', $periodo->hasta);
+                $query = $query->where('cursos.cursos.fecha', '>=', $periodo->desde);
+                $query = $query->where('cursos.cursos.fecha', '<=', $periodo->hasta);
             } else {
                 $query = $query->where('cursos.cursos.'.$key, $value);
             }
