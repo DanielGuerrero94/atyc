@@ -44,4 +44,9 @@ class Role extends Model
         )
             ->withTimestamps();
     }
+
+    public function menus()
+    {
+        return $this->hasMany('App\Menu', 'id_menu', 'id_role');
+    }
 }

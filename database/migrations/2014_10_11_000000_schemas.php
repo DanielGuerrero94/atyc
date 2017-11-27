@@ -13,6 +13,7 @@ class Schemas extends Migration
      */
     public function up()
     {
+	if (env('DB_CONNECTION') === "pgsq") {
         \DB::statement('CREATE EXTENSION IF NOT EXISTS dblink');
         \DB::statement('CREATE EXTENSION IF NOT EXISTS postgres_fdw');
         \DB::statement('CREATE SCHEMA IF NOT EXISTS alumnos');
@@ -23,7 +24,8 @@ class Schemas extends Migration
         \DB::statement('CREATE SCHEMA IF NOT EXISTS beneficiarios');
         \DB::statement('CREATE SCHEMA IF NOT EXISTS efectores');
         \DB::statement('CREATE SCHEMA IF NOT EXISTS geo');
-        \DB::statement('CREATE SCHEMA IF NOT EXISTS dw');
+	\DB::statement('CREATE SCHEMA IF NOT EXISTS dw');
+	}
     }
 
     /**

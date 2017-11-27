@@ -24,6 +24,25 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
     ];
 });
 
+/** menu */
+$factory->define(App\Menu::class, function (Faker\Generator $faker) {
+    return [
+    'title' => $faker->unique()->name,
+    'icon' => $faker->unique()->name,
+    'order' => rand(1, 5),    
+    ];
+});
+
+/** submenu */
+$factory->define(Database\Factories\Submenu::class, function (Faker\Generator $faker) {
+    return [
+    'parent' => App\Menu::pluck('id_menu')->shuffle()->first(),
+    'title' => $faker->unique()->name,
+    'icon' => $faker->unique()->name,
+    'order' => rand(1, 5),    
+    ];
+});
+
 /** pais */
 $factory->define(App\Pais::class, function (Faker\Generator $faker) {
     return [

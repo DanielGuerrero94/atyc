@@ -44,4 +44,54 @@ class User extends Authenticatable
         )
             ->withTimestamps();
     }
+
+      public function menus() 
+      { 
+        return [ 
+            'menus' => [ 
+                [ 
+                    'url' => '/alumnos', 
+                    'icon' => 'fa fa-user-o', 
+                    'title' => 'Gestión de Participantes' 
+                ], 
+                [ 
+                    'url' => '/profesores', 
+                    'icon' => 'fa fa-graduation-cap', 
+                    'title' => 'Gestión de Docentes' 
+                ], 
+                [ 
+                    'url' => '/cursos', 
+                    'icon' => 'fa fa-address-book', 
+                    'title' => 'Gestión de Acciones' 
+                ], 
+            ], 
+            'abm_menus' => [ 
+                [ 
+                    'url' => '/areasTematicas', 
+                    'icon' => 'fa fa-circle-o', 
+                    'title' => 'Areas temáticas' 
+                ], 
+                [ 
+                    'url' => '/periodos', 
+                    'icon' => 'fa fa-circle-o', 
+                    'title' => 'Periodos' 
+                ], 
+                [ 
+                    'url' => '/lineasEstrategicas', 
+                    'icon' => 'fa fa-circle-o', 
+                    'title' => 'Tipologias de acción' 
+                ], 
+                [ 
+                    'url' => '/tipoDocentes', 
+                    'icon' => 'fa fa-circle-o', 
+                    'title' => 'Tipo de docentes' 
+                ], 
+                [ 
+                    'url' => '/funciones', 
+                    'icon' => 'fa fa-circle-o', 
+                    'title' => 'Rol en el sumar' 
+                ], 
+            ], 
+        ]; 
+    }     
 }

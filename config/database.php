@@ -84,6 +84,19 @@ return [
             'schema' => 'efectores',
             'sslmode' => 'prefer',
         ],
+
+        'small' => [
+            'driver' => 'sqlite',
+            'host' => env('DB_HOST'),
+            'port' => env('DB_PORT'),
+            'database' => database_path('small.sqlite'),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
     ],
 
     /*
