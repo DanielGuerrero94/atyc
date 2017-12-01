@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Provincia extends Model
+class TipoAction extends Model
 {
-    protected $table = "provincias";
+    protected $table = "tipos_actions";
 
-    protected $fillable = ['nombre'];
+    protected $fillable = ['item', 'nombre', 'descripcion'];
 
     /**
-     * Get las Pacs de esa provincia.
+     * Get las Pas con este tipoAction.
      */
     public function matrizPacs()
     {

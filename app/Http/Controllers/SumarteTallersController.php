@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ProvinciasController extends Controller
+class SumarteTallersController extends Controller
 {
     /**
      * Display a listing of the resource.
