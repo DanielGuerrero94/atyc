@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ProvinciasController extends Controller
+use App\PautaAction;
+
+class PautasActionsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +25,7 @@ class ProvinciasController extends Controller
      */
     public function create()
     {
-        //
+        return view('home', [ 'layout' => 'layouts.pautaAccion' ]);
     }
 
     /**
@@ -34,7 +36,25 @@ class ProvinciasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'item'          => 'integer',
+            'nombre'        => 'required',
+            'descripcion'   => 'required',
+            'aniovigencia'  => 'integer'
+        ]);
+//dd($request);
+        $pautaAction = new PautaAction();
+        $pautaAction->item          = $request->item;
+        $pautaAction->nombre        = $request->nombre;
+        $pautaAction->descripcion   = $request->descripcion;
+        $pautaAction->anio_vigencia = $request->anioVigencia;
+
+        if($pautaAction->save()){
+            return back()->with('msj', 'Datos guardados');
+        }else{
+            return back()->with('errormsj', 'Error al guardar los datos');
+        }
+        
     }
 
     /**

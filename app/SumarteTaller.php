@@ -4,14 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Provincia extends Model
+class SumarteTaller extends Model
 {
-    protected $table = "provincias";
+    protected $table = "sumarte_tallers";
 
-    protected $fillable = ['nombre'];
+    protected $fillable = ['nombre', 'obejetivo'];
 
     /**
-     * Get las Pacs de esa provincia.
+     * Get las Pacs con este taller.
      */
     public function matrizPacs()
     {

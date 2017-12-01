@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ProvinciasController extends Controller
+use App\Pauta;
+use App\PautaAction;
+
+
+class PautasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +27,8 @@ class ProvinciasController extends Controller
      */
     public function create()
     {
-        //
+        $pautasactions = PautaAction::all();
+        return view('home', [ 'layout' => 'layouts.pauta' ])->with(['pautasactions' => $pautasactions]);
     }
 
     /**
@@ -34,7 +39,23 @@ class ProvinciasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'item'        => 'required',
+            'nombre'        => 'required',
+            'descripcion'   => 'required'
+        ]);
+//dd($request->action);
+        $pauta = new Pauta();
+        $pauta->item            = $request->item;
+        $pauta->nombre          = $request->nombre;
+        $pauta->descripcion     = $request->descripcion;
+        $pauta->id_pauta_action = $request->action;
+
+        if($pauta->save()){
+            return back()->with('msj', 'Datos guardados');
+        }else{
+            return back()->with('errormsj', 'Error al guardar los datos');
+        }
     }
 
     /**

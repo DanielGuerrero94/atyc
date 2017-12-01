@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ProvinciasController extends Controller
+use App\Tematicas;
+
+class TematicasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +25,7 @@ class ProvinciasController extends Controller
      */
     public function create()
     {
-        //
+        return view('home', [ 'layout' => 'tematica' ]);
     }
 
     /**
@@ -34,7 +36,10 @@ class ProvinciasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'nombre'        => 'required',
+            'descripcion'   => 'required'
+        ]);
     }
 
     /**

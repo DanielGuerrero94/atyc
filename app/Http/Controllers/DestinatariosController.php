@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ProvinciasController extends Controller
+use App\Destinatario;
+
+class DestinatariosController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +25,7 @@ class ProvinciasController extends Controller
      */
     public function create()
     {
-        //
+        return view('home', [ 'layout' => 'layouts.destinatario' ]);
     }
 
     /**
@@ -34,7 +36,20 @@ class ProvinciasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'nombre'        => 'required',
+            'descripcion'   => 'required'
+        ]);
+
+        $destinatario = new Destinatario();
+        $destinatario->nombre        = $request->nombre;
+        $destinatario->descripcion   = $request->descripcion;
+
+        if($destinatario->save()){
+            return back()->with('msj', 'Datos guardados');
+        }else{
+            return back()->with('errormsj', 'Error al guardar los datos');
+        }
     }
 
     /**
