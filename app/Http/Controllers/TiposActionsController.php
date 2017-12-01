@@ -4,11 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Pauta;
-use App\PautaAction;
-
-
-class PautasController extends Controller
+class TiposActionsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,8 +23,7 @@ class PautasController extends Controller
      */
     public function create()
     {
-        $pautasactions = PautaAction::all();
-        return view('home', [ 'layout' => 'layouts.pauta' ])->with(['pautasactions' => $pautasactions]);
+        return view('home', [ 'layout' => 'layouts.tipoAccion' ]);
     }
 
     /**
@@ -44,18 +39,6 @@ class PautasController extends Controller
             'nombre'        => 'required',
             'descripcion'   => 'required'
         ]);
-//dd($request->action);
-        $pauta = new Pauta();
-        $pauta->item            = $request->item;
-        $pauta->nombre          = $request->nombre;
-        $pauta->descripcion     = $request->descripcion;
-        $pauta->id_pauta_action = $request->action;
-
-        if($pauta->save()){
-            return back()->with('msj', 'Datos guardados');
-        }else{
-            return back()->with('errormsj', 'Error al guardar los datos');
-        }
     }
 
     /**

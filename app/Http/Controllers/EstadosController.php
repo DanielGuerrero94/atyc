@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pac\Estado;
-use Datatables;
+
+use App\Estado;
 
 class EstadosController extends Controller
 {
@@ -31,14 +31,23 @@ class EstadosController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $esta = new Estado();
-        return $esta->create($request->all());
+        $this->validate($request, [
+            'nombre'        => 'required'
+        ]);
+
+        $estado = new Estado();
+        $estado->nombre        = $request->nombre;
+
+        if($estado->save()){
+            return back()->with('msj', 'Datos guardados');
+        }else{
+            return back()->with('errormsj', 'Error al guardar los datos');
+        }
     }
 
     /**

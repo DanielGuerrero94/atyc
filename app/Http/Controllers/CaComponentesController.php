@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Pauta;
-use App\PautaAction;
+use App\CaComponente;
 
-
-class PautasController extends Controller
+class CaComponentesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,8 +25,7 @@ class PautasController extends Controller
      */
     public function create()
     {
-        $pautasactions = PautaAction::all();
-        return view('home', [ 'layout' => 'layouts.pauta' ])->with(['pautasactions' => $pautasactions]);
+        return view('home', [ 'layout' => 'layouts.componenteCa' ]);
     }
 
     /**
@@ -40,18 +37,15 @@ class PautasController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'item'        => 'required',
             'nombre'        => 'required',
-            'descripcion'   => 'required'
+            'aniovigencia'  => 'integer'
         ]);
-//dd($request->action);
-        $pauta = new Pauta();
-        $pauta->item            = $request->item;
-        $pauta->nombre          = $request->nombre;
-        $pauta->descripcion     = $request->descripcion;
-        $pauta->id_pauta_action = $request->action;
 
-        if($pauta->save()){
+        $cacomponente = new CaComponente();
+        $cacomponente->nombre        = $request->nombre;
+        $cacomponente->anio_vigencia = $request->anioVigencia;
+
+        if($cacomponente->save()){
             return back()->with('msj', 'Datos guardados');
         }else{
             return back()->with('errormsj', 'Error al guardar los datos');
