@@ -1,5 +1,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="{{ asset('css/excel.css') }}">
+<style type="text/css">
+.table-header, p {
+	font-size: 10px; 
+	font-weight: bold; 
+	text-align: center;
+	background-color: #dee4e5;
+}
+
+td {
+	font-size: 9px;
+}
+</style>
 
 <table class="table">	
 	<tr>
