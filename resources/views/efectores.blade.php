@@ -13,8 +13,6 @@
 				<div class="box-header">
 					<h2 class="box-tittle">Efectores
 						<div class="btn-group pull-right" role="group" aria-label="...">
-							<!-- <div type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></div> -->
 							<div type="button" class="btn btn-info filter" title="Filtro"><i class="fa fa-sliders" aria-hidden="true"></i></div>
 							<div type="button" class="btn btn-info expand" title="Expandir"><i class="fa fa-expand" aria-hiden="true"></i></div>
 							<div type="button" class="btn btn-info compress" title="Comprimir" style="display: none;"><i class="fa fa-compress" aria-hidden="true"></i></div>	
@@ -58,7 +56,7 @@
 		datatable = $('.table').DataTable({
 			destroy: true,
 			responsive: true,
-			searchable: false,
+			searching: false,
 			ajax : 'efectores/tabla',
 			columns: [
 			{ name: 'id_provincia', data: 'provincia', title: 'Provincia',searchable: false, orderable: false},
@@ -91,7 +89,7 @@
 			datatable = $('.table').DataTable({
 			destroy: true,
 			responsive: true,
-			searchable: false,
+			searching: false,
 			ajax : {
 				url: 'efectores/filtrar',
 				data: {
