@@ -25,7 +25,7 @@ class TallerSumarte extends Model
     */
     public function crear(Request $r)
     {
-        $this->nombre = $r->nombre;
+        $this->nombre = ucwords($r->nombre);
         $this->obejetivo = $r->obejetivo;
         $this->save();
         return $this;

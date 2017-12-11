@@ -26,7 +26,6 @@ class Provincia extends Model
      * @var bool
      */
     public $timestamps = false;
-
     public static function set($nombre)
     {
         $ret = new Provincia();
