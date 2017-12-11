@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PautaAction extends Model
+class AccionPauta extends Model
 {
-    protected $table = "pautas_actions";
+    protected $table = "acciones_pautas";
 
     protected $fillable = ['item', 'nombre', 'descripcion', 'anio_vigencia'];
 
@@ -15,6 +15,6 @@ class PautaAction extends Model
      */
     public function pautas()
     {
-        return $this->hasMany('App\Pauta');
+        return $this->hasMany('App\Models\Pac\Pauta');
     }
 }
