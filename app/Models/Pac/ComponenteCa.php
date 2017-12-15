@@ -25,7 +25,7 @@ class ComponenteCa extends Model
     */
     public function crear(Request $r)
     {
-        $this->nombre = ucwords($r->nombre);
+        $this->nombre = $r->nombre;
         $this->anio_vigencia = $r->anio_vigencia;
         $this->save();
         return $this;

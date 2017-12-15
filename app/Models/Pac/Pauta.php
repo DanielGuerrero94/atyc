@@ -33,7 +33,7 @@ class Pauta extends Model
     */
     public function crear(Request $r)
     {
-        $this->nombre = ucwords($r->nombre);
+        $this->nombre = $r->nombre;
         $this->descripcion = $r->descripcion;
         $this->id_accion_pauta = $r->id_accion_pauta;
         $this->save();

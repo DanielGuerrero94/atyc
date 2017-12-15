@@ -26,7 +26,7 @@ class Estado extends Model
     */
     public function crear(Request $r)
     {
-        $this->nombre = ucwords($r->nombre);
+        $this->nombre = $r->nombre;
         $this->save();
         return $this;
     }

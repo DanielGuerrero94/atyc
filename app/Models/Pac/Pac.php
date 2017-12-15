@@ -21,8 +21,8 @@ class Pac extends Model
 
     public function crear(Request $r)
     {
-        $this->trimestre_planificacion = ucwords($r->trimestre_planificacion);
-        $this->t1 = ucwords($r->t1);
+        $this->trimestre_planificacion = $r->trimestre_planificacion;
+        $this->t1 = $r->t1;
         $this->t2 = $r->t2;
         $this->t3 = $r->t3;
         $this->t4 = $r->t4;
