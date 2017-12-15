@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class TiposActionsController extends Controller
+class AccionesPautasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,7 +23,7 @@ class TiposActionsController extends Controller
      */
     public function create()
     {
-        return view('home', [ 'layout' => 'layouts.tipoAccion' ]);
+        //
     }
 
     /**
@@ -34,11 +34,7 @@ class TiposActionsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'item'        => 'required',
-            'nombre'        => 'required',
-            'descripcion'   => 'required'
-        ]);
+        //
     }
 
     /**

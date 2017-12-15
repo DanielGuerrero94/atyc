@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pac\Estado;
+use App\Models\Pac\ComponenteCa;
 use Datatables;
 
-class EstadosController extends Controller
+class ComponentesCaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class EstadosController extends Controller
      */
     public function index()
     {
-        return Estado::all();
+        return ComponenteCa::all();
     }
 
     /**
@@ -25,7 +25,7 @@ class EstadosController extends Controller
      */
     public function create()
     {
-        return view('estados/alta');
+        return view('componentesCa/alta');
     }
 
     /**
@@ -37,8 +37,8 @@ class EstadosController extends Controller
      */
     public function store(Request $request)
     {
-        $esta = new Estado();
-        return $esta->create($request->all());
+        $compo = new ComponenteCa();
+        return $compo->create($request->all());
     }
 
     /**
@@ -50,8 +50,8 @@ class EstadosController extends Controller
      */
     public function show($id)
     {
-        $esta = Estado::find($id);
-        return array('esta' => $esta);
+        $compo = ComponenteCa::find($id);
+        return array('compo' => $compo);
     }
 
     /**
@@ -63,7 +63,7 @@ class EstadosController extends Controller
      */
     public function edit($id)
     {
-        return view('estados/modificar', $this->show($id));
+        return view('componentesCa/modificar', $this->show($id));
     }
 
     /**
@@ -76,8 +76,8 @@ class EstadosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $esta = Estado::find($id);
-        $esta->modificar($request);
+        $compo = ComponenteCa::find($id);
+        $compo->modificar($request);
     }
 
     /**
@@ -89,8 +89,8 @@ class EstadosController extends Controller
      */
     public function destroy($id)
     {
-        $esta = Estado::find($id);
-        $esta->delete();
+        $compo = ComponenteCa::find($id);
+        $compo->delete();
     }
 
     /**
@@ -100,7 +100,7 @@ class EstadosController extends Controller
      */
     public function getTodos()
     {
-        return view('estados');
+        return view('componentesCa');
     }
     
     /**
@@ -114,10 +114,10 @@ class EstadosController extends Controller
         ->addColumn(
             'acciones',
             function ($ret) {
-                return '<button data-id="'.$ret->id_estado.'" class="btn btn-info btn-xs editar" '.
+                return '<button data-id="'.$ret->id_componente_ca.'" class="btn btn-info btn-xs editar" '.
                 'title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
                 /*
-                '<button data-id="'.$ret->id_estado.'" class="btn btn-danger btn-xs eliminar" '.
+                '<button data-id="'.$ret->id_componente_ca.'" class="btn btn-danger btn-xs eliminar" '.
                 'title="Eliminar" data-toggle="popover" data-trigger="hover" data-placement="right" '.
                 'data-content="Some content"><i class="fa fa-trash-o" aria-hidden="true"></i></button>'
                 */
