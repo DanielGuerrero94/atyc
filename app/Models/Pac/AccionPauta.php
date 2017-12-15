@@ -17,4 +17,20 @@ class AccionPauta extends Model
     {
         return $this->hasMany('App\Models\Pac\Pauta');
     }
+
+
+    /**
+    *
+    *
+    *
+    */
+    public function crear(Request $r)
+    {
+        $this->item = $r->ite);
+        $this->nombre = $r->nombre;
+        $this->descripcion = $r->descripcion;
+        $this->anio_vigencia = $r->anio_vigencia;
+        $this->save();
+        return $this;
+    }
 }
