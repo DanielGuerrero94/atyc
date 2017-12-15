@@ -1,14 +1,22 @@
 <?php
 
-namespace App;
+namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class ComponenteCa extends Model
 {
-    protected $table = "componentes_ca";
+    protected $table = "pac.componentes_ca";
 
     protected $fillable = ['nombre', 'anio_vigencia'];
+
+    /**
+     * Primary key asociated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id_componente_ca';
 
     /**
      * Las pacs de un caComponente.
@@ -17,6 +25,11 @@ class ComponenteCa extends Model
     {
         return $this->belongsToMany('App\Models\Cursos\Curso', 'cursos.cursos_componentes_ca', 'id_curso', 'id_componente_ca')->withTimestamps();
     }	
+
+    public static function table()
+    {
+        return ComponenteCa::all();
+    }
 
     /**
     *
@@ -28,6 +41,12 @@ class ComponenteCa extends Model
         $this->nombre = $r->nombre;
         $this->anio_vigencia = $r->anio_vigencia;
         $this->save();
-        return $this;
+    }
+
+    public function modificar(Request $r)
+    {
+        $this->nombre = $r->nombre;
+        $this->anio_vigencia = $r->anio_vigencia;
+        $this->save();
     }
 }
