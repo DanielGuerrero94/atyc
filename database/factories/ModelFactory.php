@@ -78,7 +78,7 @@ $factory->define(App\Models\Cursos\LineaEstrategica::class, function (Faker\Gene
 /** area tematica */
 $factory->define(App\Models\Cursos\AreaTematica::class, function (Faker\Generator $faker) {
     return [
-    'nombre' => substr($faker->name, 0, 10)
+        'nombre' => substr($faker->name, 0, 10)
     ];
 });
 
@@ -121,11 +121,30 @@ $factory->define(App\Profesor::class, function (Faker\Generator $faker) {
 
 /** curso */
 $factory->define(App\Models\Cursos\Curso::class, function (Faker\Generator $faker) {
+
+    $id_area_tematica = App\Models\Cursos\AreaTematica::select('id_area_tematica')
+    ->pluck('id_area_tematica')
+    ->shuffle()
+    ->first();
+
+    $id_area_tematica = $id_area_tematica?:factory(App\Models\Cursos\AreaTematica::class)
+    ->create()
+    ->id_area_tematica;
+
+    $id_linea_estrategica = App\Models\Cursos\LineaEstrategica::select('id_linea_estrategica')
+    ->pluck('id_linea_estrategica')
+    ->shuffle()
+    ->first();
+
+    $id_linea_estrategica = $id_linea_estrategica?:factory(App\Models\Cursos\LineaEstrategica::class)
+    ->create()
+    ->id_linea_estrategica;
+
     return [
     'nombre' => substr($faker->name, 0, 10),
     'id_provincia' => rand(1, 4),
-    'id_area_tematica' => rand(1, 4),
-    'id_linea_estrategica' => rand(1, 4),
+    'id_area_tematica' => $id_area_tematica,
+    'id_linea_estrategica' => $id_linea_estrategica,
     'fecha' => $faker->date,
     'duracion' => rand(1, 3),
     'edicion' => rand(1, 10)

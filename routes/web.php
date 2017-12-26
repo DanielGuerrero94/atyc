@@ -54,6 +54,12 @@ Route::get('dashboard/draw/heats', 'DashboardController@heats');
 
 //Logueado
 Route::group(['middleware' => ['logueado','logging']], function () {
+    //Materiales
+    Route::get('archivos', 'MaterialesController@view');
+    Route::get('materiales/list', 'MaterialesController@list');
+    Route::get('materiales/{id}/download', 'MaterialesController@download');
+    Route::resource('materiales', 'MaterialesController');
+
     //Redis
     Route::get('redis/usuarios', 'RedisController@usuarios');
 

@@ -84,6 +84,19 @@ return [
             'schema' => 'efectores',
             'sslmode' => 'prefer',
         ],
+
+        'testing' => [
+            'driver' => 'sqlite',
+            'host' => env('DB_HOST'),
+            'port' => env('DB_PORT'),
+            'database' => database_path(env('DB_DATABASE_TESTING')),
+            'username' => env('DB_USERNAME'),
+            'password' => env('DB_PASSWORD'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
     ],
 
     /*

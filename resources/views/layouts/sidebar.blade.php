@@ -40,6 +40,12 @@
             <i class="fa fa-address-book"></i>
             <span>Gestión de Acciones</span>
           </a>
+        </li>        
+        <li>
+          <a href={{url("/archivos")}}>
+            <i class="fa fa-file"></i>
+            <span>Documentación</span>
+          </a>
         </li>
       </ul>
     </li>

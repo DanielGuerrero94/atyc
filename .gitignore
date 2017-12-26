@@ -8,3 +8,4 @@ public/*.pdf
 /node_modules
 .vscode/
 *.log
+database/*.sqlite

@@ -2,14 +2,17 @@
 
 namespace Tests\Controllers;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Http\Controllers\CursosController;
+use App\Models\Cursos\Curso;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class AccionesControllerTest extends TestCase
 {
+    use DatabaseTransactions;
 
     protected $controller;
     protected $model;
@@ -17,14 +20,14 @@ class AccionesControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->controller = new App\Http\Controllers\CursosController();
-        $this->model = new App\Models\Cursos\Curso();
+        $this->controller = new CursosController();
+        $this->model = new Curso();
     }
 
     public function accionesRequestProvider()
     {
         $requests = [];
-        $filename = base_path('storage/logs/production/create-accion-2017-10-03.log');
+        $filename = '/var/www/html/atyc/storage/logs/production/create-accion-2017-10-03.log';
 
         $f = fopen($filename, 'r');
 
@@ -40,11 +43,14 @@ class AccionesControllerTest extends TestCase
     /**
      * Return date with the correct format. "16/10/2013"
      *
+     * @test
      * @return void
      */
     public function showCorrectDateFormat()
     {
-        $curso = $this->controller->show(1);
+        
+        $curso = factory(\App\Models\Cursos\Curso::class)->create();
+        $curso = $this->controller->show($curso->id_curso);
         $curso = json_decode($curso['curso'], true);
         $fecha = $curso['fecha'];
 
@@ -56,6 +62,7 @@ class AccionesControllerTest extends TestCase
      * Depende de base de datos
      *
      * @dataProvider accionesRequestProvider
+     * @testt
      * @return void
      */
     public function create(Request $request)

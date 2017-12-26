@@ -1,2 +1,2 @@
 order deny,allow
-deny from 192.6.0
+allow from 192.6.0

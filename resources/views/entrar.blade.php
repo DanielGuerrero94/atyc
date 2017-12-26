@@ -20,24 +20,15 @@
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/dist/css/skins/_all-skins.min.css")}}">
 
   <link rel="stylesheet" type="text/css" href="{{url("/css/atyc.css")}}">
-
-
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
 </head>
 <body class="hold-transition login-page">
   <div class="login-box panel panel-primary">
     <div class="login-logo">
       <p><b>Atyc</b></p>
     </div>
-    <!-- /.login-logo -->
+    <hr>
     <div class="login-box-body">
-      <p class="login-box-msg"><u>Iniciar sesión</u></p>
-
+      <p class="login-box-msg"><b>Iniciar sesión</b></p>
       <form action="{{ url('/login') }}" role="form" method="post">
         {{ csrf_field() }}        
         <div class="form-group has-feedback">
@@ -58,24 +49,13 @@
           </span>
           @endif
         </div>
-        <br>
+	<hr>
         <div class="row">
-          <div class="col-xs-8">
-            <div class="checkbox icheck">
-              <label>
-                <input type="checkbox"> Recordar
-              </label>
-            </div>
-          </div>
-          <div class="col-xs-4">
+          <div class="col-xs-4 col-xs-offset-4">
             <button type="submit" class="btn btn-primary btn-block ">Entrar</button>
           </div>
         </div>
       </form>
-      <!-- <hr>
-      <div class="social-auth-links text-center">
-        <a href={{url("/registrar")}} class="text-center">Registrarse</a>
-      </div> -->
       <!-- jQuery 2.2.3 -->
       <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/jQuery/jQuery-2.1.4.min.js") }}"></script>
       <!-- Bootstrap 3.3.6 -->
