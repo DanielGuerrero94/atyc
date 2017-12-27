@@ -1,61 +1,34 @@
 <?php
 
-namespace App\Models\Pac;
+namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Pac extends Model
 {
-    use SoftDeletes;
+    protected $table = "pac.pac";
 
-    protected $dates = ['deleted_at'];
+    protected $fillable = ['trimestre_planificacion', 't1', 't2', 't3', 't4', 'consul_peatyc', 'observado', 'repeticiones', 'id_curso'];
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'pac.pacs';
 
     /**
-     * Primary key asociated with the table.
-     *
-     * @var string
+     * Get la PautaAction de una Pauta.
      */
-    protected $primaryKey = 'id_pac';
-
-    public function destinatario()
+    public function curso()
     {
-        return $this->hasOne('App\Models\Pac\Destinatario', 'id_destinatario', 'id_destinatario');
+        return $this->hasOne('App\Models\Cursos\Curso', 'id_curso', 'id_curso');
     }
 
-    public function alcance()
+    public function crear(Request $r)
     {
-        return $this->hasOne('App\Models\Pac\Alcance', 'id_alcance', 'id_alcance');
-    }
-
-    public function profundizacion()
-    {
-        return $this->hasOne('App\Models\Pac\Profundizacion', 'id_profundizacion', 'id_profundizacion');
-    }
-
-    public function modalidad()
-    {
-        return $this->hasOne('App\Models\Pac\Modalidad', 'id_modalidad', 'id_modalidad');
-    }
-
-    public function accion()
-    {
-        return $this->hasOne('App\Accion', 'id_accion', 'id_accion');
-    }
-
-    public function pautas()
-    {
-        return $this->belongsToMany('App\Models\Pac\Pauta', 'pac_pautas', 'id_pauta', 'id_pac')->withTimestamps();
-    }
-
-    public function insumos()
-    {
-        return $this->belongsToMany('App\Models\Pac\Insumo', 'pac_insumos', 'id_insumo', 'id_pac')->withTimestamps();
+        $this->trimestre_planificacion = $r->trimestre_planificacion;
+        $this->t1 = $r->t1;
+        $this->t2 = $r->t2;
+        $this->t3 = $r->t3;
+        $this->t4 = $r->t4;
+        $this->consul_peatyc = $r->consul_peatyc;
+        $this->observado = $r->observado;
+        $this->save();
+        return $this;
     }
 }

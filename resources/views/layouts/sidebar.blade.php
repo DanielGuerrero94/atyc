@@ -201,33 +201,23 @@
         </a>
         <ul class="treeview-menu">
           <li>
-            <a href="#"><i class="fa fa-circle-o"></i>
-              <span>Alcances</span>
+            <a href='{{url("/componentesCa")}}'><i class="fa fa-circle-o"></i>
+              <span>Componentes CA</span>
             </a>
           </li>
           <li>
-            <a href="#"><i class="fa fa-circle-o"></i>
-              <span>Destinatarios</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"><i class="fa fa-circle-o"></i>
-              <span>Modalidades</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"><i class="fa fa-circle-o"></i>
-              <span>Profundizaciones</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"><i class="fa fa-circle-o"></i>
+            <a href='{{url("/pautas")}}'><i class="fa fa-circle-o"></i>
               <span>Pautas</span>
             </a>
           </li>
           <li>
+            <a href='{{url("/estados")}}'><i class="fa fa-circle-o"></i>
+              <span>Estados</span>
+            </a>
+          </li>
+          <li>
             <a href="#"><i class="fa fa-circle-o"></i>
-              <span>Insumos</span>
+              <span>Talleres Sumarte</span>
             </a>
           </li>
         </ul>

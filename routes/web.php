@@ -259,5 +259,45 @@ Route::group(['middleware' => ['logueado','logging']], function () {
 
         //Logs
         Route::get('logs/mostrar/{date}','LogController@log');
+
+        //Estados
+        Route::get('estados', 'EstadosController@getTodos');
+        Route::get('estados/alta', 'EstadosController@create');
+        Route::get('estadosTabla', 'EstadosController@getTabla');
+        Route::get('estados/{id}', 'EstadosController@edit');
+
+        Route::post('estados', 'EstadosController@store');
+
+        Route::put('estados/{id}', 'EstadosController@update');
+
+        Route::delete('estados/{id}', 'EstadosController@destroy');
+
+        //ComponentesCa
+        Route::get('componentesCa', 'ComponentesCaController@getTodos');
+        Route::get('componentesCa/alta', 'ComponentesCaController@create');
+        Route::get('componentesCaTabla', 'ComponentesCaController@getTabla');
+        Route::get('componentesCa/{id}', 'ComponentesCaController@edit');
+
+        Route::post('componentesCa', 'ComponentesCaController@store');
+
+        Route::put('componentesCa/{id}', 'ComponentesCaController@update');
+
+        Route::delete('componentesCa/{id}', 'ComponentesCaController@destroy');
+
+            //Profesores
+        Route::get('pautas', 'PautasController@get');
+        Route::get('pautas/tabla', 'PautasController@getTabla');
+        Route::get('pautas/alta', 'PautasController@create');
+        Route::get('pautas/filtrado', 'PautasController@getFiltrado');
+        Route::get('pautas/excel', 'PautasController@getExcel');
+        Route::get('pautas/pdf', 'PautasController@getPdf');
+        Route::get('pautas/typeahead', 'PautasController@getTypeahead');
+        Route::get('pautas/{id}', 'PautasController@edit');
+
+        Route::post('pautas', 'PautasController@store');
+
+        Route::put('pautas/{id}', 'PautasController@update');
+
+        Route::delete('pautas/{id}', 'PautasController@destroy');
     });
 });

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAlcancesTable extends Migration
+class CreateTalleresSumarteTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateAlcancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pac.alcances', function (Blueprint $table) {
-            $table->increments('id_alcance');
-            $table->string('nombre')->unique();
+        Schema::create('pac.talleres_sumarte', function (Blueprint $table) {
+            $table->increments('id_taller_sumarte');
+            $table->string('nombre', 100);
+            $table->text('objetivo');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +28,6 @@ class CreateAlcancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pac.alcances');
+        Schema::dropIfExists('pac.talleres_sumarte');
     }
 }
