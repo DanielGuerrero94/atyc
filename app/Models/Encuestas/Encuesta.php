@@ -25,18 +25,20 @@ class Encuesta extends Model
      */
     protected $primaryKey = 'id_encuesta';
 
+    protected $fillable = ['id_curso', 'id_pregunta', 'id_respuesta', 'cantidad'];
+
     public function curso()
     {
-        return $this->hasOne('App\Curso', 'id_curso');
+        return $this->hasOne('App\Models\Cursos\Curso', 'id_curso', 'id_curso');
     }
 
     public function pregunta()
     {
-        return $this->hasOne('App\Models\Encuestas\Pregunta', 'id_pregunta');
+        return $this->hasOne('App\Models\Encuestas\Pregunta', 'id_pregunta', 'id_pregunta');
     }
 
     public function respuesta()
     {
-        return $this->hasOne('App\Models\Encuestas\Respuesta', 'id_respuesta');
+        return $this->hasOne('App\Models\Encuestas\Respuesta', 'id_respuesta', 'id_respuesta');
     }
 }

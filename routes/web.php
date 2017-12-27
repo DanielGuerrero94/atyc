@@ -173,12 +173,13 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('reportes/{id_reporte}', 'ReportesController@reporte');
 
     //Encuestas
-    Route::get('encuestas/g_plannacer', 'Encuestas\EncuestaController@gPlannacer');
-    Route::get('encuestas/g_plannacer/datos', 'Encuestas\EncuestaController@gPlannacerDatos');
-    Route::get('encuestas/google_form', 'Encuestas\EncuestaController@googleForm');
-    Route::get('encuestas/survey', 'Encuestas\EncuestaController@survey');
-    Route::get('encuestas/grafico', 'Encuestas\EncuestaController@grafico');
-    Route::resource('encuestas', 'Encuestas\EncuestaController');
+    Route::get('encuestas/g_plannacer', 'Encuestas\EncuestasController@gPlannacer');
+    Route::get('encuestas/g_plannacer/datos', 'Encuestas\EncuestasController@gPlannacerDatos');
+    Route::get('encuestas/google_form', 'Encuestas\EncuestasController@googleForm');
+    Route::get('encuestas/survey', 'Encuestas\EncuestasController@survey');
+    Route::get('encuestas/grafico', 'Encuestas\EncuestasController@grafico');
+    Route::post('encuestas/subida', 'Encuestas\EncuestasController@subida');
+    Route::resource('encuestas', 'Encuestas\EncuestasController');
 
     //Efectores informacion que pueden acceder las provincias.
     Route::get('efectores/nombres', 'EfectoresController@getNombres');

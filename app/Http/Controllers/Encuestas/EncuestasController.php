@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Encuestas;
 
-use Illuminate\Http\Request;
-use App\Models\Encuestas\Encuesta;
 use App\Http\Controllers\Controller;
+use App\Models\Encuestas\Encuesta;
 use DB;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 
-class EncuestaController extends Controller
+class EncuestasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -37,6 +38,7 @@ class EncuestaController extends Controller
      */
     public function store(Request $request)
     {
+        return Encuesta::create($request->all())->id_encuesta;
     }
 
     /**
@@ -155,8 +157,8 @@ class EncuestaController extends Controller
         //Lo ideal seria pasarle solo el nombre de la pregunta y en un array en orden los valores
 
         $ultimo = null;
-        $datos = array();
-        $ret = array();
+        $datos = [];
+        $ret = [];
 
         $encuestas = collect($encuestas)->each(
             function ($value, $item) use (&$ultimo, &$datos, &$ret) {
@@ -184,17 +186,51 @@ class EncuestaController extends Controller
         'datos' => [12,12,14,98,47]);
         */
 
-        $r = array(
-            'preguntas' => $ret);
+        $r = ['preguntas' => $ret];
 
         return json_encode($r);
     }
 
-    public function subida(Request $r)
+    public function subida(Request $request)
     {
+        $path = $request->file('encuesta')->store('encuestas');
+        $csv = $this->procesarCsv($path);
+        $id_curso = $request->id_curso;
+        $errors = [];
+
+        foreach ($csv as $line) {
+            list($id_pregunta, $id_respuesta, $cantidad) = $line;
+            try {
+                Encuesta::create(compact('id_curso', 'id_pregunta', 'id_respuesta', 'cantidad'))->id_encuesta;
+            } catch (QueryException $e) {
+                $matches = [];
+                preg_match_all('/\(id_(\w+)\)=\((\d+)\)/', $e->getMessage(), $matches);
+                array_shift($matches);
+                list($columna, $valor) = $matches;
+                $errors[] = "La {$columna[0]} {$valor[0]} no existe.";
+            }
+        }
+
+        logger(json_encode($errors));
+
+        return json_encode(true);
     }
 
-    private function procesarArchivo()
+    public function procesarCsv($path)
     {
+        $csv = [];
+        $filename = storage_path('app/'.$path);
+
+        $f = fopen($filename, 'r');
+
+        while (!feof($f)) {
+            $line = fgets($f);
+            $line = preg_replace('/\\n$/', '', $line);
+            $csv[] = explode(';', $line);
+        }
+
+        $header = array_shift($csv);
+
+        return $csv;
     }
 }
