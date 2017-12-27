@@ -1,12 +1,15 @@
 <?php
 
-namespace App;
+namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class AccionPauta extends Model
 {
-    protected $table = "acciones_pautas";
+    protected $table = "pac.acciones_pautas";
+
+    protected $primaryKey = 'id_accion_pauta';
 
     protected $fillable = ['item', 'nombre', 'descripcion', 'anio_vigencia'];
 
@@ -18,7 +21,10 @@ class AccionPauta extends Model
         return $this->hasMany('App\Models\Pac\Pauta');
     }
 
-
+    public static function table()
+    {
+        return AccionPauta::all();
+    }
     /**
     *
     *
@@ -26,7 +32,7 @@ class AccionPauta extends Model
     */
     public function crear(Request $r)
     {
-        $this->item = $r->ite);
+        $this->item = $r->item;
         $this->nombre = $r->nombre;
         $this->descripcion = $r->descripcion;
         $this->anio_vigencia = $r->anio_vigencia;
