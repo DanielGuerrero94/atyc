@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDestinatariosTable extends Migration
+class CreateEstadosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateDestinatariosTable extends Migration
      */
     public function up()
     {
-        Schema::create('pac.destinatarios', function (Blueprint $table) {
-            $table->increments('id_destinatario');
-            $table->string('nombre')->unique();
+        Schema::create('pac.estados', function (Blueprint $table) {
+            $table->increments('id_estado');
+            $table->string('nombre');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +27,6 @@ class CreateDestinatariosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pac.destinatarios');
+        Schema::dropIfExists('pac.estados');
     }
 }

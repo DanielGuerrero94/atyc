@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProfundizacionesTable extends Migration
+class CreateComponentesCaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateProfundizacionesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pac.profundizaciones', function (Blueprint $table) {
-            $table->increments('id_profundizacion');
-            $table->string('nombre')->unique();
+        Schema::create('pac.componentes_ca', function (Blueprint $table) {
+            $table->increments('id_componente_ca');
+            $table->string('nombre');
+            $table->integer('anio_vigencia');
+            $table->timestamps();
         });
     }
 
@@ -26,6 +28,6 @@ class CreateProfundizacionesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pac.profundizaciones');
+         Schema::dropIfExists('pac.componentes_ca');
     }
 }
