@@ -211,7 +211,7 @@
             </a>
           </li>
           <li>
-            <a href="#"><i class="fa fa-circle-o"></i>
+            <a href='{{url("/pautas")}}'><i class="fa fa-circle-o"></i>
               <span>Pautas</span>
             </a>
           </li>
