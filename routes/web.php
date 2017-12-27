@@ -280,5 +280,21 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::put('componentesCa/{id}', 'ComponentesCaController@update');
 
         Route::delete('componentesCa/{id}', 'ComponentesCaController@destroy');
+
+            //Profesores
+        Route::get('pautas', 'PautasController@get');
+        Route::get('pautas/tabla', 'PautasController@getTabla');
+        Route::get('pautas/alta', 'PautasController@create');
+        Route::get('pautas/filtrado', 'PautasController@getFiltrado');
+        Route::get('pautas/excel', 'PautasController@getExcel');
+        Route::get('pautas/pdf', 'PautasController@getPdf');
+        Route::get('pautas/typeahead', 'PautasController@getTypeahead');
+        Route::get('pautas/{id}', 'PautasController@edit');
+
+        Route::post('pautas', 'PautasController@store');
+
+        Route::put('pautas/{id}', 'PautasController@update');
+
+        Route::delete('pautas/{id}', 'PautasController@destroy');
     });
 });
