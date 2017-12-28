@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class PivotCursosComponentesCaTable extends Migration
+class PivotPacsCursosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class PivotCursosComponentesCaTable extends Migration
      */
     public function up()
     {
-        Schema::create('cursos.cursos_componentes_ca', function(Blueprint $table){
+        Schema::create('pac.pacs_cursos', function (Blueprint $table) {
+            $table->primary(['id_pac', 'id_curso']);
+            $table->integer('id_pac')->unsigned();
             $table->integer('id_curso')->unsigned();
-            $table->integer('id_componente_ca')->unsigned();
 
+            $table->foreign('id_pac')->references('id_pac')->on('pac.pac');
             $table->foreign('id_curso')->references('id_curso')->on('cursos.cursos');
-            $table->foreign('id_componente_ca')->references('id_componente_ca')->on('pac.componentes_ca');
             
             $table->timestamps();
         });
@@ -31,6 +32,6 @@ class PivotCursosComponentesCaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cursos.cursos_componentes_ca');
+        Schema::dropIfExists('pac.pacs_cursos');
     }
 }

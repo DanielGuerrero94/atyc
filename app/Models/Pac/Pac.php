@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,16 +8,41 @@ class Pac extends Model
 {
     protected $table = "pac.pac";
 
-    protected $fillable = ['trimestre_planificacion', 't1', 't2', 't3', 't4', 'consul_peatyc', 'observado', 'repeticiones', 'id_curso'];
+    protected $fillable = ['trimestre_planificacion', 't1', 't2', 't3', 't4', 'consul_peatyc', 'observado'];
 
+    protected $primaryKey = 'id_pac';
 
     /**
-     * Get la PautaAction de una Pauta.
+     * Acciones planificadas.
      */
-    public function curso()
+    public function acciones()
     {
-        return $this->hasOne('App\Models\Cursos\Curso', 'id_curso', 'id_curso');
+        return $this->hasMany('App\Models\Cursos\Curso', 'id_curso', 'id_curso');
     }
+
+    /**
+     * Componentes del compromiso anual.
+     */
+    public function componentesCa()
+    {
+        return $this->hasMany('App\Models\Pac\ComponenteCa', 'pac.pacs_componentes_ca', 'id_componente_ca', 'id_pac');
+    }
+
+    /**
+     * Destinatarios de las acciones planificadas.
+     */
+    public function destinatarios()
+    {
+        return $this->belongsToMany('App\Funcion', 'pac.pacs_destinatarios', 'id_pac', 'id_funcion');
+    }
+
+    /**
+     * Ficha tecnica.
+     */
+    public function ficha_tecnica()
+    {
+        return $this->hasOne('App\Material', 'id_material', 'id_ficha_tecnica');
+    }    
 
     public function crear(Request $r)
     {

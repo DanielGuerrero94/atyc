@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Pac\Pac;
 
 class PacsController extends Controller
 {
@@ -34,7 +35,13 @@ class PacsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $pac = Pac::create($request->all());
+        if ($request->has('id_destinatario')) {
+            // eval(\Psy\sh());
+            $pac->destinatarios()->attach([$request->get('id_destinatario')]);
+        }
+        $id_pac = $pac->id_pac;
+        return $id_pac;
     }
 
     /**

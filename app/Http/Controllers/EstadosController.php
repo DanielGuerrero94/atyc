@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pac\Estado;
+use App\Models\Cursos\Estado;
 use Datatables;
 
 class EstadosController extends Controller

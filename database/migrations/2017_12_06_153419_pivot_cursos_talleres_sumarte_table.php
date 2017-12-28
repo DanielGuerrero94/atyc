@@ -13,12 +13,12 @@ class PivotCursosTalleresSumarteTable extends Migration
      */
     public function up()
     {
-        Schema::create('cursos.cursos_talleres_sumarte', function(Blueprint $table){
-            $table->primary(['id_curso', 'id_taller_sumarte']);
-            $table->integer('id_curso')->unsigned();
+        Schema::create('cursos.talleres_sumarte_destinatarios', function(Blueprint $table){
+            $table->primary(['id_taller_sumarte', 'id_destinatario']);
+            $table->integer('id_destinatario')->unsigned();
             $table->integer('id_taller_sumarte')->unsigned();
 
-            $table->foreign('id_curso')->references('id_curso')->on('cursos.cursos');
+            $table->foreign('id_destinatario')->references('id_funcion')->on('alumnos.funciones');
             $table->foreign('id_taller_sumarte')->references('id_taller_sumarte')->on('pac.talleres_sumarte');
             
             $table->timestamps();
@@ -32,6 +32,6 @@ class PivotCursosTalleresSumarteTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cursos.cursos_talleres_sumarte');
+        Schema::dropIfExists('cursos.talleres_sumarte_destinatarios');
     }
 }

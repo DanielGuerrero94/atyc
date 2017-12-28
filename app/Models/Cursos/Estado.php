@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Models\Pac;
+namespace App\Models\Cursos;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class Estado extends Model
 {
-    protected $table = "pac.estados";
+    protected $table = "cursos.estados";
 
     protected $fillable = ['nombre'];
 
@@ -19,13 +19,11 @@ class Estado extends Model
     protected $primaryKey = 'id_estado';
 
     /**
-     * Get las Pacs con ese estado.
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
      */
-    public function cursos()
-    {
-        return $this->hasMany('App\Models\Cursos\Curso');
-        return $this->belongsToMany('App\Models\Cursos\Curso', 'cursos.cursos_estados', 'id_curso', 'id_estado')->withTimestamps();
-    }
+    public $timestamps = false;
 
     public static function table()
     {

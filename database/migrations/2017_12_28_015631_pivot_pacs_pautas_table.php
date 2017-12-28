@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class PivotCursosPautasTable extends Migration
+class PivotPacsPautasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class PivotCursosPautasTable extends Migration
      */
     public function up()
     {
-        Schema::create('cursos.cursos_pautas', function(Blueprint $table){
-            $table->integer('id_curso')->unsigned();
+        Schema::create('pac.pacs_pautas', function (Blueprint $table) {
+            $table->primary(['id_pac', 'id_pauta']);
+            $table->integer('id_pac')->unsigned();
             $table->integer('id_pauta')->unsigned();
 
-            $table->foreign('id_curso')->references('id_curso')->on('cursos.cursos');
+            $table->foreign('id_pac')->references('id_pac')->on('pac.pac');
             $table->foreign('id_pauta')->references('id_pauta')->on('pac.pautas');
             
             $table->timestamps();
@@ -31,6 +32,6 @@ class PivotCursosPautasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cursos.cursos_pautas');
+        Schema::dropIfExists('pac.pacs_pautas');
     }
 }
