@@ -204,3 +204,19 @@ $factory->define(App\Models\Encuestas\Encuesta::class, function (Faker\Generator
 
     return compact('id_curso', 'id_pregunta', 'id_respuesta', 'cantidad');
 });
+
+
+/** pac */
+$factory->define(App\Models\Pac\Pac::class, function (Faker\Generator $faker) {
+
+    return [
+        'trimestre_planificacion' => strval(rand(1, 4)) . 'T',
+        't1' => boolval(rand(0, 1))?'X':'',
+        't2' => boolval(rand(0, 1))?'X':'',
+        't3' => boolval(rand(0, 1))?'X':'',
+        't4' => boolval(rand(0, 1))?'X':'',
+        'consul_peatyc' => boolval(rand(0, 1)),
+        'observado' => ''
+    ];
+});
+

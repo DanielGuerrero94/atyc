@@ -6,16 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class TallerSumarte extends Model
 {
-    protected $table = "talleres_sumarte";
+    protected $table = "cursos.talleres_sumarte";
 
     protected $fillable = ['nombre', 'obejetivo'];
 
+    protected $primaryKey = 'id_taller_sumarte';
+
     /**
-     * Get las Pacs con este taller.
+     * Get destinataraio del taller sumarte.
      */
-    public function cursos()
+    public function destinatarios()
     {
-        return $this->belongsToMany('App\Models\Cursos\Curso', 'cursos.cursos_talleres_sumarte', 'id_curso', 'id_taller_sumarte')->withTimestamps();
+        return $this->belongsToMany('App\Funcion', 'cursos.talleres_sumarte_destinatarios', 'id_funcion', 'id_destinatario')->withTimestamps();
     }
 
     /**

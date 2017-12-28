@@ -22,10 +22,7 @@ class CreatePacTable extends Migration
             $table->string('t4',1);
             $table->boolean('consul_peatyc');
             $table->text('observado');
-            $table->integer('repeticiones');
-
-            $table->integer('id_curso')->unsigned();
-            $table->foreign('id_curso')->references('id_curso')->on('cursos.cursos');
+            $table->integer('id_ficha_tectica')->nullable();
             $table->timestamps();            
         });
     }

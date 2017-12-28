@@ -12,18 +12,21 @@ class Provincia extends Model
      * @var string
      */
     protected $table = 'sistema.provincias';
+
     /**
      * Primary key asociated with the table.
      *
      * @var string
      */
     protected $primaryKey = 'id_provincia';
+    
     /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
     public $timestamps = false;
+
     public static function set($nombre)
     {
         $ret = new Provincia();

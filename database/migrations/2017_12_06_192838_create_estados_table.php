@@ -13,7 +13,7 @@ class CreateEstadosTable extends Migration
      */
     public function up()
     {
-        Schema::create('pac.estados', function (Blueprint $table) {
+        Schema::create('cursos.estados', function (Blueprint $table) {
             $table->increments('id_estado');
             $table->string('nombre');
             $table->timestamps();
@@ -27,6 +27,6 @@ class CreateEstadosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pac.estados');
+        Schema::dropIfExists('cursos.estados');
     }
 }

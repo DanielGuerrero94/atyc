@@ -30,9 +30,14 @@ class Curso extends Model
      * @var array
      */
     protected $fillable = ['nombre','id_provincia','id_area_tematica',
-    'id_linea_estrategica','fecha','duracion','edicion'];
+    'id_linea_estrategica','fecha','duracion','edicion','id_estado'];
 
     protected $hidden = ['pivot'];
+
+    public function estado()
+    {
+        return $this->hasOne('App\Models\Pac\Estado', 'id_estado', 'id_estado');
+    }
 
     public function profesores()
     {

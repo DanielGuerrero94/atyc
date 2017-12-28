@@ -16,5 +16,6 @@ class CursosSchemaSeeder extends Seeder
         $this->call(CursosTableSeeder::class);
         $this->call(CursosAlumnosTableSeeder::class);
         $this->call(CursosProfesoresTableSeeder::class);
+        $this->call(EstadosTableSeeder::class);
     }
 }
