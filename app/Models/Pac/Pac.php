@@ -17,7 +17,7 @@ class Pac extends Model
      */
     public function acciones()
     {
-        return $this->hasMany('App\Models\Cursos\Curso', 'id_curso', 'id_curso');
+        return $this->belongsToMany('App\Models\Cursos\Curso', 'pac.pacs_cursos', 'id_curso', 'id_pac');
     }
 
     /**

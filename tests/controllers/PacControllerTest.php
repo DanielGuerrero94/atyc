@@ -14,10 +14,10 @@ class PacControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-	protected $model;
-	protected $controller;
+    protected $model;
+    protected $controller;
 
-	public function setUp()
+    public function setUp()
     {
         parent::setUp();
         $this->model = new Pac;
@@ -64,7 +64,7 @@ class PacControllerTest extends TestCase
     public function storeOneDestinatario(Request $request)
     {
         $id_destinatario = $this->makeDestinatarios(1)->id_funcion;
-        $request->query->set('id_destinatario', $id_destinatario);
+        $request->query->set('destinatarios', $id_destinatario);
         $model_instance_id = $this->controller->store($request);
         $model = $this->model->with('destinatarios')->findOrFail($model_instance_id);
         $this->assertTrue(is_numeric($model->destinatarios()->get()->first()->id_funcion));
@@ -72,15 +72,41 @@ class PacControllerTest extends TestCase
 
     /**
      * A basic test example.
-     *
+     * @dataProvider PacDataProvider
+     * @test
      * @return void
      */
     public function storeManyDestinatarios(Request $request)
     {
-        $id_destinatario = $this->makeDestinatarios(1);
-        $model_instance_id = $this->controller->store($request)->id_pac;
-        $id_destinatario = $this->model->with('destinatarios')->findOrFail($model_instance_id);
-        $this->assertTrue(is_numeric($id_destinatario));
+        $destinatarios = $this->makeDestinatarios(2)->map(function ($destinatario) {
+            return $destinatario->id_funcion;
+        });
+        $destinatarios = implode($destinatarios->all(), ',');
+        $request->query->set('destinatarios', $destinatarios);
+        $model_instance_id = $this->controller->store($request);
+        $model = $this->model->with('destinatarios')->findOrFail($model_instance_id);
+        $this->assertEquals(2, $model->destinatarios()->get()->count());
+    }
+
+    /**
+     * A basic test example.
+     * @dataProvider PacDataProvider
+     * @test
+     * @return void
+     */
+    public function storeOneAccion(Request $request)
+    {
+        $accion = true;
+        $nombre = 'asd';
+        $id_linea_estrategica = 5;
+        $id_area_tematica = 5;
+        $request->query->set('accion', $accion);
+        $request->query->set('nombre', $nombre);
+        $request->query->set('id_linea_estrategica', $id_linea_estrategica);
+        $request->query->set('id_area_tematica', $id_area_tematica);
+        $model_instance_id = $this->controller->store($request);
+        $model = $this->model->with('acciones')->findOrFail($model_instance_id);
+        $this->assertTrue($model->acciones()->get()->id_curso);
     }
 
     /**
