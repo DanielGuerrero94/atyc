@@ -36,10 +36,18 @@ class PacsController extends Controller
     public function store(Request $request)
     {
         $pac = Pac::create($request->all());
-        if ($request->has('id_destinatario')) {
-            // eval(\Psy\sh());
-            $pac->destinatarios()->attach([$request->get('id_destinatario')]);
+
+
+        if ($request->has('destinatarios')) {
+            $pac->destinatarios()->attach(explode(',', $request->get('destinatarios')));
         }
+
+        if ($request->has('accion')) {
+            $accion = $request->only('nombre', 'id_linea_estrategica', 'id_area_tematica');
+            eval(\Psy\sh());
+            $pac->acciones()->create($accion);
+        }
+
         $id_pac = $pac->id_pac;
         return $id_pac;
     }
