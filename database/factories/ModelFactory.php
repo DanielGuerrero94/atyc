@@ -216,7 +216,7 @@ $factory->define(App\Models\Pac\Pac::class, function (Faker\Generator $faker) {
         't3' => boolval(rand(0, 1))?'X':'',
         't4' => boolval(rand(0, 1))?'X':'',
         'consul_peatyc' => boolval(rand(0, 1)),
-        'observado' => ''
+        'observado' => $faker->text
     ];
 });
 

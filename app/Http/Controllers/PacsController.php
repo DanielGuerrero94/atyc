@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pac\Pac;
+use App\Models\Pac\AccionPauta;
 
 class PacsController extends Controller
 {
@@ -24,7 +25,7 @@ class PacsController extends Controller
      */
     public function create()
     {
-        //
+        return view('pac.create', $this->getSelectOptions());
     }
 
     /**
@@ -43,8 +44,7 @@ class PacsController extends Controller
         }
 
         if ($request->has('accion')) {
-            $accion = $request->only('nombre', 'id_linea_estrategica', 'id_area_tematica');
-            eval(\Psy\sh());
+            $accion = $request->only('nombre', 'id_linea_estrategica', 'id_area_tematica', 'id_provincia');
             $pac->acciones()->create($accion);
         }
 
@@ -95,5 +95,22 @@ class PacsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Opciones para los selects del front end.
+     *
+     * @return array
+     */
+    public function getSelectOptions()
+    {
+        $anio = DateTime::now()->format('year');
+
+        $destinatarios = App\Funcion::all();
+        $pautas = App\Models\Pac\Pauta::where('anio_vigencia', $anio)->get();
+        $categoriasPautas = AccionPauta::where('anio_vigencia', $anio)->get();
+        $componenteCa = App\Models\Pac\componenteCa::where('anio_vigencia', $anio)->get();;
+
+        return compact('destinatarios', 'pautas', 'categoriasPautas', 'componenteCa');
     }
 }

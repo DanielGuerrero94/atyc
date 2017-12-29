@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         //$this->call(SistemaSchemaSeeder::class);
         //$this->call(PublicSchemaSeeder::class);
-        $this->call(AlumnosSchemaSeeder::class);
+        // $this->call(AlumnosSchemaSeeder::class);
         //$this->call(CursosSchemaSeeder::class);
         //$this->call(EncuestasSchemaSeeder::class);
         $this->call(PacSchemaSeeder::class);

@@ -9,7 +9,7 @@ class Pauta extends Model
 {
     protected $table = "pac.pautas";
 
-    protected $fillable = ['nombre', 'descripcion', 'id_accion_pauta'];
+    protected $fillable = ['item', 'nombre', 'descripcion', 'id_accion_pauta'];
     protected $primaryKey = 'id_pauta';
 
     /**

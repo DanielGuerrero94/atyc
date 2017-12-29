@@ -37,11 +37,6 @@ class PautasController extends AbmController
         'fa fa-trash-o'
     ];
 
-    public function query($query)
-    {
-        return DB::connection('eLearning')->select($query);
-    }
-
     /**
     * View para abm.
     *

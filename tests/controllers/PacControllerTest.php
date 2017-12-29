@@ -74,7 +74,6 @@ class PacControllerTest extends TestCase
      * A basic test example.
      * @dataProvider PacDataProvider
      * @test
-     * @return void
      */
     public function storeManyDestinatarios(Request $request)
     {
@@ -100,10 +99,14 @@ class PacControllerTest extends TestCase
         $nombre = 'asd';
         $id_linea_estrategica = 5;
         $id_area_tematica = 5;
+        $id_provincia = 1;
+        $fecha = '2017-12-11';
         $request->query->set('accion', $accion);
         $request->query->set('nombre', $nombre);
         $request->query->set('id_linea_estrategica', $id_linea_estrategica);
         $request->query->set('id_area_tematica', $id_area_tematica);
+        $request->query->set('id_provincia', $id_provincia);
+        $request->query->set('fecha', $fecha);
         $model_instance_id = $this->controller->store($request);
         $model = $this->model->with('acciones')->findOrFail($model_instance_id);
         $this->assertTrue($model->acciones()->get()->id_curso);
