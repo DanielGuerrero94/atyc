@@ -236,7 +236,7 @@
 			source: {
 				info: {
 					ajax: {
-						url: "alumnos/establecimientos",
+						url: "{{url('/alumnos/establecimientos')}}",
 						path: "data.info",						
 						data: {
 							q: "@{{query}}"
@@ -277,7 +277,7 @@
 			source: {
 				nombre: {
 					ajax: {
-						url: "efectores/nombres/typeahead",
+						url: "{{url('/efectores/nombres/typeahead')}}",
 						path: "data.nombres",						
 						data: {
 							q: "@{{query}}",
@@ -291,7 +291,7 @@
 				},
 				cuie: {
 					ajax: {
-						url: "efectores/cuies/typeahead",
+						url: "{{url('/efectores/cuies/typeahead')}}",
 						path: "data.cuies",						
 						data: {
 							q: "@{{query}}",
@@ -319,7 +319,7 @@
 		source: {
 			info: {
 				ajax: {
-					url: "alumnos/nombre_organismo",
+					url: "{{url('/alumnos/nombre_organismo')}}",
 					path: "data.info",
 					data: {
 						q: "@{{query}}"
@@ -461,7 +461,7 @@
 				source: {
 					info: {
 						ajax: {
-							url: "paises/nombres",
+							url: "{{url('/paises/nombres')}}",
 							path: "data.info",						
 							data: {
 								q: "@{{query}}"
@@ -525,7 +525,7 @@
 			let noExiste;
 			$.ajax({
 				async: false,
-				url : 'alumnos/documentos',
+				url : "{{url('/alumnos/documentos')}}",
 				data : {
 					nro_doc: value
 				},
@@ -560,12 +560,16 @@
 			function backToCreate () {
 				$('.container-fluid #creando-participante').remove();
 				$('.container-fluid #alta-accion').closest('.row').show();
+				//Quick fix
+				$('.container-fluid #modificacion-accion').closest('.row').show();
 				$('.container-fluid #alta').remove();
 			}
 			
 			function transitionAfterSubmit(data) {
 				$('.container-fluid #creando-participante').remove();
 				$('.container-fluid #alta-accion').closest('.row').show();
+				//Quick fix
+				$('.container-fluid #modificacion-accion').closest('.row').show();
 				$('.container-fluid #alta').remove();
 				agregarParticipante(data.data.nombres, data.data.apellidos, data.data.nro_doc, data.data.id_alumno);
 			}
@@ -662,7 +666,7 @@
 			},
 			submitHandler : function(form){
 				$.ajax({
-					url: "{{url('alumnos')}}",
+					url: "{{url('/alumnos')}}",
 					type: 'POST',						
 					data: getInput(),
 					complete: function(xhr, textStatus) {

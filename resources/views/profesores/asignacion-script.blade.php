@@ -24,7 +24,7 @@
         Nombres: {
           display: 'nombre',
           ajax:{
-            url: "{{url('profesores/typeahead')}}",
+            url: "{{url('/profesores/typeahead')}}",
             path: "data.info",
             data: {
               q: "@{{query}}"
@@ -38,7 +38,7 @@
         Apellidos: {
           display: 'apellidos',
           ajax: {
-            url: "{{url('profesores/typeahead')}}",
+            url: "{{url('/profesores/typeahead')}}",
             path: "data.info",
             data: {
               q: "@{{query}}"
@@ -52,7 +52,7 @@
         Documentos: {
           display: 'documentos',
           ajax:{
-            url: "{{url('profesores/typeahead')}}",
+            url: "{{url('/profesores/typeahead')}}",
             path: "data.info",
             data: {
               q: "@{{query}}"
@@ -101,11 +101,13 @@
       event.preventDefault();
 
       $.ajax({
-        url: "{{url('profesores/alta')}}",
+        url: "{{url('/profesores/alta')}}",
         success: function (response) {
           console.log('success');
 
           $('.container-fluid #alta-accion').closest('.row').slideUp(450);
+          //Quick fix
+          $('.container-fluid #modificacion-accion').closest('.row').slideUp(450);
 
         //Creo animacion de creando
         jQuery('<div/>', {

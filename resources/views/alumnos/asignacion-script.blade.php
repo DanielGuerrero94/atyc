@@ -117,11 +117,13 @@
     event.preventDefault();
     
     $.ajax({
-      url: "{{url('alumnos/alta')}}",
+      url: "{{url('/alumnos/alta')}}",
       success: function (response) {
         console.log('success');
 
         $('.container-fluid #alta-accion').closest('.row').slideUp(450);
+        //Quick fix
+        $('.container-fluid #modificacion-accion').closest('.row').slideUp(450);
 
         //Creo animacion de creando
         jQuery('<div/>', {

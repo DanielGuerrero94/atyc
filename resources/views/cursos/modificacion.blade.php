@@ -1,12 +1,13 @@
 @extends('layouts.adminlte')
 @section('content')
 <div class="container-fluid">
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<form id="form-modificacion">
-			<div class="box">
-				<div class="nav-tabs-custom">
-					<ul class="nav nav-tabs">
-						<li class="active">
+  <div class="row">
+  <div id="modificacion-accion" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <form id="form-modificacion">
+      <div class="box">
+        <div class="nav-tabs-custom">
+          <ul class="nav nav-tabs">
+            <li class="active">
               <a href="#inicial" data-toggle="tab">Inicial</a>
             </li>
             <li>
@@ -80,7 +81,7 @@
                       <option data-id="{{$area->id_area_tematica}}" selected="selected">{{$area->nombre}}</option>
                       @else
                       <option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
-                      @endif	
+                      @endif  
                       @endforeach
                     </select>          
                   </div>
@@ -98,7 +99,7 @@
                       <option data-id="{{$linea->id_linea_estrategica}}" selected="selected">{{$linea->numero}}-{{$linea->nombre}}</option>
                       @else
                       <option data-id="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
-                      @endif	
+                      @endif  
                       @endforeach
                     </select>
                   </div>          
@@ -147,7 +148,8 @@
           </div>
         </div>
       </div>
-    </form>	
+    </form> 
+  </div>
   </div>
 </div>
 @endsection
@@ -159,12 +161,12 @@
 
 <script type="text/javascript">
 
-	$(document).ready(function() {
+  $(document).ready(function() {
     console.log(getInput());
 
     //No se porque estoy teniendo que inicializarlo aca si ya se deberia haber inicializado en el layout de adminlte
     $('.datepicker').datepicker({
-    	format: 'dd/mm/yyyy',
+      format: 'dd/mm/yyyy',
     	language: 'es',
     	autoclose: true,
     });

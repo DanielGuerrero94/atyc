@@ -99,7 +99,7 @@
 				info: {
 					ajax: {
 						type: "get",
-						url: "paises/nombres",
+						url: "{{url('/paises/nombres')}}",
 						path: "data.info"
 					}
 				}
@@ -130,12 +130,16 @@
 			function backToCreate () {
 				$('.container-fluid #creando-docente').remove();
 				$('.container-fluid #alta-accion').closest('.row').show();
+				//Quick fix
+				$('.container-fluid #modificacion-accion').closest('.row').show();
 				$('.container-fluid #alta').remove();
 			}
 			
 			function transitionAfterSubmit(data) {
 				$('.container-fluid #creando-docente').remove();
 				$('.container-fluid #alta-accion').closest('.row').show();
+				//Quick fix
+				$('.container-fluid #modificacion-accion').closest('.row').show();
 				$('.container-fluid #alta').remove();
 				console.log("Se intenta agregar al docente a la accion.");
 				agregarDocente(data.nombres, data.apellidos, data.nro_doc, data.id_profesor);
@@ -166,7 +170,7 @@
 				let noExiste;
 				$.ajax({
 					async: false,
-					url : 'profesores/documentos',
+					url : '{{url('/profesores/documentos')}}',
 					data : {
 						nro_doc: value
 					},
@@ -256,7 +260,7 @@
 			},
 			submitHandler : function(form){
 				$.ajax({
-					url: 'profesores',
+					url: '{{url('/profesores')}}',
 					type: 'POST',						
 					data: getInput(),
 					complete: function(xhr, textStatus) {
