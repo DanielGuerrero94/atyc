@@ -56,7 +56,7 @@ Route::get('dashboard/draw/heats', 'DashboardController@heats');
 Route::group(['middleware' => ['logueado','logging']], function () {
     //Materiales
     Route::get('archivos', 'MaterialesController@view');
-    Route::get('materiales/list', 'MaterialesController@list');
+    Route::get('materiales/list', 'MaterialesController@listar');
     Route::get('materiales/{id}/download', 'MaterialesController@download');
     Route::resource('materiales', 'MaterialesController');
 

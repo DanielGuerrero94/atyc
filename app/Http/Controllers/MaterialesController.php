@@ -92,7 +92,7 @@ class MaterialesController extends Controller
         return json_encode($deleted);
     }
 
-    public function list()
+    public function listar()
     {
         $materiales = $this->generateList();
         return view('archivos.materiales', compact('materiales'));
