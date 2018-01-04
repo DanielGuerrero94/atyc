@@ -11,24 +11,30 @@ use Datatables;
 class EfectoresController extends Controller
 {
     private $filters_map = [
-    'id_provincia' => 'p',
-    'descripcion' => 'p',
-    'siisa' => 'e',
-    'cuie' => 'e',
-    'nombre' => 'e',
-    'denominacion_legal' => 'e',
-    'domicilio' => 'e',
-    'id_departamento' => 'd',
-    'nombre_departamento' => 'd',
-    'id_localidad' => 'l',
-    'nombre_localidad' => 'l',
-    'codigo_postal' => 'e',
-    'ciudad' => 'dg',
+        'id_provincia' => 'p',
+        'descripcion' => 'p',
+        'siisa' => 'e',
+        'cuie' => 'e',
+        'nombre' => 'e',
+        'denominacion_legal' => 'e',
+        'domicilio' => 'e',
+        'id_departamento' => 'd',
+        'nombre_departamento' => 'd',
+        'id_localidad' => 'l',
+        'nombre_localidad' => 'l',
+        'codigo_postal' => 'e',
+        'ciudad' => 'dg',
     ];
 
     public function get()
     {
-        return view('efectores');
+        $provincias = [];
+
+        if (Auth::user()->id_provincia == 25) {
+            $provincias = Provincia::all()->where('id_provincia','<>','25');    
+        }
+        
+        return view('efectores', compact('provincias'));
     }
 
     public function queryLogica(Request $r, $filtros = [])
@@ -175,29 +181,21 @@ class EfectoresController extends Controller
 
     public function toTypeahead($array)
     {
-        return array(
+        return [
             'status' => true,
             'error' => null,
             'data' => $array
-            );
+        ];
     }
 
     public function nombresTypeahead(Request $r)
     {
-        return $this->toTypeahead(
-            array(
-                'nombres' => $this->getNombres($r)
-                )
-        );
+        return $this->toTypeahead(['nombres' => $this->getNombres($r)]);
     }
 
     public function cuiesTypeahead(Request $r)
     {
-        return $this->toTypeahead(
-            array(
-                'cuies' => $this->getCuies($r)
-                )
-        );
+        return $this->toTypeahead(['cuies' => $this->getCuies($r)]);
     }
 
     public function getNombres(Request $r)
@@ -205,14 +203,12 @@ class EfectoresController extends Controller
         $query = DB::table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'e.id_efector', '=', 'dg.id_efector')
         ->select('e.nombre')
-        ->where('e.nombre', 'ilike', '%'.$r->q.'%')
+        ->whereRaw("efectores.efectores.nombre ~* '{$r->q}'")
+        ->pluck('e.nombre')
         ->orderBy('e.nombre');
 
         return $this->segunProvincia($query, $r->id_provincia)
         ->get()
-        ->map(function ($item, $key) {
-            return $item->nombre;
-        })
         ->toArray();
     }
 
@@ -221,23 +217,24 @@ class EfectoresController extends Controller
         $query = DB::table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'e.id_efector', '=', 'dg.id_efector')
         ->select('e.cuie')
-        ->where('e.cuie', 'ilike', '%'.$r->q.'%')
+        ->whereRaw("efectores.efectores.cuie ~* '{$r->q}'")
+        ->pluck('e.cuie')
         ->orderBy('e.cuie');
 
         return $this->segunProvincia($query, $r->id_provincia)
         ->get()
-        ->map(function ($item, $key) {
-            return $item->cuie;
-        })
         ->toArray();
     }
 
-
+    public function mapearProvincia($id_provincia)
+    {
+        return $id_provincia < 10?"0".strval($id_provincia):strval($id_provincia);
+    }
 
     public function segunProvincia($query, $id_provincia)
     {
         if ($id_provincia != 0) {
-            $id_provincia = $id_provincia < 10?"0".strval($id_provincia):strval($id_provincia);
+            $id_provincia = $this->mapearProvincia($id_provincia);
 
             $query = $query->where('dg.id_provincia', $id_provincia);
         }
@@ -262,12 +259,11 @@ class EfectoresController extends Controller
 
         $cursos = Curso::getByCuie($cuie);
 
-        $array = array('efector' => $efector,'cursos' => $cursos);
-        return view('efectores/historial_cursos', $array);
+        return view('efectores/historial_cursos', compact('efector', 'cursos'));
     }
 
     public function findCuie($string)
-    {
+    {   
         if ($this->esCuie($string)) {
             return $string;
         }
@@ -292,7 +288,7 @@ class EfectoresController extends Controller
 
     public function efectoresSegunProvincia($id_provincia)
     {
-        $request = new Illuminate\Http\Request(array('filtros' => array('id_provincia' => $id_provincia)));
+        $request = new Illuminate\Http\Request(['filtros' => ['id_provincia' => $id_provincia]]);
         return $this->queryLogica($request)->get();
     }
 
@@ -302,7 +298,9 @@ class EfectoresController extends Controller
         ->mapWithKeys(function ($item) {
             return $item;
         });
+
         $query = $this->queryLogica($r, $filtros);
+
         return Datatables::of($query)
         ->addColumn('acciones', function ($ret) {
             $ver_historial = '<a href="efectores/'.$ret->cuie.'/cursos"><button class="btn btn-info" '.
@@ -314,29 +312,23 @@ class EfectoresController extends Controller
 
     public function selectDepartamentos(Request $r, $id_provincia)
     {
-        $query = DB::table('geo.provincias as p')
-        ->leftJoin('geo.departamentos as d', 'd.id_provincia', '=', 'p.id_provincia')
+        return DB::table('geo.provincias as p')
+        ->join('geo.departamentos as d', 'd.id_provincia', '=', 'p.id_provincia')
         ->select('id', 'nombre_departamento')
-        ->orderBy('nombre_departamento');
-
-        $id_provincia = $id_provincia < 10?"0".strval($id_provincia):strval($id_provincia);
-        $query = $query->where('p.id_provincia', $id_provincia);
-
-        return $query->get();
+        ->where('p.id_provincia', $this->mapearProvincia($id_provincia));
+        ->orderBy('nombre_departamento')
+        ->get();
     }
 
     public function selectLocalidad(Request $r, $id_provincia, $id_departamento)
     {
-        $query = DB::table('geo.provincias as p')
-        ->leftJoin('geo.departamentos as d', 'd.id_provincia', '=', 'p.id_provincia')
-        ->leftJoin('geo.localidades as l', 'l.id_departamento', '=', 'd.id_departamento')
+        return DB::table('geo.provincias as p')
+        ->join('geo.departamentos as d', 'd.id_provincia', '=', 'p.id_provincia')
+        ->join('geo.localidades as l', 'l.id_departamento', '=', 'd.id_departamento')
         ->select('id', 'nombre_departamento')
-        ->orderBy('nombre_departamento');
-
-        $id_provincia = $id_provincia < 10?"0".strval($id_provincia):strval($id_provincia);
-        $query = $query->where('p.id_provincia', $id_provincia);
-        $query = $query->where('d.id', $id_departamento);
-
-        return $query->get();
+        ->where('p.id_provincia', $this->mapearProvincia($id_provincia))
+        ->where('d.id', $id_departamento)
+        ->orderBy('nombre_departamento')
+        ->get();
     }
 }

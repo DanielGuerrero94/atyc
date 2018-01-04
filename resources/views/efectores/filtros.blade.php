@@ -39,7 +39,7 @@
 					<div class="col-xs-7">
 						<select class="form-control" id="provincia" name="id_provincia">
 							<option value="0">Todas las provincias</option>
-							@foreach (App\Provincia::all()->where('id_provincia','<>','25') as $provincia)
+							@foreach ($provincias as $provincia)
 							<option value="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>	
 							@endforeach
 						</select>
