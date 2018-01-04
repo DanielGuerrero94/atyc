@@ -33,10 +33,13 @@
 
 	$(document).ready(function(){
 
+		$('#filtros #filtrar').click();
+
 		$('#abm').on('click','.filter',function () {
 			$('#filtros .box').toggle();
 		});
 
+		/*
 		datatable = $('.table').DataTable({
 			destroy: true,
 			responsive: true,
@@ -55,6 +58,7 @@
 			{ data: 'acciones', title: 'Acciones', searchable: false, orderable: false}
 			]
 		});
+		*/
 
 		function getFiltros(){
 			return $('#form-filtros :input')

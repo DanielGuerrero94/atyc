@@ -247,7 +247,7 @@ class EfectoresController extends Controller
 
     public function historialCursos(Request $r, $cuie)
     {
-        $efector = $this->queryLogica($r);
+        $efector = $this->queryLogica($r, collect(['capacitados' => true]));
 
         $provincia = Auth::user()->id_provincia;
 
