@@ -40,7 +40,7 @@ class EfectoresController extends Controller
         ->join('geo.localidades as l', 'l.id', '=', 'dg.id_localidad');
 
         if ($filtros->pop('capacitados')) {
-            $query = $query->join('alumnos.alumnos as al', 'al.establecimiento2', '=', 'e.cuie');
+            $query = $query->join('alumnos.alumnos as al', 'al.establecimiento1', '=', 'e.cuie');
         }
 
         $query = $query->select(
@@ -67,6 +67,22 @@ class EfectoresController extends Controller
                 $query = $query->where($this->mapearColumna($key), $value);
             }
         }
+
+        $query = $query->groupBy(
+            'p.id_provincia',
+            'p.descripcion',
+            'e.siisa',
+            'e.cuie',
+            'e.nombre',
+            'e.denominacion_legal',
+            'e.domicilio',
+            'd.id_departamento',
+            'd.nombre_departamento',
+            'l.id_localidad',
+            'l.nombre_localidad',
+            'e.codigo_postal',
+            'dg.ciudad'
+        );
         
         return $query;
     }
