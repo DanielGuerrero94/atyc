@@ -64,7 +64,7 @@
 				var r = {};
 				r[obj.name] = obj.value;
 				return r;
-			});
+			}).push({capacitados: $('#form-filtros #capacitados').data('check')});
 		}
 
 		$('#filtros').on('click','#filtrar',function () {
