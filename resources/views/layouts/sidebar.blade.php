@@ -47,6 +47,12 @@
             <span>Documentación</span>
           </a>
         </li>
+        <li>
+        <a href="{{url("/efectores")}}">
+          <i class="fa fa-circle-o"></i>
+          <span>Efectores</span>
+        </a>
+      </li>
       </ul>
     </li>
     <li class="treeview">
@@ -155,12 +161,6 @@
         <a href="{{url("/gestores")}}">
           <i class="fa fa-circle-o"></i>
           <span>Gestores</span>
-        </a>
-      </li>
-      <li>
-        <a href="{{url("/efectores")}}">
-          <i class="fa fa-circle-o"></i>
-          <span>Efectores</span>
         </a>
       </li>      
     </ul>

@@ -8,14 +8,12 @@
 		</div>
 	</div>
 	<div class="row">
-		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+		<div id="abm">
 			<div class="box box-info ">
 				<div class="box-header">
 					<h2 class="box-tittle">Efectores
 						<div class="btn-group pull-right" role="group" aria-label="...">
 							<div type="button" class="btn btn-info filter" title="Filtro"><i class="fa fa-sliders" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-info expand" title="Expandir"><i class="fa fa-expand" aria-hiden="true"></i></div>
-							<div type="button" class="btn btn-info compress" title="Comprimir" style="display: none;"><i class="fa fa-compress" aria-hidden="true"></i></div>	
 						</div>
 						<i class="fa fa-info-circle btn text-primary pull-right" title="Solo consulta de los que tienen georeferenciamiento."></i>
 					</h2>
@@ -38,20 +36,6 @@
 		$('#abm').on('click','.filter',function () {
 			$('#filtros .box').toggle();
 		});
-
-		$('#abm').on('click','.expand',function () {
-			$('#abm').removeClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
-			datatable.draw();
-			$('.compress').show();	
-			$(this).hide();
-		});
-
-		$('#abm').on('click','.compress',function () {
-			$('#abm').addClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
-			datatable.draw();
-			$('.expand').show();	
-			$(this).hide();	
-		});	
 
 		datatable = $('.table').DataTable({
 			destroy: true,

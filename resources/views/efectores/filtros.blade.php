@@ -22,7 +22,14 @@
 					<div class="col-xs-7">
 						<input class="form-control" id="apellidos" name="apellidos">
 					</div>
-				</div>						
+				</div>	
+				<div class="form-group col-sm-4">  		  		
+					<label for="capacitados" class="control-label col-xs-5">Capacitados</label>
+					<div class="col-xs-7">
+						<i class="fa btn fa-toggle-on" id="capacitados" name="capacitados" data-check="true"></i>
+					</div>
+				</div>	
+				
 			</div>
 			<hr>
 			<div class="row">
@@ -104,5 +111,13 @@
 			});
 			
 		});
+
+		$('#filtros').on('click', '#capacitados', function () {
+
+			switchIcon($(this),'fa-toggle-off','fa-toggle-on');
+
+			$(this).data('check', !$(this).data('check'));
+			
+		});	
 	});
 </script>

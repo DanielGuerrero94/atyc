@@ -35,10 +35,15 @@ class EfectoresController extends Controller
     {
         $query = DB::table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'dg.id_efector', '=', 'e.id_efector')
-        ->leftJoin('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
-        ->leftJoin('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
-        ->leftJoin('geo.localidades as l', 'l.id', '=', 'dg.id_localidad')
-        ->select(
+        ->join('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
+        ->join('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
+        ->join('geo.localidades as l', 'l.id', '=', 'dg.id_localidad');
+
+        if ($filtros->pop('capacitados')) {
+            $query = $query->join('alumnos.alumnos as al', 'al.establecimiento2', '=', 'e.cuie');
+        }
+
+        $query = $query->select(
             'p.id_provincia',
             'p.descripcion as provincia',
             'e.siisa',
@@ -62,7 +67,7 @@ class EfectoresController extends Controller
                 $query = $query->where($this->mapearColumna($key), $value);
             }
         }
-        logger(json_encode($query));
+        
         return $query;
     }
 
@@ -141,7 +146,7 @@ class EfectoresController extends Controller
 
     public function getTabla(Request $r)
     {
-        $query = $this->queryLogica($r);
+        $query = $this->queryLogica($r, collect(['capacitados' => true]));
 
         return Datatables::of($query)
         ->addColumn('acciones', function ($ret) {
