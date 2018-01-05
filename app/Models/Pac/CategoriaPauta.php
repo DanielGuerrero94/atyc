@@ -5,11 +5,11 @@ namespace App\Models\Pac;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
-class AccionPauta extends Model
+class CategoriaPauta extends Model
 {
-    protected $table = "pac.acciones_pautas";
+    protected $table = "pac.categorias_pautas";
 
-    protected $primaryKey = 'id_accion_pauta';
+    protected $primaryKey = 'id_categoria_pauta';
 
     protected $fillable = ['item', 'nombre', 'descripcion', 'anio_vigencia'];
 
@@ -23,7 +23,7 @@ class AccionPauta extends Model
 
     public static function table()
     {
-        return AccionPauta::all();
+        return CategoriaPauta::all();
     }
     /**
     *

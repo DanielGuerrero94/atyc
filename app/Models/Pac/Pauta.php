@@ -9,7 +9,7 @@ class Pauta extends Model
 {
     protected $table = "pac.pautas";
 
-    protected $fillable = ['nombre', 'descripcion', 'id_accion_pauta'];
+    protected $fillable = ['nombre', 'descripcion', 'id_categoria_pauta'];
     protected $primaryKey = 'id_pauta';
 
     /**
@@ -30,7 +30,7 @@ class Pauta extends Model
 
     public function accionPauta()
     {
-        return $this->hasOne('App\Models\Pac\AccionPauta', 'id_accion_pauta', 'id_accion_pauta');
+        return $this->hasOne('App\Models\Pac\CategoriaPauta', 'id_categoria_pauta', 'id_categoria_pauta');
     }
     /**
     *
@@ -42,7 +42,7 @@ class Pauta extends Model
         $this->item             = $r->item;
         $this->nombre           = $r->nombre;
         $this->descripcion      = $r->descripcion;
-        $this->id_accion_pauta  = $r->id_accion_pauta;
+        $this->id_categoria_pauta  = $r->id_categoria_pauta;
         $this->save();
         return $this;
     }
@@ -52,7 +52,7 @@ class Pauta extends Model
         $this->item             = $r->item;
         $this->nombre           = $r->nombre;
         $this->descripcion      = $r->descripcion;
-        $this->id_accion_pauta  = $r->id_accion_pauta;
+        $this->id_categoria_pauta  = $r->id_categoria_pauta;
         $this->save();
         return $this;
     }

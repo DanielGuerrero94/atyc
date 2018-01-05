@@ -4,8 +4,6 @@
 		<h2 class="box-tittle">Pautas
 			<div class="btn-group pull-right" role="group" aria-label="...">
 				<button type="button" class="btn btn-box-tool btn-info filter" title="Filtro"><i class="fa fa-sliders" aria-hidden="true"></i></button>
-				<button type="button" class="btn btn-box-tool btn-info compress" title="Comprimir" style="display: none;"><i class="fa fa-compress" aria-hidden="true"></i></button>
-				<button type="button" class="btn btn-box-tool btn-info expand" title="Expandir"><i class="fa fa-expand" aria-hidden="true"></i></button>					
 			</div>
 		</h2>
 	</div>
@@ -16,7 +14,7 @@
 					<th>Item</th>
 					<th>Nombre</th>
 					<th>Descripcion</th>
-					<th>Accion Pauta</th>
+					<th>Categoria Pauta</th>
 					<th>Acciones</th>
 				</tr>
 			</thead>

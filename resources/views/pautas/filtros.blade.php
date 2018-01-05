@@ -33,12 +33,12 @@
 			</div>
 			<div class="row">
 				<div class="form-group col-sm-4">
-					<label class="control-label col-xs-5" for="id_accion_pauta">Accion de la Pauta:</label>
+					<label class="control-label col-xs-5" for="id_categoria_pauta">Categoriaid_categoria_pauta de la Pauta:</label>
 					<div class="col-xs-7">
-						<select class="form-control" id="id_accion_pauta" title="Accion de la Pauta" name="id_accion_pauta">
-							@foreach ($accionPauta as $accion)
+						<select class="form-control" id="id_categoria_pauta" title="Categoriaid_categoria_pauta de la Pauta" name="id_categoria_pauta">
+							@foreach ($categoriaPauta as $categoria)
 
-							<option value="{{$accion->id_accion_pauta}}" title="{{$accion->item}}">{{$accion->nombre}}</option>										
+							<option value="{{$categoria->id_categoria_pauta}}" title="{{$categoria->item}}">{{$categoria->nombre}}</option>										
 							@endforeach
 						</select>
 					</div>

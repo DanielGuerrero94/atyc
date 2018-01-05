@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAccionesPautasTable extends Migration
+class CreateCategoriasPautasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateAccionesPautasTable extends Migration
      */
     public function up()
     {
-        Schema::create('pac.acciones_pautas', function (Blueprint $table) {
-            $table->increments('id_accion_pauta');
+        Schema::create('pac.categorias_pautas', function (Blueprint $table) {
+            $table->increments('id_categoria_pauta');
             $table->integer('item');
             $table->string('nombre');
             $table->text('descripcion');
@@ -30,6 +30,6 @@ class CreateAccionesPautasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pac.acciones_pautas');
+        Schema::dropIfExists('pac.categorias_pautas');
     }
 }

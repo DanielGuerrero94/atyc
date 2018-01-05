@@ -32,11 +32,7 @@
 							<div class="col-xs-8">
 								<select class="form-control" id="id_accion_pauta" name="id_accion_pauta">
 									@foreach ($accionPauta as $accion)							
-										@if ($accion->id_accion_pauta == $profesor->id_accion_pauta)
-										<option value="{{$accion->id_accion_pauta}}" title="{{$accion->titulo}}" selected="selected">{{$accion->nombre}}</option>
-										@else
 										<option value="{{$accion->id_accion_pauta}}" title="{{$accion->item}}">{{$accion->nombre}}</option>
-										@endif						
 									@endforeach
 								</select>
 							</div>
@@ -76,7 +72,7 @@
 			var data = $('#form-alta').serialize();
 
 			$.ajax({
-				url: pauta,
+				url: "{{url('/pautas')}}"+"/"+pauta,
 				method: 'put',
 				data: data,
 				success: function(data){
@@ -84,7 +80,7 @@
 					$('#alta').html("");
 					$('#abm').show();
 					$('#filtros').show();
-					window.location = "{{url('pautas')}}";
+					window.location = "{{url('/pautas')}}";
 				},
 				error: function (data) {
 					console.log('Error.');
