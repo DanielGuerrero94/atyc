@@ -22,6 +22,7 @@ td {
 		<th class="table-header">Departamento</th>
 		<th class="table-header">Localidad</th>
 		<th class="table-header">Accion</th>
+		<th class="table-header">Tematica</th>
 		<th class="table-header">Fecha</th>
 		<th class="table-header">Participantes</th>
 	</tr>
@@ -35,6 +36,7 @@ td {
 		<td>{{$resultado->departamento}}</td>
 		<td>{{$resultado->localidad}}</td>
 		<td>{{$resultado->accion}}</td>
+		<td>{{$resultado->tematica}}</td>
 		<td>{{$resultado->fecha}}</td>
 		<td>{{$resultado->participantes}}</td>
 	</tr>

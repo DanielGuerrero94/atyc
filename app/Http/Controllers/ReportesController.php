@@ -73,11 +73,19 @@ class ReportesController extends Controller
     {
         $query = $this->queryLogica($r);
 
-        $returns = DB::select($query);
+        if ($r->id_reporte == '6') {
+            $desde = $r->filtros['desde'];
+            $hasta = $r->filtros['hasta'];
+            $returns = $query->get()->map(function ($value) use ($desde, $hasta)
+            {
+                $value->periodo = "{$desde}-{$hasta}";
+                return $value;
+            });
+        } else {
+            $returns = DB::select($query);            
+        }
 
         return Datatables::of(collect($returns))->make(true);
-
-        /*return Datatables::of($query)->make(true);*/
     }
 
     public function queryLogica(Request $r)
@@ -93,12 +101,14 @@ class ReportesController extends Controller
             $desde = $r->filtros['desde'];
             $hasta = $r->filtros['hasta'];
         }
-
-        if ($id_reporte == '6') {
-            $query = $this->reporte6($id_provincia, $desde, $hasta);
-        } elseif (!array_key_exists('id_periodo', $r->filtros)) {
-            $query = "SELECT CONCAT('{$desde}'::date,'/','{$hasta}'::date) as periodo,* 
-            FROM reporte_{$r->id_reporte}('{$id_provincia}','{$desde}','{$hasta}')";
+        
+        if (!array_key_exists('id_periodo', $r->filtros)) {
+            if ($id_reporte == '6') {
+                $query = $this->reporte6($id_provincia, $desde, $hasta);
+            } else {
+                $query = "SELECT CONCAT('{$desde}'::date,'/','{$hasta}'::date) as periodo,* 
+                FROM reporte_{$r->id_reporte}('{$id_provincia}','{$desde}','{$hasta}')";
+            }
         } elseif ($id_reporte == '5' and $id_periodo == '0') {
             $query = "SELECT P.nombre as periodo ,R.* 
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R 
@@ -110,13 +120,6 @@ class ReportesController extends Controller
             $query = "SELECT P.nombre as periodo ,R.*
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R 
             where P.id_periodo = {$id_periodo}";
-
-            /*
-            $query = DB::table("sistema.periodos as pe,reporte_{$id_reporte}
-            ({$id_provincia},pe.desde,pe.hasta) as r")
-            ->select('pe.nombre as periodo','r.*')
-            ->where('pe.id_periodo',$id_periodo);  
-            */
         }
 
         return $query;
@@ -130,7 +133,20 @@ class ReportesController extends Controller
 
         $excel_reporte = "excel.reporte_".$r->id_reporte;
 
-        $data = DB::select($query_default);
+        if ($r->id_reporte == '6') {
+            $desde = $r->filtros['desde'];
+            $hasta = $r->filtros['hasta'];
+            $data = $query_default->get()->map(function ($value) use ($desde, $hasta)
+            {
+                $value->periodo = "{$desde}-{$hasta}";
+                return $value;
+            });
+        } else {
+            $data = DB::select($query_default);
+        }
+
+        
+
         $datos = ['resultados' => $data,'nombre' => $excel_reporte];
         $path = $nombre_reporte."_".date("Y-m-d_H:i:s");
 
@@ -195,23 +211,22 @@ class ReportesController extends Controller
 
     public function reporte6($id_provincia, $desde, $hasta)
     {
-        $query = "SELECT CONCAT('{$desde}'::date,'/','{$hasta}'::date) as periodo,sub.* 
-            FROM (select p.descripcion as provincia, e.cuie, e.nombre as efector, e.denominacion_legal, d.nombre_departamento as departamento, l.nombre_localidad as localidad , c.nombre as accion, c.fecha, count(*) as participantes 
-        from efectores.efectores as e 
-        inner join efectores.datos_geograficos as dg on dg.id_efector = e.id_efector 
-        inner join geo.provincias as p on p.id_provincia = dg.id_provincia 
-        inner join geo.departamentos as d on d.id = dg.id_departamento 
-        inner join geo.localidades as l on l.id = dg.id_localidad 
-        inner join alumnos.alumnos as a on a.establecimiento1 = e.cuie 
-        inner join cursos.cursos_alumnos as ca on ca.id_alumno = a.id_alumno 
-        inner join cursos.cursos as c on c.id_curso = ca.id_curso 
-        where c.fecha between '{$desde}' and '{$hasta}' ";
+        $query = DB::table('efectores.efectores as e ')
+        ->join('efectores.datos_geograficos as dg', 'dg.id_efector', '=', 'e.id_efector')
+        ->join('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
+        ->join('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
+        ->join('geo.localidades as l', 'l.id', '=', 'dg.id_localidad')
+        ->join('alumnos.alumnos as a', 'a.establecimiento1', '=', 'e.cuie')
+        ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
+        ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
+        ->join('cursos.areas_tematicas as at', 'at.id_area_tematica', '=', 'c.id_area_tematica')
+        ->select('p.descripcion as provincia', 'e.cuie', 'e.nombre as efector', 'e.denominacion_legal', 'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad ', 'c.nombre as accion', 'at.nombre as tematica', 'c.fecha', DB::raw('count(*) as participantes'))
+        ->whereBetween('c.fecha', [$desde,$hasta]);
 
         if ($id_provincia != 0) {
-            $query = $query."and dg.id_provincia::integer = {$id_provincia} ";
+            $query = $query->whereRaw("dg.id_provincia::integer = {$id_provincia} ");
         }
 
-        $query = $query."group by p.descripcion, e.cuie, e.nombre, e.denominacion_legal, d.nombre_departamento, l.nombre_localidad, c.nombre, c.fecha) as sub;";
-        return $query;
-   }
+        return $query->groupBy('p.descripcion', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'd.nombre_departamento', 'l.nombre_localidad', 'c.nombre', 'at.nombre', 'c.fecha');
+    }
 }
