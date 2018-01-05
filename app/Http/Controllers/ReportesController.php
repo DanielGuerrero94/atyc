@@ -71,21 +71,35 @@ class ReportesController extends Controller
 
     public function queryReporte(Request $r)
     {
-        $query = $this->queryLogica($r);
+        $query_default = $this->queryLogica($r);
 
         if ($r->id_reporte == '6') {
-            $desde = $r->filtros['desde'];
-            $hasta = $r->filtros['hasta'];
-            $returns = $query->get()->map(function ($value) use ($desde, $hasta)
-            {
-                $value->periodo = "{$desde}-{$hasta}";
-                return $value;
-            });
+            $data = [];
+            if (array_key_exists('desde', $r->filtros)) {
+                $desde = $r->filtros['desde'];
+                $hasta = $r->filtros['hasta'];                
+                $data = $query_default->get()
+                    ->map(function ($value) use ($desde, $hasta) {
+                        $value->periodo = "{$desde}-{$hasta}";
+                        return $value;
+                    });
+            } else {
+                foreach ($query_default as $compuesta) {
+                    $desde = $compuesta['periodo']->desde;
+                    $hasta = $compuesta['periodo']->hasta;
+                    $aux = $compuesta['query']->get()
+                    ->map(function ($value) use ($desde, $hasta) {
+                        $value->periodo = "{$desde}-{$hasta}";
+                        return $value;
+                    });
+                    $data = array_merge($data, $aux->toArray());
+                }
+            }
         } else {
-            $returns = DB::select($query);            
-        }
+            $data = DB::select($query_default);
+        } 
 
-        return Datatables::of(collect($returns))->make(true);
+        return Datatables::of(collect($data))->make(true);
     }
 
     public function queryLogica(Request $r)
@@ -113,6 +127,23 @@ class ReportesController extends Controller
             $query = "SELECT P.nombre as periodo ,R.* 
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R 
             order by P.id_periodo,R.provincia,R.nombre,R.edicion";
+        } elseif ($id_reporte == '6') {
+            if ($id_periodo == '0') {
+                $periodos = Periodo::all();
+                //Armo todas las queries en un array                
+                foreach ($periodos as $periodo) {
+                    $query[] = [
+                        'periodo' => $periodo,
+                        'query' => $this->reporte6($id_provincia, $periodo->desde, $periodo->hasta)
+                    ];
+                }
+            } else {
+                $periodo = Periodo::findOrFail($id_periodo);
+                $query[] = [
+                    'periodo' => $periodo,
+                    'query' => $this->reporte6($id_provincia, $periodo->desde, $periodo->hasta)
+                ];
+            }
         } elseif ($id_periodo == '0') {
             $query = "SELECT P.nombre as periodo ,R.* 
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R";
@@ -134,18 +165,30 @@ class ReportesController extends Controller
         $excel_reporte = "excel.reporte_".$r->id_reporte;
 
         if ($r->id_reporte == '6') {
-            $desde = $r->filtros['desde'];
-            $hasta = $r->filtros['hasta'];
-            $data = $query_default->get()->map(function ($value) use ($desde, $hasta)
-            {
-                $value->periodo = "{$desde}-{$hasta}";
-                return $value;
-            });
+            $data = [];
+            if (array_key_exists('desde', $r->filtros)) {
+                $desde = $r->filtros['desde'];
+                $hasta = $r->filtros['hasta'];                
+                $data = $query_default->get()
+                    ->map(function ($value) use ($desde, $hasta) {
+                        $value->periodo = "{$desde}-{$hasta}";
+                        return $value;
+                    });
+            } else {
+                foreach ($query_default as $compuesta) {
+                    $desde = $compuesta['periodo']->desde;
+                    $hasta = $compuesta['periodo']->hasta;
+                    $aux = $compuesta['query']->get()
+                    ->map(function ($value) use ($desde, $hasta) {
+                        $value->periodo = "{$desde}-{$hasta}";
+                        return $value;
+                    });
+                    $data = array_merge($data, $aux->toArray());
+                }
+            }
         } else {
             $data = DB::select($query_default);
-        }
-
-        
+        }         
 
         $datos = ['resultados' => $data,'nombre' => $excel_reporte];
         $path = $nombre_reporte."_".date("Y-m-d_H:i:s");

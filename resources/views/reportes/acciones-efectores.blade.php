@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
+	@include('reportes.header')
 	<div id="filtros" class="col-xs-12">
 		@include('reportes.filtros')	
 	</div>
