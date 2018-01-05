@@ -219,4 +219,32 @@ class DashboardController extends Controller
                 );
         })->toArray();
     }
+
+    public function cantidadCapacitados($id_provincia)
+    {
+        # code...
+    }
+
+    public function cantidadTematicasCubiertas($value='')
+    {
+        # code...
+    }
+
+    public function cantidadTipologiasCubiertas($value='')
+    {
+        # code...
+    }
+
+    public function cantidadTalleresSumarte($value='')
+    {
+        # code...
+    }
+
+    //Cada efector a su vez deberia hacer los count de participantes que se conocen del efector y fueron capcaitados este anio
+    //Las tipologias, areas tematacias, todo el resto en general aparte del historial y los cambios que se decia antes
+    //A su vez 
+    public function cantidadParticipantesDelTotalHistoricoConocidoDelEfector($value='')
+    {
+        # code...
+    }
 }
