@@ -25,7 +25,7 @@ class Pac extends Model
      */
     public function componentesCa()
     {
-        return $this->hasMany('App\Models\Pac\ComponenteCa', 'pac.pacs_componentes_ca', 'id_componente_ca', 'id_pac');
+        return $this->belongsToMany('App\Models\Pac\ComponenteCa', 'pac.pacs_componentes_ca', 'id_componente_ca', 'id_pac');
     }
 
     /**

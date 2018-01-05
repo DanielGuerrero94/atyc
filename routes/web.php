@@ -281,7 +281,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
 
         Route::delete('componentesCa/{id}', 'ComponentesCaController@destroy');
 
-            //Profesores
+        //Pautas
         Route::get('pautas', 'PautasController@get');
         Route::get('pautas/tabla', 'PautasController@getTabla');
         Route::get('pautas/alta', 'PautasController@create');
@@ -296,5 +296,14 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::put('pautas/{id}', 'PautasController@update');
 
         Route::delete('pautas/{id}', 'PautasController@destroy');
+
+        //Pacs
+        Route::get('pacs', 'PacsController@get');
+        Route::get('pacs/alta', 'PacsController@create');
+        Route::post('pacs', 'PacsController@store');
+
+        Route::put('pacs/{id}', 'PacsController@update');
+
+        Route::delete('pacs/{id}', 'PacsController@destroy');
     });
 });

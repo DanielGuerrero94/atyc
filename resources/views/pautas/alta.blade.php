@@ -23,12 +23,12 @@
 					</div>
 				</div>
 				<div class="form-group col-sm-6">
-					<label class="control-label col-xs-4" for="id_accion_pauta">Accion Pauta:</label>
+					<label class="control-label col-xs-4" for="id_categoria_pauta">Categoria Pauta:</label>
 					<div class="col-xs-8">
-						<select class="form-control" id="id_accion_pauta" title="Accion Pauta" name="id_accion_pauta">
-							@foreach ($accionPauta as $accion)
+						<select class="form-control" id="id_categoria_pauta" title="Categoria Pauta" name="id_categoria_pauta">
+							@foreach ($categoriaPauta as $categoria)
 							
-							<option data-id="{{$accion->id_accion_pauta}}" title="{{$accion->item}}" value="{{$accion->id_accion_pauta}}">{{$accion->nombre}}</option>					
+							<option data-id="{{$categoria->id_categoria_pauta}}" title="{{$categoria->item}}" value="{{$categoria->id_categoria_pauta}}">{{$categoria->nombre}}</option>					
 							@endforeach
 						</select>
 					</div>

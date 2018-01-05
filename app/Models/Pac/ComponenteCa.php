@@ -21,9 +21,9 @@ class ComponenteCa extends Model
     /**
      * Las pacs de un caComponente.
      */
-    public function cursos()
+    public function pacs()
     {
-        return $this->belongsToMany('App\Models\Cursos\Curso', 'cursos.cursos_componentes_ca', 'id_curso', 'id_componente_ca')->withTimestamps();
+        return $this->belongsToMany('App\Models\Pacs\Pac', 'pac.pacs_componentes_ca', 'id_pac', 'id_componente_ca')->withTimestamps();
     }	
 
     public static function table()

@@ -14,7 +14,7 @@ class PacsController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -24,7 +24,7 @@ class PacsController extends Controller
      */
     public function create()
     {
-        //
+        return view('pacs/alta', $this->getSelectOptions());
     }
 
     /**
@@ -71,7 +71,7 @@ class PacsController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('pacs.modificacion', array_merge($this->getSelectOptions(), $this->show($id)));
     }
 
     /**

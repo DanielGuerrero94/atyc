@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class AccionesPautasController extends Controller
+class CategoriasPautasController extends Controller
 {
     /**
      * Display a listing of the resource.

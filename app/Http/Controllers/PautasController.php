@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
-use App\Models\Pac\AccionPauta;
+use App\Models\Pac\CategoriaPauta;
 use App\Models\Pac\Pauta;
 use Cache;
 use DB;
@@ -22,25 +22,20 @@ class PautasController extends AbmController
         'item' => 'required|string',
         'nombre' => 'required|string',
         'descripcion' => 'required|string',
-        'id_accion_pauta' => 'required|numeric'
+        'id_categoria_pauta' => 'required|numeric'
     ];
 
     private $filters = [
         'item' => 'string',
         'nombre' => 'string',
         'descripcion' => 'string',
-        'id_accion_pauta' => 'numeric'
+        'id_categoria_pauta' => 'numeric'
     ];
 
     private $botones = [
         'fa fa-pencil-square-o',
         'fa fa-trash-o'
     ];
-
-    public function query($query)
-    {
-        return DB::connection('eLearning')->select($query);
-    }
 
     /**
     * View para abm.
@@ -152,7 +147,7 @@ class PautasController extends AbmController
      */
     public function getTabla(Request $r)
     {
-        $query = Pauta::select('item', 'nombre', 'descripcion', 'id_accion_pauta')
+        $query = Pauta::select('id_pauta', 'item', 'nombre', 'descripcion', 'id_categoria_pauta')
         ->with('accionPauta');
 
         return $this->toDatatable($r, $query);
@@ -160,18 +155,15 @@ class PautasController extends AbmController
 
     private function queryLogica(Request $r, $filtros)
     {
-        $query = Pauta::leftJoin(
-            'pac.acciones_pautas',
-            'pac.pautas.id_accion_pauta',
-            '=',
-            'pac.acciones_pautas.id_accion_pauta'
-        )
-        ->select(
+        $query = Pauta::select(
+            'pac.pautas.id_pauta',
             'pac.pautas.nombre',
             'pac.pautas.descripcion',
-            'pac.acciones_pautas.nombre as accion',
-            'pac.pautas.item'
-        );
+            'pac.acciones_pautas.nombre as categoria',
+            'pac.pautas.item',
+            'pac.pautas.id_categoria_pauta'
+        )
+        ->with('categoriaPauta');
 
         return $query;
     }
@@ -231,11 +223,11 @@ class PautasController extends AbmController
      */
     public function getSelectOptions()
     {
-        $accionPautas = Cache::remember('accion_pautas', 5, function () {
-            return AccionPauta::all();
+        $categoriaPautas = Cache::remember('categoria_pautas', 5, function () {
+            return CategoriaPauta::all();
         });
         return [
-            'accionPauta' => $accionPautas,
+            'categoriaPauta' => $categoriaPautas,
         ];
     }
 

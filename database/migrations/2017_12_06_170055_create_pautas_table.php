@@ -18,9 +18,9 @@ class CreatePautasTable extends Migration
             $table->string('item', 10);
             $table->string('nombre', 100);
             $table->text('descripcion');
-            $table->integer('id_accion_pauta')->unsigned();
+            $table->integer('id_categoria_pauta')->unsigned();
 
-            $table->foreign('id_accion_pauta')->references('id_accion_pauta')->on('pac.acciones_pautas');
+            $table->foreign('id_categoria_pauta')->references('id_categoria_pauta')->on('pac.categorias_pautas');
             $table->timestamps();
         });
     }
