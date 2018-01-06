@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\ControllerTestMakeCommand::class,
         \App\Console\Commands\EntityMakeCommand::class,
-	\App\Console\Commands\GetBackupCommand::class,
+        \App\Console\Commands\DatabaseRestoreCommand::class,
+        \App\Console\Commands\GetBackupCommand::class,
         \App\Console\Commands\GetFileCommand::class,
         \App\Console\Commands\GetLogCommand::class,
         \App\Console\Commands\ViewMakeCommand::class,
