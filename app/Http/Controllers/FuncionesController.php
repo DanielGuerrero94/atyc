@@ -43,7 +43,7 @@ class FuncionesController extends Controller
     public function store(Request $request)
     {
         try {
-            return Periodo::create($request->only(['nombre']));
+            return Funcion::create($request->only(['nombre']));
         } catch (Illuminate\Database\QueryException $e) {
             return json_encode($e->message);
         }
@@ -57,7 +57,8 @@ class FuncionesController extends Controller
     */
     public function show($id)
     {
-        return array('funciones' => Funcion::findOrFail($id));
+        $funcion = Funcion::findOrFail($id);
+        return collect('funcion');
     }
     
     /**
@@ -117,7 +118,7 @@ class FuncionesController extends Controller
      */
     public function table(Request $r)
     {
-        return $this->toDatatable($r, Periodo::all());
+        return $this->toDatatable($r, Funcion::all());
     }
 
     /**
@@ -138,7 +139,7 @@ class FuncionesController extends Controller
                 $accion = $r->input('botones');
 
                 $editar = '<a href="'.url('funciones').'/'.$ret->id_funcion.'/edit'.'"><button data-id="'.
-                $ret->id_funcion.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.
+                $ret->id_funcion.'" class="btn btn-info btn-xs detalle" title="Detalle"><i class="'.
                 $this->botones[0].'" aria-hidden="true"></i></button></a>';
 
                 $agregar = '<button data-id="'.$ret->id_funcion.'" class="btn btn-info btn-xs agregar" '.

@@ -146,7 +146,7 @@
       <li>
         <a href="{{url("/funciones")}}">
           <i class="fa fa-circle-o"></i>
-          <span>Rol en el sumar</span>
+          <span>Rol/Destinatario</span>
         </a>
       </li>
         </ul>
