@@ -23,7 +23,6 @@ class CreatePacTable extends Migration
             $table->boolean('consul_peatyc');
             $table->text('observado');
             $table->integer('id_ficha_tecnica')->nullable();
-            $table->integer('id_taller_sumarte'); //FK
             $table->timestamps();            
         });
     }
