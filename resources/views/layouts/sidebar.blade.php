@@ -144,7 +144,7 @@
         </a>
       </li>
       <li>
-        <a href="{{url("/funciones")}}">
+        <a href="{{url("/funciones")}}" id="destinatarios">
           <i class="fa fa-circle-o"></i>
           <span>Rol/Destinatario</span>
         </a>
