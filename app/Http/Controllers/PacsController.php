@@ -24,7 +24,7 @@ class PacsController extends Controller
      */
     public function create()
     {
-        return view('pacs/alta', $this->getSelectOptions());
+        return view('pacs/alta');
     }
 
     /**
@@ -35,22 +35,10 @@ class PacsController extends Controller
      */
     public function store(Request $request)
     {
-        $pac = Pac::create($request->all());
-
-
-        if ($request->has('destinatarios')) {
-            $pac->destinatarios()->attach(explode(',', $request->get('destinatarios')));
-        }
-
-        if ($request->has('accion')) {
-            $accion = $request->only('nombre', 'id_linea_estrategica', 'id_area_tematica');
-            eval(\Psy\sh());
-            $pac->acciones()->create($accion);
-        }
-
-        $id_pac = $pac->id_pac;
-        return $id_pac;
+        $pac = new Pac();
+        return $pac->create($request->all());
     }
+
 
     /**
      * Display the specified resource.
@@ -96,4 +84,37 @@ class PacsController extends Controller
     {
         //
     }
+
+    /**
+     * View para abm.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getTodos()
+    {
+        return view('pacs');
+    }
+
+    /**
+     * Devuelve la informacion para abm.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getTabla(Request $request)
+    {
+        $query = Pac::select(
+            'id_pac',
+            'trimestre_planificacion',
+            't1',
+            't2',
+            't3',
+            't4',
+            'consul_peatyc',
+            'observado'
+        )->segunProvincia();
+
+        return $this->toDatatable($request, $query);
+    }
 }
+ 

@@ -298,10 +298,10 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::delete('pautas/{id}', 'PautasController@destroy');
 
         //Pacs
-        Route::get('pacs', 'PacsController@get');
+        Route::get('pacs', 'PacsController@getTodos');
         Route::get('pacs/alta', 'PacsController@create');
         Route::post('pacs', 'PacsController@store');
-
+        Route::get('pacs/tabla', 'CursosController@getTabla');
         Route::put('pacs/{id}', 'PacsController@update');
 
         Route::delete('pacs/{id}', 'PacsController@destroy');

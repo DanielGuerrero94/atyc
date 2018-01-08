@@ -197,7 +197,7 @@
         </a>
       </li>
       <li>
-        <a href="#">
+        <a href='{{url("/pacs")}}'>
           <i class="fa fa-circle-o"></i>
           <span>Matriz</span>
         </a>

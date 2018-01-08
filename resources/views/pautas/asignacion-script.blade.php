@@ -80,15 +80,15 @@
           '</tr>';
           existe = false;
 
-          $.each($('#pautas-del-curso tbody tr .fa-search'),function(k,v){
+          $.each($('#pautas-de-la-pac tbody tr .fa-search'),function(k,v){
             if($(v).data('id') == item.id){
               existe = true;
             }
           });
 
           if(!existe){
-            $('#pautas-del-curso tbody').append(pauta);  
-            $('#pautas-del-curso').closest('div').show();
+            $('#pautas-de-la-pac tbody').append(pauta);  
+            $('#pautas-de-la-pac').closest('div').show();
             refreshCounter();           
           }
           $('#pautas .pautas_typeahead').val('');
@@ -131,13 +131,13 @@
     });          
 
 
-    $('#pautas-del-curso').on('click','.quitar', function(event) {
+    $('#pautas-de-la-pac').on('click','.quitar', function(event) {
       this.closest('tr').remove();
       refreshCounter();
     });
 
     function refreshCounter() {
-      let count = $('#pautas-del-curso tbody').children().length;
+      let count = $('#pautas-de-la-pac tbody').children().length;
       $('#contador-pautas').html(count);
     }
 
