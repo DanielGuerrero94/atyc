@@ -118,8 +118,7 @@ class FuncionesController extends Controller
     {
         return Datatables::of($resultados)->make(true);
     }
-
-
+    
     /**
      * Si la request es ajax devulve el contenido sin extender el layout
      */

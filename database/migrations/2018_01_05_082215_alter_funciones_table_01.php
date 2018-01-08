@@ -26,7 +26,7 @@ class AlterFuncionesTable01 extends Migration
     public function down()
     {
         Schema::table('alumnos.funciones', function (Blueprint $table) {
-            //
+            $table->dropColumn('deleted_at');
         });
     }
 }
