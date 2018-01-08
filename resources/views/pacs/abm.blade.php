@@ -20,14 +20,11 @@
 					<th>4to. Trimestre</th>
 					<th>Consultor PeAtyc</th>
 					<th>Observado</th>
-					<th>Tipología de acción</th>
-					<th>Jurisdicción</th>
-					<th>Acciones</th>
 				</tr>
 			</thead>
 		</table>
 	</div>
 	<div class="box-footer">
-		<button class="btn btn-success pull-right" id="alta_curso"><i class="fa fa-plus" aria-hidden="true"></i>Alta acción</button>
+		<button class="btn btn-success pull-right" id="alta_pac"><i class="fa fa-plus" aria-hidden="true"></i>Alta PAC</button>
 	</div>
 </div>
