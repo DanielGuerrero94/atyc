@@ -1,16 +1,25 @@
 @foreach ($materiales as $material)
-<div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 material">
 	<div class="box box-primary">
 		<div class="box-body">
-			<p><i class="fa {{$material->icon}}"></i>
-				{{$material->original}}
+			<p>
+				<i class="fa {{$material->icon}}"></i>
+				<span class="filename">{{$material->original}}</span>
 			</p>
+			<blockquote style="padding-left: 10px;margin-bottom: 5px;" class="description">
+				<p>
+					@if(isset($material->descripcion))
+					<span>{{$material->descripcion}}</span>
+					<a href="#" class="btn text-primary pull-right more" data-toggle=true>DESCRIPCIÓN <i class="fa fa-angle-down fa-lg text-info"></i></a>	
+					@else
+					<span class="more" data-toggle=true>Sin descripción.</span>
+					@endif
+				</p>
+			</blockquote>
 		</div>			
 		<div class="box-footer" data-id="{{$material->id_material}}">
-			<a href="{{'materiales/'}}{{$material->id_material}}/download" 
-				style="text-decoration: none;color: #2F2D2D;">
-				<i class="fa fa-download"></i> Descargar
-			</a>
+			<span class="buttons"></span>
+			<span class="pull-right" style="padding-top: 10px;">{{$material->updated_at->format('Y-m-d')}}</span>			
 		</div>
 	</div>	
 </div>	

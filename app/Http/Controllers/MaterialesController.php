@@ -95,6 +95,7 @@ class MaterialesController extends Controller
     public function listar()
     {
         $materiales = $this->generateList();
+        // eval(\Psy\sh());
         return view('archivos.materiales', compact('materiales'));
     }
 
@@ -107,7 +108,7 @@ class MaterialesController extends Controller
 
     public function generateList()
     {
-        $materiales = Material::select('id_material', 'original')->get();
+        $materiales = Material::all();
         $materiales = $this->setIcon($materiales);
         return $materiales;
     }
@@ -118,17 +119,17 @@ class MaterialesController extends Controller
         Puede estar en otro lado esto y en front todavia no esta limitado a estas extensiones
         */
         $icon = [
-            'csv' => 'fa-file-excel-o text-success',
-            'xls' => 'fa-file-excel-o text-success',
-            'xlsx' => 'fa-file-excel-o text-success',
-            'txt' => 'fa-file-text-o',
-            'sql' => 'fa-file-code-o',
-            'doc' => 'fa-file-word-o text-primary',
-            'docx' => 'fa-file-word-o text-primary',
-            'pdf' => 'fa-file-pdf-o text-danger',
-            'powerpoint' => 'fa-file-powerpoint-o text-warning',
-            'rar' => 'fa-file-archive-o text-danger',
-            'zip' => 'fa-file-archive-o text-warning'
+            'csv' => 'fa-lg fa-file-excel-o text-success',
+            'xls' => 'fa-lg fa-file-excel-o text-success',
+            'xlsx' => 'fa-lg fa-file-excel-o text-success',
+            'txt' => 'fa-lg fa-file-text-o',
+            'sql' => 'fa-lg fa-file-code-o',
+            'doc' => 'fa-lg fa-file-word-o text-primary',
+            'docx' => 'fa-lg fa-file-word-o text-primary',
+            'pdf' => 'fa-lg fa-file-pdf-o text-danger',
+            'powerpoint' => 'fa-lg fa-file-powerpoint-o text-warning',
+            'rar' => 'fa-lg fa-file-archive-o text-danger',
+            'zip' => 'fa-lg fa-file-archive-o text-warning'
         ];
 
         return $materiales->map(function ($material) use ($icon) {
@@ -139,7 +140,20 @@ class MaterialesController extends Controller
             $material->icon = $icon[$suffix];
             //Recorta el nombre del archivo para que se vea bien en front, 16 esta muy hardcodeado
             $material->original = explode('.', $material->original);
-            $material->original = substr($material->original[0], 0, 16);
+            // $material->original = substr($material->original[0], 0, 16);
+            /*$material->original = array_map(function ($string) {
+                return $string."<br>";
+            }, str_split($material->original[0], 30));
+            $material->original = implode("", $material->original);*/
+            $material->original = $material->original[0];
+            /*
+            if (isset($material->descripcion)) {
+                $material->descripcion = array_map(function ($string) {
+                    return $string."<br>";
+                }, str_split($material->descripcion, 20));
+                $material->descripcion = implode("", $material->descripcion);
+            }
+            */
             return $material;
         });
     }
