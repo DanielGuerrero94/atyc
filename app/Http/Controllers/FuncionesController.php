@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Funcion;
 use Datatables;
+use Log;
 
 //Exceptions
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -12,14 +13,12 @@ use Illuminate\Database\QueryException;
 
 class FuncionesController extends Controller
 {
-    private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
-
     /**
     * Display a listing of the resource.
     *
     * @return \Illuminate\Http\Response
     */
-    public function index()
+    public function index(Request $request)
     {
         return view('funciones');
     }
@@ -29,7 +28,7 @@ class FuncionesController extends Controller
     *
     * @return \Illuminate\Http\Response
     */
-    public function create()
+    public function create(Request $request)
     {
         return view('funciones.alta');
     }
@@ -42,11 +41,7 @@ class FuncionesController extends Controller
     */
     public function store(Request $request)
     {
-        try {
-            return Periodo::create($request->only(['nombre']));
-        } catch (Illuminate\Database\QueryException $e) {
-            return json_encode($e->message);
-        }
+        return Funcion::create($request->only(['nombre']));
     }
     
     /**
@@ -57,7 +52,8 @@ class FuncionesController extends Controller
     */
     public function show($id)
     {
-        return array('funciones' => Funcion::findOrFail($id));
+        $funcion = Funcion::findOrFail($id);
+        return compact('funcion');
     }
     
     /**
@@ -68,11 +64,7 @@ class FuncionesController extends Controller
     */
     public function edit($id)
     {
-        try {
-            return view('funciones.modificacion', $this->show($id));
-        } catch (ModelNotFoundException $e) {
-            return json_encode($e->getMessage());
-        }
+        return view('funciones.modificacion', $this->show($id));
     }
     
     /**
@@ -84,12 +76,8 @@ class FuncionesController extends Controller
     */
     public function update(Request $request, $id)
     {
-        try {
-            return Funcion::findOrFail($id)
-            ->update($request->all());
-        } catch (ModelNotFoundException $e) {
-            return json_encode($e->getMessage());
-        }
+        Funcion::findOrFail($id)->update($request->all());
+        return response('Updated', 200);
     }
     
     /**
@@ -100,12 +88,10 @@ class FuncionesController extends Controller
     */
     public function destroy($id)
     {
-        try {
-            return Funcion::findOrFail($id)
-            ->delete();
-        } catch (ModelNotFoundException $e) {
-            return json_encode($e->getMessage());
-        }
+        //No es conveniente por ahora que puedan borrar
+        //Funcion::findOrFail($id)->delete();
+        // return response('Deleted', 200);            
+        return response('DatabaseError', 403);
     }
 
     /**
@@ -117,7 +103,7 @@ class FuncionesController extends Controller
      */
     public function table(Request $r)
     {
-        return $this->toDatatable($r, Periodo::all());
+        return $this->toDatatable($r, Funcion::all());
     }
 
     /**
@@ -130,23 +116,16 @@ class FuncionesController extends Controller
      */
     public function toDatatable(Request $r, $resultados)
     {
-        return Datatables::of($resultados)
-        ->addColumn(
-            'acciones',
-            function ($ret) use ($r) {
+        return Datatables::of($resultados)->make(true);
+    }
 
-                $accion = $r->input('botones');
 
-                $editar = '<a href="'.url('funciones').'/'.$ret->id_funcion.'/edit'.'"><button data-id="'.
-                $ret->id_funcion.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.
-                $this->botones[0].'" aria-hidden="true"></i></button></a>';
-
-                $agregar = '<button data-id="'.$ret->id_funcion.'" class="btn btn-info btn-xs agregar" '.
-                'title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
-
-                return $accion == 'agregar'?$agregar:$editar;
-            }
-        )
-        ->make(true);
+    /**
+     * Si la request es ajax devulve el contenido sin extender el layout
+     */
+    public function setView($path, $data = [], Request $request)
+    {
+        $path = $request->isXmlHttpRequest()?"{$path}.ajax":$path;
+        return view($path, $data);
     }
 }

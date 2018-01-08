@@ -169,7 +169,7 @@
         @include('layouts.sidebar')
       </aside>
       <div class="content-wrapper">      
-        <section class="content">          
+        <section class="content" style="padding-left: 5px;padding-right: 5px;">          
           @include('layouts.beta')
           @yield('content')
         </section>
@@ -191,68 +191,109 @@
 
   <script type="text/javascript" src="{{ asset ("/dist/js/jquery.validate.min.js") }}"></script>
 
-<script type="text/javascript">
+  <script type="text/javascript">
 
-  $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
+    $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
 
-  $.blockUI.defaults = { 
-    css: {
-      border: 'none',
-      padding: '15px',
-      backgroundColor: '#000',
-      '-webkit-border-radius': '10px',
-      '-moz-border-radius': '10px',
-      opacity: .5,
-      color: '#fff',
-    },    
-    message: '<i class="fa fa-spinner fa-spin"></i>  Cargando...', 
-  };
+    $.blockUI.defaults = { 
+      css: {
+        border: 'none',
+        padding: '15px',
+        backgroundColor: '#000',
+        '-webkit-border-radius': '10px',
+        '-moz-border-radius': '10px',
+        opacity: .5,
+        color: '#fff',
+      },    
+      message: '<i class="fa fa-spinner fa-spin"></i>  Cargando...', 
+    };
 
-  /*Traduccion a español para DataPicker*/
-  $('.datepicker').datepicker({
-    format: 'dd/mm/yyyy',
-    language: 'es',
-    autoclose: true,
-  });
-
-  $('.select2').select2();
-  $(".js-example-basic-multiple").select2();
-
-  $(document).ready(function(){       
-
-    /*Traduccion a español para DataTable*/
-    $.extend( $.fn.dataTable.defaults, {
-      processing: true,
-      scrollY:"400px",
-      scrollCollapse: true,
-      serverSide: true,
-      rowReorder: {
-        selector: 'td:nth-child(2)'
-      },
-      responsive: true,
-      language: {
-        emptyTable: "No se encontraron registros",
-        info: "Mostrando registros del _START_ al _END_ de _TOTAL_ registros",
-        infoEmpty: "No hay registros disponibles",
-        infoFiltered: "(filtrados de un total de _MAX_ registros)",
-        lengthMenu: "Mostrar _MENU_ registros",
-        loadingRecords: "Cargando...",
-        paginate: {
-          next: "Siguiente",
-          previous: "Anterior",
-          last: "Ultima"
-        },
-        processing: "Procesando...",
-        search: "Buscar:",
-        thousands: ".",
-        zeroRecords: "No se encontraron registros",
-      }
+    /*Traduccion a español para DataPicker*/
+    $('.datepicker').datepicker({
+      format: 'dd/mm/yyyy',
+      language: 'es',
+      autoclose: true,
     });
 
-  });
+    $('.select2').select2();
+    $(".js-example-basic-multiple").select2();
 
-  var timer;
-  window.onload = resetTimer;
+    $(document).ready(function(){     
+
+      /*
+      history.replaceState(null, null, location.href);
+      console.log(window.history);
+      */
+
+      /*Traduccion a español para DataTable*/
+      $.extend( $.fn.dataTable.defaults, {
+        processing: true,
+        scrollY:"400px",
+        scrollCollapse: true,
+        serverSide: true,
+        rowReorder: {
+          selector: 'td:nth-child(2)'
+        },
+        responsive: true,
+        language: {
+          emptyTable: "No se encontraron registros",
+          info: "Mostrando registros del _START_ al _END_ de _TOTAL_ registros",
+          infoEmpty: "No hay registros disponibles",
+          infoFiltered: "(filtrados de un total de _MAX_ registros)",
+          lengthMenu: "Mostrar _MENU_ registros",
+          loadingRecords: "Cargando...",
+          paginate: {
+            next: "Siguiente",
+            previous: "Anterior",
+            last: "Ultima"
+          },
+          processing: "Procesando...",
+          search: "Buscar:",
+          thousands: ".",
+          zeroRecords: "No se encontraron registros",
+        }
+      });
+
+      /*
+      $(".main-sidebar").on("click", "#destinatarios", function (e) {
+        e.preventDefault();
+        let url = $(this).attr("href");
+
+        $.ajax({
+          url: url,
+          success: function (html) {
+            $(".content").html(html);
+            history.pushState(url, null, url);
+            console.log(window.history);
+          },
+          error: function (html) {
+            alert("El modulo no funciona.");
+          },
+        })
+        .done(function() {
+
+        })
+        .fail(function() {
+          console.log("error");
+        })
+        .always(function() {
+          console.log("complete");
+        });
+
+      })
+      */
+
+    });
+
+    /*
+    window.onpopstate = function (e) {
+      console.log(e);
+      location.href = e.state.url;
+    }
+    */
+
+    var timer;
+    window.onload = resetTimer;
   // DOM Events
   document.onmousemove = resetTimer;
   document.onkeypress = resetTimer;

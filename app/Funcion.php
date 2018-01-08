@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Funcion extends Model
 {
+    use SoftDeletes;
+
     /**
      * The table associated with the model.
      *
@@ -33,4 +36,11 @@ class Funcion extends Model
      * @var array
      */
     protected $fillable = ['nombre'];
+
+    /**
+     * Nombre de la columna que define el soft delete del trait.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 }
