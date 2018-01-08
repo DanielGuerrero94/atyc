@@ -190,6 +190,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('efectores/cuies/typeahead', 'EfectoresController@cuiesTypeahead');
     Route::get('efectores/filtrar', 'EfectoresController@filtrar');
     Route::get('efectores/provincias/{id_provincia}/departamentos', 'EfectoresController@selectDepartamentos');
+    Route::get('efectores/provincias/{id_provincia}/departamentos/{id_departamento}/localidades', 'EfectoresController@selectLocalidades');
 
     Route::get('provincias/localidades/typeahead', 'ProvinciasController@localidadesTypeahead');
 

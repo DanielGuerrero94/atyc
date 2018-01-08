@@ -13,7 +13,7 @@
 				<div class="box-header">
 					<h2 class="box-tittle">Efectores
 						<div class="btn-group pull-right" role="group" aria-label="...">
-							<div type="button" class="btn btn-info filter" title="Filtro"><i class="fa fa-sliders" aria-hidden="true"></i></div>
+							<div type="button" class="btn btn-info filter" title="Filtro"><i class="fa fa-sliders"></i></div>
 						</div>
 						<i class="fa fa-info-circle btn text-primary pull-right" title="Solo consulta de los que tienen georeferenciamiento."></i>
 					</h2>
@@ -33,71 +33,52 @@
 
 	$(document).ready(function(){
 
-		$('#filtros #filtrar').click();
-
-		$('#abm').on('click','.filter',function () {
-			$('#filtros .box').toggle();
+		$("#abm").on("click",".filter",function () {
+			$("#filtros .box").toggle();
 		});
-
-		/*
-		datatable = $('.table').DataTable({
-			destroy: true,
-			responsive: true,
-			searching: false,
-			ajax : 'efectores/tabla',
-			columns: [
-			{ name: 'id_provincia', data: 'provincia', title: 'Provincia',searchable: false, orderable: false},
-			{ data: 'siisa', title: 'Siisa'},
-			{ data: 'cuie', title: 'Cuie'},
-			{ data: 'nombre', title: 'Nombre',searchable: false, orderable: false},
-			{ data: 'denominacion_legal', title: 'Denominación legal',searchable: false, orderable: false},
-			{ name: 'id_departamento', data: 'departamento', title: 'Departamento',searchable: false, orderable: false},
-			{ name: 'id_localidad', data: 'localidad', title: 'Localidad',searchable: false, orderable: false},
-			{ data: 'codigo_postal', title: 'Codigo postal',searchable: false, orderable: false},
-			{ data: 'ciudad', title: 'Ciudad',searchable: false, orderable: false},
-			{ data: 'acciones', title: 'Acciones', searchable: false, orderable: false}
-			]
-		});
-		*/
 
 		function getFiltros(){
-			return $('#form-filtros :input')
+			let filtros = $("#form-filtros :input")
 			.filter(function(i,e){return $(e).val() != ""})
 			.serializeArray()
 			.map(function(obj) { 
 				var r = {};
 				r[obj.name] = obj.value;
 				return r;
-			}).push({capacitados: $('#form-filtros #capacitados').data('check')});
+			});
+			filtros.push({capacitados: $("#form-filtros #capacitados").data("check")});
+			return filtros;
 		}
 
-		$('#filtros').on('click','#filtrar',function () {
+		$("#filtros").on("click","#filtrar",function () {
 			console.log(getFiltros());
 
-			datatable = $('.table').DataTable({
-			destroy: true,
-			responsive: true,
-			searching: false,
-			ajax : {
-				url: 'efectores/filtrar',
-				data: {
-					filtros: getFiltros()
-				}
-			},
-			columns: [
-			{ name: 'id_provincia', data: 'provincia', title: 'Provincia',searchable: false, orderable: false},
-			{ data: 'siisa', title: 'Siisa'},
-			{ data: 'cuie', title: 'Cuie'},
-			{ data: 'nombre', title: 'Nombre',searchable: false, orderable: false},
-			{ data: 'denominacion_legal', title: 'Denominación legal',searchable: false, orderable: false},
-			{ name: 'id_departamento', data: 'departamento', title: 'Departamento',searchable: false, orderable: false},
-			{ name: 'id_localidad', data: 'localidad', title: 'Localidad',searchable: false, orderable: false},
-			{ data: 'codigo_postal', title: 'Codigo postal',searchable: false, orderable: false},
-			{ data: 'ciudad', title: 'Ciudad',searchable: false, orderable: false},
-			{ data: 'acciones', title: 'Acciones', searchable: false, orderable: false}
-			]
-		});
+			datatable = $(".table").DataTable({
+				destroy: true,
+				responsive: true,
+				searching: false,
+				ajax : {
+					url: "{{url('/efectores/filtrar')}}",
+					data: {
+						filtros: getFiltros()
+					}
+				},
+				columns: [
+				{ data: "provincia", name: "id_provincia", title: "Provincia", orderable: false},
+				{ data: "siisa", title: "Siisa"},
+				{ data: "cuie", title: "Cuie"},
+				{ data: "nombre", title: "Nombre", orderable: false},
+				{ data: "denominacion_legal", title: "Denominación legal", orderable: false},
+				{ data: "departamento", name: "departamento", title: "Departamento", orderable: false},
+				{ data: "localidad", name: "id_localidad", title: "Localidad", orderable: false},
+				{ data: "codigo_postal", title: "Codigo postal", orderable: false},
+				{ data: "ciudad", title: "Ciudad", orderable: false},
+				{ data: "acciones", title: "Acciones", orderable: false}
+				]
+			});
 		});	
+
+		$(".container-fluid #filtros #filtrar").click();
 
 	});
 

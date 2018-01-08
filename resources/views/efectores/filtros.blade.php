@@ -26,14 +26,14 @@
 				<div class="form-group col-sm-4">  		  		
 					<label for="capacitados" class="control-label col-xs-5">Capacitados</label>
 					<div class="col-xs-7">
-						<i class="fa btn fa-toggle-on" id="capacitados" name="capacitados" data-check="true"></i>
+						<i class="fa btn fa-toggle-on" id="capacitados" name="capacitados" data-check=true></i>
 					</div>
 				</div>	
 				
 			</div>
 			<hr>
 			<div class="row">
-			@if(Auth::user()->id_provincia == 25)
+				@if(Auth::user()->id_provincia == 25)
 				<div class="form-group col-sm-4">
 					<label for="provincia" class="control-label col-xs-5">Provincia:</label>
 					<div class="col-xs-7">
@@ -45,6 +45,10 @@
 						</select>
 					</div>
 				</div>
+				@else
+				<select class="form-control" id="provincia" name="id_provincia" style="display: none;">
+							<option value="{{Auth::user()->id_provincia}}"></option>
+				</select>
 				@endif
 				<div class="form-group col-sm-4">  		  		
 					<label for="departamento" class="control-label col-xs-5">Departamento</label>
@@ -70,53 +74,62 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		{{-- Esta funcion es solo para aquel que pueda ver otras provincias, verifica si tiene que traer el departamento de esa provincia --}}
-		$('#filtros').on('click', '#provincia', function(event) {
+
+		@if(Auth::user()->id_provincia === 25)
+		$("#filtros").on("change", "#provincia", function(event) {
 			event.preventDefault();
-			console.log('selecciona provincia va buscar departamentos');
+			console.log("selecciona provincia va buscar departamentos");
+
+			if ($(this).val() == 0) {
+				return;
+			}
 			
 			$.ajax({
-				url: "{{url('efectores/provincias')}}" + "/" + $('#provincia').val() + "/departamentos"
-			})
-			.done(function(data) {
-				console.log("success");
-				console.log(data);
-			})
-			.fail(function() {
-				console.log("error");
-			})
-			.always(function() {
-				console.log("complete");
+				url: "{{url('/efectores/provincias')}}" + "/" + $(this).val() + "/departamentos",
+				success: function (data) {
+					let departamentos = $("#filtros #departamento");
+					departamentos.html('<option value="0">Todos los departamentos</option>');
+					$.each(data, function (key, value) {
+						$('<option value="'+value.id+'">'+value.departamento+'</option>').appendTo(departamentos);
+					});
+					console.log(data);
+					console.log("Departamentos cargados");
+				},
+				error: function (data) {
+					alert("No se pudieron cargar los departamentos.");
+					location.reload();
+				}
 			});
 		});
+		@endif
 
-		$('#filtros').on('click', '#departamento', function(event) {
+		$("#filtros").on("change", "#departamento", function(event) {
 			event.preventDefault();
-			console.log('selecciona departamento tiene que ir a buscar localidades');
-			$.get("{{url('efectores/provincias')}}" + "/" + $('#provincia').val() + "/departamentos", function(data) {
-				console.log("success");
-				console.log(data);
-			});
+			console.log("selecciona departamento tiene que ir a buscar localidades");
 			$.ajax({
-				url: "{{url('efectores/provincias')}}" + "/" + $('#provincia').val() + "/departamentos"
-			})
-			.done(function(data) {
-				console.log("success");
-				console.log(data);
-			})
-			.fail(function() {
-				console.log("error");
-			})
-			.always(function() {
-				console.log("complete");
-			});
-			
+				url: "{{url('/efectores/provincias')}}" + "/" + $('#provincia').val() + "/departamentos" + "/" + $(this).val(),
+				success: function (data) {
+					let localidades = $("#filtros #localidad");
+					localidades.html('<option value="0">Todos las localidades</option>');
+					localidades.attr("disabled", false);
+					$.each(data, function (key, value) {
+						$('<option value="'+value.id+'">'+value.localidad+'</option>').appendTo(localidades);
+					});
+					console.log(data);
+					console.log("Localidades cargadas");
+				},
+				error: function (data) {
+					alert("No se pudieron cargar las localidades.");
+					location.reload();
+				}
+			});			
 		});
 
-		$('#filtros').on('click', '#capacitados', function () {
+		$("#filtros").on("click", "#capacitados", function () {
 
-			switchIcon($(this),'fa-toggle-off','fa-toggle-on');
+			switchIcon($(this),"fa-toggle-off","fa-toggle-on");
 
-			$(this).data('check', !$(this).data('check'));
+			$(this).data("check", !$(this).data("check"));
 			
 		});	
 	});
