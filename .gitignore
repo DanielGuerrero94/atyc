@@ -9,3 +9,4 @@ public/*.pdf
 .vscode/
 *.log
 database/*.sqlite
+database/backups/*.sql
