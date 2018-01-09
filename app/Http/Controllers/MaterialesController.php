@@ -75,7 +75,10 @@ class MaterialesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //No necesita
+        logger($id);
+        logger(json_encode($request->all()));
+        Material::findOrFail($id)->update($request->all());
+        return response('Updated', 200);
     }
 
     /**
@@ -95,7 +98,6 @@ class MaterialesController extends Controller
     public function listar()
     {
         $materiales = $this->generateList();
-        // eval(\Psy\sh());
         return view('archivos.materiales', compact('materiales'));
     }
 
@@ -161,5 +163,18 @@ class MaterialesController extends Controller
     public function view()
     {
         return view('archivos.archivos');
+    }
+
+    public function replace(Request $request, $id)
+    {
+        $path = $request->file('csv')->store('material');
+        $path = explode('/', $path);
+        $path = $path[1];
+        $original = $request->file('csv')->getClientOriginalName();
+        $material = Material::findOrFail($id);
+        $replaced = $material->path;
+        $material->update((compact('original', 'path')));
+        Storage::delete($replaced);
+        return response('Replaced', 200);
     }
 }

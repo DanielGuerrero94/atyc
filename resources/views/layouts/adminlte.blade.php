@@ -161,7 +161,6 @@
         </a>      
         <nav class="navbar navbar-static-top" role="navigation">
           @include('layouts.navbar')
-
         </nav> 
       </header>
       @if (!Auth::guest())
@@ -169,8 +168,8 @@
         @include('layouts.sidebar')
       </aside>
       <div class="content-wrapper">      
-        <section class="content" style="padding-left: 5px;padding-right: 5px;">          
-          @include('layouts.beta')
+        <section class="content" style="padding: 5px 5px 0px 5px;">          
+          @include('layouts.header')
           @yield('content')
         </section>
       </div>

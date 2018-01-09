@@ -17,8 +17,6 @@ class CreateMaterialesTable extends Migration
             $table->increments('id_material');
             $table->string('path');
             $table->string('original');
-            $table->text('descripcion')->nullable();
-            $table->integer('id_etapa')->nullable();
             $table->timestamps();
         });
     }

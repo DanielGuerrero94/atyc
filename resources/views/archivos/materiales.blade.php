@@ -19,7 +19,7 @@
 		</div>			
 		<div class="box-footer" data-id="{{$material->id_material}}">
 			<span class="buttons"></span>
-			<span class="pull-right" style="padding-top: 10px;">{{$material->updated_at->format('Y-m-d')}}</span>			
+			<span class="pull-right" style="padding-top: 10px;">{{$material->updated_at->format('d/m/Y')}}</span>			
 		</div>
 	</div>	
 </div>	

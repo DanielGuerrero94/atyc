@@ -58,6 +58,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('archivos', 'MaterialesController@view');
     Route::get('materiales/list', 'MaterialesController@listar');
     Route::get('materiales/{id}/download', 'MaterialesController@download');
+    Route::post('materiales/{id}', 'MaterialesController@replace');
     Route::resource('materiales', 'MaterialesController');
 
     //Redis
