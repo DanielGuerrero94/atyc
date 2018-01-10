@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Yajra\Datatables\Datatables;
 
 class MaterialesController extends Controller
 {
@@ -140,22 +141,8 @@ class MaterialesController extends Controller
             $suffix = $suffix[1];
             //Setea icono y color
             $material->icon = $icon[$suffix];
-            //Recorta el nombre del archivo para que se vea bien en front, 16 esta muy hardcodeado
             $material->original = explode('.', $material->original);
-            // $material->original = substr($material->original[0], 0, 16);
-            /*$material->original = array_map(function ($string) {
-                return $string."<br>";
-            }, str_split($material->original[0], 30));
-            $material->original = implode("", $material->original);*/
             $material->original = $material->original[0];
-            /*
-            if (isset($material->descripcion)) {
-                $material->descripcion = array_map(function ($string) {
-                    return $string."<br>";
-                }, str_split($material->descripcion, 20));
-                $material->descripcion = implode("", $material->descripcion);
-            }
-            */
             return $material;
         });
     }
@@ -176,5 +163,30 @@ class MaterialesController extends Controller
         $material->update((compact('original', 'path')));
         Storage::delete($replaced);
         return response('Replaced', 200);
+    }
+
+    /**
+     * Devuelve la informacion para abm.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  $request['botones']
+     * @return \Illuminate\Http\Response
+     */
+    public function table(Request $r)
+    {
+        return $this->toDatatable($r, Material::all());
+    }
+
+    /**
+     * Devuelve en DataTable los resultados.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  $request['botones']
+     * @param  Collection               $resultados
+     * @return \Illuminate\Http\Response
+     */
+    public function toDatatable(Request $r, $resultados)
+    {
+        return Datatables::of($resultados)->make(true);
     }
 }

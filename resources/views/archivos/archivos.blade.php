@@ -4,26 +4,41 @@
 <div class="container-fluid">
 	<div class="box box-success">
 		<div class="box-header with-border">
-			<h3 class="box-title">Material</h3>
-			@if(Auth::user()->id_provincia === 25)
+			<h3 class="box-title">Documentación - Ejecución</h3>
 			<div class="btn-group pull-right">
-				<div type="button" class="btn btn-box-tool" id="configure" data-toggle=false>
-					<i class="fa fa-gear"  style="color: #2F2D2D;"></i>
-				</div>
-				<div  class="btn btn-box-tool">
+				<a href="#" class="btn btn-box-tool" id="list-view" tittle="Listar" data-toggle=true>
+					<i class="fa fa-list fa-lg" style="color: #2F2D2D;"></i>
+				</a>
+				@if(Auth::user()->id_provincia === 25)
+				<div  class="btn btn-box-tool" tittle="Subir archivo">
 					<form id="upload" name="upload">
 						{{ csrf_field() }}
 						<label style="cursor: pointer;color: #2F2D2D;">
 							<input type="file" style="display: none;" name="csv">
-							<i class="fa fa-cloud-upload"></i> Subir
+							<i class="fa fa-lg fa-cloud-upload"></i> Subir
 						</label>
 					</form>
 				</div>
+				<div type="button" class="btn btn-box-tool" id="configure" tittle="Configurar" data-toggle=false>
+					<i class="fa fa-lg fa-gear"  style="color: #2F2D2D;"></i>
+				</div>
+				@endif			
 			</div>
-			@endif
 		</div>
 		<div class="box-body">
 			<div id="list">
+			</div>
+			<div id="grid" style="display: none;">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Archivo</th>
+							<th>Descripción</th>
+							<th>Ultima modificación</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+				</table>
 			</div>
 		</div>
 	</div>				
@@ -34,6 +49,10 @@
 <script type="text/javascript">
 
 	var downloadButton = '<a href="#" class="btn download"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>';	
+
+	function downloadAction(id) {
+		return '<a href="{{url('/materiales')}}/' + id + '/download" class="btn" tittle="Descargar"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"></i></a>';		
+	}
 
 	function changeToDownload() {
 		$('#list .buttons').each(function(key,value){
@@ -113,6 +132,49 @@
 				$(this).find('i').removeClass("fa-angle-up").addClass("fa-angle-down");
 			}			
 		});
+
+		$(".container-fluid").on("click", '#list-view', function(event) {
+			event.preventDefault();
+			listView = $(this);
+			if (listView.data("toggle")) {
+				listView.children().removeClass("fa-list").addClass("fa-th");
+				$(".container-fluid #list").hide();
+				$(".container-fluid #configure").hide();
+				$(".container-fluid #grid").show();
+				gridView()
+				listView.data("toggle", false);
+			} else {
+				$(".container-fluid #grid").hide();
+				$(".container-fluid #list").show();
+				$(".container-fluid #configure").show();
+				listView.children().removeClass("fa-th").addClass("fa-list");
+				listView.data("toggle", true);
+			}	
+		});
+
+		function gridView() {
+
+			$(".container-fluid #grid .table").DataTable({
+				debug: true,
+				destroy: true,
+				searching: true,
+				ajax : "{{url('/materiales/table')}}",
+				columns: [
+				{ data: 'original', tittle: 'Archivo', name: 'Archivo'},
+				{ data: 'descripcion', tittle: 'Descripción', name: 'Descripción'},
+				{ data: 'updated_at', tittle: 'Ultima modificacion'},
+				{ 
+					data: 'id_material',
+					tittle: 'acciones',
+					render: function ( data, type, row, meta ) {
+						return downloadAction(data);
+					},
+					orderable: false
+				}
+				],
+				responsive: true
+			});
+		}
 
 	});
 

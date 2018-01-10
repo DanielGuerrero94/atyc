@@ -1,7 +1,7 @@
 <script type="text/javascript">
 	
-	var updateButton = '<a href="#" class="btn update" title="Actualizar"><i class="fa fa-cloud-upload fa-lg text-primary"></i></a>';;
-	var editButton = '<a href="#" class="btn edit" title="Editar"><i class="fa fa-pencil fa-lg text-info"></i></a>';;
+	var updateButton = '<a href="#" class="btn update" title="Remplazar archivo"><i class="fa fa-cloud-upload fa-lg text-primary"></i></a>';;
+	var editButton = '<a href="#" class="btn edit" title="Editar descripción"><i class="fa fa-pencil fa-lg text-info"></i></a>';;
 	var deleteButton = '<a href="#" class="btn delete" title="Borrar"><i class="fa fa-trash-o fa-lg text-danger"></i></a>';
 	var saveButton = '<a href="#" class="btn save" title="Guardar"><i class="fa fa-floppy-o fa-lg text-success"></i></a>';
 	var cancelButton = '<a href="#" class="btn cancel" title="Cancelar"><i class="fa fa-ban fa-lg text-danger"></i></a>';
