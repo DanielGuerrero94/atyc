@@ -1,18 +1,11 @@
 <script type="text/javascript">
-
-	var downloadButton = '<a href="#" class="btn download"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>';
+	
 	var updateButton = '<a href="#" class="btn update" title="Actualizar"><i class="fa fa-cloud-upload fa-lg text-primary"></i></a>';;
 	var editButton = '<a href="#" class="btn edit" title="Editar"><i class="fa fa-pencil fa-lg text-info"></i></a>';;
 	var deleteButton = '<a href="#" class="btn delete" title="Borrar"><i class="fa fa-trash-o fa-lg text-danger"></i></a>';
 	var saveButton = '<a href="#" class="btn save" title="Guardar"><i class="fa fa-floppy-o fa-lg text-success"></i></a>';
 	var cancelButton = '<a href="#" class="btn cancel" title="Cancelar"><i class="fa fa-ban fa-lg text-danger"></i></a>';
 	//var orderButton = '<a href="#" class="btn order" title="Orden"><i class="fa fa fa-sort fa-lg" style="color: #2F2D2D;"></i></a>';
-
-	function changeToDownload() {
-		$('#list .buttons').each(function(key,value){
-			$(value).html(downloadButton);
-		});
-	}
 
 	function changeToEdit() {
 		$('#list .buttons').each(function(key,value){
@@ -21,10 +14,18 @@
 			$(updateButton).appendTo(buttons);
 			$(editButton).appendTo(buttons);
 			$(deleteButton).appendTo(buttons);
-			$(orderButton).appendTo(buttons);
+			//$(orderButton).appendTo(buttons);
 		});
 	}
 	$(document).ready(function($) {
+
+		$(".container-fluid").keydown( function(e) {
+			var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+			if(key == 13) {
+				e.preventDefault();
+				$(this).find(".save").click();
+			}
+		});
 		
 		formDescripcion = '<form id="description">{{ csrf_field() }}{{ method_field('PUT') }}<input type="text" class="form-control" id="descripcion" name="descripcion"></form>';
 
@@ -145,15 +146,17 @@
 			});			
 		});
 
+		var check = jQuery('<p/>', {
+			id: 'dialogDelete',
+			text: '¿Esta seguro que quiere borrar el archivo?'
+		});
+
 		$(".container-fluid").on("click", ".delete", function(event) {
 			event.preventDefault();
 
-			id = $(this).closest(".box-footer").data('id');
+			var id = $(this).closest(".box-footer").data('id');
 
-			jQuery('<div/>', {
-				id: 'dialogDelete',
-				text: ''
-			}).appendTo('.container-fluid');
+			$('<div id="dialogDelete"></div>').appendTo('.container-fluid');
 
 			$("#dialogDelete").dialog({
 				title: "Verificacion",
@@ -170,36 +173,31 @@
 				resizable: false,
 				dialogClass: "alert",
 				open: function () {
-					jQuery('<p/>', {
-						id: 'dialogDelete',
-						text: '¿Esta seguro que quiere borrar el archivo?'
-					}).appendTo('#dialogDelete');
+					check.appendTo('#dialogDelete');
+				},
+				close : function () {
+					$(this).dialog("destroy").remove();
 				},
 				buttons :
 				{
 					"Aceptar" : function () {
 						$(this).dialog("destroy");
-						$("#dialogDelete").html("");
 						_token = $('.container-fluid #upload').children().val();
 
 						$.ajax({
-							url: '{{'materiales/'}}' + id,
-							type: 'DELETE',
+							url: "{{url('/materiales')}}" + "/" + id,
+							type: 'delete',
 							data: {'_token': _token},
 							success: function (data) {
-								console.log("success");
 								location.reload("true");
 							},
 							error: function (data) {
-								alert("Error al borrar.");
-								location.reload("true");
+								alert(data.responseText);
 							}
 						});
 					},
 					"Cancelar" : function () {
-						$(this).dialog("destroy");
-						$("#dialogDelete").html("");
-						location.reload("true");
+						$(this).dialog("close");
 					}
 				}
 			});			

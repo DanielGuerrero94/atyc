@@ -32,7 +32,15 @@
 
 @section('script')
 <script type="text/javascript">
-	
+
+	var downloadButton = '<a href="#" class="btn download"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>';	
+
+	function changeToDownload() {
+		$('#list .buttons').each(function(key,value){
+			$(value).html(downloadButton);
+		});
+	}
+
 	function filenameFix() {
 		$('#list .filename').each(function (key,value){
 			let val = $(value);
@@ -48,10 +56,12 @@
 	function descriptionFix() {
 		$('#list .description span').each(function (key,value){
 			let val = $(value);
-			val.attr('tittle', val.html());
-			let match = val.html().substr(0, 30);
-			val.html(match);
-			$(value).find('i').removeClass("fa-angle-up").addClass("fa-angle-down");
+			if (val.html().length > 30) {
+				val.attr('tittle', val.html());
+				let match = val.html().substr(0, 30);
+				val.html(match);
+				$(value).find('i').removeClass("fa-angle-up").addClass("fa-angle-down");	
+			}			
 		});
 	}
 
@@ -66,7 +76,7 @@
 			},
 			error: function (data) {
 				alert("Error al cargar documentacion.");
-				location.reload();
+				location.href = "{{url('/dashboard')}}";
 			}
 		});
 

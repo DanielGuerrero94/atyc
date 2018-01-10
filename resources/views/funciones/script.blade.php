@@ -38,13 +38,11 @@
 			text: '¿Esta seguro que quiere dar de baja la funcion?'
 		});
 
-		$(".container-fluid").on("click", ".delete", function(){
+		$(".container-fluid").on("click", ".delete", function(event){
+			event.preventDefault();
 			let id = $(this).data("id");
 
-			jQuery('<div/>', {
-				id: 'dialogDelete',
-				text: ''
-			}).appendTo('.container-fluid');
+			$('<div id="dialogDelete"></div>').appendTo('.container-fluid');
 
 			$("#dialogDelete").dialog({
 				title: "Verificacion",
@@ -70,12 +68,12 @@
 				{
 					"Aceptar" : function () {
 						$(this).dialog("destroy");
-						let data = "_token=" + $("#abm input").first().val();
+						_token = $("#abm input").first().val();
 
 						$.ajax ({
 							url: "{{url('/funciones')}}" + "/" + id,
 							method: 'delete',
-							data: data,
+							data: {'_token': _token},
 							success: function(data){
 								$('.main-sidebar').click("#destinatarios");
 							},
