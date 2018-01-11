@@ -50,6 +50,8 @@ class EfectoresController extends Controller
 
         if ($filtros->get('capacitados') === "true") {
             $query = $query->join('alumnos.alumnos as al', 'al.establecimiento1', '=', 'e.cuie');
+            $query = $query->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'al.id_alumno');
+            $query = $query->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso');
         }
 
         $filtros->pop('capacitados');
