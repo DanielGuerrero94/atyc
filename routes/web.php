@@ -40,6 +40,7 @@ Route::get('dashboard/draw/areas', 'DashboardController@areas');
 Route::get('dashboard/draw/trees', 'DashboardController@trees');
 Route::get('dashboard/draw/pies', 'DashboardController@pies');
 Route::get('dashboard/draw/heats', 'DashboardController@heats');
+Route::get('dashboard/draw/progress', 'DashboardController@progress');
 
 /*
 |--------------------------------------------------------------------------

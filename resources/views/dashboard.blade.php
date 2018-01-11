@@ -44,13 +44,31 @@
 </div>
 </div>
 <div class="row">
-  <div class="col-lg-12 col-xs-12">
+  <div class="col-lg-9 col-xs-12">
     <div class="box box-primary">
       <div class="box-body">
         <div id="accionesPorAnioYMes" style="min-width: 310px;height: 400px; margin: 0 auto"></div>
       </div>
     </div>
   </div>  
+  <div class="col-lg-3 col-xs-12" id="efectores-capacitados">
+    <div class="info-box bg-aqua">
+      <span class="info-box-icon"><i class="fa fa-h-square "></i></span>
+
+      <div class="info-box-content">
+        <span class="info-box-text">Efectores capacitados</span>
+        <span class="info-box-number"></span>
+
+        <div class="progress">
+          <div class="progress-bar" style="width: 20%"></div>
+        </div>
+        <span class="progress-description">
+          20% Increase in 30 Days
+        </span>
+      </div>
+      <!-- /.info-box-content -->
+    </div>
+  </div>
 </div>
 <div class="row">
   <div class="col-lg-6 col-xs-12">
@@ -189,7 +207,22 @@
         color: '#fff'
       },		
       message: 'Cargando...', 
-    });    
+    });   
+
+    $.ajax({
+      url: 'dashboard/draw/progress',
+      dataType: 'json',
+      success: function (data) {
+        console.log(data);
+        let total = data.capacitados + "/" + data.efectores;
+        let porcentaje = data.capacitados * 100 / data.efectores;
+        $("#efectores-capacitados").find(".info-box-number").html(total);
+        $("#efectores-capacitados").find(".progress-bar").css('width', porcentaje + "%");
+      }
+    }).
+    fail(function() {
+      alert('ajax error progress');
+    });
 
     $.ajax({
       url: 'dashboard/draw/first',

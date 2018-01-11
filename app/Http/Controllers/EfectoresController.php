@@ -154,11 +154,11 @@ class EfectoresController extends Controller
 
     public function toTypeahead($array)
     {
-        return array(
+        return [
             'status' => true,
             'error' => null,
             'data' => $array
-            );
+            ];
     }
 
     public function nombresTypeahead(Request $r)

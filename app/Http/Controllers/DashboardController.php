@@ -39,28 +39,28 @@ class DashboardController extends Controller
             'participantes' => $this->getCountTable("alumnos.alumnos"),
             'acciones' => $this->getCountTable("cursos.cursos"),
             'docentes' => $this->getCountTable("sistema.profesores")
-            );
+        );
     }
 
     public function pies()
     {
         return array(
             'porcentajeTematica' => $this->porcentajeTematica()
-            );
+        );
     }
 
     public function areas()
     {
         return array(
             'accionesPorAnioYMes' => $this->accionesPorAnioYMes()
-            );
+        );
     }
 
     public function heats()
     {
         return array(
             'accionesReportadas' => $this->accionesInformadasEsteAnio()
-            );
+        );
     }
 
     public function trees()
@@ -68,7 +68,35 @@ class DashboardController extends Controller
         return array(
             'accionesPorTipologia' => $this->accionesPorTipologia(),
             'accionesPorTematica' => $this->accionesPorTematica()
-            );
+        );
+    }
+
+    public function progress()
+    {
+        return [
+            'capacitados' => $this->capacitados(),
+            'efectores' => $this->efectores(),
+        ];
+    }
+
+    /**
+     * El count despues tiene que ser por periodo y con mas join por las provincias
+     */
+    public function capacitados()
+    {
+        return DB::table('efectores.efectores as e')
+        ->join('alumnos.alumnos as a', 'a.establecimiento1', '=', 'e.cuie')
+        ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
+        ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
+        ->groupBy('e.cuie')
+        ->count();
+    }
+
+    public function efectores()
+    {
+        return DB::table('efectores.efectores as e')
+        ->where('e.id_estado', 1)
+        ->count();
     }
 
     private function getCountTable($table)
@@ -89,7 +117,7 @@ class DashboardController extends Controller
         )
         ->select(
             DB::raw('CONCAT(cursos.lineas_estrategicas.numero,
-        \' - \',cursos.lineas_estrategicas.nombre) as label'),
+                \' - \',cursos.lineas_estrategicas.nombre) as label'),
             DB::raw('count(*) as value')
         )
         ->groupBy('cursos.lineas_estrategicas.nombre', 'cursos.lineas_estrategicas.numero')
@@ -114,8 +142,8 @@ class DashboardController extends Controller
             array(
                 'name' => 'Lineas',
                 'data' => $data
-                )
-            );
+            )
+        );
     }
 
     private function accionesPorAnioYMes()
@@ -127,7 +155,7 @@ class DashboardController extends Controller
             order by extract(year from fecha),extract(month from fecha))
             union all
             (select max(extract(year from fecha)),generate_series(
-            (select extract(month from max(fecha))::numeric) + 1,12),0 from cursos.cursos)");
+                (select extract(month from max(fecha))::numeric) + 1,12),0 from cursos.cursos)");
 
         $colores = ['#d0d1e6','#a6bddb','#67a9cf','#3690c0','#02818a','#016c59','#014636'];
 
@@ -140,7 +168,7 @@ class DashboardController extends Controller
                     return $dato->cantidad;
                 }, $acciones->toArray()),
                 'color' => array_shift($colores)
-                );
+            );
         })
         ->values()
         ->toArray();
@@ -163,7 +191,7 @@ class DashboardController extends Controller
                 'value' => $accion->cantidad,
                 'colorValue' => $contadorColores,
                 'label' => $accion->titulo
-                );
+            );
         })
         ->values()
         ->toArray();
@@ -185,7 +213,7 @@ class DashboardController extends Controller
                 'name' => $accion->tematica,
                 'value' => $accion->cantidad,
                 'colorValue' => $contadorColores
-                );
+            );
         })
         ->values()
         ->toArray();
@@ -201,14 +229,14 @@ class DashboardController extends Controller
             order by id_provincia,extract(month from fecha))
             union all
             (select distinct id_provincia,
-            generate_series(
-            (select extract(month from max(c.fecha)) + 1 from cursos.cursos c
-            where extract(year from c.fecha) = extract(year from now())
-            and c.id_provincia = ca.id_provincia)::numeric,12),0
-            from cursos.cursos ca
-            where extract(year from fecha) = extract(year from now())
-            and id_provincia <> 25
-            )");
+                generate_series(
+                    (select extract(month from max(c.fecha)) + 1 from cursos.cursos c
+                    where extract(year from c.fecha) = extract(year from now())
+                    and c.id_provincia = ca.id_provincia)::numeric,12),0
+                    from cursos.cursos ca
+                    where extract(year from fecha) = extract(year from now())
+                    and id_provincia <> 25
+                )");
 
         return collect($acciones)
         ->map(function ($accion) {
@@ -216,7 +244,7 @@ class DashboardController extends Controller
                 '0' => intval($accion->mes) - 1,
                 '1' => $accion->id_provincia - 1,
                 '2' => $accion->cantidad,
-                );
+            );
         })->toArray();
     }
 }
