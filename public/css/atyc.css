@@ -50,3 +50,11 @@
 .checkbox {
   padding-left: 20px;
 }
+
+th {
+  font-size: 12px; 
+}
+
+td {
+  font-size: 14px; 
+}

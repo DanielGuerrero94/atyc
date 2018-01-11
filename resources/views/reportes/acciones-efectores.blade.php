@@ -11,7 +11,7 @@
 		<div class="col-md-12">
 			<div class="box box-info ">
 				<div class="box-header">
-					<h2 class="box-tittle">{{$reporte->nombre}}
+					<h2 class="box-tittle">Reporte
 						<div class="btn-group pull-right ">
 							<button type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></button>
 						</div>	

@@ -1,14 +1,4 @@
 <section class="sidebar" style="height: auto;">
-  {{-- <form action="#" method="get" class="sidebar-form">
-    <div class="input-group">
-      <input type="text" name="q" class="form-control" placeholder="Buscar...">
-      <span class="input-group-btn">
-        <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-          <i class="fa fa-search"></i>
-        </button>
-      </span>
-    </div>
-  </form> --}}
   <ul class="sidebar-menu tree" data-widget="tree">
     <li class="header text-center">
       <b><span>MENU</span></b>
@@ -60,23 +50,20 @@
       <ul class="treeview-menu" role="menu">
         <li>
           <a href='{{url("/reportes/1")}}'>
-            <span>1 - ODP 4</span>
+            <span class="label label-primary pull-left">1</span>
+            <span>ODP 4</span>
           </a>
         </li>
-        <!-- <li>
-          <a href='{{url("/reportes/2")}}'>
-            <i class="fa fa-circle-o"></i>
-            <span>Banco.</span>
-          </a>
-        </li> -->
         <li>
           <a href='{{url("/reportes/3")}}'>
-            <span>2 - Total staff institucional</span>
+            <span class="label label-primary pull-left">2</span>
+            <span>Total staff institucional</span>
           </a>
         </li>
         <li>
           <a href='{{url("/reportes/4")}}'>
-            <span>3 - Porcentaje de efectores</span>
+            <span class="label label-primary pull-left">3</span>
+            <span>Porcentaje de efectores</span>
             <br>
             <span>capacitados con modalidad</span>
             <br> 
@@ -85,14 +72,16 @@
         </li>
         <li>
           <a href='{{url("/reportes/cursos")}}'>
-            <span>4 - Cantidad de participantes</span>
+            <span class="label label-primary pull-left">4</span>
+            <span>Cantidad de participantes</span>
             <br>
             <span>por acción de capacitación</span>
           </a>
         </li>
         <li>
           <a href='{{url("/reportes/6")}}'>
-            <span>5 - Efectores</span>
+            <span class="label label-primary pull-left">5</span>
+            <span>Efectores</span>
           </a>
         </li>
       </ul>

@@ -6,11 +6,11 @@
 		<div class="box-header with-border">
 			<h3 class="box-title">Documentación - Ejecución</h3>
 			<div class="btn-group pull-right">
-				<a href="#" class="btn btn-box-tool" id="list-view" tittle="Listar" data-toggle=true>
-					<i class="fa fa-list fa-lg" style="color: #2F2D2D;"></i>
+				<a href="#" class="btn btn-box-tool" id="list-view" title="Listar" data-toggle=false>
+					<i class="fa fa-th fa-lg" style="color: #2F2D2D;"></i>
 				</a>
 				@if(Auth::user()->id_provincia === 25)
-				<div  class="btn btn-box-tool" tittle="Subir archivo">
+				<div  class="btn btn-box-tool" title="Subir archivo">
 					<form id="upload" name="upload">
 						{{ csrf_field() }}
 						<label style="cursor: pointer;color: #2F2D2D;">
@@ -19,25 +19,17 @@
 						</label>
 					</form>
 				</div>
-				<div type="button" class="btn btn-box-tool" id="configure" tittle="Configurar" data-toggle=false>
+				<div type="button" class="btn btn-box-tool" id="configure" title="Configurar" data-toggle=false style="display: none;">
 					<i class="fa fa-lg fa-gear"  style="color: #2F2D2D;"></i>
 				</div>
 				@endif			
 			</div>
 		</div>
 		<div class="box-body">
-			<div id="list">
+			<div id="grid"  style="display: none;">
 			</div>
-			<div id="grid" style="display: none;">
+			<div id="list">
 				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th>Archivo</th>
-							<th>Descripción</th>
-							<th>Ultima modificación</th>
-							<th>Acciones</th>
-						</tr>
-					</thead>
 				</table>
 			</div>
 		</div>
@@ -51,17 +43,17 @@
 	var downloadButton = '<a href="#" class="btn download"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>';	
 
 	function downloadAction(id) {
-		return '<a href="{{url('/materiales')}}/' + id + '/download" class="btn" tittle="Descargar"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"></i></a>';		
+		return '<a href="{{url('/materiales')}}/' + id + '/download" class="btn" title="Descargar"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"></i></a>';		
 	}
 
 	function changeToDownload() {
-		$('#list .buttons').each(function(key,value){
+		$('#grid .buttons').each(function(key,value){
 			$(value).html(downloadButton);
 		});
 	}
 
 	function filenameFix() {
-		$('#list .filename').each(function (key,value){
+		$('#grid .filename').each(function (key,value){
 			let val = $(value);
 			let match = val.html().match(/.{1,30}/g);
 			let words = [];
@@ -73,10 +65,10 @@
 	}
 
 	function descriptionFix() {
-		$('#list .description span').each(function (key,value){
+		$('#grid .description span').each(function (key,value){
 			let val = $(value);
 			if (val.html().length > 30) {
-				val.attr('tittle', val.html());
+				val.attr('title', val.html());
 				let match = val.html().substr(0, 30);
 				val.html(match);
 				$(value).find('i').removeClass("fa-angle-up").addClass("fa-angle-down");	
@@ -86,18 +78,49 @@
 
 	$(document).ready(function(){
 
-		$.ajax({
-			url: "{{url('/materiales/list')}}",
-			success: function (data) {
-				$(".container-fluid #list").html(data);
-				descriptionFix();
-				changeToDownload();
-			},
-			error: function (data) {
-				alert("Error al cargar documentacion.");
-				location.href = "{{url('/dashboard')}}";
-			}
-		});
+		function listView() {
+
+			$(".container-fluid #list .table").DataTable({
+				debug: true,
+				destroy: true,
+				searching: true,
+				ajax : "{{url('/materiales/table')}}",
+				columns: [
+				{ data: 'original', title: 'Archivo'},
+				{ 
+					data: 'descripcion',
+					title: 'Descripción',
+					orderable: false
+				},
+				{ data: 'updated_at', title: 'Ultima modificación'},
+				{ 
+					data: 'id_material',
+					render: function ( data, type, row, meta ) {
+						return downloadAction(data);
+					},
+					orderable: false
+				}
+				],
+				responsive: true
+			});
+		}
+
+		listView();
+
+		function gridView() {
+			$.ajax({
+				url: "{{url('/materiales/list')}}",
+				success: function (data) {
+					$(".container-fluid #grid").html(data);
+					descriptionFix();
+					changeToDownload();
+				},
+				error: function (data) {
+					alert("Error al cargar documentacion.");
+					location.href = "{{url('/dashboard')}}";
+				}
+			});
+		}
 
 		$(".container-fluid").on("click", '.download', function(event) {
 			event.preventDefault();
@@ -122,7 +145,7 @@
 			let more = $(this);
 			let span = more.parent().find('span');
 			if (more.data("toggle")) {
-				span.html(span.attr('tittle'));
+				span.html(span.attr('title'));
 				more.data("toggle", false);
 				$(this).find('i').removeClass("fa-angle-down").addClass("fa-angle-up");
 			} else {
@@ -135,46 +158,25 @@
 
 		$(".container-fluid").on("click", '#list-view', function(event) {
 			event.preventDefault();
-			listView = $(this);
-			if (listView.data("toggle")) {
-				listView.children().removeClass("fa-list").addClass("fa-th");
-				$(".container-fluid #list").hide();
-				$(".container-fluid #configure").hide();
-				$(".container-fluid #grid").show();
-				gridView()
-				listView.data("toggle", false);
-			} else {
-				$(".container-fluid #grid").hide();
+			listButton = $(this);
+			if (listButton.data("toggle")) {
+				listButton.children().removeClass("fa-list").addClass("fa-th");
 				$(".container-fluid #list").show();
+				$(".container-fluid #configure").hide();
+				$(".container-fluid #grid").hide();
+				listView();
+				listButton.data("toggle", false);
+			} else {
+				$(".container-fluid #grid").show();
+				$(".container-fluid #list").hide();
 				$(".container-fluid #configure").show();
-				listView.children().removeClass("fa-th").addClass("fa-list");
-				listView.data("toggle", true);
+				gridView();
+				listButton.children().removeClass("fa-th").addClass("fa-list");
+				listButton.data("toggle", true);
 			}	
 		});
 
-		function gridView() {
-
-			$(".container-fluid #grid .table").DataTable({
-				debug: true,
-				destroy: true,
-				searching: true,
-				ajax : "{{url('/materiales/table')}}",
-				columns: [
-				{ data: 'original', tittle: 'Archivo', name: 'Archivo'},
-				{ data: 'descripcion', tittle: 'Descripción', name: 'Descripción'},
-				{ data: 'updated_at', tittle: 'Ultima modificacion'},
-				{ 
-					data: 'id_material',
-					tittle: 'acciones',
-					render: function ( data, type, row, meta ) {
-						return downloadAction(data);
-					},
-					orderable: false
-				}
-				],
-				responsive: true
-			});
-		}
+		
 
 	});
 

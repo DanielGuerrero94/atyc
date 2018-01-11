@@ -47,7 +47,7 @@
   <div class="col-lg-12 col-xs-12">
     <div class="box box-primary">
       <div class="box-body">
-        <div id="accionesPorAnioYMes" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <div id="accionesPorAnioYMes" style="min-width: 310px;height: 400px; margin: 0 auto"></div>
       </div>
     </div>
   </div>  
@@ -217,7 +217,7 @@
 
           Highcharts.chart('accionesPorAnioYMes', {
             chart: {
-              type: 'areaspline',    
+              type: 'areaspline'
             },
             title: {
               text: 'Acciones por año y mes (Nación)' 
@@ -244,7 +244,7 @@
                 fillOpacity: 0.5
               }  
             },
-            series: data.accionesPorAnioYMes,
+            series: data.accionesPorAnioYMes
           });
 
         }

@@ -8,7 +8,7 @@
 	//var orderButton = '<a href="#" class="btn order" title="Orden"><i class="fa fa fa-sort fa-lg" style="color: #2F2D2D;"></i></a>';
 
 	function changeToEdit() {
-		$('#list .buttons').each(function(key,value){
+		$('#grid .buttons').each(function(key,value){
 			let buttons = $(value);
 			buttons.html("");
 			$(updateButton).appendTo(buttons);
@@ -101,7 +101,6 @@
 			short = span.text();
 			span.html(span.attr('tittle'));
 			let old = span.text();
-			console.log(old);
 			//Agrego el input y pongo el texto viejo
 			input = formDescripcion;
 			blockquote.html(input);
@@ -116,8 +115,6 @@
 			$(cancelButton).appendTo(buttons);
 			$(saveButton).appendTo(buttons);
 
-			console.log(blockquote.css("margin-bottom"));
-			console.log(blockquote.css("padding-bottom"));
 			blockquote.css("margin-bottom", "0px");
 			blockquote.css("padding-bottom", "5px");
 		});

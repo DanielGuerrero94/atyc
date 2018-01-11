@@ -151,7 +151,7 @@
     @stack('scripts')
     
   </head>
-  <body class="skin-blue sidebar-mini" style="height: auto; min-height: 100%;">
+  <body class="skin-blue" style="height: auto; min-height: 100%;">
     <div class="wrapper" style="height: auto; min-height: 100%;background-color: #f5f5f5;">
       <header class="main-header">
         <!-- Branding Image -->
