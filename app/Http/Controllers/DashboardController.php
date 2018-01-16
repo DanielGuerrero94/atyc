@@ -71,28 +71,37 @@ class DashboardController extends Controller
         );
     }
 
-    public function progress()
+    public function progress(Request $request)
     {
         return [
-            'capacitados' => $this->capacitados(),
-            'efectores' => $this->efectores(),
+            'capacitados' => $this->capacitados($request),
+            'efectores' => $this->efectores($request),
         ];
     }
 
     /**
      * El count despues tiene que ser por periodo y con mas join por las provincias
      */
-    public function capacitados()
+    public function capacitados(Request $request)
     {
-        return DB::table('efectores.efectores as e')
+        $query = DB::table('efectores.efectores as e')
+        ->select(DB::raw("count(distinct e.cuie)"))
         ->join('alumnos.alumnos as a', 'a.establecimiento1', '=', 'e.cuie')
         ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
         ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
-        ->groupBy('e.cuie')
-        ->count();
+        ->where('e.id_estado', 1);
+
+        logger($request->get("anio"));
+        if (($anio = $request->get('anio')) != 0) {
+            logger($anio);
+            $query = $query->where("c.fecha", ">", "{$anio}-01-01");
+        }
+
+        return $query->first()
+        ->count;
     }
 
-    public function efectores()
+    public function efectores(Request $request)
     {
         return DB::table('efectores.efectores as e')
         ->where('e.id_estado', 1)
