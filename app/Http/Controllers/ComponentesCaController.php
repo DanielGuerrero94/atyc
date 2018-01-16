@@ -116,13 +116,30 @@ class ComponentesCaController extends Controller
             function ($ret) {
                 return '<button data-id="'.$ret->id_componente_ca.'" class="btn btn-info btn-xs editar" '.
                 'title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
-                /*
-                '<button data-id="'.$ret->id_componente_ca.'" class="btn btn-danger btn-xs eliminar" '.
-                'title="Eliminar" data-toggle="popover" data-trigger="hover" data-placement="right" '.
-                'data-content="Some content"><i class="fa fa-trash-o" aria-hidden="true"></i></button>'
-                */
             }
-        )
-        ->make(true);
+        )->make(true);
     }
+
+    /**
+     * Buscar por nombre y año de vigencia de los componentes Ca.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getTypeahead(Request $r)
+    {
+        $query = ComponenteCa::select('id_componente_ca as id', 'nombre');
+
+        $typed = $r->input('q');
+
+        $nombre = explode(' ', $typed);
+
+        foreach ($nombre as $key => $value) {
+            $query = $query->orWhereRaw("nombre ~* '{$value}'");
+        }
+
+        $matchs = $query->get();
+
+        return $this->typeaheadResponse($matchs);
+    }    
 }

@@ -4,9 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pac\Pac;
+use Datatables;
 
 class PacsController extends Controller
 {
+
+    /**
+     * Icono de botones
+     *
+     * @var array
+     **/
+    private $botones = [
+        'editar' => 'fa fa-pencil-square-o',
+        'eliminar' => 'fa fa-trash-o',
+        'buscar' => 'fa fa-search',
+        'agregar' => 'fa fa-plus-circle'
+    ];    
     /**
      * Display a listing of the resource.
      *
@@ -103,18 +116,37 @@ class PacsController extends Controller
      */
     public function getTabla(Request $request)
     {
-        $query = Pac::select(
-            'id_pac',
-            'trimestre_planificacion',
-            't1',
-            't2',
-            't3',
-            't4',
-            'consul_peatyc',
-            'observado'
-        )->segunProvincia();
+        $query = Pac::all();
 
         return $this->toDatatable($request, $query);
     }
+
+    /**
+     * Devuelve en DataTable los resultados con sus correspondientes acciones.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Support\Collection  $resultados
+     * @return \Illuminate\Http\Response
+     */
+    public function toDatatable(Request $r, $resultados)
+    {
+        return Datatables::of($resultados)
+        ->addColumn('acciones', function ($ret) use ($r) {
+
+            $accion = $r->has('botones')?$r->botones:null;
+
+            $editarYEliminar = '<a href="'.url('cursos').'/'.$ret->id_pac.'"><button data-id="'.$ret->id_pac.
+            '" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones['editar'].
+            '" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_pac.
+            '" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones['eliminar'].
+            '" aria-hidden="true"></i></button>';
+            
+            $agregar = '<button data-id="'.$ret->id_pac.'" class="btn btn-info btn-xs agregar" '.
+            'title="Agregar"><i class="'.$this->botones['agregar'].'" aria-hidden="true"></i></button>';
+
+            return $accion == 'agregar'?$agregar:$editarYEliminar;
+        })
+        ->make(true);
+    }    
 }
  

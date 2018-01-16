@@ -36,7 +36,7 @@
 			{ data: 'item'},
 			{ data: 'nombre'},
 			{ data: 'descripcion'},
-			{ name: 'id_accion_pauta', data: 'accion_pauta.nombre'},
+			{ name: 'id_categoria_pauta', data: 'categoria_pauta.nombre'},
 			{ data: 'acciones', orderable: false}
 			],			
 			rowReorder: {
@@ -64,7 +64,7 @@
 				{ data: 'item'},
 				{ data: 'nombre'},
 				{ data: 'descripcion'},
-				{ data: 'accion_pauta'},
+				{ data: 'categoria_pauta'},
 				{ data: 'acciones', orderable: false}
 				],			
 				rowReorder: {

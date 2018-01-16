@@ -25,10 +25,10 @@
 			$('#filtros .box').show();
 		});
 
-		datatable = $('#abm-table').DataTable({
+		var datatable = $('#abm-table').DataTable({
 			destroy: true,
 			searching: false,
-			ajax : 'pacs/tabla',
+			ajax : '{{ url('pacs/tabla') }}',
 			columns: [
 			{ data: 'trimestre_planificacion'},
 			{ data: 't1'},
@@ -49,11 +49,13 @@
 
 			$.ajax({
 				url: "{{url('pacs/alta')}}",
-				method: 'get',
+				type: 'get',
+                beforeSend: function () {
+                        $("#alta-pac").html("Procesando, espere por favor...");
+                },				
 				success: function(data){
 					$('#alta-pac').html(data);
 					$('#alta-pac').show();
-					$('#filtros').hide();
 					$('#abm').hide();
 				}
 			});
@@ -137,7 +139,7 @@
 			});
 		});
 
-		$('#alta-accion').on('click','#modificar',function() {
+		$('#alta-pac').on('click','#modificar',function() {
 
 			var pac = $(this).data('id');
 
