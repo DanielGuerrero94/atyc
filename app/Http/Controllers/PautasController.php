@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Models\Pac\CategoriaPauta;
 use App\Models\Pac\Pauta;
+use App\Provincia;
 use Cache;
 use DB;
 use Auth;
@@ -147,8 +148,7 @@ class PautasController extends AbmController
      */
     public function getTabla(Request $r)
     {
-        $query = Pauta::select('id_pauta', 'item', 'nombre', 'descripcion', 'id_categoria_pauta')
-        ->with('accionPauta');
+        $query = Pauta::select('id_pauta', 'item', 'nombre', 'descripcion', 'id_categoria_pauta');
 
         return $this->toDatatable($r, $query);
     }
@@ -159,7 +159,7 @@ class PautasController extends AbmController
             'pac.pautas.id_pauta',
             'pac.pautas.nombre',
             'pac.pautas.descripcion',
-            'pac.acciones_pautas.nombre as categoria',
+            'pac.categorias_pautas.nombre as categoria',
             'pac.pautas.item',
             'pac.pautas.id_categoria_pauta'
         )
@@ -223,11 +223,12 @@ class PautasController extends AbmController
      */
     public function getSelectOptions()
     {
-        $categoriaPautas = Cache::remember('categoria_pautas', 5, function () {
-            return CategoriaPauta::all();
-        });
+        $categoriaPautas = CategoriaPauta::all();
+        $provincias = Provincia::all();
+
         return [
             'categoriaPauta' => $categoriaPautas,
+            'provincias'     => $provincias,
         ];
     }
 
@@ -248,7 +249,8 @@ class PautasController extends AbmController
             $nombre = explode(' ', $typed);
 
             foreach ($nombre as $key => $value) {
-                $query = $query->orWhereRaw("nombre ~* '{$value}'");
+                $query = $query->orWhereRaw("nombre ~* '{$value}'")
+                ->orWhereRaw("descripcion ~* '{$value}'");
             }
         }
 

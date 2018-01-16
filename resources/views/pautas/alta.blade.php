@@ -33,7 +33,28 @@
 						</select>
 					</div>
 				</div>
-				
+	            <div class="form-group col-sm-6">          
+		            <label for="provincia" class="control-label col-xs-4">Provincia:</label>
+		            <div class="col-xs-8">
+		                @if(Auth::user()->id_provincia == 25)
+			                <select class="form-control" id="id_provincia" name="id_provincia">
+			                    @foreach ($provincias as $provincia)                
+			                       <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->nombre}}" value="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>           
+			                    @endforeach
+			                </select>
+		                @else
+			                <select class="form-control" id="id_provincia" name="id_provincia" name="id_provincia" disabled>
+			                    <option data-id="{{Auth::user()->id_provincia}}" value="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>  
+			                </select>
+		                @endif
+		            </div>        
+	            </div>
+	            <div class="form-group col-sm-6">          
+		            <label for="vigencia" class="control-label col-xs-4">Año de vigencia:</label>
+		            <div class="col-xs-8">
+						<input name="vigencia" type="text" class="form-control" id="vigencia" value="{{date('Y')}}" disabled>		            	
+		            </div>
+		        </div>	            				
 			</div>	
 			<hr>
 
@@ -163,9 +184,10 @@
 		$('#alta').on('click','#crear',function(e) {
 			e.preventDefault();		
 			if(validator.valid()){
+				$('#vigencia').prop('disabled', false);
+				$('#id_provincia').prop('disabled', false);
 				$('#alta #form-alta').submit();	
 			}
 		});
-		
 	});
 </script>

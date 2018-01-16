@@ -274,6 +274,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('componentesCa/alta', 'ComponentesCaController@create');
         Route::get('componentesCaTabla', 'ComponentesCaController@getTabla');
         Route::get('componentesCa/{id}', 'ComponentesCaController@edit');
+        Route::get('componentesCa/typeahead', 'ComponentesCaController@getTypeahead');
 
         Route::post('componentesCa', 'ComponentesCaController@store');
 
@@ -301,7 +302,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('pacs', 'PacsController@getTodos');
         Route::get('pacs/alta', 'PacsController@create');
         Route::post('pacs', 'PacsController@store');
-        Route::get('pacs/tabla', 'CursosController@getTabla');
+        Route::get('pacs/tabla', 'PacsController@getTabla');
         Route::put('pacs/{id}', 'PacsController@update');
 
         Route::delete('pacs/{id}', 'PacsController@destroy');

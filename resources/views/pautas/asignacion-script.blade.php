@@ -7,7 +7,7 @@
     $.typeahead({
       input: '.pautas_typeahead',
       maxItem: 10,
-      minLength: 3,
+      minLength: 1,
       order: "desc",
       dynamic: true,
       delay: 400,
@@ -105,14 +105,14 @@
         success: function (response) {
           console.log('success');
 
-          $('.container-fluid #alta-accion').closest('.row').slideUp(450);
+          $('.container-fluid #alta-pauta').closest('.row').slideUp(450);
 
         //Creo animacion de creando
         jQuery('<div/>', {
           id: 'creando-pauta',
           class: 'row',
           css: 'z-index: 1000;',
-          html: '<h3 style="text-align: center;">(Alta de acción en progreso) <i class="fa fa-cog fa-spin fa-2x fa-fw margin-bottom"></i> Creando Pauta</h3>'
+          html: '<h3 style="text-align: center;">(Alta de pauta en progreso) <i class="fa fa-cog fa-spin fa-2x fa-fw margin-bottom"></i> Creando Pauta</h3>'
         }).appendTo('.container-fluid');
 
         //Creo div para el form de alta de pauta

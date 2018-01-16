@@ -25,57 +25,45 @@
           <br>
           <div class="row">
             <div class="form-group col-xs-12 col-md-6">          
-              <label for="trimestres" class="control-label col-md-4 col-xs-3">Trimestre a planificar</label>
+              <label for="trimestre_planificacion" class="control-label col-md-4 col-xs-3">Trimestre a planificar</label>
               <div class="col-md-8 col-xs-9">
-                <input type="number" class="form-control" name="planificar" id="trimestres" placeholder="Trimestre a planificar la accion"> 
+                <input type="number" class="form-control" name="planificar" id="trimestre_planificacion" placeholder="Trimestre a planificar la accion"> 
               </div>
             </div>
           </div>
           <br>
           <div class="row">
             <ul>
-              <li>Role:</li>
-              <li>
-                  <div class="checkbox checkbox-info">
+              <li>Trimestre:</li>
+                  <div class="form-check form-check-inline">
                       <input type="checkbox" id="t1">
                       <label for="t1">
-                          1er Trimestre
+                          1ro
                       </label>
-                  </div>
-              </li>
-              <li>
-                  <div class="checkbox checkbox-info">
                       <input type="checkbox" id="t2">
                       <label for="t2">
-                          2do Trimestre
+                          2do
                       </label>
-                  </div>
-              </li>
-              <li>
-                  <div class="checkbox checkbox-info">
                       <input type="checkbox" id="t3">
                       <label for="t3">
-                          3er Trimestre
+                          3ro
                       </label>
-                  </div>
-              </li>
-              <li>
-                  <div class="checkbox checkbox-info">
                       <input type="checkbox" id="t4">
                       <label for="t4">
-                          4to Trimestre
+                          4to
                       </label>
                   </div>
-              </li>
             </ul>
           </div>
           <div class="row">
-            <div class="checkbox checkbox-info">
-                <input type="checkbox" id="peatyc">
-                <label for="peatyc">
+            <ul>
+              <div class="checkbox checkbox-info">
+                <input type="checkbox" id="consul_peatyc">
+                <label for="consul_peatyc">
                     Consultor PeAtyc
                 </label>
-            </div>
+              </div>
+            </ul>
           </div>
           <br>
           <div class="row">
@@ -88,11 +76,12 @@
           </div>          
         </form>  
       </div>
-      <div class="tab-pane" id="pautas">   
-        @include('pautas.asignacion')             
-      </div>
-      <div class="tab-pane" id="profesores">
-        @include('profesores.asignacion')
+      <div class="tab-pane" id="pautas">  
+        <form>
+          @include('componentesCa.asignacion')
+        @include('pautas.asignacion') 
+        <br>        
+        </form>
       </div>
     </div> 
   </div>      
@@ -106,7 +95,7 @@
 
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
 
-    $('#alta-pac #tabla-profesores').on('click','.agregar',function () {
+/*    $('#alta-pac #tabla-profesores').on('click','.agregar',function () {
 
       var fila = $(this).parent().parent();
       var id = $(this).data('id');
@@ -123,7 +112,7 @@
       $(nueva_fila).append(botonQuitar); 
       $(nueva_fila).find('td:last button').attr('data-id',id);
 
-    });
+    });*/
 
     $.typeahead({
       input: '.curso_typeahead',
@@ -150,8 +139,8 @@
       });
     }
 
-    function getProfesoresSelected() {
-      return $('#profesores-del-curso .fa-search').map(function(index, val) {
+    function getComponentesCaSelected() {
+      return $('#componentesCa-de-la-pac .fa-search').map(function(index, val) {
         return $(val).data('id');
       });
     }
@@ -159,15 +148,15 @@
     function getSelected() {
 
       var pautas = getPautasSelected();
-      var profesores = getProfesoresSelected();
+      var componentesCa = getComponrentesCaSelected();
       return [
       { 
         name: 'pautas',
         value: pautas.toArray()
       },
       { 
-        name: 'profesores',
-        value: profesores.toArray()
+        name: 'componentesCa',
+        value: componentesCa.toArray()
       }];
     }
 
@@ -206,7 +195,7 @@
             console.log("Success.");
             alert("Se crea el pac.");
             location.replace('pacs');
-          },pac
+          },
           error : function(data){
             console.log("Error.");
             alert("No se pudo crear el pac.");
@@ -230,5 +219,5 @@
 {{-- Script asignacion pautas --}}
 @include('pautas.asignacion-script')
 
-{{-- Script para asignacion de docentes --}}
-@include('profesores.asignacion-script')
+{{-- Script para asignacion de componentes --}}
+@include('componentesCa.asignacion-script')
