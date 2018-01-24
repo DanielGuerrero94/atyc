@@ -30,8 +30,8 @@
 }
 
 .col-centered{
-    float: none;
-    margin: 0 auto;
+  float: none;
+  margin: 0 auto;
 }
 
 .container-fluid {
@@ -57,4 +57,38 @@ th {
 
 td {
   font-size: 14px; 
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a:active {
+  text-decoration: none;
+}
+
+.material:hover div {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.btn-circle {
+  padding: 10px 10px 10px 10px;
+}
+
+.btn-circle:hover {
+  border-radius: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 1px 5px rgba(0,0,0,0.20);
+}
+
+.btn-circle:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1), 0 1px 5px rgba(0,0,0,0.10);
 }

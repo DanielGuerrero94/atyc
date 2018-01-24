@@ -17,6 +17,8 @@ class AlterMaterialesTable01 extends Migration
             $table->text('descripcion')->nullable();
             $table->integer('id_etapa')->nullable();
             $table->integer('orden')->nullable();
+            $table->unique(['original', 'id_etapa']);
+            $table->unique('path');
         });
     }
 
@@ -31,6 +33,7 @@ class AlterMaterialesTable01 extends Migration
             $table->dropColumn('descripcion');
             $table->dropColumn('id_etapa');
             $table->dropColumn('orden');
+            $table->dropUnique('path');
         });
     }
 }

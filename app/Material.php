@@ -10,5 +10,5 @@ class Material extends Model
 
     protected $primaryKey = 'id_material';
 
-    protected $fillable = ['path', 'original', 'descripcion'];
+    protected $fillable = ['path', 'original', 'descripcion', 'id_etapa'];
 }

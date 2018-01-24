@@ -1,6 +1,8 @@
 <div class="box box-success">
 	<div class="box-header with-border">
-		<a href="#" class="btn pull-left" id="back" title="Volver" onclick="window.location = '{{url()->previous()}}'"><i class="fa fa-arrow-left fa-lg"></i></a>
+		<a href="#" class="btn pull-left" id="back" title="Volver" onclick="window.location = '{{url()->previous()}}'">
+			<i class="fa fa-arrow-left fa-lg"></i>
+		</a>
 		<h3 class="box-tittle" style="margin-top: 5px;font-size: 2vw;font-size: 3vh"> Nuevo Rol/Destinatario</h3>						
 		<div class="box-tools pull-right" style="margin-top: 5px;">
 			<a href="#" class="btn btn-box-tool" id="store" title="Crear">

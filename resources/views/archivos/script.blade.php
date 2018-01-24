@@ -1,11 +1,18 @@
 <script type="text/javascript">
 	
-	var updateButton = '<a href="#" class="btn update" title="Remplazar archivo"><i class="fa fa-cloud-upload fa-lg text-primary"></i></a>';;
-	var editButton = '<a href="#" class="btn edit" title="Editar descripción"><i class="fa fa-pencil fa-lg text-info"></i></a>';;
-	var deleteButton = '<a href="#" class="btn delete" title="Borrar"><i class="fa fa-trash-o fa-lg text-danger"></i></a>';
-	var saveButton = '<a href="#" class="btn save" title="Guardar"><i class="fa fa-floppy-o fa-lg text-success"></i></a>';
-	var cancelButton = '<a href="#" class="btn cancel" title="Cancelar"><i class="fa fa-ban fa-lg text-danger"></i></a>';
-	//var orderButton = '<a href="#" class="btn order" title="Orden"><i class="fa fa fa-sort fa-lg" style="color: #2F2D2D;"></i></a>';
+	var updateButton = '<a href="#" class="btn btn-circle update" title="Remplazar archivo"><i class="fa fa-cloud-upload fa-lg text-primary"></i></a>';;
+	var editButton = '<a href="#" class="btn btn-circle edit" title="Editar descripción"><i class="fa fa-pencil fa-lg text-info"></i></a>';;
+	var deleteButton = '<a href="#" class="btn btn-circle delete" title="Borrar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
+	var saveButton = '<a href="#" class="btn btn-circle save" title="Guardar"><i class="fa fa-floppy-o fa-lg text-success"></i></a>';
+	var cancelButton = '<a href="#" class="btn btn-circle cancel" title="Cancelar"><i class="fa fa-ban fa-lg text-danger"></i></a>';
+	// var orderButton = '<a href="#" class="btn btn-circle order pull-right" title="Orden"><i class="fa fa fa-sort fa-lg" style="color: #2F2D2D;"></i></a>';
+	
+	var confirmOrderButton = '<a href="#" class="btn btn-circle confirm-order" title="Confirmar"><i class="fa fa-check fa-lg text-success"></i></a>';
+	var revertOrderButton = '<a href="#" class="btn btn-circle revert-order" title="Revertir"><i class="fa fa-ban fa-lg text-danger"></i></a>';
+
+	function orderInput(value) {
+		return '<input type="number" name="order" class="form-control order" value="' + value + '" style="width: 20%;float: right;">';
+	}
 
 	function changeToEdit() {
 		$('#grid .buttons').each(function(key,value){
@@ -17,6 +24,7 @@
 			//$(orderButton).appendTo(buttons);
 		});
 	}
+
 	$(document).ready(function($) {
 
 		$(".container-fluid").keydown( function(e) {
@@ -30,6 +38,25 @@
 		formDescripcion = '<form id="description">{{ csrf_field() }}{{ method_field('PUT') }}<input type="text" class="form-control" id="descripcion" name="descripcion"></form>';
 
 		formUpdate = '<form id="update" name="update">{{ csrf_field() }}<label><input type="file" name="csv" style="display: none;"></label></form>';
+
+		$(".container-fluid").on("click", ".material .box-body", function(event) {
+			buttons = $(this).parent().find(".box-footer");
+			buttons.html("");
+			$(updateButton).appendTo(buttons);
+			$(editButton).appendTo(buttons);
+			$(deleteButton).appendTo(buttons);
+			$(orderInput(0)).appendTo(buttons);
+		});
+
+		$(".container-fluid").on("change", ".order", function(event) {
+			alert("Quiere cambiar el orden");
+			value = event.currentTarget.value;
+			buttons = $(this).parent();
+			buttons.html("");
+			$(confirmOrderButton).appendTo(buttons);
+			$(revertOrderButton).appendTo(buttons);
+			$(orderInput(value)).appendTo(buttons);
+		});
 
 		$(".container-fluid").on("change", "#upload input", function(event) {
 			data = new FormData($("#upload")[0]);

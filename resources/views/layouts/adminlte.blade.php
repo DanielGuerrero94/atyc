@@ -230,9 +230,7 @@
         scrollY:"400px",
         scrollCollapse: true,
         serverSide: true,
-        rowReorder: {
-          selector: 'td:nth-child(2)'
-        },
+        rowReorder: false,
         responsive: true,
         language: {
           emptyTable: "No se encontraron registros",

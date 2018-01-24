@@ -12,7 +12,8 @@ class DatabaseRestoreCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'db:restore';
+    protected $signature = 'db:restore
+    {--m|migrate=0 : Migrate}';
 
     /**
      * The console command description.
@@ -66,7 +67,10 @@ class DatabaseRestoreCommand extends Command
      */
     public function handle()
     {
-        $this->call('migrate:refresh');
+        if ($this->option('migrate')) {
+            $this->call('migrate:refresh');
+        }
+
         $this->getBackupPaths()->setRestoreConnection();
         $this->restore();
         $this->info("Restored");
@@ -108,11 +112,11 @@ class DatabaseRestoreCommand extends Command
         return $this;
     }
 
-    public function setRestoreConnection()
+    public function setRestoreConnection($database = null)
     {
         $db_password = env('DB_PASSWORD');
         $db_username = env('DB_USERNAME');
-        $db_database = env('DB_DATABASE');
+        $db_database = isset($database)?$database:env('DB_DATABASE');
         $this->restoreCommand = "PGPASSWORD='{$db_password}' psql -U {$db_username} -d {$db_database} ";
         return $this;
     }

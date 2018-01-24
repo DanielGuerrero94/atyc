@@ -20,29 +20,19 @@ class MaterialesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //No necesita
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id_etapa)
     {
         $path = $request->file('csv')->store('material');
         $path = explode('/', $path);
         $path = $path[1];
         $original = $request->file('csv')->getClientOriginalName();
-
-        return Material::create(compact('original', 'path'))->id_material;
+        
+        return Material::create(compact('original', 'path', 'id_etapa'))->id_material;
     }
 
     /**
@@ -57,17 +47,6 @@ class MaterialesController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //No necesita
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -76,8 +55,6 @@ class MaterialesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        logger($id);
-        logger(json_encode($request->all()));
         Material::findOrFail($id)->update($request->all());
         return response('Updated', 200);
     }
@@ -135,12 +112,13 @@ class MaterialesController extends Controller
             'zip' => 'fa-lg fa-file-archive-o text-warning'
         ];
 
+
         return $materiales->map(function ($material) use ($icon) {
             //Consigue el sufijo
             $suffix = explode('.', $material->original);
             $suffix = $suffix[1];
             //Setea icono y color
-            $material->icon = $icon[$suffix];
+            $material->icon = array_key_exists($suffix, $icon)?$icon[$suffix]:$icon['txt'];
             $material->original = explode('.', $material->original);
             $material->original = $material->original[0];
             return $material;

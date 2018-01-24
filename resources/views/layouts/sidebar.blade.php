@@ -4,12 +4,19 @@
       <b><span>MENU</span></b>
     </li>
     @if (!Auth::guest())            
+    <li>
+      <a href="{{url('/dashboard')}}">
+        <i class="fa fa-tachometer" aria-hidden="true"></i>
+        <span>Dashboard</span>
+      </a>
+
+    </li>
     <li class="treeview" id="ejecucion">
       <a href="#">
-        <i class="fa fa-tachometer" aria-hidden="true"></i>
+        <i class="fa fa-desktop" aria-hidden="true"></i>
         <span>Ejecución</span>
-        <span class="pull-right-container">
-          <i class="fa fa-angle-left pull-right"></i>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
         </span>
       </a>
       <ul class="treeview-menu">
@@ -32,8 +39,8 @@
           </a>
         </li>        
         <li>
-          <a href={{url("/archivos")}}>
-            <i class="fa fa-file"></i>
+          <a href={{url("/materiales/etapa/4")}}>
+            <i class="fa fa-book"></i>
             <span>Documentación</span>
           </a>
         </li>
@@ -41,10 +48,27 @@
     </li>
     <li class="treeview">
       <a href="#">
-        <i class="fa fa-file-o" aria-hidden="true"></i>
-        <span>Monitoreo y Evaluación</span>
-        <span class="pull-right-container">
-          <i class="fa fa-angle-left pull-right"></i>
+        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+        <span>Evaluación</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu" role="menu">
+        <li>
+          <a href={{url("/materiales/etapa/5")}}>
+            <i class="fa fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </li>
+      </ul>
+    </li>             
+    <li class="treeview">
+      <a href="#">
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <span>Monitoreo</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
         </span>
       </a>
       <ul class="treeview-menu" role="menu">
@@ -91,78 +115,100 @@
       <span>ADMIN</span>
     </li>
     <li class="treeview">
-    <a href="#">
-      <i class="fa fa-desktop"></i>
-      <span>Admin</span>
-      <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
-      </span>
-    </a>
-    <ul class="treeview-menu">      
-      <li class="treeview">
-        <a href="#">
-          <i class="fa fa-plus" aria-hidden="true"></i>
-          <span>ABM</span>
-          <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-          </span>
-        </a>
-        <ul class="treeview-menu">
-          <li>
-        <a href="{{url("/areasTematicas")}}">
-          <i class="fa fa-circle-o"></i>
-          <span>Areas temáticas</span>
-        </a>
-      </li>
-          <li>
-        <a href="{{url("/periodos")}}">
-          <i class="fa fa-circle-o"></i>
-          <span>Periodos</span>
-        </a>
-      </li>
-      <li>
-        <a href="{{url("/lineasEstrategicas")}}">
-          <i class="fa fa-circle-o"></i>
-          <span>Tipologias de acción</span>
-        </a>
-      </li>
-      <li>
-        <a href="{{url("/tipoDocentes")}}">
-          <i class="fa fa-circle-o"></i>
-          <span>Tipo de docentes</span>
-        </a>
-      </li>
-      <li>
-        <a href="{{url("/funciones")}}" id="destinatarios">
-          <i class="fa fa-circle-o"></i>
-          <span>Rol/Destinatario</span>
-        </a>
-      </li>
-        </ul>
-      </li>      
-      <li>
-        <a href="{{url("/gestores")}}">
-          <i class="fa fa-circle-o"></i>
-          <span>Gestores</span>
-        </a>
-      </li>
-      <li>
-        <a href="{{url("/efectores")}}">
-          <i class="fa fa-circle-o"></i>
-          <span>Efectores</span>
-        </a>
-      </li>      
-    </ul>
-  </li>
-  <li class="header text-center">
+      <a href="#">
+        <i class="fa fa-plus"></i>
+        <span>ABM</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">      
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-user-o" aria-hidden="true"></i>
+            <span>Participantes</span>
+            <span class="pull-right">
+              <i class="fa fa-angle-down"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="{{url("/funciones")}}" id="destinatarios">
+                <i class="fa fa-circle-o"></i>
+                <span>Rol/Destinatario</span>
+              </a>
+            </li>            
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+            <span>Docentes</span>
+            <span class="pull-right">
+              <i class="fa fa-angle-down"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="{{url("/tipoDocentes")}}">
+                <i class="fa fa-circle-o"></i>
+                <span>Tipo de docentes</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-address-book" aria-hidden="true"></i>
+            <span>Acciones</span>
+            <span class="pull-right">
+              <i class="fa fa-angle-down"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="{{url("/areasTematicas")}}">
+                <i class="fa fa-circle-o"></i>
+                <span>Areas temáticas</span>
+              </a>
+            </li>
+            <li>
+              <a href="{{url("/lineasEstrategicas")}}">
+                <i class="fa fa-circle-o"></i>
+                <span>Tipologias de acción</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href="{{url("/periodos")}}">
+            <i class="fa fa-circle-o"></i>
+            <span>Periodos</span>
+          </a>
+        </li>      
+        <li>
+          <a href="{{url("/gestores")}}">
+            <i class="fa fa-circle-o"></i>
+            <span>Gestores</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{url("/efectores")}}">
+            <i class="fa fa-circle-o"></i>
+            <span>Efectores</span>
+          </a>
+        </li>      
+      </ul>
+    </li>
+    <li class="header text-center">
       <span>DESARROLLO</span>
     </li>
     <li class="treeview">
       <a href="#">
         <i class="fa fa-bar-chart" aria-hidden="true"></i>
         <span>Pac</span>
-        <span class="pull-right-container">
-          <i class="fa fa-angle-left pull-right"></i>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
         </span>
       </a>
       <ul class="treeview-menu">
@@ -238,8 +284,8 @@
     <a href="#">
       <i class="fa fa-file" aria-hidden="true"></i>
       <span>Encuestas</span>
-      <span class="pull-right-container">
-        <i class="fa fa-angle-left pull-right"></i>
+      <span class="pull-right">
+        <i class="fa fa-angle-down"></i>
       </span>
     </a>
     <ul class="treeview-menu">

@@ -40,10 +40,23 @@
 @section('script')
 <script type="text/javascript">
 
-	var downloadButton = '<a href="#" class="btn download"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>';	
+	var downloadButton = '<a href="#" class="btn btn-circle download"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>';	
+	var updateButton = '<a href="#" class="btn btn-circle update" title="Remplazar archivo"><i class="fa fa-cloud-upload fa-lg text-primary"></i></a>';;
+	var deleteButton = '<a href="#" class="btn btn-circle delete" title="Borrar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
+
+	@if(Auth::user()->id_provincia === 25)
+	function tableButtons(data) {
+		return downloadAction(data) + updateButton + deleteButton;
+	}
+	@else
+	function tableButtons(data) {
+		return downloadAction(data);
+	}
+	@endif
+
 
 	function downloadAction(id) {
-		return '<a href="{{url('/materiales')}}/' + id + '/download" class="btn" title="Descargar"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"></i></a>';		
+		return '<a href="{{url('/materiales')}}/' + id + '/download" class="btn btn-circle" title="Descargar"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"></i></a>';		
 	}
 
 	function changeToDownload() {
@@ -96,7 +109,7 @@
 				{ 
 					data: 'id_material',
 					render: function ( data, type, row, meta ) {
-						return downloadAction(data);
+						return tableButtons(data);
 					},
 					orderable: false
 				}
