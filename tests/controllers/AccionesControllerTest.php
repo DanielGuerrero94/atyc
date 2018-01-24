@@ -40,6 +40,13 @@ class AccionesControllerTest extends TestCase
         return $requests;
     }
 
+    public function fakerRequestProvider()
+    {
+        return factory(Curso::class, 5)->make()->map(function ($model) {
+            return new Request($model->toArray());
+        });
+    }
+
     /**
      * Return date with the correct format. "16/10/2013"
      *
@@ -48,8 +55,7 @@ class AccionesControllerTest extends TestCase
      */
     public function showCorrectDateFormat()
     {
-        
-        $curso = factory(\App\Models\Cursos\Curso::class)->create();
+        $curso = factory(Curso::class)->states('completo')->create();
         $curso = $this->controller->show($curso->id_curso);
         $curso = json_decode($curso['curso'], true);
         $fecha = $curso['fecha'];
@@ -61,15 +67,18 @@ class AccionesControllerTest extends TestCase
      * Return
      * Depende de base de datos
      *
-     * @dataProvider accionesRequestProvider
-     * @testt
+     * @test
      * @return void
      */
-    public function create(Request $request)
+    public function create()
     {
-        //$this->assertTrue($request->has('alumnos'), 'No tiene alumnos:'.json_encode($request->all()));
-        $accion = $this->controller->store($request);
-        $this->assertNotNull($accion, json_encode($accion));
+        $requests = factory(Curso::class, 2)->states('completo')->make()->map(function ($model) {
+            return new Request($model->toArray());
+        });
+        foreach ($requests as $request) {
+            $accion = $this->controller->store($request);
+            $this->assertNotNull($accion, json_encode($accion));
+        }
     }
 
     /**
@@ -81,6 +90,18 @@ class AccionesControllerTest extends TestCase
     public function getAlumnos()
     {
         $curso = $this->controller->getAlumnos(1);
-        $this->assertEmpty($curso, json_encode($curso));
+        $this->assertEmpty($curso, $curso);
+    }
+
+    /**
+     * Permite crear una accion sin fecha de inicio para la pac
+     *
+     * @test
+     * @return void
+     */
+    public function newCreate()
+    {
+        $curso = factory(Curso::class)->create();
+        $this->assertTrue(is_numeric($curso->id_curso));
     }
 }

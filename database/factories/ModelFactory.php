@@ -142,11 +142,27 @@ $factory->define(App\Models\Cursos\Curso::class, function (Faker\Generator $fake
     ->first()
     ->id_linea_estrategica;
 
+    $id_provincia = App\Provincia::select('id_provincia')
+    ->pluck('id_provincia')
+    ->shuffle()
+    ->first();
+
+    $id_provincia = $id_provincia?:factory(App\Provincia::class, 10)
+    ->create()
+    ->first()
+    ->id_provincia;    
+
     return [
         'nombre' => substr($faker->name, 0, 10),
-        'id_provincia' => rand(1, 4),
+        'id_provincia' => $id_provincia,
         'id_area_tematica' => $id_area_tematica,
         'id_linea_estrategica' => $id_linea_estrategica,
+    ];
+});
+
+/** curso */
+$factory->state(App\Models\Cursos\Curso::class, 'completo', function (Faker\Generator $faker) {
+    return [
         'fecha' => $faker->date,
         'duracion' => rand(1, 3),
         'edicion' => rand(1, 10)
