@@ -232,6 +232,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         
         //Funciones/Roles del sumar
         Route::get('funciones/table', 'FuncionesController@table');
+        Route::get('funciones/typeahead', 'FuncionesController@getTypeahead');
         Route::resource('funciones', 'FuncionesController');
         
         //Tipo de docentes
@@ -276,8 +277,8 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('componentesCa', 'ComponentesCaController@getTodos');
         Route::get('componentesCa/alta', 'ComponentesCaController@create');
         Route::get('componentesCaTabla', 'ComponentesCaController@getTabla');
-        Route::get('componentesCa/{id}', 'ComponentesCaController@edit');
         Route::get('componentesCa/typeahead', 'ComponentesCaController@getTypeahead');
+        Route::get('componentesCa/{id}', 'ComponentesCaController@edit');
 
         Route::post('componentesCa', 'ComponentesCaController@store');
 

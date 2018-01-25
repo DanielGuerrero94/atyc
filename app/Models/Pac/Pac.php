@@ -21,11 +21,19 @@ class Pac extends Model
     }
 
     /**
+     * Las pacs de una pauta.
+     */
+    public function pautas()
+    {
+        return $this->belongsToMany('App\Models\Pac\Pauta', 'pac.pacs_pautas', 'id_pac', 'id_pauta')->withTimestamps();
+    }
+
+    /**
      * Componentes del compromiso anual.
      */
     public function componentesCa()
     {
-        return $this->belongsToMany('App\Models\Pac\ComponenteCa', 'pac.pacs_componentes_ca', 'id_componente_ca', 'id_pac');
+        return $this->belongsToMany('App\Models\Pac\ComponenteCa', 'pac.pacs_componentes_ca', 'id_pac', 'id_componente_ca')->withTimestamps();
     }
 
     /**
@@ -33,7 +41,7 @@ class Pac extends Model
      */
     public function destinatarios()
     {
-        return $this->belongsToMany('App\Funcion', 'pac.pacs_destinatarios', 'id_pac', 'id_funcion');
+        return $this->belongsToMany('App\Funcion', 'pac.pacs_destinatarios', 'id_pac', 'id_funcion')->withTimestamps();
     }
 
     /**

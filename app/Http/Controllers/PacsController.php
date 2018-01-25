@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pac\Pac;
+use App\Models\Pac\Pauta;
+use App\Models\Cursos\Curso;
+use App\Models\Cursos\AreaTematica;
+use App\Models\Cursos\LineaEstrategica;
 use Datatables;
 
 class PacsController extends Controller
@@ -27,7 +31,7 @@ class PacsController extends Controller
      */
     public function index()
     {
-        
+
     }
 
     /**
@@ -37,7 +41,7 @@ class PacsController extends Controller
      */
     public function create()
     {
-        return view('pacs/alta');
+        return view('pacs/alta', $this->getSelectOptions());
     }
 
     /**
@@ -48,8 +52,64 @@ class PacsController extends Controller
      */
     public function store(Request $request)
     {
-        $pac = new Pac();
-        return $pac->create($request->all());
+/**********/
+        $repeticiones = $request->repeticiones;
+
+        if ($request->has('t1')) {
+            $request->request->add(['t1' => 1]);
+        }else{        
+            $request->request->add(['t1' => 0]);
+        }
+        
+        if ($request->has('t2')) {
+            $request->request->add(['t2' => 1]);
+        }else{        
+            $request->request->add(['t2' => 0]);
+        }
+
+        if ($request->has('t3')) {
+            $request->request->add(['t3' => 1]);
+        }else{        
+            $request->request->add(['t3' => 0]);
+        }
+
+        if ($request->has('t4')) {
+            $request->request->add(['t4' => 1]);
+        }else{        
+            $request->request->add(['t4' => 0]);
+        }
+
+        if ($request->has('consul_peatyc')) {
+            $request->request->add(['consul_peatyc' => 1]);
+        }else{        
+            $request->request->add(['consul_peatyc' => 0]);
+        }        
+
+        for ($i=0; $i < $repeticiones; $i++) { 
+            $curso = new Curso();
+            $curso->create($request->only(['nombre', 'id_area_tematica', 'id_linea_estrategica']));
+        }
+
+        
+        $pac = Pac::create($request->all());
+
+        if ($request->has('destinatarios')) {
+            $destinatarios = explode(',', $request->get('destinatarios'));
+            $pac->destinatarios()->attach($destinatarios);
+        }
+
+        if ($request->has('componentesCa')) {
+            $componentes = explode(',', $request->get('componentesCa'));
+            $pac->componentesCa()->attach($componentes);
+        }
+
+        if ($request->has('pautas')) {
+            $pautas = explode(',', $request->get('pautas'));
+            $pac->pautas()->attach($pautas);
+        }
+/************/
+
+        return $pac->id;
     }
 
 
@@ -147,6 +207,22 @@ class PacsController extends Controller
             return $accion == 'agregar'?$agregar:$editarYEliminar;
         })
         ->make(true);
-    }    
+    }   
+
+    /**
+     * Opciones para los selects del front end.
+     *
+     * @return array
+     */
+    private function getSelectOptions()
+    {
+        $areas = AreaTematica::all();
+
+        $lineas = LineaEstrategica::all();
+
+        return [
+            'areas_tematicas' => $areas,
+            'lineas_estrategicas' => $lineas
+        ];
+    }             
 }
- 

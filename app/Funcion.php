@@ -43,4 +43,12 @@ class Funcion extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+    
+    /**
+     * Destinatarios de la pac.
+     */
+    public function pacs()
+    {
+        return $this->belongsToMany('App\Models\Pac\Pac', 'pac.pacs_destinatarios', 'id_pac', 'id_funcion')->withTimestamps();
+    }    
 }
