@@ -148,7 +148,9 @@ class PautasController extends AbmController
      */
     public function getTabla(Request $r)
     {
-        $query = Pauta::select('id_pauta', 'item', 'nombre', 'descripcion', 'id_categoria_pauta');
+        $query = Pauta::select('id_pauta', 'item', 'nombre', 'descripcion', 'id_categoria_pauta')
+        ->with('categoriaPauta');
+
 
         return $this->toDatatable($r, $query);
     }

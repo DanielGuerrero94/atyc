@@ -18,7 +18,7 @@
         return '<tr><td><b>Nombre: </b>'+item.nombre+'</td></tr>';
       },
       emptyTemplate: function(){
-        return '<tr><td><button type="button" class="btn btn-outline" id="alta_componenteCa_dialog"><i class="fa fa-plus text-green"></i><b>  Crear componente CA </b></button></td></tr>';        
+        return '<tr><td><div class="alert alert-info"><p class="text-danger">No existe componente Ca</p></div></td></tr>';        
       },
       source: {
         Nombre: {
@@ -44,13 +44,13 @@
           componenteCa = '<tr>'+
           '<td>'+item.nombre+'</td>'+
           '<td>'+
-          '<div class="btn btn-xs btn-info"><a href="{{url('/componentesCa')}}/'+item.id+'"><i class="fa fa-search" data-id="'+item.id+'"></i></a></div>'+
-          '<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>'+
+          '<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus" data-id="'+item.id+'"></i></div>'+
           '</td>'+
           '</tr>';
           existe = false;
 
-          $.each($('#componenteCa-de-la-pac tbody tr .fa-search'),function(k,v){
+          $.each($('#componentesCa-de-la-pac tbody tr .fa-minus'),function(k,v){
+            //$(v).find(td).last().find(i).first().data('id')
             if($(v).data('id') == item.id){
               existe = true;
             }
@@ -67,7 +67,7 @@
       debug: true
     });
 
-    $('.container-fluid').on('click', '#alta_componenteCa_dialog', function(event) {
+/*    $('.container-fluid').on('click', '#alta_componenteCa_dialog', function(event) {
       event.preventDefault();
 
       $.ajax({
@@ -98,7 +98,7 @@
         console.log('error');
       }
     });  
-    });          
+    }); */         
 
 
     $('#componentesCa-de-la-pac').on('click','.quitar', function(event) {
@@ -108,7 +108,7 @@
 
     function refreshCounter() {
       let count = $('#componentesCa-de-la-pac tbody').children().length;
-      $('#contador-componentesCa').html(count);
+      $('#contador-componenteCa').html(count);
     }
 
   });

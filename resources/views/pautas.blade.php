@@ -31,7 +31,7 @@
 		var datatable = $('#table').DataTable({
 			destroy: true,
 			searching: false,
-			ajax : 'pautas/tabla',
+			ajax : "{{url('/pautas/tabla')}}",
 			columns: [
 			{ data: 'item'},
 			{ data: 'nombre'},
@@ -64,7 +64,7 @@
 				{ data: 'item'},
 				{ data: 'nombre'},
 				{ data: 'descripcion'},
-				{ data: 'categoria_pauta'},
+				{ data: 'categoriaPauta.nombre'},
 				{ data: 'acciones', orderable: false}
 				],			
 				rowReorder: {

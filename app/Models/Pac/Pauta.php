@@ -15,9 +15,9 @@ class Pauta extends Model
     /**
      * Las pacs de una pauta.
      */
-    public function cursos()
+    public function pacs()
     {
-        return $this->belongsToMany('App\Models\Cursos\Curso', 'cursos.cursos_pautas', 'id_curso', 'id_pauta')->withTimestamps();
+        return $this->belongsToMany('App\Models\Pac\Pac', 'pac.pacs_pautas', 'id_pac', 'id_pauta')->withTimestamps();
     }
 
     /**
@@ -28,7 +28,7 @@ class Pauta extends Model
         return $this->belongsTo('App\Models\Pac\AccionPauta');
     }
 
-    public function accionPauta()
+    public function categoriaPauta()
     {
         return $this->hasOne('App\Models\Pac\CategoriaPauta', 'id_categoria_pauta', 'id_categoria_pauta');
     }

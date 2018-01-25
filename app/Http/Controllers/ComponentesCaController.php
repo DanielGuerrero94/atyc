@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Pac\ComponenteCa;
 use Datatables;
 
-class ComponentesCaController extends Controller
+class ComponentesCaController extends AbmController
 {
     /**
      * Display a listing of the resource.
@@ -137,6 +137,8 @@ class ComponentesCaController extends Controller
         foreach ($nombre as $key => $value) {
             $query = $query->orWhereRaw("nombre ~* '{$value}'");
         }
+
+        //$query = $query->where('anio_vigencia', date());
 
         $matchs = $query->get();
 

@@ -170,7 +170,7 @@
       </aside>
       <div class="content-wrapper">      
         <section class="content">          
-          @include('layouts.beta')
+          <!-- @include('layouts.beta') -->
           @yield('content')
         </section>
       </div>

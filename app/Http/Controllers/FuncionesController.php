@@ -10,7 +10,7 @@ use Datatables;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 
-class FuncionesController extends Controller
+class FuncionesController extends AbmController
 {
     private $botones = ['fa fa-pencil-square-o','fa fa-trash-o'];
 
@@ -149,4 +149,27 @@ class FuncionesController extends Controller
         )
         ->make(true);
     }
+
+        /**
+     * Buscar por nombre las funciones.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getTypeahead(Request $r)
+    {
+        $query = Funcion::select('id_funcion as id', 'nombre');
+
+        $typed = $r->input('q');
+
+        $nombre = explode(' ', $typed);
+
+        foreach ($nombre as $key => $value) {
+            $query = $query->orWhereRaw("nombre ~* '{$value}'");
+        }
+
+        $matchs = $query->get();
+
+        return $this->typeaheadResponse($matchs);
+    } 
 }
