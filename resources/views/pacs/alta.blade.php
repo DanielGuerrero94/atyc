@@ -8,7 +8,7 @@
       <li class="navbar-right"><div class="btn btn-success store">Guardar</div></li>
     </ul>
     <div class="tab-content">
-      <div class="in active tab-pane" id="inicial">
+      <div class="tab-pane in active" id="inicial">
         <form>
           {{ csrf_field() }}
           <div class="row">
@@ -124,62 +124,9 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-      $('#componentesCa').hide();
-      $('#destinatarios').hide();
-      $('#pautas').hide();
-      $('#inicial').show();
-
-    $('#tab-pac').on('click', function(event) {
-      $('#componentesCa').hide();
-      $('#destinatarios').hide();
-      $('#pautas').hide();
-      $('#inicial').show();
-    });
-
-    $('#tab-pauta').on('click', function(event) {
-      $('#componentesCa').hide();
-      $('#destinatarios').hide();
-      $('#pautas').show();
-      $('#inicial').hide();
-    });    
-
-    $('#tab-destinatario').on('click', function(event) {
-      $('#componentesCa').hide();
-      $('#destinatarios').show();
-      $('#pautas').hide();
-      $('#inicial').hide();
-    });    
-
-    $('#tab-componenteCa').on('click', function(event) {
-      $('#componentesCa').show();
-      $('#destinatarios').hide();
-      $('#pautas').hide();
-      $('#inicial').hide();
-    });        
-
     $(".js-example-basic-single").select2();    
 
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
-
-
-/*    $('#alta-pac #tabla-profesores').on('click','.agregar',function () {
-
-      var fila = $(this).parent().parent();
-      var id = $(this).data('id');
-
-      fila.find('td:last').remove();
-      fila.append(botonQuitar);
-
-      var data = $('#tabla-profesores').DataTable().row(fila).data();      
-
-      $('#tabla-profesores').DataTable().row(fila).remove().draw(false);
-      var nueva_fila = $('#tabla-profesores-curso').DataTable().row.add(data).draw(false).row().node();
-
-      $(nueva_fila).find('td:last').remove();
-      $(nueva_fila).append(botonQuitar); 
-      $(nueva_fila).find('td:last button').attr('data-id',id);
-
-    });*/
 
     $.typeahead({
       input: '.curso_typeahead',

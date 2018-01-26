@@ -1,6 +1,6 @@
-
-
-		<div>
+<form>
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form role="form">
 				<div class="row" id="busqueda-pautas">
 					<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">  
@@ -16,9 +16,11 @@
 				</div>
 			</form>
 		</div>	
-
-		<div>
-			<div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="box box-default no-padding">
 				<div class="box-header">
 					<p>Pautas de la Pac - Cantidad: <b><span id="contador-pautas"></span></b></p>
 				</div>
@@ -62,4 +64,4 @@
 				</div>
 			</div>
 		</div>
-
+	</form>
