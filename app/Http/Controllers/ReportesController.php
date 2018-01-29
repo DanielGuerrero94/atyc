@@ -95,7 +95,9 @@ class ReportesController extends Controller
                     $data = array_merge($data, $aux->toArray());
                 }
             }
-        } else {
+        } elseif ($r->id_reporte == 4) {
+	    $data = $query_default->get();		
+	} else {
             $data = DB::select($query_default);
         } 
 
@@ -145,8 +147,7 @@ class ReportesController extends Controller
                 ];
             }
         } elseif ($id_reporte == '4') {
-            $periodo = Periodo::findOrFail($id_periodo);
-            $this->reporte4($id_provincia, $periodo->desde, $periodo->hasta);
+            $query = $this->reporte4($id_provincia, $id_periodo);
         } elseif ($id_periodo == '0') {
             $query = "SELECT P.nombre as periodo ,R.* 
             FROM sistema.periodos P,reporte_{$id_reporte}({$id_provincia},P.desde,P.hasta) R";
@@ -189,7 +190,9 @@ class ReportesController extends Controller
                     $data = array_merge($data, $aux->toArray());
                 }
             }
-        } else {
+        } elseif ($r->id_reporte == 4) {
+	    $data = $query_default->get();		
+	} else {
             $data = DB::select($query_default);
         }         
 
@@ -230,14 +233,21 @@ class ReportesController extends Controller
         return $path;
     }
 
-    public function reporte4($id_provincia, $desde, $hasta)
+    public function reporte4($id_provincia, $id_periodo)
     {
         // $query = "SELECT * FROM efectores.mv_reporte_4 R where R.desde = {$desde} and R.hasta = {$hasta}";
         $query = DB::table("efectores.mv_reporte_4 as R")
-        ->select("R.*")
-        ->where("R.desde", $desde)
-        ->where("R.hasta", $hasta)
-        ->where("R.id_provincia", $id_provincia);
+	->join('sistema.provincias as P', "P.id_provincia", '=', "R.id_provincia")
+	->join('sistema.periodos as PE', "PE.id_periodo", '=', DB::raw("{$id_periodo}"))
+        ->select('R.id_provincia', 'R.desde', 'R.hasta', 'R.capacitados', 'R.total', 'R.porcentaje', 'P.nombre as provincia', 'PE.nombre as periodo')
+        ->whereColumn('R.desde', 'PE.desde')
+        ->whereColumn('R.hasta', 'PE.hasta');
+
+if ($id_provincia != 0) {
+            $query = $query->where("R.id_provincia", $id_provincia);
+        }
+
+return $query;
     }
 
     public function reporte5($id_provincia = '0', $desde = '2014-01-01', $hasta = '2014-12-31')

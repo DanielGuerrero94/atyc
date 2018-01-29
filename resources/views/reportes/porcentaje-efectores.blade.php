@@ -28,13 +28,9 @@
 @endsection
 
 @section('script')
-<script type="text/javascript">	
+<script type="text/javascript">
 
-	$(document).ready(function(){
-		
-		var table;	
-
-		function getFiltro() {
+	function getFiltro() {
 			var id_provincia = $('#filtros #provincia :selected').data('id');
 			var id_periodo = $('#filtros #periodo :selected').data('id');
 
@@ -44,12 +40,17 @@
 			};
 		};
 
-		$('#filtrar').on('click',function () {	
+	$(document).ready(function(){
+		
+		var table;	
+				$('#filtrar').on('click',function () {	
 
 			$('#reporte').show();
 
 			table = $('#reporte-table').DataTable({	
-				destroy: true,		
+				destroy: true,	
+				searching: false,
+				ordering: false,	
 				ajax : {
 					url: 'query',
 					data: {
