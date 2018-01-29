@@ -60,13 +60,9 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('materiales/etapa/{id_etapa}/list', 'MaterialesController@listar');
     Route::get('materiales/etapa/{id_etapa}', 'MaterialesController@view');
     Route::get('materiales/{id}/download', 'MaterialesController@download');
-    // Route::post('materiales/etapa/{$id_etapa}', 'MaterialesController@store');
-    Route::post('materiales/etapa/{$id_etapa}', function ($value)
-    {
-        logger("asd");
-    });
+    Route::post('materiales/etapa/{id_etapa}', 'MaterialesController@store');
     Route::post('materiales/{id}', 'MaterialesController@replace');
-    Route::resource('materiales', 'MaterialesController', ['except' => ['create', 'edit']]);
+    Route::resource('materiales', 'MaterialesController', ['except' => ['create', 'edit', 'store']]);
 
     //Redis
     Route::get('redis/usuarios', 'RedisController@usuarios');

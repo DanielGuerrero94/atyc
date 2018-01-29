@@ -126,6 +126,12 @@ class MaterialesController extends Controller
         });
     }
 
+    /**
+     * Returns the specified view for etapa.
+     *
+     * @param  int  $id_etapa
+     * @return \Illuminate\Http\Response
+     */
     public function view($id_etapa)
     {
         $etapa = Etapa::findOrFail($id_etapa);
@@ -154,9 +160,9 @@ class MaterialesController extends Controller
      */
     public function table(Request $r, $id_etapa)
     {
-        $materiales = Material::with(['etapa' => function ($query) use ($id_etapa){
-            $query->where('id_etapa', $id_etapa);
-        }])->get();
+        $materiales = Material::with('etapa')
+        ->where('id_etapa', $id_etapa);
+
         return $this->toDatatable($r, $materiales);
     }
 

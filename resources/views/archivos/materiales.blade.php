@@ -10,12 +10,6 @@
 				<p>
 					@if(isset($material->descripcion))
 					<span>{{$material->descripcion}}</span>
-					
-					<a href="#" class="btn text-primary pull-right more" data-toggle=true>
-						@if(strlen($material->descripcion) > 30)
-						DESCRIPCIÓN <i class="fa fa-angle-down fa-lg text-info"></i>
-					@endif
-				</a>						
 					@else
 					<span class="more" data-toggle=true>Sin descripción.</span>
 					@endif

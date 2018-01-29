@@ -40,14 +40,11 @@
 @section('script')
 <script type="text/javascript">
 
-	var downloadButton = '<a href="#" class="btn btn-circle download"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>';	
-	var updateButton = '<a href="#" class="btn btn-circle update" title="Remplazar archivo"><i class="fa fa-cloud-upload fa-lg text-primary"></i></a>';;
-	var deleteButton = '<a href="#" class="btn btn-circle delete" title="Borrar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
+	var downloadButton = '<a href="#" class="btn btn-square download"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>';	
 
 	@if(Auth::user()->id_provincia === 25)
 	function tableButtons(data) {
-		//return downloadAction(data) + updateButton + deleteButton;
-		return downloadAction(data);
+		return downloadAction(data) + updateAction(data) + deleteAction(data);
 	}
 	@else
 	function tableButtons(data) {
@@ -58,6 +55,14 @@
 
 	function downloadAction(id) {
 		return '<a href="{{url('/materiales')}}/' + id + '/download" class="btn btn-circle" title="Descargar"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"></i></a>';		
+	}
+
+	function updateAction(id) {
+		return '<a href="#" data-id="' + id + '" class="btn btn-circle update-action" title="Remplazar archivo"><i class="fa fa-cloud-upload fa-lg text-primary"></i></a>';
+	}
+
+	function deleteAction(id) {
+		return '<a href="#" data-id="' + id + '"class="btn btn-circle delete" title="Borrar"><i class="fa fa-trash fa-lg text-danger"></i></a>';
 	}
 
 	function changeToDownload() {
@@ -81,11 +86,10 @@
 	function descriptionFix() {
 		$('#grid .description span').each(function (key,value){
 			let val = $(value);
-			if (val.html().length > 30) {
+			if (val.html().length > 45) {
 				val.attr('title', val.html());
-				let match = val.html().substr(0, 30);
+				let match = val.html().substr(0, 45);
 				val.html(match);
-				$(value).find('i').removeClass("fa-angle-up").addClass("fa-angle-down");	
 			}			
 		});
 	}
@@ -95,7 +99,6 @@
 		function listView() {
 
 			$(".container-fluid #list .table").DataTable({
-				debug: true,
 				destroy: true,
 				searching: true,
 				ajax : "{{url('/materiales/etapa')}}" + "/" + $("#etapa").data('id') + "/table",
@@ -142,7 +145,7 @@
 			location.href = "{{url('/materiales')}}" + "/" + id + "/download";
 		});
 
-		$(".container-fluid").on('mouseleave', '.material', function(event) {
+		/*$(".container-fluid").on('mouseleave', '.material', function(event) {
 			event.preventDefault();
 			let more = $(this).find('.more');	
 			if (!more.data("toggle")) {
@@ -169,7 +172,7 @@
 				$(this).find('i').removeClass("fa-angle-up").addClass("fa-angle-down");
 			}			
 		});
-
+		*/
 		$(".container-fluid").on("click", '#list-view', function(event) {
 			event.preventDefault();
 			listButton = $(this);
