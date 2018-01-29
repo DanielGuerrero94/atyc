@@ -188,6 +188,7 @@ class StoredProceduresSeeder extends Seeder
         left join alumnos.alumnos as a on a.id_alumno = ca.id_alumno
         left join efectores.efectores as e on e.cuie = a.establecimiento1
         where c.fecha between desde and hasta
+        and e.integrante = 'S' and e.compromiso_gestion = 'S'
         group by p.id_provincia) as sub on sub.id_provincia = p.id_provincia
         order by p.id_provincia;
         ELSE RETURN QUERY

@@ -38,6 +38,7 @@
 					</div>
 				</div>						
 			</div>
+			@if ($reporte->id_reporte != 4)
 			<div class="row" id="toggle-fecha">
 				<div class="form-group col-sm-6">
 					<p>Especificar fecha:  <i class="fa fa-toggle-off btn"></i></p>
@@ -63,6 +64,7 @@
 					</div>
 				</div>
 			</div>
+			@endif
 		</div>
 		<div class="box-footer">	
 			<button class="btn btn-danger pull-right" id="limpiar" style="display: none"><i class="fa fa-eraser"></i></button>
