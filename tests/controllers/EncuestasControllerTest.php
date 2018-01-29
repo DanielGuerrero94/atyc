@@ -12,9 +12,9 @@ use Tests\TestCase;
 
 class EncuestasControllerTest extends TestCase
 {
-	use DatabaseTransactions;
+    use DatabaseTransactions;
 
-	protected $model;
+    protected $model;
     protected $controller;
 
     public function setUp()
@@ -41,7 +41,7 @@ class EncuestasControllerTest extends TestCase
      */
     public function canStore(Request $request)
     {
-    	$id_encuesta = $this->controller->store($request);
+        $id_encuesta = $this->controller->store($request);
         $this->assertTrue(is_numeric($id_encuesta));
     }
 
@@ -51,8 +51,8 @@ class EncuestasControllerTest extends TestCase
      */
     public function tieneAccion(Request $request)
     {
-    	$id_encuesta = $this->controller->store($request);
-    	$encuesta = $this->model->with('curso')->findOrFail($id_encuesta);
+        $id_encuesta = $this->controller->store($request);
+        $encuesta = $this->model->with('curso')->findOrFail($id_encuesta);
         $this->assertTrue(is_numeric($encuesta->curso->id_curso));
     }
 
@@ -62,8 +62,8 @@ class EncuestasControllerTest extends TestCase
      */
     public function tienePregunta(Request $request)
     {
-    	$id_encuesta = $this->controller->store($request);
-    	$encuesta = $this->model->with('pregunta')->findOrFail($id_encuesta);
+        $id_encuesta = $this->controller->store($request);
+        $encuesta = $this->model->with('pregunta')->findOrFail($id_encuesta);
         $this->assertTrue(is_numeric($encuesta->pregunta->id_pregunta));
     }
 
@@ -73,8 +73,8 @@ class EncuestasControllerTest extends TestCase
      */
     public function tieneRespuesta(Request $request)
     {
-    	$id_encuesta = $this->controller->store($request);
-    	$encuesta = $this->model->with('respuesta')->findOrFail($id_encuesta);
+        $id_encuesta = $this->controller->store($request);
+        $encuesta = $this->model->with('respuesta')->findOrFail($id_encuesta);
         $this->assertTrue(is_numeric($encuesta->respuesta->id_respuesta));
     }
 }

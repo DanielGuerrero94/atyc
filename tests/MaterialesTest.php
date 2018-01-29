@@ -11,8 +11,7 @@ use Illuminate\Http\Request;
 
 class MaterialesTest extends TestCase
 {
-
-	use WithoutMiddleware;
+    use WithoutMiddleware;
     use DatabaseTransactions;
 
     public function materialesProvider()
@@ -37,8 +36,8 @@ class MaterialesTest extends TestCase
         $this->assertTrue(is_numeric($id_material), $id_material);
     }
 
-	/**
-	 * @test
+    /**
+     * @test
      * @dataProvider materialesProvider
      */
     public function icon($original, $path, $id_etapa)

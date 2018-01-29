@@ -5,7 +5,6 @@ namespace Tests;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\TipoDocentesController;
 use App\TipoDocente;
@@ -13,14 +12,23 @@ use App\TipoDocente;
 class TipoDocenteTest extends TestCase
 {
     protected static $stack;
+    protected $controller;
+    protected $model;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->controller = app(TipoDocentesController::class);
+        $this->model = app(TipoDocente::class);
+    }
 
     public static function tiposDocentesRequest()
     {
-        return array(
-            array(new Request(array('nombre' => 'docenteA'))),
-            array(new Request(array('nombre' => 'docenteB'))),
-            array(new Request(array('nombre' => 'docenteC')))
-        );
+        return [
+            [new Request(['nombre' => 'docenteA'])],
+            [new Request(['nombre' => 'docenteB'])],
+            [new Request(['nombre' => 'docenteC'])]
+        ];
     }
 
     public static function updateTiposDocentesRequest()
@@ -66,7 +74,6 @@ class TipoDocenteTest extends TestCase
      *
      * @param Request $r
      * @test
-     * @depends create
      * @dataProvider updateTiposDocentesRequest
      * @return void
      */
@@ -85,7 +92,6 @@ class TipoDocenteTest extends TestCase
      * SoftDelete on model
      *
      * @test
-     * @depends update
      */
     public function destroy()
     {
