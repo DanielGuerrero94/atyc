@@ -8,7 +8,6 @@ use App\Models\Cursos\Curso;
 use App\Reporte;
 use App\Periodo;
 use DB;
-use Log;
 use Excel;
 use PDF;
 use Auth;
@@ -34,13 +33,10 @@ class ReportesController extends Controller
         });
 
         $periodos = Cache::remember('periodos', 5, function () {
-            return Periodo::all();
+            return Periodo::orderBy('hasta', 'desc')->get();
         });
 
-        return array(
-            'provincias' => $provincias,
-            'periodos' => $periodos
-        );
+        return compact('provincias', 'periodos');
     }
 
     public function getCursos()
@@ -48,7 +44,7 @@ class ReportesController extends Controller
         return $this->reporte(5);
     }
 
-    public function efectores(Request $r)
+    public function efectores()
     {
         return $this->reporte(6);
     }
@@ -59,12 +55,7 @@ class ReportesController extends Controller
 
         $provincia_usuario = Provincia::findOrFail(Auth::user()->id_provincia);
 
-        $extra = array(
-            'reporte' => $reporte,
-            'provincia_usuario' => $provincia_usuario
-        );
-
-        $data = array_merge($this->getSelectOptions(), $extra);
+        $data = array_merge($this->getSelectOptions(), compact('reporte', 'provincia_usuario'));
 
         return view('reportes.'.$reporte->view, $data);
     }
@@ -235,7 +226,6 @@ class ReportesController extends Controller
 
     public function reporte4($id_provincia, $id_periodo)
     {
-        // $query = "SELECT * FROM efectores.mv_reporte_4 R where R.desde = {$desde} and R.hasta = {$hasta}";
         $query = DB::table("efectores.mv_reporte_4 as R")
 	->join('sistema.provincias as P', "P.id_provincia", '=', "R.id_provincia")
 	->join('sistema.periodos as PE', "PE.id_periodo", '=', DB::raw("{$id_periodo}"))
@@ -243,11 +233,11 @@ class ReportesController extends Controller
         ->whereColumn('R.desde', 'PE.desde')
         ->whereColumn('R.hasta', 'PE.hasta');
 
-if ($id_provincia != 0) {
+	if ($id_provincia != 0) {
             $query = $query->where("R.id_provincia", $id_provincia);
         }
 
-return $query;
+	return $query;
     }
 
     public function reporte5($id_provincia = '0', $desde = '2014-01-01', $hasta = '2014-12-31')
