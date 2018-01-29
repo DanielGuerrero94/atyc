@@ -34,6 +34,16 @@
 		
 		var table;	
 
+		function getFiltro() {
+			var id_provincia = $('#filtros #provincia :selected').data('id');
+			var id_periodo = $('#filtros #periodo :selected').data('id');
+
+			return {
+				id_provincia: id_provincia,
+				id_periodo: id_periodo
+			};
+		};
+
 		$('#filtrar').on('click',function () {	
 
 			$('#reporte').show();
@@ -44,7 +54,7 @@
 					url: 'query',
 					data: {
 						id_reporte : {{$reporte->id_reporte}},
-						filtros: getFiltrosReportes()
+						filtros: getFiltro()
 					}
 				},
 				columns: [
@@ -66,7 +76,7 @@
 				url: 'excel',
 				data: {
 					id_reporte: {{$reporte->id_reporte}},
-					filtros: getFiltrosReportes(),
+					filtros: getFiltro(),
 					order_by: $('#reporte-table').DataTable().order()
 				},
 				success: function(data){
@@ -87,7 +97,7 @@
 				url: 'pdf',
 				data: {
 					id_reporte : {{$reporte->id_reporte}}, 
-					filtros: getFiltrosReportes(),
+					filtros: getFiltro(),
 					order_by : $('#reporte-table').DataTable().order()				
 				},
 				success: function(data){
