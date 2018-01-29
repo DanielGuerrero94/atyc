@@ -54,11 +54,17 @@ Route::get('dashboard/draw/heats', 'DashboardController@heats');
 
 //Logueado
 Route::group(['middleware' => ['logueado','logging']], function () {
+
     //Materiales
+    Route::get('materiales/etapa/{id_etapa}/table', 'MaterialesController@table');
+    Route::get('materiales/etapa/{id_etapa}/list', 'MaterialesController@listar');
     Route::get('materiales/etapa/{id_etapa}', 'MaterialesController@view');
-    Route::get('materiales/table', 'MaterialesController@table');
-    Route::get('materiales/list', 'MaterialesController@listar');
     Route::get('materiales/{id}/download', 'MaterialesController@download');
+    // Route::post('materiales/etapa/{$id_etapa}', 'MaterialesController@store');
+    Route::post('materiales/etapa/{$id_etapa}', function ($value)
+    {
+        logger("asd");
+    });
     Route::post('materiales/{id}', 'MaterialesController@replace');
     Route::resource('materiales', 'MaterialesController', ['except' => ['create', 'edit']]);
 

@@ -4,7 +4,7 @@
 <div class="container-fluid">
 	<div class="box box-success">
 		<div class="box-header with-border">
-			<h3 class="box-title">Documentación - Ejecución</h3>
+			<h3 id="etapa" class="box-title" data-id="{{$etapa->id_etapa}}">Documentación - {{$etapa->nombre}}</h3>
 			<div class="btn-group pull-right">
 				<a href="#" class="btn btn-box-tool" id="list-view" title="Listar" data-toggle=false>
 					<i class="fa fa-th fa-lg" style="color: #2F2D2D;"></i>
@@ -46,7 +46,8 @@
 
 	@if(Auth::user()->id_provincia === 25)
 	function tableButtons(data) {
-		return downloadAction(data) + updateButton + deleteButton;
+		//return downloadAction(data) + updateButton + deleteButton;
+		return downloadAction(data);
 	}
 	@else
 	function tableButtons(data) {
@@ -97,7 +98,7 @@
 				debug: true,
 				destroy: true,
 				searching: true,
-				ajax : "{{url('/materiales/table')}}",
+				ajax : "{{url('/materiales/etapa')}}" + "/" + $("#etapa").data('id') + "/table",
 				columns: [
 				{ data: 'original', title: 'Archivo'},
 				{ 
@@ -122,7 +123,7 @@
 
 		function gridView() {
 			$.ajax({
-				url: "{{url('/materiales/list')}}",
+				url: "{{url('/materiales/etapa')}}" + "/" + $("#etapa").data('id') + "/list",
 				success: function (data) {
 					$(".container-fluid #grid").html(data);
 					descriptionFix();
@@ -189,8 +190,6 @@
 			}	
 		});
 
-		
-
 	});
 
 </script> 
@@ -198,4 +197,3 @@
 @include('archivos.script')		
 @endif
 @endsection
-

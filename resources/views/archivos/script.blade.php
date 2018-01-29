@@ -61,7 +61,8 @@
 		$(".container-fluid").on("change", "#upload input", function(event) {
 			data = new FormData($("#upload")[0]);
 			$.ajax({
-				url: "{{url('/materiales')}}",
+				url: "{{url('/materiales/etapa')}}" + "/" + $("#etapa").data('id'),
+				// url: "{{url('/materiales')}}",
 				type: 'post',
 				data: data,
 				processData: false,
@@ -81,7 +82,7 @@
 			data = new FormData($(this).closest(".box").find("form")[0]);
 			let id = $(this).closest(".box-footer").data("id");			
 			$.ajax({
-				url: "{{url('/materiales')}}" + "/" + id,
+				url: "{{url('/materiales/etapa')}}" + "/" + $("#etapa").data('id'),
 				type: 'post',
 				data: data,
 				processData: false,

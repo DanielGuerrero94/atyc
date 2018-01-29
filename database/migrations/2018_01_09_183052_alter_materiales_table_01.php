@@ -15,10 +15,12 @@ class AlterMaterialesTable01 extends Migration
     {
         Schema::table('sistema.materiales', function (Blueprint $table) {
             $table->text('descripcion')->nullable();
-            $table->integer('id_etapa')->nullable();
-            $table->integer('orden')->nullable();
+            $table->integer('id_etapa');
+            $table->integer('orden')->default(1);
             $table->unique(['original', 'id_etapa']);
             $table->unique('path');
+
+            $table->foreign('id_etapa')->references('id_etapa')->on('sistema.etapas');
         });
     }
 
@@ -33,7 +35,6 @@ class AlterMaterialesTable01 extends Migration
             $table->dropColumn('descripcion');
             $table->dropColumn('id_etapa');
             $table->dropColumn('orden');
-            $table->dropUnique('path');
         });
     }
 }

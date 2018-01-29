@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Etapa;
 use App\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -73,9 +74,9 @@ class MaterialesController extends Controller
         return json_encode($deleted);
     }
 
-    public function listar()
+    public function listar($id_etapa)
     {
-        $materiales = $this->generateList();
+        $materiales = $this->generateList($id_etapa);
         return view('archivos.materiales', compact('materiales'));
     }
 
@@ -86,9 +87,9 @@ class MaterialesController extends Controller
         return response()->download($path, $material->original);
     }
 
-    public function generateList()
+    public function generateList($id_etapa)
     {
-        $materiales = Material::all();
+        $materiales = Material::where('id_etapa', $id_etapa)->get();
         $materiales = $this->setIcon($materiales);
         return $materiales;
     }
@@ -125,9 +126,10 @@ class MaterialesController extends Controller
         });
     }
 
-    public function view()
+    public function view($id_etapa)
     {
-        return view('archivos.archivos');
+        $etapa = Etapa::findOrFail($id_etapa);
+        return view('archivos.archivos', ['etapa' => $etapa]);
     }
 
     public function replace(Request $request, $id)
@@ -150,9 +152,12 @@ class MaterialesController extends Controller
      * @param  $request['botones']
      * @return \Illuminate\Http\Response
      */
-    public function table(Request $r)
+    public function table(Request $r, $id_etapa)
     {
-        return $this->toDatatable($r, Material::all());
+        $materiales = Material::with(['etapa' => function ($query) use ($id_etapa){
+            $query->where('id_etapa', $id_etapa);
+        }])->get();
+        return $this->toDatatable($r, $materiales);
     }
 
     /**

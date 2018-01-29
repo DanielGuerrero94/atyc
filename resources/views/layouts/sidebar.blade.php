@@ -11,6 +11,23 @@
       </a>
 
     </li>
+    <li class="treeview" id="diagnostico">
+      <a href="#">
+        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+        <span>Diagnóstico</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/1")}}>
+            <i class="fa fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </li>
+      </ul>
+    </li>
     <li class="treeview" id="ejecucion">
       <a href="#">
         <i class="fa fa-desktop" aria-hidden="true"></i>
@@ -322,7 +339,7 @@
       </li>
     </ul>
   </li>             
-  
+
   @endif             
   @endif
 </ul>
