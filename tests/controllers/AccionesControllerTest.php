@@ -14,42 +14,34 @@ class AccionesControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    protected $controller;
-    protected $model;
-
     public function setUp()
     {
         parent::setUp();
-        $this->controller = new CursosController();
-        $this->model = new Curso();
+        $this->controller = $this->app->make(CursosController::class);
+        $this->model = $this->app->make(Curso::class);
     }
 
-    public function accionesRequestProvider()
+    public function requestProvider()
     {
-        $requests = [];
-        $filename = '/var/www/html/atyc/storage/logs/production/create-accion-2017-10-03.log';
-
-        $f = fopen($filename, 'r');
-
-        while (!feof($f)) {
-            $line = fgets($f);
-            $request_array = json_decode($line, true);
-            $request = new Request($request_array);
-            array_push($requests, [$request]);
-        }
-        return $requests;
+        $this->refreshApplication();
+        return factory(Curso::class, 3)
+        ->make()
+        ->map(function ($i) {
+            return [new Request($i->toArray())];
+        })
+        ->all();
     }
 
     /**
      * Return date with the correct format. "16/10/2013"
      *
      * @test
-     * @return void
      */
     public function showCorrectDateFormat()
     {
         
-        $curso = factory(\App\Models\Cursos\Curso::class)->create();
+        $curso = factory(Curso::class)->make();
+        $curso->save();
         $curso = $this->controller->show($curso->id_curso);
         $curso = json_decode($curso['curso'], true);
         $fecha = $curso['fecha'];
@@ -58,29 +50,26 @@ class AccionesControllerTest extends TestCase
     }
 
     /**
-     * Return
-     * Depende de base de datos
+     * 
      *
-     * @dataProvider accionesRequestProvider
-     * @testt
-     * @return void
+     * @param Request $request
+     * @dataProvider requestProvider
+     * @test
      */
     public function create(Request $request)
     {
-        //$this->assertTrue($request->has('alumnos'), 'No tiene alumnos:'.json_encode($request->all()));
-        $accion = $this->controller->store($request);
-        $this->assertNotNull($accion, json_encode($accion));
+        $id_accion = $this->controller->store($request)->id_curso;
+        $this->assertTrue(is_numeric($id_accion));
     }
 
     /**
-     * Return
      * Depende de base de datos
      *
-     * @return void
+     * @expectedException Illuminate\Database\Eloquent\ModelNotFoundException
+     * @test
      */
     public function getAlumnos()
     {
         $curso = $this->controller->getAlumnos(1);
-        $this->assertEmpty($curso, json_encode($curso));
     }
 }

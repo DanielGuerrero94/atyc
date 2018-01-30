@@ -36,7 +36,7 @@ class LineasEstrategicasController extends Controller
      */
     public function store(Request $request)
     {
-        return LineaEstrategica::create($request->all())->id_linea_estrategica;
+        return LineaEstrategica::create($request->all());
     }
 
     /**

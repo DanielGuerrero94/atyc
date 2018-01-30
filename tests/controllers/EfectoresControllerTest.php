@@ -7,33 +7,43 @@ use App\Repositories\EfectoresRepository;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class EfectoresControllerTest extends TestCase
 {
+    use DatabaseTransactions;
+
     public function setUp()
-    {
+    {        
         parent::setUp();
-        //config(['database.connections.pgsql.database' => 'atyc']);
-        $this->controller = resolve(EfectoresController::class);
+        $this->controller = $this->app->make(EfectoresController::class);
+        putenv('DB_DATABASE=atyc');
+        $this->refreshApplication();
+    }    
+
+    public function tearDown()
+    {
+        putenv('DB_DATABASE=atyc_testing');
+        $this->refreshApplication();
     }
 
     /**
      * @test
      */
-    public function it_should_filter_efectores_by_provincia($id_provincia = 12)
+    public function itShouldFilterEfectoresByProvincia($id_provincia = 12)
     {
-        $count = $this->controller->queryLogica(null, compact('id_provincia'))->count();
-        $this->assertEquals(143, $count, 'No coincide la cantidad: '.$count);
-        //config(['database.connections.pgsql.database' => 'atyc_testing']);
+        
+        $count = $this->controller->queryLogica(new Request(), compact('id_provincia'))->count();
+        $this->assertEquals(143, $count);
     }
 
     /**
+     * @test
      */
-    public function it_should_return_departamentos()
+    public function itShouldReturnDepartamentos()
     {
-        $count = $this->controller->queryLogica(null, compact('id_provincia'))->count();
-        $this->assertEquals(143, $count, 'No coincide la cantidad: '.$count);
-        //config(['database.connections.pgsql.database' => 'atyc_testing']);
+        $count = $this->controller->queryLogica(new Request(), compact('id_provincia'))->count();
+        $this->assertEquals(9283, $count);
     }
 }

@@ -119,6 +119,12 @@ $factory->define(App\Profesor::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\TipoDocente::class, function (Faker\Generator $faker) {
+    return [
+        'nombre' => substr($faker->name, 0, 10),
+    ];
+});
+
 /** curso */
 $factory->define(App\Models\Cursos\Curso::class, function (Faker\Generator $faker) {
 

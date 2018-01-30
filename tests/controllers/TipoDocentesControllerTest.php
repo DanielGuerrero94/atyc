@@ -2,30 +2,29 @@
 
 namespace Tests\Controllers;
 
-use App\Http\Controllers\LineasEstrategicasController;
-use App\Models\Cursos\LineaEstrategica;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\Request;
+use App\Http\Controllers\TipoDocentesController;
+use App\TipoDocente;
 use Tests\TestCase;
-use DB;
 
-class LineasEstrategicasControllerTest extends TestCase
+class TipoDocentesControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
     public function setUp()
     {
         parent::setUp();
-        $this->controller = $this->app->make(LineasEstrategicasController::class);
-        $this->model = $this->app->make(LineaEstrategica::class);
+        $this->controller = $this->app->make(TipoDocentesController::class);
+        $this->model = $this->app->make(TipoDocente::class);
     }
 
     public function requestProvider()
     {
         $this->refreshApplication();
-        return factory(LineaEstrategica::class, 3)
+        return factory(TipoDocente::class, 3)
         ->make()
         ->map(function ($i) {
             return [new Request($i->toArray())];
@@ -40,7 +39,6 @@ class LineasEstrategicasControllerTest extends TestCase
      */
     public function empty()
     {
-        DB::statement("truncate cursos.lineas_estrategicas cascade");
         $this->assertCount(0, $this->model->all());
     }
 
@@ -51,7 +49,7 @@ class LineasEstrategicasControllerTest extends TestCase
      */
     public function create()
     {
-        $this->assertEquals('0b81e2ee7ace239134f2e9f6b366f656', md5($this->controller->create()));
+        $this->assertEquals('a2efda22b3f64cb92fed888ac8481a91', md5($this->controller->create()));
     }
 
     /**
@@ -63,7 +61,7 @@ class LineasEstrategicasControllerTest extends TestCase
      */
     public function store(Request $request)
     {
-        $id = $this->controller->store($request)->id_linea_estrategica;
+        $id = $this->controller->store($request)->id_tipo_docente;
         $this->assertTrue($this->model->find($id)->exists, 'No se persistio');
     }
 
@@ -76,9 +74,21 @@ class LineasEstrategicasControllerTest extends TestCase
      */
     public function show(Request $request)
     {
-        $id = $this->controller->store($request)->id_linea_estrategica;
+        $id = $this->controller->store($request)->id_tipo_docente;
         $array = $this->controller->show($id);
-        $this->assertArrayHasKey('linea', $array);
+        $this->assertArrayHasKey('tipo_docentes', $array);
+    }
+
+    /**
+     * Edit view of the model
+     *
+     * @test
+     */
+    public function edit()
+    {
+        $id = $this->controller->store(new Request(['nombre' => 'testing']))->id_tipo_docente;
+        $view = $this->controller->edit($id);
+        $this->assertEquals('ae2b1fca515949e5d54fb22b8ed95575', md5($view), $view);
     }
 
     /**
@@ -90,7 +100,7 @@ class LineasEstrategicasControllerTest extends TestCase
      */
     public function update(Request $request)
     {
-        $id = $this->controller->store($request)->id_linea_estrategica;
+        $id = $this->controller->store($request)->id_tipo_docente;
         $antes = $this->model->findOrFail($id)->first()->nombre;
         $request->replace(['nombre' => strtoupper($request->nombre)]);
         $this->controller->update($request, $id);
@@ -107,8 +117,31 @@ class LineasEstrategicasControllerTest extends TestCase
      */
     public function destroy(Request $request)
     {
-        $id = $this->controller->store($request)->id_linea_estrategica;
+        $id = $this->controller->store($request)->id_tipo_docente;
         $bool = $this->controller->destroy($id);
         $this->assertTrue($bool);
+    }
+
+    /**
+     * Store model with request fails
+     *
+     * @test
+     */
+    public function storeFails()
+    {
+        $response = $this->controller->store(new Request(['invalid' => 'parameter']));
+        $this->assertEquals('The given data failed to pass validation.', $response->getOriginalContent());
+    }
+
+    /**
+     * Update model with request fails
+     *
+     * @test
+     */
+    public function updateFails()
+    {
+        $id = $this->controller->store(new Request(['nombre' => 'testing']))->id_tipo_docente;
+        $response = $this->controller->update(new Request(['invalid' => 'parameter']), $id);
+        $this->assertEquals('The given data failed to pass validation.', $response->getOriginalContent());
     }
 }

@@ -2,22 +2,23 @@
 
 namespace Tests\Controllers;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Http\Controllers\ProfesoresController;
+use App\Profesor;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class DocenteControllerTest extends TestCase
 {
-    protected $model;
-    protected $controller;
+    use DatabaseTransactions;
 
     public function setUp()
     {
         parent::setUp();
-        $this->controller = new App\Http\Controllers\ProfesoresController();
-        $this->model = new App\Profesor();
+        $this->controller = app(ProfesoresController::class);
+        $this->model = app(Profesor::class);
     }
 
     /**

@@ -2,45 +2,41 @@
 
 namespace Tests\Controllers;
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Alumno;
+use App\Http\Controllers\AlumnosController;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Http\Request;
 use Tests\TestCase;
 
 class ParticipantesControllerTest extends TestCase
 {
-    protected $controller;
-    protected $model;
+       use DatabaseTransactions;
 
     public function setUp()
     {
         parent::setUp();
-        $this->controller = new App\Http\Controllers\AlumnosController();
-        $this->model = new App\Alumno();
+        $this->controller = app(AlumnosController::class);
+        $this->model = app(Alumno::class);
     }
 
-    public function participantesRequestProvider()
+    public function requestProvider()
     {
-        $requests = [];
-        $filename = base_path('storage/logs/production/create-participante-2017-09-28.log');
-
-        $f = fopen($filename, 'r');
-
-        while (!feof($f)) {
-            $line = fgets($f);
-            $request_array = json_decode($line, true);
-            $request = new Request($request_array);
-            array_push($requests, [$request]);
-        }
-        return $requests;
+        $this->refreshApplication();
+        return factory(Alumno::class, 3)
+        ->make()
+        ->map(function ($i) {
+            return [new Request($i->toArray())];
+        })
+        ->all();
     }
 
     /**
      * A basic test example.
      *
      * @test
-     * @dataProvider participantesRequestProvider
+     * @dataProvider requestProvider
      * @return void
      */
     public function create(Request $request)

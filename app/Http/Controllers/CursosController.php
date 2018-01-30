@@ -124,7 +124,7 @@ class CursosController extends AbmController
             $curso->profesores()->attach($profesores);
         }
 
-        return $curso->id_curso;
+        return $curso;
     }
 
     /**

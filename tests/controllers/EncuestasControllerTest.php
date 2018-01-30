@@ -14,17 +14,14 @@ class EncuestasControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    protected $model;
-    protected $controller;
-
     public function setUp()
     {
         parent::setUp();
-        $this->model = new Encuesta();
-        $this->controller = new EncuestasController();
+        $this->controller = $this->app->make(EncuestasController::class);
+        $this->model = $this->app->make(Encuesta::class);
     }
 
-    public function encuestaProvider()
+    public function requestProvider()
     {
         $this->refreshApplication();
         return factory(Encuesta::class, 3)
@@ -36,44 +33,44 @@ class EncuestasControllerTest extends TestCase
     }
 
     /**
-     * @dataProvider encuestaProvider
+     * @dataProvider requestProvider
      * @test
      */
     public function canStore(Request $request)
     {
-        $id_encuesta = $this->controller->store($request);
+        $id_encuesta = $this->controller->store($request)->id_encuesta;
         $this->assertTrue(is_numeric($id_encuesta));
     }
 
     /**
-     * @dataProvider encuestaProvider
+     * @dataProvider requestProvider
      * @test
      */
     public function tieneAccion(Request $request)
     {
-        $id_encuesta = $this->controller->store($request);
+        $id_encuesta = $this->controller->store($request)->id_encuesta;
         $encuesta = $this->model->with('curso')->findOrFail($id_encuesta);
         $this->assertTrue(is_numeric($encuesta->curso->id_curso));
     }
 
     /**
-     * @dataProvider encuestaProvider
+     * @dataProvider requestProvider
      * @test
      */
     public function tienePregunta(Request $request)
     {
-        $id_encuesta = $this->controller->store($request);
+        $id_encuesta = $this->controller->store($request)->id_encuesta;
         $encuesta = $this->model->with('pregunta')->findOrFail($id_encuesta);
         $this->assertTrue(is_numeric($encuesta->pregunta->id_pregunta));
     }
 
     /**
-     * @dataProvider encuestaProvider
+     * @dataProvider requestProvider
      * @test
      */
     public function tieneRespuesta(Request $request)
     {
-        $id_encuesta = $this->controller->store($request);
+        $id_encuesta = $this->controller->store($request)->id_encuesta;
         $encuesta = $this->model->with('respuesta')->findOrFail($id_encuesta);
         $this->assertTrue(is_numeric($encuesta->respuesta->id_respuesta));
     }

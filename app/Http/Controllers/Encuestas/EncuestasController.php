@@ -38,7 +38,7 @@ class EncuestasController extends Controller
      */
     public function store(Request $request)
     {
-        return Encuesta::create($request->all())->id_encuesta;
+        return Encuesta::create($request->all());
     }
 
     /**

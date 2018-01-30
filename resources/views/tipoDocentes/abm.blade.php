@@ -7,9 +7,9 @@
 		<table id="table" class="table table-hover">
 			<thead>
 				<tr>
-					<th>Fix</th>
+					<th>ID</th>
 					<th>Nombre</th>
-					<th>Acciones</th>
+					<th></th>
 				</tr>
 			</thead>
 		</table>
