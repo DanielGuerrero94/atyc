@@ -19,4 +19,34 @@ class ExampleTest extends TestCase
         $this->visit('/')
             ->see('Laravel');
     }
+
+    /**
+     * Dashboard test example.
+     *
+     * @test
+     * @return void
+     */
+    public function dashboardExample()
+    {
+        $this->visit('/dashboard')
+            ->see('Entrar');
+    }    
+
+    /**
+     * Login test example.
+     *
+     * @test
+     * @return void
+     */
+    public function login()
+    {
+        $this->visit('/dashboard')
+        ->click('Entrar')
+        ->see('Iniciar sesión')
+        ->seePageIs('/entrar')
+        ->type('jujuy', 'name')
+        ->type('jujuy001', 'password')
+        ->press('entrar')
+        ->seePageIs('/dashboard');
+    }
 }

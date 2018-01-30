@@ -44,7 +44,7 @@ class MaterialesTest extends TestCase
     {
         Material::create(compact('original', 'path', 'id_etapa'))->id_material;
         $c = new MaterialesController();
-        $materiales = $c->generateList();
+        $materiales = $c->generateList($id_etapa);
         $material = $materiales->first();
         $this->assertEquals('fa-lg fa-file-excel-o text-success', $material->icon);
     }
@@ -59,7 +59,7 @@ class MaterialesTest extends TestCase
         $original = 'test.unknown';
         $path = '/test/test';
         $id_material = Material::create(compact('original', 'path', 'id_etapa'))->id_material;
-        $materiales = $c->generateList();
+        $materiales = $c->generateList($id_etapa);
         $material = $materiales->where('id_material', $id_material)->first();
         $this->assertEquals('fa-lg fa-file-text-o', $material->icon);
     }

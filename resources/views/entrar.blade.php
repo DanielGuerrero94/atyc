@@ -52,7 +52,7 @@
 	<hr>
         <div class="row">
           <div class="col-xs-4 col-xs-offset-4">
-            <button type="submit" class="btn btn-primary btn-block ">Entrar</button>
+            <button type="submit" class="btn btn-primary btn-block" id="entrar">Entrar</button>
           </div>
         </div>
       </form>
