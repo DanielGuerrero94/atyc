@@ -9,6 +9,7 @@ use App\Models\Cursos\Curso;
 use App\Models\Cursos\AreaTematica;
 use App\Models\Cursos\LineaEstrategica;
 use Datatables;
+use Auth;
 
 class PacsController extends Controller
 {
@@ -52,42 +53,23 @@ class PacsController extends Controller
      */
     public function store(Request $request)
     {
-/**********/
+
         $repeticiones = $request->repeticiones;
 
-        if ($request->has('t1')) {
-            $request->request->add(['t1' => 1]);
-        }else{        
-            $request->request->add(['t1' => 0]);
-        }
-        
-        if ($request->has('t2')) {
-            $request->request->add(['t2' => 1]);
-        }else{        
-            $request->request->add(['t2' => 0]);
-        }
+        $request->request->add(['t1' => $request->has('t1')]);        
+        $request->request->add(['t2' => $request->has('t2')]);
+        $request->request->add(['t3' => $request->has('t3')]);
+        $request->request->add(['t4' => $request->has('t4')]);
+     
 
-        if ($request->has('t3')) {
-            $request->request->add(['t3' => 1]);
-        }else{        
-            $request->request->add(['t3' => 0]);
-        }
-
-        if ($request->has('t4')) {
-            $request->request->add(['t4' => 1]);
-        }else{        
-            $request->request->add(['t4' => 0]);
-        }
-
-        if ($request->has('consul_peatyc')) {
-            $request->request->add(['consul_peatyc' => 1]);
-        }else{        
-            $request->request->add(['consul_peatyc' => 0]);
-        }        
+        $id_provincia = Auth::user()->id_provincia;
+        $estado = 1;
+        $request->request->add(['id_provincia' => $id_provincia]);
 
         for ($i=0; $i < $repeticiones; $i++) { 
             $curso = new Curso();
-            $curso->create($request->only(['nombre', 'id_area_tematica', 'id_linea_estrategica']));
+            $parametros = array_merge(['id_provincia' => $id_provincia, 'id_estado' => $estado ],$request->only(['nombre', 'id_linea_estrategica']));
+            $curso->create($parametros);
         }
 
         
@@ -107,7 +89,6 @@ class PacsController extends Controller
             $pautas = explode(',', $request->get('pautas'));
             $pac->pautas()->attach($pautas);
         }
-/************/
 
         return $pac->id;
     }
@@ -216,12 +197,10 @@ class PacsController extends Controller
      */
     private function getSelectOptions()
     {
-        $areas = AreaTematica::all();
 
         $lineas = LineaEstrategica::all();
 
         return [
-            'areas_tematicas' => $areas,
             'lineas_estrategicas' => $lineas
         ];
     }             

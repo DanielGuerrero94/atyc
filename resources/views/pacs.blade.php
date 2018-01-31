@@ -30,12 +30,10 @@
 			searching: false,
 			ajax : '{{ url('pacs/tabla') }}',
 			columns: [
-			{ data: 'trimestre_planificacion'},
 			{ data: 't1'},
 			{ data: 't2'},
 			{ data: 't3'},
 			{ data: 't4'},
-			{ data: 'consul_peatyc'},
 			{ data: 'observado'},
 			{ data: 'acciones',"orderable": false}
 			],			

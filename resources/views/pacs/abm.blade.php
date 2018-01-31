@@ -13,12 +13,10 @@
 			<thead>
 				<tr>
 					<th>Nombre de la accion</th>
-					<th>Trimestre a planificar</th>
 					<th>1er. Trimestre</th>
 					<th>2do. Trimestre</th>
 					<th>3er. Trimestre</th>
 					<th>4to. Trimestre</th>
-					<th>Consultor PeAtyc</th>
 					<th>Observado</th>
 				</tr>
 			</thead>

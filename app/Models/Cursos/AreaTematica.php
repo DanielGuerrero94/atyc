@@ -27,6 +27,14 @@ class AreaTematica extends Model
      * @var array
      */
     protected $fillable = ['nombre'];
+    
+    /**
+     * Las pacs.
+     */
+    public function pacs()
+    {
+        return $this->belongsToMany('App\Models\Pacs\Pac', 'pac.pacs_areas_tematicas', 'id_pac', 'id_area_tematica')->withTimestamps();
+    }   
 
     public static function table()
     {

@@ -8,7 +8,7 @@ class Pac extends Model
 {
     protected $table = "pac.pac";
 
-    protected $fillable = ['trimestre_planificacion', 't1', 't2', 't3', 't4', 'consul_peatyc', 'observado'];
+    protected $fillable = ['t1', 't2', 't3', 't4', 'observado'];
 
     protected $primaryKey = 'id_pac';
 
@@ -51,15 +51,21 @@ class Pac extends Model
     {
         return $this->hasOne('App\Material', 'id_material', 'id_ficha_tecnica');
     }    
+    
+    /**
+     * Areas tematicas.
+     */
+    public function areasTematicas()
+    {
+        return $this->belongsToMany('App\Models\Cursos\AreaTematica', 'pac.pacs_areas_tematicas', 'id_area_tematica', 'id_pac');
+    }
 
     public function crear(Request $r)
     {
-        $this->trimestre_planificacion = $r->trimestre_planificacion;
         $this->t1 = $r->t1;
         $this->t2 = $r->t2;
         $this->t3 = $r->t3;
         $this->t4 = $r->t4;
-        $this->consul_peatyc = $r->consul_peatyc;
         $this->observado = $r->observado;
         $this->save();
         return $this;

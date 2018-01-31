@@ -25,15 +25,6 @@
           </div>
           
           <div class="row">
-            <div class="form-group col-xs-12 col-md-6">          
-              <label for="trimestre_planificacion" class="control-label col-md-4 col-xs-3">Trimestre a planificar</label>
-              <div class="col-md-8 col-xs-9">
-                <input type="number" class="form-control" name="trimestre_planificacion" id="trimestre_planificacion" placeholder="Trimestre a planificar la accion"> 
-              </div>
-            </div>
-          </div>
-          
-          <div class="row">
             <div class="col-md-6">          
               <label for="repeticiones" class="control-label col-md-4 col-xs-3">Repeticiones</label>
               <div class="col-md-4 col-xs-3">
@@ -56,7 +47,7 @@
           <div class="row">
             <div class="col-md-6">
             <ul>
-              <li>Trimestre:</li>
+              <li>Trimestre de ejecucion:</li>
                   <div class="form-check form-check-inline">
                       <input type="checkbox" id="t1" name="t1">
                       <label for="t1">1ro</label>
@@ -68,28 +59,7 @@
                       <label for="t4">4to</label>
                   </div>
             </ul>
-            </div>
-            <div class="col-md-6">
-              <label for="area_tematica" class="control-label col-md-4 col-xs-3">Areas Tematicas:</label>
-                <div class="col-md-8 col-xs-9">
-                  <select class="form-control" id="area_tematica" name="area_tematica">
-                    <option>Seleccionar</option>
-                    @foreach ($areas_tematicas as $area)
-                    <option data-id="{{$area->id_area_tematica}}" value="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
-                    @endforeach
-                  </select>          
-                </div>
-            </div>            
-          </div>
-          <div class="row">
-            <ul>
-              <div class="checkbox checkbox-info">
-                <input type="checkbox" id="consul_peatyc" name="consul_peatyc">
-                <label for="consul_peatyc">
-                    Consultor PeAtyc
-                </label>
-              </div>
-            </ul>
+            </div>         
           </div>
           
           <div class="row">
