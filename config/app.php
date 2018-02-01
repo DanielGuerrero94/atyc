@@ -165,14 +165,15 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Laravel\Tinker\TinkerServiceProvider::class,
 
         /*
          * Package Service Providers...
          */
 
-        Yajra\Datatables\DatatablesServiceProvider::class,
+        Yajra\DataTables\DataTablesServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-        Codedge\Fpdf\FpdfServiceProvider::class,    
+        Codedge\Fpdf\FpdfServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -225,11 +226,11 @@ return [
         'Route' => Illuminate\Support\Facades\Route::class,
         'Schema' => Illuminate\Support\Facades\Schema::class,
         'Session' => Illuminate\Support\Facades\Session::class,
-        'Storage' => Illuminate\Support\Facades\Storage::class,
+        'Storage' => Illuminate\Support\Facaes\Storage::class,
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Datatables' => Yajra\Datatables\Facades\Datatables::class,
+        'Datatables' => Yajra\DataTables\DataTables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Fpdf' => Codedge\Fpdf\Facades\Fpdf::class,
