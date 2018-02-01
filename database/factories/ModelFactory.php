@@ -84,6 +84,16 @@ $factory->define(App\Models\Cursos\AreaTematica::class, function (Faker\Generato
 
 /** alumno */
 $factory->define(App\Alumno::class, function (Faker\Generator $faker) {
+    $id_convenio = App\Convenio::select('id_convenio')
+    ->pluck('id_convenio')
+    ->shuffle()
+    ->first();
+
+    $id_convenio = $id_convenio?:factory(App\Convenio::class, 2)
+    ->create()
+    ->first()
+    ->id_convenio;
+
     return [
         'nombres' => substr($faker->name, 0, 10),
         'apellidos' => substr($faker->name, 0, 10),
@@ -96,7 +106,7 @@ $factory->define(App\Alumno::class, function (Faker\Generator $faker) {
         'id_trabajo' => rand(1, 4),
         'id_funcion' => rand(1, 4),
         'id_provincia' => rand(1, 4),
-        'id_convenio' => rand(1, 4),
+        'id_convenio' => $id_convenio,
         'establecimiento1' => substr($faker->name, 0, 10),
         'establecimiento2' => substr($faker->name, 0, 10),
         'organismo1' => substr($faker->name, 0, 10),

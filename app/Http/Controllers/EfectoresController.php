@@ -62,7 +62,7 @@ class EfectoresController extends Controller
                 $query = $query->where($this->mapearColumna($key), $value);
             }
         }
-        logger(json_encode($query));
+        
         return $query;
     }
 
@@ -239,7 +239,7 @@ class EfectoresController extends Controller
         ->where('e.cuie', $cuie)
         ->first();
 
-        $cursos = Curso::getByCuie($cuie);
+        $cursos = (new Curso)->getByCuie($cuie);
 
         $array = array('efector' => $efector,'cursos' => $cursos);
         return view('efectores/historial_cursos', $array);

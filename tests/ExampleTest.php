@@ -30,7 +30,7 @@ class ExampleTest extends TestCase
     {
         $this->visit('/dashboard')
             ->see('Entrar');
-    }    
+    }
 
     /**
      * Login test example.

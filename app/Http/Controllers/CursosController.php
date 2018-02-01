@@ -169,7 +169,7 @@ class CursosController extends AbmController
         ->where('id_curso', $id)
         ->first();
 
-        return array('curso' => $curso);
+        return ['curso' => $curso];
     }
 
     /**
@@ -209,7 +209,7 @@ class CursosController extends AbmController
             $curso->profesores()->detach();                
         }
         
-        $curso->update($request->all());
+        return $curso->update($request->all());
     }
 
     /**
@@ -276,10 +276,10 @@ class CursosController extends AbmController
         })->make(true);
     }
 
-    public function getDictadosPorProfesor($profesor)
+    public function getDictadosPorProfesor($id_profesor)
     {
-        $returns = Curso::whereHas('profesores', function ($query) use ($profesor) {
-            $query->where('profesores.id_profesor', $profesor);
+        $returns = Curso::whereHas('profesores', function ($query) use ($id_profesor) {
+            $query->where('profesores.id_profesor', $id_profesor);
         })
         ->select('id_curso', 'nombre', 'fecha', 'id_provincia')
         ->with('provincia');
@@ -313,13 +313,6 @@ class CursosController extends AbmController
     public function getProfesores($id)
     {
         $curso = Curso::findOrFail($id)
-        /*->with([
-			'profesores' => function($q){
-				$q->with(['tipoDocumento']);
-			}
-		])
-		->select('sistema.profesores.id_profesor','nombres','apellidos','profesores.tipoDocumento.nombre','nro_doc')
-		->get();*/
         ->profesores()
         ->join(
             'sistema.tipos_documentos',
@@ -331,20 +324,11 @@ class CursosController extends AbmController
             'profesores.id_profesor',
             'nombres',
             'apellidos',
-            'sistema.tipos_documentos.nombre as tipo_doc',
+            'sistema.tipos_documentos.nombre as id_tipo_documento',
             'nro_doc'
-        )
-        ->get();
+        );
 
-        $returns = collect($curso)->map(function ($item, $key) {
-            return array('id_profesor' => $item['id_profesor'],
-                'nombres' => $item['nombres'],
-                'apellidos' => $item['apellidos'],
-                'id_tipo_documento' => $item['tipo_doc'],
-                'nro_doc' => $item['nro_doc']);
-        });
-
-        return Datatables::of($returns)
+        return Datatables::of($curso)
         ->addColumn('acciones', function ($ret) {
             return '<a href="'.url('profesores/'.$ret['id_profesor']).'"><button data-id="'.$ret['id_profesor'].
             '" class="btn btn-info btn-xs ver" title="Ver"><i class="'.$this->botones['editar'].
@@ -368,19 +352,10 @@ class CursosController extends AbmController
             'alumnos.id_alumno',
             'nombres',
             'apellidos',
-            'sistema.tipos_documentos.nombre as tipo_doc',
+            'sistema.tipos_documentos.nombre as id_tipo_documento',
             'nro_doc',
             'sistema.provincias.nombre as provincia'
-        )
-        ->get()
-        ->map(function ($item, $key) {
-            return array('id_alumno' => $item['id_alumno'],
-                'nombres' => $item['nombres'],
-                'apellidos' => $item['apellidos'],
-                'id_tipo_documento' => $item['tipo_doc'],
-                'nro_doc' => $item['nro_doc'],
-                'provincia' => $item['provincia']);
-        });
+        );
 
         return Datatables::of($curso)
         ->addColumn('acciones', function ($ret) {
@@ -421,16 +396,9 @@ class CursosController extends AbmController
         return $query;
     }
 
-    public function getAlumnosDeCursosPorProvincia($id)
+    public function getAlumnosDeCursosPorProvincia($id_provincia)
     {
-        if ($id == 0) {
-            $cursos = Curso::where('id_provincia', $id);
-        } else {
-            $cursos = Curso::whereNull('deleted_at');
-        }
-
-        $cursos = $cursos->alumnos()->get();
-        return $cursos;
+        return Curso::segunProvincia()->with('alumnos')->get();
     }
 
     /**
@@ -440,24 +408,23 @@ class CursosController extends AbmController
      */
     private function getSelectOptions()
     {
-        $areas = Cache::remember('areas', 5, function () {
+        $areas_tematicas = Cache::remember('areas', 5, function () {
             return AreaTematica::orderBy('nombre')->get();
         });
-        $lineas = Cache::remember('lineas', 5, function () {
+
+        $lineas_estrategicas = Cache::remember('lineas', 5, function () {
             return LineaEstrategica::orderBy('numero')->get();
         });
+
         $provincias = Cache::remember('provincias', 5, function () {
             return Provincia::orderBy('nombre')->get();
         });
+
         $periodos = Cache::remember('periodos', 5, function () {
             return Periodo::all();
         });
-        return [
-            'areas_tematicas' => $areas,
-            'lineas_estrategicas' => $lineas,
-            'provincias' => $provincias,
-            'periodos' => $periodos
-        ];
+
+        return compact('areas_tematicas', 'lineas_estrategicas', 'provincias', 'periodos');
     }
 
     private function queryLogica(Request $r, $filtros, $orderBy)

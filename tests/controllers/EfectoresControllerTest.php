@@ -15,12 +15,12 @@ class EfectoresControllerTest extends TestCase
     use DatabaseTransactions;
 
     public function setUp()
-    {        
+    {
         parent::setUp();
         $this->controller = $this->app->make(EfectoresController::class);
         putenv('DB_DATABASE=atyc');
         $this->refreshApplication();
-    }    
+    }
 
     public function tearDown()
     {
@@ -33,8 +33,7 @@ class EfectoresControllerTest extends TestCase
      */
     public function itShouldFilterEfectoresByProvincia($id_provincia = 12)
     {
-        
-        $count = $this->controller->queryLogica(new Request(), compact('id_provincia'))->count();
+        $count = $this->controller->queryLogica(new Request, compact('id_provincia'))->count();
         $this->assertEquals(143, $count);
     }
 
@@ -43,7 +42,7 @@ class EfectoresControllerTest extends TestCase
      */
     public function itShouldReturnDepartamentos()
     {
-        $count = $this->controller->queryLogica(new Request(), compact('id_provincia'))->count();
-        $this->assertEquals(9283, $count);
+        $count = $this->controller->queryLogica(new Request)->count();
+        $this->assertEquals(9284, $count);
     }
 }

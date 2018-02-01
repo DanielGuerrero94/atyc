@@ -10,9 +10,12 @@ class AreaTematica extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = 'cursos.areas_tematicas';
-
-    protected $dates = ['deleted_at'];
 
     /**
      * Primary key asociated with the table.
@@ -28,20 +31,10 @@ class AreaTematica extends Model
      */
     protected $fillable = ['nombre'];
 
-    public static function table()
-    {
-        return AreaTematica::all();
-    }
-
-    public function crear(Request $r)
-    {
-        $this->nombre = $r->nombre;
-        $this->save();
-    }
-
-    public function modificar(Request $r)
-    {
-        $this->nombre = $r->nombre;
-        $this->save();
-    }
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 }

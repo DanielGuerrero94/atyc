@@ -73,14 +73,12 @@ abstract class AbmController extends Controller
      */
     protected function typeaheadResponse($info)
     {
-        return response()->json(
-            array(
+        return response()->json([
             'status' => true,
             'error' => null,
-            'data' => array(
+            'data' => [
                 'info' => $info
-                )
-            )
-        );
+            ]
+        ]);
     }
 }

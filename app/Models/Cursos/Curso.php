@@ -5,7 +5,6 @@ namespace App\Models\Cursos;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use DB;
 use Auth;
 
 class Curso extends Model
@@ -13,10 +12,13 @@ class Curso extends Model
     
     use SoftDeletes;
 
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = "cursos.cursos";
 
-    protected $dates = ['deleted_at'];
-    
     /**
      * Primary key asociated with the table.
      *
@@ -25,14 +27,41 @@ class Curso extends Model
     protected $primaryKey = 'id_curso';
 
     /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    // protected $attributes = ['tematica'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['tematica'];
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['nombre','id_provincia','id_area_tematica',
-    'id_linea_estrategica','fecha','duracion','edicion'];
+    protected $fillable = ['nombre','id_provincia','id_area_tematica','id_linea_estrategica','fecha','duracion',
+    'edicion'];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
     protected $hidden = ['pivot'];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
 
     public function profesores()
     {
@@ -42,7 +71,7 @@ class Curso extends Model
             'id_curso',
             'id_profesor'
         )
-            ->withTimestamps();
+        ->withTimestamps();
     }
 
     public function alumnos()
@@ -53,7 +82,7 @@ class Curso extends Model
             'id_curso',
             'id_alumno'
         )
-            ->withTimestamps();
+        ->withTimestamps();
     }
 
     public function provincia()
@@ -79,9 +108,9 @@ class Curso extends Model
         );
     }
 
-    public static function getByCuie($cuie)
+    public function getByCuie($cuie)
     {
-        return DB::table('cursos.cursos')
+        return $this->query()
         ->join(
             'cursos.cursos_alumnos',
             'cursos.cursos_alumnos.id_curso',
@@ -95,13 +124,15 @@ class Curso extends Model
             'cursos.cursos_alumnos.id_alumno'
         )
         ->select(
+            'alumnos.alumnos.establecimiento1',
             'cursos.cursos.id_curso',
             'cursos.cursos.nombre',
-            'cursos.cursos.fecha',
-            DB::raw('count(*) as alumnos')
+            'cursos.cursos.fecha'
         )
+        ->selectRaw('count(*) as alumnos')
         ->where('alumnos.alumnos.establecimiento1', $cuie)
         ->groupBy(
+            'alumnos.alumnos.establecimiento1',
             'cursos.cursos.id_curso',
             'cursos.cursos.nombre',
             'cursos.cursos.fecha'
@@ -121,5 +152,29 @@ class Curso extends Model
     public function getFechaAttribute($value)
     {
         return implode('/', array_reverse(explode("-", $value)));
+    }
+
+    /**
+     * Retorna la duracion en horas.
+     *
+     * @var string
+     */
+    public function getDuracionAttribute($value)
+    {
+        return $value . " hs";
+    }
+
+    /**
+     * Retorna la tematica dependiendo de si la accion esta asociada a una pac.
+     *
+     * @var mixed
+     */
+    public function getTematicaAttribute($value)
+    {
+        if ($this->id_area_tematica) {
+            return $this->areaTematica()->withTrashed()->get();
+        } else {
+            //TODO
+        }
     }
 }
