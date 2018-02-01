@@ -125,7 +125,7 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
-    'log_max_files' => 180,
+    'log_max_files' => 365,
     
     /*
     |--------------------------------------------------------------------------
@@ -170,9 +170,9 @@ return [
          * Package Service Providers...
          */
 
-        // Yajra\DataTables\DatatablesServiceProvider::class,
+        Yajra\Datatables\DatatablesServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-        Codedge\Fpdf\FpdfServiceProvider::class,    
+        Codedge\Fpdf\FpdfServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -229,7 +229,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        // 'Datatables' => Yajra\Datatables\Datatables::class,
+        'Datatables' => Yajra\Datatables\Datatables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Fpdf' => Codedge\Fpdf\Facades\Fpdf::class,

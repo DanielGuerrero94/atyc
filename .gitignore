@@ -9,3 +9,4 @@ public/*.pdf
 *.log
 database/*.sqlite
 database/backups/*.sql
+.htaccess
