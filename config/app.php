@@ -170,7 +170,7 @@ return [
          * Package Service Providers...
          */
 
-        Yajra\Datatables\DatatablesServiceProvider::class,
+        // Yajra\DataTables\DatatablesServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Codedge\Fpdf\FpdfServiceProvider::class,    
         /*
@@ -229,7 +229,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Datatables' => Yajra\Datatables\Facades\Datatables::class,
+        // 'Datatables' => Yajra\Datatables\Datatables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Fpdf' => Codedge\Fpdf\Facades\Fpdf::class,
