@@ -33,6 +33,18 @@
 
 		@include('profesores.tutorial-base')
 
+		function seeButton(id_profesor) {
+			return '<a href="{{url("/profesores")}}/' + id_profesor + '/see" data-id="' + id_profesor + '" class="btn btn-circle ver" title="Ver"><i class="fa fa-eye text-info fa-lg"></i></a>';
+		}
+
+		function editButton(id_profesor) {
+			return '<a href="{{url("/profesores")}}/' + id_profesor + '" data-id="' + id_profesor + '" class="btn btn-circle editar" title="Editar"><i class="fa fa-pencil text-info fa-lg"></i></a>';
+		}
+
+		function deleteButton(id_profesor) {
+			return '<a href="#" data-id="' + id_profesor + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
+		}
+
 		$('#abm').on('click','.filter',function () {			
 			$('#filtros .box').show();
 		});
@@ -45,8 +57,16 @@
 			{ data: 'nombres'},
 			{ data: 'apellidos'},
 			{ data: 'nro_doc'},
-			{ name: 'id_tipo_documento', data: 'tipo_documento.nombre'},
-			{ data: 'acciones', orderable: false}
+			{ name: 'id_tipo_documento', data: 'tipo_documento.nombre'},			
+			{ 
+				data: 'acciones',
+				name: '',
+				render: function ( data, type, row, meta ) {
+					return seeButton(row.id_profesor) + editButton(row.id_profesor) + deleteButton(row.id_profesor);
+					// return data;
+				},
+				orderable: false
+			}
 			],			
 			rowReorder: {
 				selector: 'td:nth-child(2)'
@@ -74,13 +94,21 @@
 				{ data: 'apellidos'},
 				{ data: 'nro_doc'},
 				{ data: 'tipo_doc'},
-				{ data: 'acciones', orderable: false}
-				],			
-				rowReorder: {
-					selector: 'td:nth-child(2)'
+				{ 
+					data: 'acciones',
+					name: '',
+					render: function ( data, type, row, meta ) {
+					// return seeButton(row.id_alumno) + editButton(row.id_alumno) + deleteButton(row.id_alumno);
+					return data;
 				},
-				responsive: true
-			});
+				orderable: false
+			}
+			],			
+			rowReorder: {
+				selector: 'td:nth-child(2)'
+			},
+			responsive: true
+		});
 		});
 
 		$('.excel').on('click',function () {

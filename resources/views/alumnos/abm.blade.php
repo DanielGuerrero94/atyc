@@ -20,7 +20,7 @@
 					<th>Nro Doc</th>
 					<th>Tipo Doc</th>
 					<th>Jurisdicción</th>
-					<th>Acciones</th>
+					<th></th>
 				</tr>
 			</thead>
 		</table>

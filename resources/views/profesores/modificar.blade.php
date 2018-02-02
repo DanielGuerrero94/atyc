@@ -123,6 +123,12 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 
+		@if(isset($disabled)) 
+		$('.box input').each(function (k,v) {$(v).attr('disabled', true);});
+		$('.box select').each(function (k,v) {$(v).attr('disabled', true);});
+		$('.box-footer #modificar').hide();
+		@endif
+
 		$.typeahead({
 			input: '.pais_typeahead',
 			order: "desc",

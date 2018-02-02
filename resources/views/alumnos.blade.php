@@ -22,6 +22,18 @@
 @section('script')
 <script type="text/javascript">
 
+	function seeButton(id_alumno) {
+		return '<a href="http://localhost/atyc/public/alumnos/' + id_alumno + '/see" data-id="' + id_alumno + '" class="btn btn-circle ver" title="Ver"><i class="fa fa-eye text-info fa-lg"></i></a>';
+	}
+
+	function editButton(id_alumno) {
+		return '<a href="{{url("/alumnos")}}/' + id_alumno + '" data-id="' + id_alumno + '" class="btn btn-circle editar" title="Editar"><i class="fa fa-pencil text-info fa-lg"></i></a>';
+	}
+
+	function deleteButton(id_alumno) {
+		return '<a href="#" data-id="' + id_alumno + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
+	}
+
 	$(document).ready(function(){
 
 		var datatable;
@@ -54,7 +66,14 @@
 			{ data: 'nro_doc'},
 			{ name: 'id_tipo_documento',data: 'tipo_documento.nombre'},
 			{ name: 'id_provincia',data: 'provincia.nombre'},
-			{ data: 'acciones', orderable: false}
+			{ 
+				data: 'acciones',
+				name: '',
+				render: function ( data, type, row, meta ) {
+					return seeButton(row.id_alumno) + editButton(row.id_alumno) + deleteButton(row.id_alumno);
+				},
+				orderable: false
+			}
 			],
 			responsive: true
 		});
@@ -83,7 +102,14 @@
 				{ data: 'nro_doc'},
 				{ name: 'id_tipo_documento',data: 'id_tipo_documento',orderable: false},
 				{ name: 'id_provincia',data: 'provincia'},
-				{ data: 'acciones', orderable: false}
+				{ 
+					data: 'acciones',
+					name: '',
+					render: function ( data, type, row, meta ) {
+						return seeButton(row.id_alumno) + editButton(row.id_alumno) + deleteButton(row.id_alumno);
+					},
+					orderable: false
+				}
 				],
 				rowReorder: {
 					selector: 'td:nth-child(2)'
@@ -177,8 +203,7 @@
 							method: 'delete',
 							data: data,
 							success: function(data){
-								console.log('Se borro el alumno.');
-								location.reload("true");
+								console.log('Se borro el alumno.');								
 							},
 							error: function (data) {
 								console.log('Hubo un error.');
@@ -186,7 +211,7 @@
 							}
 						});
 
-
+						location.reload("true");
 					},
 					"Cancelar" : function () {
 						$(this).dialog("destroy");

@@ -246,16 +246,10 @@ class ProfesoresController extends AbmController
 
                 $accion = $r->has('botones')?$r->botones:null;
 
-                $editarYEliminar = '<a href="'.url('profesores').'/'.$ret->id_profesor.'"><button data-id="'.
-                $ret->id_profesor.'" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].
-                '" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_profesor.
-                '" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].
-                '" aria-hidden="true"></i></button>';
-
                 $agregar = '<button data-id="'.$ret->id_profesor.'" class="btn btn-info btn-xs agregar" '.
                 'title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
-                return $accion == 'agregar'?$agregar:$editarYEliminar;
+                return $accion == 'agregar'?$agregar:'';
             }
         )
         ->make(true);
@@ -389,5 +383,16 @@ class ProfesoresController extends AbmController
             'existe' => Profesor::where('nro_doc', $r->input('nro_doc'))
             ->count() != 0
         ];
+    }
+
+    /**
+     * Show the form for seeing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function see($id)
+    {
+        return view('profesores/modificar', array_merge($this->show($id), ['disabled' => true]));
     }
 }

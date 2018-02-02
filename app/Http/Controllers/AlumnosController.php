@@ -8,35 +8,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Alumno;
-use App\Provincia;
-use App\Pais;
 use App\Funcion;
-use App\Trabajo;
-use App\TipoDocumento;
 use App\Genero;
+use App\Http\Controllers\EfectoresController;
+use App\PDF as Pdf;
+use App\Pais;
+use App\Provincia;
+use App\TipoDocumento;
+use App\Trabajo;
+use App\Traits\TypeaheadResponseTrait;
+use Auth;
 use Cache;
-use Validator;
+use DB;
 use Datatables;
 use Excel;
-use App\PDF as Pdf;
-use DB;
-use Auth;
-use Log;
-use App\Http\Controllers\EfectoresController;
+use Illuminate\Http\Request;
+use Validator;
 
-//Exceptions
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-
-class AlumnosController extends AbmController
+class AlumnosController extends ModelController
 {
+    use TypeaheadResponseTrait;
+
     /**
      * Rules for the validator
      *
      * @var string
      **/
-    private $rules = [
+    protected $rules = [
         'nombres' => 'required|string',
         'apellidos' => 'required|string',
         'id_tipo_documento' => 'required|numeric',
@@ -47,7 +46,7 @@ class AlumnosController extends AbmController
         'id_trabajo' => 'required|numeric',
         'id_genero' => 'required|numeric',
         'id_funcion' => 'required_if:id_trabajo,2,3|numeric',
-    //'establecimiento' => 'required_if:id_trabajo,2|required_if:id_trabajo,2|string',
+        //'establecimiento' => 'required_if:id_trabajo,2|required_if:id_trabajo,2|string',
         'tipo_convenio' => 'nullable',
         'efector' => 'required_with:tipo_convenio|string',
         'tipo_organismo' => 'required_if:id_trabajo,3|string',
@@ -123,7 +122,7 @@ class AlumnosController extends AbmController
      */
     public function index()
     {
-        return json_encode(Alumno::all());
+        return Alumno::all();
     }
 
     /**
@@ -165,7 +164,7 @@ class AlumnosController extends AbmController
             $alumno = Alumno::crear($request);
             return response(['data' => $alumno->toArray()], 200);
         } else {
-            Log::warning("No se pudo crear el alumno: ".json_encode($v->errors()));
+            logger()->warning("No se pudo crear el alumno: ".json_encode($v->errors()));
             return response($v->errors(), 400);
         }
     }
@@ -202,11 +201,7 @@ class AlumnosController extends AbmController
      */
     public function edit($id)
     {
-        try {
-            return view('alumnos/modificar', array_merge($this->show($id), $this->getSelectOptions()));
-        } catch (ModelNotFoundException $e) {
-            return json_encode('El dato no existe o no tiene permiso para verlo.');
-        }
+        return view('alumnos/modificar', array_merge($this->show($id), $this->getSelectOptions()));
     }
 
     /**
@@ -237,13 +232,7 @@ class AlumnosController extends AbmController
      */
     public function destroy($id)
     {
-        try {
-            Alumno::segunProvincia()
-            ->findOrFail($id)
-            ->delete();
-        } catch (ModelNotFoundException $e) {
-            return $e->message;
-        }
+        return Alumno::segunProvincia()->findOrFail($id)->delete();
     }
 
     /**
@@ -281,7 +270,7 @@ class AlumnosController extends AbmController
      */
     public function getSelectOptions()
     {
-        $tipo_documentos = Cache::remember('tipo_documentos', 5, function () {
+        $documentos = Cache::remember('documentos', 5, function () {
             return TipoDocumento::all();
         });
 
@@ -309,14 +298,7 @@ class AlumnosController extends AbmController
             return Genero::all();
         });
 
-        return array(
-            'documentos' => $tipo_documentos,
-            'provincias' => $provincias,
-            'trabajos' => $trabajos,
-            'funciones' => $funciones,
-            'organismos' => $organismos,
-            'generos' => $generos
-        );
+        return compact('documentos', 'provincias', 'trabajos', 'funciones', 'organismos', 'generos');
     }
 
     /* Metodos Typeahead */
@@ -482,16 +464,10 @@ class AlumnosController extends AbmController
 
                 $accion = $r->input('botones');
 
-                $editarYEliminar = '<a href="'.url('alumnos').'/'.$ret->id_alumno.'"><button data-id="'.$ret->id_alumno.
-                '" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones[0].
-                '" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_alumno.
-                '" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones[1].
-                '" aria-hidden="true"></i></button>';
-
                 $agregar = '<button data-id="'.$ret->id_alumno.'" class="btn btn-info btn-xs agregar" '.
                 'title="Agregar"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>';
 
-                return $accion == 'agregar'?$agregar:$editarYEliminar;
+                return $accion == 'agregar'?$agregar:'';
             }
         )
         ->make(true);
@@ -623,5 +599,16 @@ class AlumnosController extends AbmController
         ->store('xls');
 
         return response()->download(__DIR__."/../../../storage/exports/{$path}.xls");
+    }
+
+    /**
+     * Show the form for seeing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function see($id)
+    {
+        return view('alumnos/modificar', array_merge($this->show($id), $this->getSelectOptions(), ['disabled' => true]));
     }
 }

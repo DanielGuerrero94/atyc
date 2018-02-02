@@ -104,6 +104,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('alumnos/typeahead/nombres', 'AlumnosController@getNombres');
     Route::get('alumnos/typeahead/apellidos', 'AlumnosController@getApellidos');
     Route::get('alumnos/typeahead/documentos', 'AlumnosController@getDocumentos');
+    Route::get('alumnos/{id}/see', 'AlumnosController@see');
     Route::get('alumnos/{id}', 'AlumnosController@edit');
 
 
@@ -122,6 +123,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('profesores/pdf', 'ProfesoresController@getPdf');
     Route::get('profesores/documentos', 'ProfesoresController@checkDocumentos');
     Route::get('profesores/typeahead', 'ProfesoresController@getTypeahead');
+    Route::get('profesores/{id}/see', 'ProfesoresController@see');
     Route::get('profesores/{id}', 'ProfesoresController@edit');
 
     Route::post('profesores', 'ProfesoresController@store');

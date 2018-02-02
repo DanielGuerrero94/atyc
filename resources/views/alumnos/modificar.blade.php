@@ -257,7 +257,7 @@
 									</div>
 									<div class="box-footer">
 										<a href="{{url()->previous()}}"><button class="btn btn-warning" id="volver" title="Volver a la lista"><i class="fa fa-undo" aria-hidden="true"></i> Volver</button></a>
-										<button class="btn btn-primary pull-right" id="modificar" title="Guardar modificaciones" data-id="{{$alumno->id_alumno}}"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</button>
+										<button class="btn btn-primary pull-right" id="modificar" title="Guardar modificaciones" data-id="{{$alumno->id_alumno}}"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</button>						
 									</div>
 								</div> 
 							</div>
@@ -285,6 +285,12 @@
 	
 
 	$(document).ready(function () {
+
+		@if(isset($disabled)) 
+		$('.box input').each(function (k,v) {$(v).attr('disabled', true);});
+		$('.box select').each(function (k,v) {$(v).attr('disabled', true);});
+		$('.box-footer #modificar').hide();
+		@endif
 
 		$.typeahead({
 			input: '#establecimiento',
