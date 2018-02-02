@@ -3,11 +3,11 @@
 	<div class="box-header">
 		<h2 class="box-tittle">Participantes
 			<div class="btn-group pull-right" role="group" aria-label="...">
-				<div type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></div>
-				<div type="button" class="btn btn-box-tool btn-default pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger" aria-hidden="true"></i></div>
-				<div type="button" class="btn btn-info filter" title="Filtro"><i class="fa fa-sliders" aria-hidden="true"></i></div>
-				<div type="button" class="btn btn-info expand" title="Expandir"><i class="fa fa-expand" aria-hiden="true"></i></div>
-				<div type="button" class="btn btn-info compress" title="Comprimir" style="display: none;"><i class="fa fa-compress" aria-hidden="true"></i></div>	
+				<a href="#" class="btn btn-square excel" title="Excel"><i class="fa fa-file-excel-o text-success fa-lg"></i></a>
+				<a href="#" class="btn btn-square pdf" title="PDF"><i class="fa fa-file-pdf-o text-danger fa-lg"></i></a>
+				<a href="#" class="btn btn-square filter" title="Filtro"><i class="fa fa-sliders text-info fa-lg"></i></a>
+				<a href="#" class="btn btn-square expand" title="Expandir"><i class="fa fa-expand text-info fa-lg"></i></a>
+				<a href="#" class="btn btn-square compress" title="Comprimir" style="display: none;"><i class="fa fa-compress text-info fa-lg"></i></a>
 			</div>
 		</h2>
 	</div>
