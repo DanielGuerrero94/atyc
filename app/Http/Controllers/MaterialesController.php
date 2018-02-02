@@ -159,7 +159,8 @@ class MaterialesController extends Controller
      */
     public function table(Request $r, $id_etapa)
     {
-        $materiales = Material::with('etapa')->where('id_etapa', $id_etapa);
+        $materiales = Material::with('etapa')->where('id_etapa', $id_etapa)->get();
+        $materiales = $this->setIcon($materiales);
         return $this->toDatatable($r, $materiales);
     }
 

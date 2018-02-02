@@ -103,10 +103,16 @@
 				searching: true,
 				ajax : "{{url('/materiales/etapa')}}" + "/" + $("#etapa").data('id') + "/table",
 				columns: [
-				{ data: 'original', title: 'Archivo'},
+				{ 
+					data: 'original',
+					title: 'Archivo',
+					render: function ( data, type, row, meta ) {
+						return '<i class="fa ' + row.icon + '"></i>  ' + row.original;
+					},
+				},
 				{ 
 					data: 'descripcion',
-					title: 'Descripción',
+					title: 'Descripción',					
 					orderable: false
 				},
 				{ data: 'updated_at', title: 'Ultima modificación'},
@@ -115,7 +121,8 @@
 					render: function ( data, type, row, meta ) {
 						return tableButtons(data);
 					},
-					orderable: false
+					orderable: false,
+					searching: false
 				}
 				],
 				responsive: true
