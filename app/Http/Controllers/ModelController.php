@@ -8,9 +8,11 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class ModelController extends Controller
 {
+/*
     use ValidatesRequests {
         validate as validateRequest;
     }
+*/
 
     /**
      * Rules for the validator
@@ -135,7 +137,7 @@ class ModelController extends Controller
     public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
     {
         try {
-            $this->validateRequest($request, $rules, $messages, $customAttributes);
+            parent::validate($request, $rules, $messages, $customAttributes);
         } catch (ValidationException $e) {
             logger($e->getMessage());
             return $e->getMessage();
