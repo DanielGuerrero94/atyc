@@ -28,6 +28,40 @@
         </li>
       </ul>
     </li>
+    <li class="treeview" id="planificacion">
+      <a href="#">
+        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+        <span>Planificación</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/3")}}>
+            <i class="fa fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="treeview" id="disenio">
+      <a href="#">
+        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+        <span>Diseño</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/2")}}>
+            <i class="fa fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </li>
+      </ul>
+    </li>
     <li class="treeview" id="ejecucion">
       <a href="#">
         <i class="fa fa-desktop" aria-hidden="true"></i>
