@@ -13,7 +13,7 @@
     </li>
     <li class="treeview" id="diagnostico">
       <a href="#">
-        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+        <i class="fa fa-bar-chart" aria-hidden="true"></i>
         <span>Diagnóstico</span>
         <span class="pull-right">
           <i class="fa fa-angle-down"></i>
@@ -30,7 +30,7 @@
     </li>
     <li class="treeview" id="planificacion">
       <a href="#">
-        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+        <i class="fa fa-sitemap" aria-hidden="true"></i>
         <span>Planificación</span>
         <span class="pull-right">
           <i class="fa fa-angle-down"></i>
@@ -47,7 +47,7 @@
     </li>
     <li class="treeview" id="disenio">
       <a href="#">
-        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+        <i class="fa fa-pencil" aria-hidden="true"></i>
         <span>Diseño</span>
         <span class="pull-right">
           <i class="fa fa-angle-down"></i>
