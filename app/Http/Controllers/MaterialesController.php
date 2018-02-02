@@ -6,7 +6,7 @@ use App\Etapa;
 use App\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Yajra\Datatables\Datatables;
+use Datatables;
 
 class MaterialesController extends Controller
 {
@@ -115,13 +115,12 @@ class MaterialesController extends Controller
 
 
         return $materiales->map(function ($material) use ($icon) {
-            //Consigue el sufijo
-            $suffix = explode('.', $material->original);
-            $suffix = $suffix[1];
+            //Consigue el sufijo y el nombre del archivo
+            preg_match_all("/(.*)\.(\w+$)/", $material->original, $matches);
+            $suffix = $matches[2][0];
             //Setea icono y color
             $material->icon = array_key_exists($suffix, $icon)?$icon[$suffix]:$icon['txt'];
-            $material->original = explode('.', $material->original);
-            $material->original = $material->original[0];
+            $material->original = $matches[1][0];
             return $material;
         });
     }
@@ -146,7 +145,7 @@ class MaterialesController extends Controller
         $original = $request->file('csv')->getClientOriginalName();
         $material = Material::findOrFail($id);
         $replaced = $material->path;
-        $material->update((compact('original', 'path')));
+        $material->update(compact('original', 'path'));
         Storage::delete($replaced);
         return response('Replaced', 200);
     }
@@ -160,9 +159,7 @@ class MaterialesController extends Controller
      */
     public function table(Request $r, $id_etapa)
     {
-        $materiales = Material::with('etapa')
-        ->where('id_etapa', $id_etapa);
-
+        $materiales = Material::with('etapa')->where('id_etapa', $id_etapa);
         return $this->toDatatable($r, $materiales);
     }
 
