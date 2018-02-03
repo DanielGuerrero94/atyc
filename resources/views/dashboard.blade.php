@@ -1,16 +1,9 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="row">
-  <div class="col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3 text-center">
-    <div class="btn-group" id="dashboard-anio">
-      <button type="button" class="btn btn-info"">Historico</button>
-      <button type="button" class="btn btn-info"">2018</button>
-      <button type="button" class="btn btn-info"">2017</button>
-    </div>
-  </div>
-</div>
-<br>
+@if(!Auth::guest())
+@include('dashboard.filter')
+@endif
 <div class="row" style="margin-right: 5px;margin-left: 5px;">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
     <div class="small-box bg-aqua">
@@ -69,6 +62,7 @@
         <span class="info-box-text">Efectores capacitados</span>
         <span class="info-box-number"></span>
 
+
         <div class="progress">
           <div class="progress-bar" style="width: 20%"></div>
         </div>
@@ -96,8 +90,7 @@
     </div>
   </div>   
 </div>
-@if(!Auth::guest())
-@if(Auth::user()->id_provincia == 25)
+@if(!Auth::guest() and Auth::user()->id_provincia == 25)
 <div class="row">
   <div class="col-lg-12 col-xs-12">
     <div class="box box-success">
@@ -107,17 +100,6 @@
     </div>
   </div>
 </div>
-
-<div class="row" style="margin-right: 5px;margin-left: 5px;">
-  <div class="col-lg-12 col-xs-12">
-    <div class="box box-default">
-      <div class="box-body">
-        <div id="pieAccionesTipologia"></div>
-      </div>
-    </div>
-  </div>  
-</div>
-@endif
 @endif
 
 <!-- Highcharts -->
@@ -137,6 +119,22 @@
 <script type="text/javascript" src="{{asset("/bower_components/highcharts/modules/treemap.js")}}"></script>
 
 <script type="text/javascript">
+
+  function firstCounts(division, anio) {
+    return {
+      url: 'dashboard/draw/first',
+      data: {
+        'division': division,
+        'anio': anio
+      },
+      dataType: 'json',
+      success: function (data) {
+        $('#count-acciones').html(data.acciones);
+        $('#count-participantes').html(data.participantes);
+        $('#count-docentes').html(data.docentes);            
+      }
+    };
+  }
 
   $(document).ajaxStop($.unblockUI);  
 
@@ -172,23 +170,6 @@
       }
     });
 
-    // Radialize the colors Deberia ponerselo solo al pie
-    /*
-    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
-    return {
-    radialGradient: {
-      cx: 0.5,
-      cy: 0.3,
-      r: 0.7
-    },
-    stops: [
-    [0, color],
-            [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
-            ]
-          };
-        });
-        */
-
     // Make monochrome colors and set them as default for all pies
     Highcharts.getOptions().plotOptions.pie.colors = (function () {
       var colors = [],
@@ -215,7 +196,7 @@
       },		
       message: 'Cargando...', 
     });   
-  
+
 
     function load(anio) {
 
@@ -235,15 +216,7 @@
         alert('ajax error progress');
       });
 
-      $.ajax({
-        url: 'dashboard/draw/first',
-        dataType: 'json',
-        success: function (data) {
-          $('#count-acciones').html(data.acciones);
-          $('#count-participantes').html(data.participantes);
-          $('#count-docentes').html(data.docentes);            
-        }
-      })
+      $.ajax(firstCounts('Nación', 'Histórico'))
       .done(function() {
         console.log("success counts");
       })
@@ -382,45 +355,7 @@
               url: 'dashboard/draw/pies',
               dataType: 'json',
               success: function (data) {
-
-                Highcharts.chart('pieAccionesTipologia', {
-                  chart: {
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie',
-                  },
-                  title: {
-                    text: 'Acciones por tipología'
-                  },
-                  tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                  },
-                  plotOptions: {
-                    pie: {
-                      allowPointSelect: true,
-                      cursor: 'pointer',
-                      dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                        style: {
-                          color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                        },
-                        connectorColor: 'silver'
-                      },
-                      size : 300
-                    }
-                  },  
-                  series: data.porcentajeTematica
-                });                 
-
               }
-            })
-            .done(function() {
-              console.log("success pies");
-            })
-            .fail(function() {
-              alert('ajax error pies');
             })
             .always(function() {
 
@@ -497,12 +432,15 @@
             });
 
           });
-});
+        });
 });
 }
 load(0);
 });
 
 </script>
+@if(!Auth::guest())
+@include('dashboard.filter-script')
+@endif
 @endsection
 @stack('more-scripts')

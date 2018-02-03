@@ -28,18 +28,18 @@ class DashboardController extends Controller
         return view('entrar');
     }
 
-    public function firstDraw()
+    public function firstDraw(Request $request)
     {
-        return $this->counts();
+        return $this->counts($request);
     }
 
-    public function counts()
+    public function counts(Request $request)
     {
-        return array(
-            'participantes' => $this->getCountTable("alumnos.alumnos"),
-            'acciones' => $this->getCountTable("cursos.cursos"),
-            'docentes' => $this->getCountTable("sistema.profesores")
-        );
+        return [
+            'participantes' => $this->getCountTable($request, "alumnos.alumnos"),
+            'acciones' => $this->getCountTable($request, "cursos.cursos"),
+            'docentes' => $this->getCountTable($request, "sistema.profesores")
+        ];
     }
 
     public function pies()
@@ -75,7 +75,7 @@ class DashboardController extends Controller
     {
         return [
             'capacitados' => $this->capacitados($request),
-            'efectores' => $this->efectores($request),
+            'efectores' => $this->efectores($request)
         ];
     }
 
@@ -108,11 +108,27 @@ class DashboardController extends Controller
         ->count();
     }
 
-    private function getCountTable($table)
+    private function getCountTable(Request $request, $table)
     {
-        return DB::table($table)
-        ->whereNull('deleted_at')
-        ->count();
+        $query = DB::table($table)
+        ->whereNull('deleted_at');
+
+        if (is_numeric($anio = $request->get('anio'))) {
+            $query = $query->whereYear('created_at', $anio);
+        }
+
+        if (is_numeric($division = $request->get('division'))) {
+            logger($division);
+            /*
+             * Los docentes no tienen provincia asociada todavia asi que los excluyo
+             * de una manera bastante desprolija por ahora
+             */
+            if ($table != "sistema.profesores") {
+                $query = $query->where('id_provincia', $division);
+            }
+        }
+
+        return $query->count();
     }
 
     private function porcentajeTematica()

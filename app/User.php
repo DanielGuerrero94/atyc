@@ -31,7 +31,7 @@ class User extends Authenticatable
 
     public function provincia()
     {
-        return $this->hasOne('App\Provincia', 'id', 'id_provincia');
+        return $this->hasOne('App\Provincia', 'id_provincia', 'id_provincia');
     }
 
     public function roles()
@@ -43,5 +43,10 @@ class User extends Authenticatable
             'id_role'
         )
             ->withTimestamps();
+    }
+
+    public function isUEC()
+    {
+        return $this->id_provincia == 25;
     }
 }
