@@ -48,7 +48,7 @@
 </div>
 <div class="row">
   <div class="col-lg-3 col-xs-12">
-    <div class="info-box bg-green" id="progreso-pac">
+    <div class="info-box bg-teal" id="progreso-pac">
       <span class="info-box-icon"><i class="fa fa-sitemap"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Progreso PAC</span>
@@ -63,21 +63,21 @@
         </span>
       </div>
     </div>
-    <div class="info-box bg-green" id="efectores-capacitados">
+    <div class="info-box bg-teal" id="efectores-capacitados">
       <span class="info-box-icon"><i class="fa fa-h-square"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Efectores capacitados</span>
         <span class="info-box-number">0</span>
       </div>
     </div>
-    <div class="info-box bg-green" id="talleres-sumarte">
+    <div class="info-box bg-teal" id="talleres-sumarte">
       <span class="info-box-icon"><i class="fa fa-scribd"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Talleres sumarte</span>
         <span class="info-box-number">0</span>
       </div>      
     </div>
-    <div class="info-box bg-green">
+    <div class="info-box bg-teal">
       <span class="info-box-icon"><i class=""></i></span>
       <div class="info-box-content">
         <span class="info-box-text"></span>
@@ -109,17 +109,6 @@
     </div>
   </div>   
 </div>
-@if(!Auth::guest() and Auth::user()->id_provincia == 25)
-<div class="row">
-  <div class="col-lg-12 col-xs-12">
-    <div class="box box-success">
-      <div class="box-body">
-        <div id="accionesReportadas" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
-      </div>
-    </div>
-  </div>
-</div>
-@endif
 
 <!-- Highcharts -->
 <script type="text/javascript" src="{{asset("/bower_components/highcharts/highcharts.js")}}"></script>
@@ -167,6 +156,125 @@
         console.log(data);
         $("#efectores-capacitados").find(".info-box-number").html(data.capacitados);
         $("#talleres-sumarte").find(".info-box-number").html(data.talleres);
+      }
+    };
+  }
+
+  function areasChart(division, anio) {
+    return {
+      url: 'dashboard/draw/areas',
+      data: {
+        'division': division,
+        'anio': anio
+      },
+      dataType: 'json',
+      success: function (data) {
+
+        Highcharts.chart('accionesPorAnioYMes', {
+          chart: {
+            type: 'areaspline'
+          },
+          title: {
+            text: 'Acciones por año y mes' 
+          },
+          xAxis: {
+            categories: Highcharts.getOptions().lang.months,
+            tickmarkPlacement: 'on',
+            title: {
+              enabled: false,
+              text: 'Mes'
+            }
+          },
+          yAxis: {
+            title: {
+              text: 'Acciones'
+            }
+          },
+          tooltip: {
+            shared: true,
+            valueSuffix: ' acciones'
+          },
+          plotOptions: {
+            areaspline: {
+              fillOpacity: 0.5
+            }  
+          },
+          series: data.accionesPorAnioYMes
+        });
+
+      }
+    };
+  }
+
+  function treesCharts(division, anio) {
+    return {
+      url: 'dashboard/draw/trees',
+      data: {
+        'division': division,
+        'anio': anio
+      },
+      dataType: 'json',
+      success: function (data) {
+
+        Highcharts.chart('accionesPorTipologia', {
+          colorAxis: {
+            minColor: '#FFFFFF',
+            maxColor: Highcharts.getOptions().colors[2]
+          },
+          plotOptions: {
+            treemap: {
+              allowPointSelect: true,
+              point: {
+                events: {
+                  click: function (e) {
+                    alert(this.name);
+                  }
+                }
+              },
+              tooltip: {
+                pointFormatter: function () {
+                  return this.name + ': ' + this.label + ' <b>' + this.value + '</b> acciones.';
+                }
+              }
+            }
+          },
+          series: [{
+            type: 'treemap',
+            layoutAlgorithm: 'squarified',
+            data: data.accionesPorTipologia
+          }],
+          title: {
+            text: 'Cantidad de acciones por tipología'
+          }
+        });
+
+        Highcharts.chart('accionesPorTematica', {
+          colorAxis: {
+            minColor: '#FFFFFF',
+            maxColor: Highcharts.getOptions().colors[0]
+          },
+          legend: {
+            labelFormat: "{name.substring(1,12)}"
+          },
+          plotOptions: {
+            treemap: {
+              dataLabels: {
+                formatter: function () {
+                  return '<span>'+this.point.name.substring(0,20) + '</span>';
+                }
+              }
+            }
+          },
+          series: [{
+            type: 'treemap',
+            layoutAlgorithm: 'squarified',
+            data: data.accionesPorTematica
+          }],
+          title: {
+            text: 'Cantidad de acciones por temática'
+          }
+        });  
+
       }
     };
   }
@@ -271,45 +379,7 @@
 
         console.log("complete");
 
-        $.ajax({
-          url: 'dashboard/draw/areas',
-          dataType: 'json',
-          success: function (data) {
-
-            Highcharts.chart('accionesPorAnioYMes', {
-              chart: {
-                type: 'areaspline'
-              },
-              title: {
-                text: 'Acciones por año y mes (Nación)' 
-              },
-              xAxis: {
-                categories: Highcharts.getOptions().lang.months,
-                tickmarkPlacement: 'on',
-                title: {
-                  enabled: false,
-                  text: 'Mes'
-                }
-              },
-              yAxis: {
-                title: {
-                  text: 'Acciones'
-                }
-              },
-              tooltip: {
-                shared: true,
-                valueSuffix: ' acciones'
-              },
-              plotOptions: {
-                areaspline: {
-                  fillOpacity: 0.5
-                }  
-              },
-              series: data.accionesPorAnioYMes
-            });
-
-          }
-        })
+        $.ajax(areasChart('Nación', 'Histórico'))
         .done(function() {
           console.log("success areas");
         })
@@ -320,72 +390,7 @@
 
           console.log("complete");
 
-          $.ajax({
-            url: 'dashboard/draw/trees',
-            dataType: 'json',
-            success: function (data) {
-
-              Highcharts.chart('accionesPorTipologia', {
-                colorAxis: {
-                  minColor: '#FFFFFF',
-                  maxColor: Highcharts.getOptions().colors[2]
-                },
-                plotOptions: {
-                  treemap: {
-                    allowPointSelect: true,
-                    point: {
-                      events: {
-                        click: function (e) {
-                          alert(this.name);
-                        }
-                      }
-                    },
-                    tooltip: {
-                      pointFormatter: function () {
-                        return this.name + ': ' + this.label + ' <b>' + this.value + '</b> acciones.';
-                      }
-                    }
-                  }
-                },
-                series: [{
-                  type: 'treemap',
-                  layoutAlgorithm: 'squarified',
-                  data: data.accionesPorTipologia
-                }],
-                title: {
-                  text: 'Cantidad de acciones por tipología (Nación)'
-                }
-              });
-
-              Highcharts.chart('accionesPorTematica', {
-                colorAxis: {
-                  minColor: '#FFFFFF',
-                  maxColor: Highcharts.getOptions().colors[0]
-                },
-                legend: {
-                  labelFormat: "{name.substring(1,12)}"
-                },
-                plotOptions: {
-                  treemap: {
-                    dataLabels: {
-                      formatter: function () {
-                        return '<span>'+this.point.name.substring(0,20) + '</span>';
-                      }
-                    }
-                  }
-                },
-                series: [{
-                  type: 'treemap',
-                  layoutAlgorithm: 'squarified',
-                  data: data.accionesPorTematica
-                }],
-                title: {
-                  text: 'Cantidad de acciones por temática (Nación)'
-                }
-              });  
-
-            }
-          })
+          $.ajax(treesCharts('Nación', 'Histórico'))
           .done(function() {
             console.log("success trees");      
           })
@@ -402,85 +407,15 @@
               }
             })
             .always(function() {
-
               console.log("complete");
-
-              if($('#accionesReportadas').length){
-
-                $.ajax({
-                  url: 'dashboard/draw/heats',
-                  dataType: 'json',
-                  success: function (data) {
-
-                    Highcharts.chart('accionesReportadas', {
-                      chart: {
-                        type: 'heatmap',
-                        marginTop: 40,
-                        marginBottom: 80,
-                        plotBorderWidth: 1
-                      },
-                      title: {
-                        text: 'Acciones reportadas al sistema este año'
-                      },
-                      xAxis: {
-                        categories: Highcharts.getOptions().lang.months,
-                        title: {
-                          text: 'Mes'
-                        }
-                      },
-                      yAxis: {
-                        categories: ['CABA','BUENOS AIRES','CATAMARCA','CORDOBA','CORRIENTES','ENTRE RIOS','JUJUY','LA RIOJA','MENDOZA','SALTA','SAN JUAN','SAN LUIS','SANTA FE','SANTIAGO DEL ESTERO','CHACO','TUCUMAN','CHUBUT','FORMOSA','LA PAMPA','MISIONES','NEUQUEN','RIO NEGRO','SANTA CRUZ','TIERRA DEL FUEGO'],
-                        title: null
-                      },
-                      colorAxis: {
-                        min: 0,
-                        minColor: '#FFFFFF',
-                        maxColor: Highcharts.getOptions().colors[0]
-                      },
-                      legend: {
-                        align: 'right',
-                        layout: 'vertical',
-                        margin: 0,
-                        verticalAlign: 'top',
-                        y: 25,
-                        symbolHeight: 280
-                      },
-                      tooltip: {
-                        formatter: function () {
-                          return '<b>' + this.series.yAxis.categories[this.point.y] + '</b> reporto <br><b>' +
-                          this.point.value + '</b> acciones en <br><b>' + this.series.xAxis.categories[this.point.x] + '</b>';
-                        }
-                      },
-                      series: [{
-                        name: 'Acciones',
-                        borderWidth: 1,
-                        data: data.accionesReportadas,
-                        dataLabels: {
-                          enabled: true,
-                          color: '#000000'
-                        }
-                      }]
-                    });
-
-                  }
-                })
-                .done(function() {
-                  console.log("success heats");
-                })
-                .fail(function() {
-                  alert('ajax error heats');
-                });
-
-              } 
-
             });
 
           });
         });
-});
-}
-load(0);
-});
+      });
+    }
+    load(0);
+  });
 
 </script>
 @if(!Auth::guest())

@@ -31,6 +31,30 @@
         alert('ajax error first draw');
       });
 
+      $.ajax(progressCounts(division, anio))
+      .done(function() {
+        console.log("success progress chart");
+      })
+      .fail(function() {
+        alert('ajax error progress draw');
+      });
+
+      $.ajax(areasChart(division, anio))
+      .done(function() {
+        console.log("success areas chart");
+      })
+      .fail(function() {
+        alert('ajax error areas draw');
+      });
+
+      $.ajax(treesCharts(division, anio))
+      .done(function() {
+        console.log("success trees chart");
+      })
+      .fail(function() {
+        alert('ajax error trees draw');
+      });      
+
     });
 
   });

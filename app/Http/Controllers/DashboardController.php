@@ -49,11 +49,11 @@ class DashboardController extends Controller
         );
     }
 
-    public function areas()
+    public function areas(Request $request)
     {
-        return array(
-            'accionesPorAnioYMes' => $this->accionesPorAnioYMes()
-        );
+        return [
+            'accionesPorAnioYMes' => $this->accionesPorAnioYMes($request)
+        ];
     }
 
     public function heats()
@@ -63,19 +63,19 @@ class DashboardController extends Controller
         );
     }
 
-    public function trees()
+    public function trees(Request $request)
     {
-        return array(
-            'accionesPorTipologia' => $this->accionesPorTipologia(),
-            'accionesPorTematica' => $this->accionesPorTematica()
-        );
+        return [
+            'accionesPorTipologia' => $this->accionesPorTipologia($request),
+            'accionesPorTematica' => $this->accionesPorTematica($request)
+        ];
     }
 
     public function progress(Request $request)
     {
         return [
             'capacitados' => $this->mvCapacitados($request),
-            'talleres' => $this->mvTalleresSumarte($request)
+            'talleres' => $this->talleresSumarte($request)
             // 'efectores' => $this->efectores($request)
         ];
     }
@@ -104,53 +104,40 @@ class DashboardController extends Controller
 
     public function mvCapacitados(Request $request)
     {
-        return 100;
+        $query = DB::table("efectores.mv_reporte_4");
 
-        $query = DB::table("efectores.mv_reporte_4 as R")
-        ->selectRaw('sum(R.capacitados)');
-
-        //No puedo permitir que busque historico si hace el sum
-        if ($anio = $request->get('anio')) {
-            if (!is_numeric($anio)) {
-                //Calcula el ultimo anio
-                $anio = date('Y');
-            }
-
-            $query = $query->whereColumn('R.desde', $anio)
-            ->whereColumn('R.hasta', DB::raw(strval($anio + 1) . "::date - '1 day'::interval"));
+        if (!is_numeric($anio = $request->get('anio'))) {
+            $query = $query->selectRaw('sum(capacitados) as capacitados');
+            $anio = date('Y');
+        } else {
+            $query = $query->select('capacitados');
         }
+
+        $query = $query->whereRaw("desde = '{$anio}-01-01'")
+        ->whereRaw("hasta = cast('".strval($anio + 1)."-01-01'::date - '1 day'::interval as date)");
 
         if (is_numeric($division = $request->get('division'))) {
-            $query = $query->where('R.id_provincia', $division);
+            $query = $query->where('id_provincia', $division);
         }
 
-        return $query;
+        $capacitados = $query->first();
+
+        return $capacitados?$capacitados->capacitados:0;
     }
 
-    public function mvTalleresSumarte(Request $request)
+    public function talleresSumarte(Request $request)
     {
-        return 10;
+        $query = Curso::whereRaw("nombre ~* 'sumarte'");
 
-        $query = DB::table("cursos.mv_talleres as R")
-        ->selectRaw('sum(R.talleres)');
-
-        //No puedo permitir que busque historico si hace el sum
-        if ($anio = $request->get('anio')) {
-
-            if (!is_numeric($anio)) {
-                //Calcula el ultimo anio
-                $anio = date('Y');
-            }
-
-            $query = $query->whereColumn('R.desde', $anio)
-            ->whereColumn('R.hasta', DB::raw(strval($anio + 1) . "::date - '1 day'::interval"));
+        if (is_numeric($anio = $request->get('anio'))) {
+            $query = $query->whereYear('fecha', $anio);
         }
 
         if (is_numeric($division = $request->get('division'))) {
-            $query = $query->where('R.id_provincia', $division);
+            $query = $query->where('id_provincia', $division);
         }
 
-        return $query;
+        return $query->count();
     }
 
     public function efectores(Request $request)
@@ -222,16 +209,23 @@ class DashboardController extends Controller
         );
     }
 
-    private function accionesPorAnioYMes()
+    private function accionesPorAnioYMes(Request $request)
     {
-        $acciones = \DB::select("(select extract(year from fecha) as anio,extract(month from fecha) as mes,
-            count(*) as cantidad from cursos.cursos
-            where fecha > '2013-01-01'
-            group by extract(year from fecha),extract(month from fecha)
-            order by extract(year from fecha),extract(month from fecha))
-            union all
-            (select max(extract(year from fecha)),generate_series(
-                (select extract(month from max(fecha))::numeric) + 1,12),0 from cursos.cursos)");
+        $query = "(select extract(year from fecha) as anio,extract(month from fecha) as mes,
+        count(*) as cantidad from cursos.cursos
+        where fecha > '2013-01-01'";
+
+        if (is_numeric($division = $request->get('division'))) {
+            $query .= " and id_provincia = {$division}";
+        }
+
+        $query .= " group by extract(year from fecha),extract(month from fecha)
+        order by extract(year from fecha),extract(month from fecha))
+        union all
+        (select max(extract(year from fecha))".
+        ",generate_series((select extract(month from max(fecha))::numeric) + 1,12),0 from cursos.cursos)";
+
+        $acciones = \DB::select($query);
 
         $colores = ['#d0d1e6','#a6bddb','#67a9cf','#3690c0','#02818a','#016c59','#014636'];
 
@@ -250,46 +244,72 @@ class DashboardController extends Controller
         ->toArray();
     }
 
-    private function accionesPorTipologia()
+    private function accionesPorTipologia(Request $request)
     {
-        $acciones = \DB::select("select l.numero as tipo,l.nombre as titulo,count(*) as cantidad from cursos.cursos c 
-            join cursos.lineas_estrategicas l on l.id_linea_estrategica = c.id_linea_estrategica
-            group by l.numero,l.nombre
-            order by l.numero");
+        /*
+         * Agrego una condicion obvia para que no se complique agregar los otros where
+         * despues tengo que transformarla en query builder para que quede mas prolijo
+         */
+        $query = "select l.numero as tipo,l.nombre as titulo,count(*) as cantidad from cursos.cursos c 
+        join cursos.lineas_estrategicas l on l.id_linea_estrategica = c.id_linea_estrategica
+        where l.numero is not null";
+
+        if (is_numeric($anio = $request->get('anio'))) {
+            $query .= " and extract(year from c.fecha) = {$anio}";
+        }
+
+        if (is_numeric($division = $request->get('division'))) {
+            $query .= " and c.id_provincia = {$division}";
+        }
+
+        $query .= " group by l.numero,l.nombre order by l.numero";
+
+        $acciones = \DB::select($query);
 
         $contadorColores = 0;
 
         return collect($acciones)
         ->map(function ($accion) use (&$contadorColores) {
             $contadorColores++;
-            return array(
+            return [
                 'name' => $accion->tipo,
                 'value' => $accion->cantidad,
                 'colorValue' => $contadorColores,
                 'label' => $accion->titulo
-            );
+            ];
         })
         ->values()
         ->toArray();
     }
 
-    private function accionesPorTematica()
+    private function accionesPorTematica(Request $request)
     {
-        $acciones = \DB::select("select a.nombre as tematica,count(*) as cantidad from cursos.cursos c 
-            join cursos.areas_tematicas a on a.id_area_tematica = c.id_area_tematica
-            group by a.nombre
-            order by count(*) desc");
+        $query = "select a.nombre as tematica,count(*) as cantidad from cursos.cursos c 
+        join cursos.areas_tematicas a on a.id_area_tematica = c.id_area_tematica
+        where a.id_area_tematica is not null";
+
+        if (is_numeric($anio = $request->get('anio'))) {
+            $query .= " and extract(year from c.fecha) = {$anio}";
+        }
+
+        if (is_numeric($division = $request->get('division'))) {
+            $query .= " and c.id_provincia = {$division}";
+        }
+
+        $query .= " group by a.nombre order by count(*) desc";
+
+        $acciones = \DB::select($query);
 
         $contadorColores = 0;
 
         return collect($acciones)
         ->map(function ($accion) use (&$contadorColores) {
             $contadorColores++;
-            return array(
+            return [
                 'name' => $accion->tematica,
                 'value' => $accion->cantidad,
                 'colorValue' => $contadorColores
-            );
+            ];
         })
         ->values()
         ->toArray();
