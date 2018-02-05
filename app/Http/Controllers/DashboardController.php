@@ -108,15 +108,20 @@ class DashboardController extends Controller
 
         if (!is_numeric($anio = $request->get('anio'))) {
             $query = $query->selectRaw('sum(capacitados) as capacitados');
-            $anio = date('Y');
         } elseif (!is_numeric($division = $request->get('division'))) {
             $query = $query->selectRaw('sum(capacitados) as capacitados');
         } else {
             $query = $query->select('capacitados');
         }
+	
+	if (!is_numeric($anio)) {
+	    $anio = date('Y');
+            $query = $query->whereRaw("desde = '2013-01-01'");
+	} else {
+	    $query = $query->whereRaw("desde = '{$anio}-01-01'");
+	}
 
-        $query = $query->whereRaw("desde = '{$anio}-01-01'")
-        ->whereRaw("hasta = cast('".strval($anio + 1)."-01-01'::date - '1 day'::interval as date)");
+	$query = $query->whereRaw("hasta = cast('".strval($anio + 1)."-01-01'::date - '1 day'::interval as date)");
 
         if (is_numeric($division = $request->get('division'))) {
             $query = $query->where('id_provincia', $division);
