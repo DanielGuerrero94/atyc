@@ -109,6 +109,8 @@ class DashboardController extends Controller
         if (!is_numeric($anio = $request->get('anio'))) {
             $query = $query->selectRaw('sum(capacitados) as capacitados');
             $anio = date('Y');
+        } elseif (!is_numeric($division = $request->get('division'))) {
+            $query = $query->selectRaw('sum(capacitados) as capacitados');
         } else {
             $query = $query->select('capacitados');
         }
