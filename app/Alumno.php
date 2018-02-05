@@ -12,13 +12,6 @@ class Alumno extends Model
     use SoftDeletes;
 
     /**
-     * Nombre de la columna que define el soft delete del trait.
-     *
-     * @var array
-     */
-    protected $dates = ['deleted_at'];
-
-    /**
      * The table associated with the model.
      *
      * @var string
@@ -41,6 +34,13 @@ class Alumno extends Model
     'localidad', 'id_trabajo', 'id_funcion'];
 
     /**
+     * Nombre de la columna que define el soft delete del trait.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
+    /**
      * The attributes that are hidden in the response.
      *
      * @var array
@@ -53,10 +53,10 @@ class Alumno extends Model
     public function cursos()
     {
         return $this
-        ->belongsToMany('App\Curso', 'cursos_alumnos', 'id_curso', 'id_alumno')
+        ->belongsToMany('App\Models\Cursos\Curso', 'cursos.cursos_alumnos', 'id_alumno', 'id_curso')
         ->withTimestamps();
     }
-
+    
     /**
      * Obtiene la provincia asocida.
      */

@@ -13,6 +13,9 @@ class UpdateFixesSeeder extends Seeder
     {
     	$this->updateAreasTematicas();
     	$this->updateLineasEstrategicas();
+        $this->updateAcciones();
+        $this->updateParticipantes();
+        $this->updateDocentes();
     }
 
     public function updateAreasTematicas()
@@ -29,5 +32,10 @@ class UpdateFixesSeeder extends Seeder
         ->each(function ($model) {
         	$model->setUpdatedAt('2013-01-01')->setCreatedAt('2013-01-01')->save();
         });
+    }
+
+    public function updateParticipantes()
+    {
+        # code...
     }
 }
