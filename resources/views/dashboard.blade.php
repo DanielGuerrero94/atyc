@@ -55,22 +55,39 @@
     </div>
   </div>  
   <div class="col-lg-3 col-xs-12" id="efectores-capacitados">
-    <div class="info-box bg-aqua">
-      <span class="info-box-icon"><i class="fa fa-h-square "></i></span>
-
+    <div class="info-box bg-green">
+      <span class="info-box-icon"><i class="fa fa-sitemap"></i></span>
       <div class="info-box-content">
-        <span class="info-box-text">Efectores capacitados</span>
+        <span class="info-box-text">Progreso PAC</span>
         <span class="info-box-number"></span>
-
-
         <div class="progress">
-          <div class="progress-bar" style="width: 20%"></div>
+          <div class="progress-bar" style="width: 0%"></div>
         </div>
         <span class="progress-description">
-          20% Increase in 30 Days
+          Proximamente
         </span>
       </div>
-      <!-- /.info-box-content -->
+    </div>
+    <div class="info-box bg-green">
+      <span class="info-box-icon"><i class="fa fa-h-square"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Efectores capacitados</span>
+        <span class="info-box-number">0</span>
+      </div>
+    </div>
+    <div class="info-box bg-green">
+      <span class="info-box-icon"><i class="fa fa-scribd"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Talleres sumarte</span>
+        <span class="info-box-number">0</span>
+      </div>      
+    </div>
+    <div class="info-box bg-green">
+      <span class="info-box-icon"><i class=""></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text"></span>
+        <span class="info-box-number"></span>
+      </div>      
     </div>
   </div>
 </div>
