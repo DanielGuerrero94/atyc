@@ -47,35 +47,30 @@
 </div>
 </div>
 <div class="row">
-  <div class="col-lg-9 col-xs-12">
-    <div class="box box-primary">
-      <div class="box-body">
-        <div id="accionesPorAnioYMes" style="min-width: 310px;height: 400px; margin: 0 auto"></div>
-      </div>
-    </div>
-  </div>  
-  <div class="col-lg-3 col-xs-12" id="efectores-capacitados">
-    <div class="info-box bg-green">
+  <div class="col-lg-3 col-xs-12">
+    <div class="info-box bg-green" id="progreso-pac">
       <span class="info-box-icon"><i class="fa fa-sitemap"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Progreso PAC</span>
-        <span class="info-box-number"></span>
+        <span class="info-box-number">Proximamente</span>
         <div class="progress">
-          <div class="progress-bar" style="width: 0%"></div>
+          <div class="progress-bar" style="width: 0%">
+
+          </div>
         </div>
         <span class="progress-description">
-          Proximamente
+          0/0 de acciones planificadas.
         </span>
       </div>
     </div>
-    <div class="info-box bg-green">
+    <div class="info-box bg-green" id="efectores-capacitados">
       <span class="info-box-icon"><i class="fa fa-h-square"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Efectores capacitados</span>
         <span class="info-box-number">0</span>
       </div>
     </div>
-    <div class="info-box bg-green">
+    <div class="info-box bg-green" id="talleres-sumarte">
       <span class="info-box-icon"><i class="fa fa-scribd"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Talleres sumarte</span>
@@ -90,6 +85,13 @@
       </div>      
     </div>
   </div>
+  <div class="col-lg-9 col-xs-12">
+    <div class="box box-primary">
+      <div class="box-body">
+        <div id="accionesPorAnioYMes" style="min-width: 310px;height: 400px; margin: 0 auto"></div>
+      </div>
+    </div>
+  </div>  
 </div>
 <div class="row">
   <div class="col-lg-6 col-xs-12">
@@ -149,6 +151,22 @@
         $('#count-acciones').html(data.acciones);
         $('#count-participantes').html(data.participantes);
         $('#count-docentes').html(data.docentes);            
+      }
+    };
+  }
+
+  function progressCounts(division, anio) {
+    return {
+      url: 'dashboard/draw/progress',
+      data: {
+        'division': division,
+        'anio': anio
+      },
+      dataType: 'json',
+      success: function (data) {
+        console.log(data);
+        $("#efectores-capacitados").find(".info-box-number").html(data.capacitados);
+        $("#talleres-sumarte").find(".info-box-number").html(data.talleres);
       }
     };
   }
@@ -216,7 +234,7 @@
 
 
     function load(anio) {
-
+/*
       $.ajax({
         url: 'dashboard/draw/progress',
         data: {anio: 0},
@@ -230,6 +248,15 @@
         }
       }).
       fail(function() {
+        alert('ajax error progress');
+      });
+      */
+
+      $.ajax(progressCounts('Nación', 'Histórico'))
+      .done(function() {
+        console.log("success progress counts");
+      })
+      .fail(function() {
         alert('ajax error progress');
       });
 

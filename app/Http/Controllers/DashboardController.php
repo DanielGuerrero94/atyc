@@ -74,8 +74,9 @@ class DashboardController extends Controller
     public function progress(Request $request)
     {
         return [
-            'capacitados' => $this->capacitados($request),
-            'efectores' => $this->efectores($request)
+            'capacitados' => $this->mvCapacitados($request),
+            'talleres' => $this->mvTalleresSumarte($request)
+            // 'efectores' => $this->efectores($request)
         ];
     }
 
@@ -101,6 +102,57 @@ class DashboardController extends Controller
         ->count;
     }
 
+    public function mvCapacitados(Request $request)
+    {
+        return 100;
+
+        $query = DB::table("efectores.mv_reporte_4 as R")
+        ->selectRaw('sum(R.capacitados)');
+
+        //No puedo permitir que busque historico si hace el sum
+        if ($anio = $request->get('anio')) {
+            if (!is_numeric($anio)) {
+                //Calcula el ultimo anio
+                $anio = date('Y');
+            }
+
+            $query = $query->whereColumn('R.desde', $anio)
+            ->whereColumn('R.hasta', DB::raw(strval($anio + 1) . "::date - '1 day'::interval"));
+        }
+
+        if (is_numeric($division = $request->get('division'))) {
+            $query = $query->where('R.id_provincia', $division);
+        }
+
+        return $query;
+    }
+
+    public function mvTalleresSumarte(Request $request)
+    {
+        return 10;
+
+        $query = DB::table("cursos.mv_talleres as R")
+        ->selectRaw('sum(R.talleres)');
+
+        //No puedo permitir que busque historico si hace el sum
+        if ($anio = $request->get('anio')) {
+
+            if (!is_numeric($anio)) {
+                //Calcula el ultimo anio
+                $anio = date('Y');
+            }
+
+            $query = $query->whereColumn('R.desde', $anio)
+            ->whereColumn('R.hasta', DB::raw(strval($anio + 1) . "::date - '1 day'::interval"));
+        }
+
+        if (is_numeric($division = $request->get('division'))) {
+            $query = $query->where('R.id_provincia', $division);
+        }
+
+        return $query;
+    }
+
     public function efectores(Request $request)
     {
         return DB::table('efectores.efectores as e')
@@ -118,7 +170,6 @@ class DashboardController extends Controller
         }
 
         if (is_numeric($division = $request->get('division'))) {
-            logger($division);
             /*
              * Los docentes no tienen provincia asociada todavia asi que los excluyo
              * de una manera bastante desprolija por ahora
