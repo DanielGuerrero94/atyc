@@ -18,7 +18,7 @@
   <!-- iCheck -->
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/plugins/iCheck/square/blue.css")}}">
 
-   <!-- ADMIN-LTE -->
+  <!-- ADMIN-LTE -->
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/dist/css/AdminLTE.min.css")}}">
   <link rel="stylesheet" type="text/css" href="{{asset("/bower_components/admin-lte/dist/css/skins/_all-skins.min.css")}}">
   <link rel="stylesheet" type="text/css" href="{{url("/css/atyc.css")}}">
@@ -30,13 +30,13 @@
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-  <![endif]-->
+<![endif]-->
 
-  <script>
-        window.Laravel = <?php echo json_encode([
-            'csrfToken' => csrf_token(),
-            ]); ?>
-        </script>
+<script>
+  window.Laravel = <?php echo json_encode([
+    'csrfToken' => csrf_token(),
+    ]); ?>
+  </script>
 </head>
 <body class="hold-transition register-page">
 
@@ -45,14 +45,14 @@
 
 <div class="register-box">
   <div class="register-logo">
-    <p><b>Atyc</b></p>
+    <p><b>ATyC</b></p>
   </div>
 
   <div class="register-box-body">
     <p class="login-box-msg">Solicitud de usuario.</p>
 
     <form action="{{ url('/register') }}" method="post" role="form">
-    {{ csrf_field() }}
+      {{ csrf_field() }}
       <div class="form-group has-feedback">
         <input id="name" name="name" type="text" class="form-control" placeholder="Nombre completo" required autofocus>
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -70,12 +70,18 @@
         <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
       </div>
       <hr>
+      <div class="form-group">
+          <select class="form-control" id="provincia" name="id_provincia">
+            <option data-id="0" value="" title="Todas las provincias">Provincia</option>
+            @foreach (App\Provincia::where('id_provincia', '!=', 25)->get() as $provincia)
+            <option data-id="{{$provincia->id_provincia}}" value="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>                  
+            @endforeach
+          </select>
+      </div>
+      <hr>
       <div class="row">
-        <div class="col-xs-4 pull-left">
-          <a href={{url("/entrar")}} class="btn btn-primary btn-block">Entrar</a>
-        </div>
-        <div class="col-xs-4 pull-right">
-          <button type="submit" class="btn btn-primary btn-block">Registrar</button>
+        <div class="col-xs-6 col-xs-offset-3 col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+          <button type="submit" class="btn btn-primary btn-block">Solicitar</button>
         </div>
       </div>
     </form>    
@@ -84,12 +90,12 @@
 </div>
 <!-- /.register-box -->
 
-   <!-- jQuery 2.2.3 -->
-      <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js") }}"></script>
-      <!-- Bootstrap 3.3.6 -->
-      <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/bootstrap/js/bootstrap.min.js") }}" ></script>
-      <!-- iCheck -->
-      <script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/iCheck/icheck.min.js") }}" ></script>
+<!-- jQuery 2.2.3 -->
+<script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js") }}"></script>
+<!-- Bootstrap 3.3.6 -->
+<script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/bootstrap/js/bootstrap.min.js") }}" ></script>
+<!-- iCheck -->
+<script type="text/javascript" src="{{ asset ("/bower_components/admin-lte/plugins/iCheck/icheck.min.js") }}" ></script>
 <script>
   $(function () {
     $('input').iCheck({

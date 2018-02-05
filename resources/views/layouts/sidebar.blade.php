@@ -1,7 +1,7 @@
 <section class="sidebar" style="height: auto;">
   <ul class="sidebar-menu tree" data-widget="tree">
     <li class="header text-center">
-      <b><span>MENU</span></b>
+      <b><span class="text-primary">MENU</span></b>
     </li>
     @if (!Auth::guest())            
     <li>
@@ -88,7 +88,15 @@
             <i class="fa fa-address-book"></i>
             <span>Gestión de Acciones</span>
           </a>
-        </li>        
+        </li>      
+        @if(Auth::user()->isUec())
+        <li>
+          <a href="{{url("/efectores")}}">
+            <i class="fa fa-h-square"></i>
+            <span> Ver efectores</span>
+          </a>
+        </li>  
+        @endif  
         <li>
           <a href={{url("/materiales/etapa/4")}}>
             <i class="fa fa-book"></i>
@@ -163,7 +171,7 @@
     </li>             
     @if(Auth::user()->id_provincia == 25)
     <li class="header text-center">
-      <span>ADMIN</span>
+      <span class="text-danger">ADMIN</span>
     </li>
     <li class="treeview">
       <a href="#">
@@ -231,28 +239,39 @@
             </li>
           </ul>
         </li>
-        <li>
-          <a href="{{url("/periodos")}}">
-            <i class="fa fa-circle-o"></i>
-            <span>Periodos</span>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-circle-o" aria-hidden="true"></i>
+            <span>Otros</span>
+            <span class="pull-right">
+              <i class="fa fa-angle-down"></i>
+            </span>
           </a>
-        </li>      
-        <li>
-          <a href="{{url("/gestores")}}">
-            <i class="fa fa-circle-o"></i>
-            <span>Gestores</span>
-          </a>
-        </li>
-        <li>
-          <a href="{{url("/efectores")}}">
-            <i class="fa fa-circle-o"></i>
-            <span>Efectores</span>
-          </a>
-        </li>      
+          <ul class="treeview-menu">
+            <li>
+              <a href="{{url("/periodos")}}">
+                <i class="fa fa-calendar"></i>
+                <span>Periodos</span>
+              </a>
+            </li> 
+            <li>
+              <a href="{{url("/gestores")}}">
+                <i class="fa fa-user-circle-o"></i>
+                <span>Gestores</span>
+              </a>
+            </li>
+          </ul>
+        </li>        
       </ul>
     </li>
+    <li>
+      <a href="{{url("/efectores")}}">
+        <i class="fa fa-h-square"></i>
+        <span>Efectores</span>
+      </a>
+    </li>      
     <li class="header text-center">
-      <span>DESARROLLO</span>
+      <span class="text-success">DESARROLLO</span>
     </li>
     <li class="treeview">
       <a href="#">

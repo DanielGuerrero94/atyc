@@ -54,23 +54,19 @@
 			searching: false,
 			ajax : 'profesores/tabla',
 			columns: [
-			{ data: 'nombres'},
-			{ data: 'apellidos'},
-			{ data: 'nro_doc'},
-			{ name: 'id_tipo_documento', data: 'tipo_documento.nombre'},			
+			{ data: 'nombres', title: 'Nombres'},
+			{ data: 'apellidos', title: 'Apellidos'},
+			{ data: 'nro_doc', title: 'Nro Doc'},
+			{ title: 'Tipo Documento', data: 'tipo_documento.nombre', name: 'id_tipo_documento'},			
+			{ title: 'Tipo Docente', data: 'tipo_docente.nombre', name: 'id_tipo_docente'},			
 			{ 
 				data: 'acciones',
-				name: '',
 				render: function ( data, type, row, meta ) {
 					return seeButton(row.id_profesor) + editButton(row.id_profesor) + deleteButton(row.id_profesor);
-					// return data;
 				},
 				orderable: false
 			}
-			],			
-			rowReorder: {
-				selector: 'td:nth-child(2)'
-			},
+			],
 			responsive: true
 		});
 
@@ -90,25 +86,22 @@
 					}
 				},
 				columns: [
-				{ data: 'nombres'},
-				{ data: 'apellidos'},
-				{ data: 'nro_doc'},
-				{ data: 'tipo_doc'},
+				{ data: 'nombres', title: 'Nombres'},
+				{ data: 'apellidos', title: 'Apellidos'},
+				{ data: 'nro_doc', title: 'Nro Doc'},
+				{ title: 'Tipo Documento', data: 'tipo_documento.nombre', name: 'id_tipo_documento'},			
+				{ title: 'Tipo Docente', data: 'tipo_docente.nombre', name: 'id_tipo_docente'},	
 				{ 
 					data: 'acciones',
 					name: '',
 					render: function ( data, type, row, meta ) {
-					// return seeButton(row.id_alumno) + editButton(row.id_alumno) + deleteButton(row.id_alumno);
-					return data;
-				},
-				orderable: false
-			}
-			],			
-			rowReorder: {
-				selector: 'td:nth-child(2)'
-			},
-			responsive: true
-		});
+						return seeButton(row.id_profesor) + editButton(row.id_profesor) + deleteButton(row.id_profesor);
+					},
+					orderable: false
+				}
+				],
+				responsive: true
+			});
 		});
 
 		$('.excel').on('click',function () {

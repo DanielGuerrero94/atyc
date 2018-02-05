@@ -13,11 +13,22 @@
 				<div class="box-header">
 					<h2 class="box-tittle">Efectores
 						<div class="btn-group pull-right" role="group" aria-label="...">
-							<div type="button" class="btn btn-info filter" title="Filtro"><i class="fa fa-sliders" aria-hidden="true"></i></div>
-							<div type="button" class="btn btn-info expand" title="Expandir"><i class="fa fa-expand" aria-hiden="true"></i></div>
-							<div type="button" class="btn btn-info compress" title="Comprimir" style="display: none;"><i class="fa fa-compress" aria-hidden="true"></i></div>	
+							<a href="http://200.69.210.3/sirge3/public/login" class="btn btn-square" title="Ver en SIRGE">
+								<i class="fa fa-link text-primary fa-lg"> SIRGE</i>
+							</a>
+							<a href="#" class="btn btn-square" title="Solo consulta de los que tienen georeferenciamiento.">
+								<i class="fa fa-info-circle text-primary fa-lg"></i>
+							</a>
+							<a href="#" class="btn btn-square filter" title="Filtro">
+								<i class="fa fa-sliders text-info fa-lg"></i>
+							</a>
+							<a href="#" class="btn btn-square expand" title="Expandir">
+								<i class="fa fa-expand text-info fa-lg"></i>
+							</a>
+							<a href="#" class="btn btn-square compress" title="Comprimir" style="display: none;">
+								<i class="fa fa-compress text-info fa-lg"></i>
+							</a>
 						</div>
-						<i class="fa fa-info-circle btn text-primary pull-right" title="Solo consulta de los que tienen georeferenciamiento."></i>
 					</h2>
 				</div>
 				<div class="box-body">
@@ -32,6 +43,10 @@
 
 @section('script')
 <script type="text/javascript">
+
+	function historialButton(cuie) {
+		return '<a href="{{url("/efectores")}}/' + cuie + '/cursos" class="btn btn-circle" title="Historial"><i class="fa fa-calendar text-info fa-lg"></i></a>';
+	}
 
 	$(document).ready(function(){
 
@@ -68,7 +83,13 @@
 			{ name: 'id_localidad', data: 'localidad', title: 'Localidad',searchable: false, orderable: false},
 			{ data: 'codigo_postal', title: 'Codigo postal',searchable: false, orderable: false},
 			{ data: 'ciudad', title: 'Ciudad',searchable: false, orderable: false},
-			{ data: 'acciones', title: 'Acciones', searchable: false, orderable: false}
+			{ 
+				data: 'acciones',
+				render: function ( data, type, row, meta ) {
+					return historialButton(row.cuie);
+				},
+				orderable: false
+			}
 			]
 		});
 
@@ -87,28 +108,28 @@
 			console.log(getFiltros());
 
 			datatable = $('.table').DataTable({
-			destroy: true,
-			responsive: true,
-			searching: false,
-			ajax : {
-				url: 'efectores/filtrar',
-				data: {
-					filtros: getFiltros()
-				}
-			},
-			columns: [
-			{ name: 'id_provincia', data: 'provincia', title: 'Provincia',searchable: false, orderable: false},
-			{ data: 'siisa', title: 'Siisa'},
-			{ data: 'cuie', title: 'Cuie'},
-			{ data: 'nombre', title: 'Nombre',searchable: false, orderable: false},
-			{ data: 'denominacion_legal', title: 'Denominación legal',searchable: false, orderable: false},
-			{ name: 'id_departamento', data: 'departamento', title: 'Departamento',searchable: false, orderable: false},
-			{ name: 'id_localidad', data: 'localidad', title: 'Localidad',searchable: false, orderable: false},
-			{ data: 'codigo_postal', title: 'Codigo postal',searchable: false, orderable: false},
-			{ data: 'ciudad', title: 'Ciudad',searchable: false, orderable: false},
-			{ data: 'acciones', title: 'Acciones', searchable: false, orderable: false}
-			]
-		});
+				destroy: true,
+				responsive: true,
+				searching: false,
+				ajax : {
+					url: 'efectores/filtrar',
+					data: {
+						filtros: getFiltros()
+					}
+				},
+				columns: [
+				{ name: 'id_provincia', data: 'provincia', title: 'Provincia',searchable: false, orderable: false},
+				{ data: 'siisa', title: 'Siisa'},
+				{ data: 'cuie', title: 'Cuie'},
+				{ data: 'nombre', title: 'Nombre',searchable: false, orderable: false},
+				{ data: 'denominacion_legal', title: 'Denominación legal',searchable: false, orderable: false},
+				{ name: 'id_departamento', data: 'departamento', title: 'Departamento',searchable: false, orderable: false},
+				{ name: 'id_localidad', data: 'localidad', title: 'Localidad',searchable: false, orderable: false},
+				{ data: 'codigo_postal', title: 'Codigo postal',searchable: false, orderable: false},
+				{ data: 'ciudad', title: 'Ciudad',searchable: false, orderable: false},
+				{ data: 'acciones', title: 'Acciones', searchable: false, orderable: false}
+				]
+			});
 		});	
 
 	});

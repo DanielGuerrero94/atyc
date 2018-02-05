@@ -1,11 +1,11 @@
 <script type="text/javascript">
 
 	function editTemplate(id) {
-		return '<a href="#"><i class="fa fa-pencil-square-o fa-2x text-info detail" title="Detalle" data-id="' + id + '"></i></a>';
+		return '<a href="#"><i class="fa fa-pencil-square-o fa-lg text-info detail" title="Detalle" data-id="' + id + '"></i></a>';
 	}
 
 	function deleteTemplate(id) {
-		return '<a href="#"><i class="fa fa-trash-o fa-2x text-danger delete" title="Borrar" data-id="' + id + '"></i></a>';
+		return '<a href="#"><i class="fa fa-trash-o fa-lg text-danger delete" title="Borrar" data-id="' + id + '"></i></a>';
 	}
 
 	var excelTemplate = '<a href="#" class="btn btn-box-tool excel" title="Excel"><i class="fa fa-file-excel-o fa-lg text-success"></i></a>';

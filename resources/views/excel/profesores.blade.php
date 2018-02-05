@@ -27,9 +27,9 @@ td {
 		<tr>
 			<td>{{$profesor->nombres}}</td>
 			<td>{{$profesor->apellidos}}</td>
-			<td>{{$profesor->tipo_doc}}</td>
+			<td>{{$profesor->tipoDocumento->nombre}}</td>
 			<td>{{$profesor->nro_doc}}</td>
-			<td>{{$profesor->tipo_docente}}</td>
+			<td>{{$profesor->tipoDocente->nombre}}</td>
 			<td>{{$profesor->email}}</td>
 			<td>{{$profesor->tel}}</td>
 			<td>{{$profesor->cel}}</td>

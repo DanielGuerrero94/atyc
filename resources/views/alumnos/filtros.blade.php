@@ -29,10 +29,9 @@
 					<label class="control-label col-xs-5" for="id_tipo_documento">Tipo de Documento:</label>
 					<div class="col-xs-7">
 						<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" name="id_tipo_documento">
+							<option data-id="" title="Todos" value="">Todos</option>
 							@foreach ($documentos as $documento)
-
 							<option data-id="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}" value="{{$documento->id_tipo_documento}}">{{$documento->nombre}}</option>
-
 							@endforeach
 						</select>
 					</div>
@@ -67,29 +66,30 @@
 			</div>
 			<hr>
 			<div class="row">
-				<div class="form-group col-sm-4">  		  		
-					<label for="localidad" class="control-label col-xs-5">Localidad</label>
-					<div class="col-xs-7">
-						<input class="form-control" id="localidad" name="localidad">
-					</div>
-				</div>					
 				@if(Auth::user()->id_provincia == 25)
 				<div class="form-group col-sm-4">
 					<label for="provincia" class="control-label col-xs-5">Provincia:</label>
 					<div class="col-xs-7">
 						<select class="form-control" id="provincia" name="id_provincia">
-							<option data-id="0" value="0">Todas las provincias</option>
+							<option data-id="0" value="" title="Todas las provincias">Todas las provincias</option>
 							@foreach ($provincias as $provincia)
-
 							<option data-id="{{$provincia->id_provincia}}" value="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>									
 							@endforeach
 						</select>
 					</div>
 				</div>
-				@endif					
+				@endif
+				<div class="form-group col-sm-4">  		  		
+					<label for="localidad" class="control-label col-xs-5">Localidad</label>
+					<div class="col-xs-7">
+						<input class="form-control" id="localidad" name="localidad">
+					</div>
+				</div>									
 			</div>
 			<div class="box-footer">		
-				<div class="btn btn-info pull-right" id="filtrar"><i class="fa fa-filter"></i>Filtrar</div>	
+				<a href="#" class="btn btn-square pull-right filtro" id="filtrar">
+					<i class="fa fa-filter text-info fa-lg"> Filtrar</i>
+				</a>
 			</div>	
 		</form>
 	</div>

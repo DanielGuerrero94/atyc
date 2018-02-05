@@ -170,41 +170,18 @@ class ProfesoresController extends AbmController
      */
     public function getTabla(Request $r)
     {
-        $query = Profesor::select('id_profesor', 'nombres', 'apellidos', 'nro_doc', 'id_tipo_documento')
-        ->with('tipoDocumento');
+        $query = Profesor::with('tipoDocumento', 'tipoDocente');
 
         return $this->toDatatable($r, $query);
     }
 
     private function queryLogica(Request $r, $filtros)
     {
-        $query = Profesor::leftJoin(
-            'sistema.tipos_documentos',
-            'sistema.profesores.id_tipo_documento',
-            '=',
-            'sistema.tipos_documentos.id_tipo_documento'
-        )
-        ->leftJoin(
-            'sistema.tipos_docentes',
-            'sistema.profesores.id_tipo_docente',
-            '=',
-            'sistema.tipos_docentes.id_tipo_docente'
-        )
-        ->select(
-            'sistema.profesores.id_profesor',
-            'sistema.profesores.nombres',
-            'sistema.profesores.apellidos',
-            'sistema.tipos_documentos.nombre as tipo_doc',
-            'sistema.profesores.nro_doc',
-            'sistema.profesores.email',
-            'sistema.profesores.tel',
-            'sistema.profesores.cel',
-            'sistema.tipos_docentes.nombre as tipo_docente'
-        );
+        $query = Profesor::with('tipoDocumento', 'tipoDocente');
 
         foreach ($filtros as $key => $value) {
             if ($key == 'nombres' || $key == 'apellidos' || $key == 'email') {
-                $query = $query->where('sistema.profesores.'.$key, 'ilike', '%'.$value.'%');
+                $query = $query->whereRaw("sistema.profesores.{$key} ~* '{$value}'");
             } else {
                 $query = $query->where('sistema.profesores.'.$key, '=', $value);
             }
@@ -326,7 +303,7 @@ class ProfesoresController extends AbmController
             $path,
             function ($excel) use ($datos) {
                 $excel->sheet(
-                    'Reporte',
+                    'Docentes',
                     function ($sheet) use ($datos) {
                         $sheet->setHeight(1, 20);
                         $sheet->loadView('excel.profesores', $datos);

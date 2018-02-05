@@ -256,7 +256,10 @@ class CursosController extends AbmController
             'lineaEstrategica',
             'provincia'
         ])
+        ->withCount('alumnos')
         ->segunProvincia();
+
+        logger()->warning(json_encode($query->first()));
 
         return $this->toDatatable($request, $query);
     }
@@ -457,6 +460,7 @@ class CursosController extends AbmController
             'cursos.lineas_estrategicas.nombre as linea_estrategica',
             'sistema.provincias.nombre as provincia'
         )
+        ->withCount('alumnos')
         ->segunProvincia();
 
         foreach ($filtered as $key => $value) {

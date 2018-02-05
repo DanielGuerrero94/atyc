@@ -13,7 +13,7 @@
 				<div class="box-header">
 					<h2 class="box-tittle">Reporte
 						<div class="btn-group pull-right ">
-							<button type="button" class="btn btn-box-tool btn-default excel" title="Excel"><i class="fa fa-file-excel-o text-success" aria-hidden="true"></i></button>
+							<a href="#" class="btn btn-square excel" title="Excel"><i class="fa fa-file-excel-o text-success fa-lg"> Excel</i></a>
 						</div>	
 					</h2>								
 				</div>				

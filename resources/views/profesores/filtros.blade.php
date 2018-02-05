@@ -30,9 +30,9 @@
 					<label class="control-label col-xs-5" for="id_tipo_documento">Tipo de Documento:</label>
 					<div class="col-xs-7">
 						<select class="form-control" id="id_tipo_documento" title="Documento nacional de identidad" name="id_tipo_documento">
+							<option value="">Todos</option>
 							@foreach ($tipoDocumento as $documento)
-
-							<option value="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>										
+							<option value="{{$documento->id_tipo_documento}}" title="{{$documento->titulo}}">{{$documento->nombre}}</option>		
 							@endforeach
 						</select>
 					</div>
@@ -50,6 +50,7 @@
 					<label class="control-label col-xs-5" for="id_tipo_docente">Tipo de Docente:</label>
 					<div class="col-xs-7">
 						<select class="form-control" id="id_tipo_docente" name="id_tipo_docente">
+							<option value="">Todos</option>
 							@foreach ($tipoDocente as $docente)
 							<option value="{{$docente->id_tipo_docente}}">{{$docente->nombre}}</option>
 							@endforeach
@@ -80,7 +81,9 @@
 				</div>							
 			</div>
 			<div class="box-footer">		
-				<div class="btn btn-info pull-right" id="filtrar"><i class="fa fa-filter"></i>Filtrar</div>	
+				<a href="#" class="btn btn-square pull-right filtro" id="filtrar">
+					<i class="fa fa-filter text-info fa-lg"> Filtrar</i>
+				</a>
 			</div>
 		</form>
 	</div>

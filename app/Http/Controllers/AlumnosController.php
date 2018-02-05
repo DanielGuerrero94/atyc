@@ -249,15 +249,10 @@ class AlumnosController extends ModelController
             'nombres',
             'apellidos',
             'nro_doc',
-            'alumnos.id_provincia',
-            'alumnos.id_tipo_documento'
+            'id_provincia',
+            'id_tipo_documento'
         )
-        ->with(
-            [
-                'tipoDocumento',
-                'provincia'
-            ]
-        )
+        ->with('tipoDocumento', 'provincia')
         ->segunProvincia();
 
         return  $this->toDatatable($r, $returns);
@@ -400,21 +395,17 @@ class AlumnosController extends ModelController
 
     private function queryLogica(Request $r, $filtros, $order_by)
     {
+        logger()->warning(json_encode($filtros));
+
         $query = Alumno::segunProvincia()
-        ->leftJoin(
-            'sistema.tipos_documentos',
-            'alumnos.id_tipo_documento',
-            '=',
-            'sistema.tipos_documentos.id_tipo_documento'
-        )
-        ->leftJoin('sistema.provincias', 'alumnos.id_provincia', '=', 'sistema.provincias.id_provincia')
+        ->with('tipoDocumento', 'provincia')
         ->select(
             'id_alumno',
             'nombres',
             'apellidos',
-            'sistema.tipos_documentos.nombre as id_tipo_documento',
+            'id_tipo_documento',
             'nro_doc',
-            'sistema.provincias.nombre as provincia'
+            'id_provincia'
         );
 
         foreach ($filtros as $key => $value) {
@@ -433,7 +424,7 @@ class AlumnosController extends ModelController
         $filtros = collect($r->get('filtros'))
         ->mapWithKeys(function ($item) {
             return [$item['name'] => $item['value']] ;
-        })->except(['id_provincia']);
+        });
 
 
         $order_by = $r->input('order_by', null)?$r->get('order_by'):null;

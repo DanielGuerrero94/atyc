@@ -22,6 +22,18 @@
 @section('script')
 <script type="text/javascript">
 
+	function participantesLabel(cantidad) {
+		return '<small class="label bg-blue" title="' + cantidad + ' Participantes"><i class="fa fa-users"> ' + cantidad + '</i></small>';
+	}
+
+	function editButton(id_curso) {
+		return '<a href="{{url("/cursos")}}/' + id_curso + '" data-id="' + id_curso + '" class="btn btn-circle editar" title="Editar"><i class="fa fa-pencil text-info fa-lg"></i></a>';
+	}
+
+	function deleteButton(id_curso) {
+		return '<a href="#" data-id="' + id_curso + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
+	}
+
 	$(document).ready(function(){
 
 		var datatable;
@@ -35,20 +47,24 @@
 			searching: false,
 			ajax : 'cursos/tabla',
 			columns: [
-			{ data: 'nombre'},
-			{ data: 'fecha'},
-			{ data: 'edicion'},
-			{ data: 'duracion'},
-			{ name: 'id_area_tematica', data: 'area_tematica.nombre'},
-			{ name: 'id_linea_estrategica', data: 'linea_estrategica.nombre'},
-			{ name: 'id_provincia', data: 'provincia.nombre'},
-			{ data: 'acciones',"orderable": false}
-			],			
-			rowReorder: {
-				selector: 'td:nth-child(2)'
-			},
+			{ title: 'Nombre', data: 'nombre'},
+			{ title: 'Fecha', data: 'fecha'},
+			{ title: 'Edicion', data: 'edicion'},
+			{ title: 'Duracion', data: 'duracion'},			
+			{ title: 'Tematica', data: 'area_tematica.nombre', name: 'id_area_tematica'},
+			{ title: 'Tipologia', data: 'linea_estrategica.nombre', name: 'id_linea_estrategica'},
+			{ title: 'Jurisdiccion', data: 'provincia.nombre', name: 'id_provincia'},
+			{ 
+				data: 'acciones',
+				render: function ( data, type, row, meta ) {
+					return participantesLabel(row.alumnos_count) + editButton(row.id_curso) + deleteButton(row.id_curso);
+					// return data;
+				},
+				orderable: false
+			}
+			],
 			responsive: true
-		});
+		});			
 
 		function getFiltrosJson() {
 
@@ -141,20 +157,25 @@
 					}
 				},
 				columns: [
-				{ data: 'nombre'},
-				{ data: 'fecha'},
-				{ data: 'edicion'},
-				{ data: 'duracion'},
-				{ data: 'area_tematica'},
-				{ data: 'linea_estrategica'},
-				{ data: 'provincia'},
-				{ data: 'acciones', orderable: false}
-				],			
-				rowReorder: {
-					selector: 'td:nth-child(2)'
-				},
+				{ title: 'Nombre', data: 'nombre'},
+				{ title: 'Fecha', data: 'fecha'},
+				{ title: 'Edicion', data: 'edicion'},
+				{ title: 'Duracion', data: 'duracion'},			
+				{ title: 'Tematica', data: 'area_tematica.nombre', name: 'id_area_tematica'},
+				{ title: 'Tipologia', data: 'linea_estrategica.nombre', name: 'id_linea_estrategica'},
+				{ title: 'Jurisdiccion', data: 'provincia.nombre', name: 'id_provincia'},
+				{ 
+					data: 'acciones',
+					render: function ( data, type, row, meta ) {
+						return participantesLabel(row.alumnos_count) + editButton(row.id_curso) + deleteButton(row.id_curso);
+						// return data;
+					},
+					orderable: false
+				}
+				],
 				responsive: true
-			});
+			});	
+
 		});
 
 		$('#alta_curso').on("click",function(){

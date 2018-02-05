@@ -106,8 +106,9 @@
 				</div>
 			</div>				
 			<div class="box-footer">	
-				<div class="btn btn-danger pull-right" id="limpiar" style="display: none"><i class="fa fa-eraser"></i>Limpiar</div>		
-				<div class="btn btn-info pull-right" id="filtrar"><i class="fa fa-filter"></i>Filtrar</div>				
+				<a href="#" class="btn btn-square pull-right filtro" id="filtrar">
+					<i class="fa fa-filter text-info fa-lg"> Filtrar</i>
+				</a>
 			</div>
 		</form>
 	</div>

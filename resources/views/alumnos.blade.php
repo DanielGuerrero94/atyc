@@ -61,14 +61,13 @@
 			searching: false,
 			ajax : 'alumnos/tabla',
 			columns: [
-			{ data: 'nombres'},
-			{ data: 'apellidos'},
-			{ data: 'nro_doc'},
-			{ name: 'id_tipo_documento',data: 'tipo_documento.nombre'},
-			{ name: 'id_provincia',data: 'provincia.nombre'},
+			{ title: 'Nombres', data: 'nombres'},
+			{ title: 'Apellidos', data: 'apellidos'},
+			{ title: 'Nro Doc', data: 'nro_doc'},
+			{ title: 'Tipo Documento', data: 'tipo_documento.nombre', name: 'id_tipo_documento'},			
+			{ title: 'Provincia', data: 'provincia.nombre', name: 'id_provincia'},
 			{ 
 				data: 'acciones',
-				name: '',
 				render: function ( data, type, row, meta ) {
 					return seeButton(row.id_alumno) + editButton(row.id_alumno) + deleteButton(row.id_alumno);
 				},
@@ -79,9 +78,15 @@
 		});
 
 		function getFiltros(){
-			return $('#form-filtros :input')
+			let select = $('#form-filtros select')
 			.filter(function(i,e){return $(e).val() != ""})
 			.serializeArray();
+
+			let input = $('#form-filtros input')
+			.filter(function(i,e){return $(e).val() != ""})
+			.serializeArray();
+
+			return $.merge(input, select);
 		}
 
 		$('#filtros').on('click','#filtrar',function () {
@@ -97,23 +102,19 @@
 					}
 				},
 				columns: [
-				{ data: 'nombres'},
-				{ data: 'apellidos'},
-				{ data: 'nro_doc'},
-				{ name: 'id_tipo_documento',data: 'id_tipo_documento',orderable: false},
-				{ name: 'id_provincia',data: 'provincia'},
+				{ title: 'Nombres', data: 'nombres'},
+				{ title: 'Apellidos', data: 'apellidos'},
+				{ title: 'Nro Doc', data: 'nro_doc'},
+				{ title: 'Tipo Documento', data: 'tipo_documento.nombre', name: 'id_tipo_documento'},			
+				{ title: 'Provincia', data: 'provincia.nombre', name: 'id_provincia'},
 				{ 
 					data: 'acciones',
-					name: '',
 					render: function ( data, type, row, meta ) {
 						return seeButton(row.id_alumno) + editButton(row.id_alumno) + deleteButton(row.id_alumno);
 					},
 					orderable: false
 				}
 				],
-				rowReorder: {
-					selector: 'td:nth-child(2)'
-				},
 				responsive: true
 			});
 
