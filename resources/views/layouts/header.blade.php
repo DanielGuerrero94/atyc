@@ -8,11 +8,13 @@
 	</div>
 </section>
 
+
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		setTimeout(function(){
 			let help = $(".content-header .pull-right");
-			help.html('<i class="fa fa-question-circle fa-lg"></i><a href="mailto:sistemasuec@gmail.com"> sistemasuec@gmail.com</a>');
+			help.html('<a href="https://sumartestzulip.zulipchat.com/#narrow/stream/Soporte.20-.20Atyc" class="btn btn-success btn-xs" target="_blank"><i class="fa fa-question-circle fa-lg"></i> <b>Soporte</b></a>');
 		}, 3000);
 	});
 </script>
