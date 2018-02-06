@@ -256,10 +256,10 @@ class CursosController extends AbmController
             'lineaEstrategica',
             'provincia'
         ])
-        ->withCount('alumnos')
+        //->withCount('alumnos')
         ->segunProvincia();
 
-        logger()->warning(json_encode($query->first()));
+        //logger()->warning(json_encode($query->first()));
 
         return $this->toDatatable($request, $query);
     }
@@ -437,30 +437,10 @@ class CursosController extends AbmController
             return $value != "" && $value != "0";
         });
 
-        $query = Curso::leftJoin(
-            'cursos.areas_tematicas',
-            'cursos.cursos.id_area_tematica',
-            '=',
-            'cursos.areas_tematicas.id_area_tematica'
-        )
-        ->leftJoin(
-            'cursos.lineas_estrategicas',
-            'cursos.cursos.id_linea_estrategica',
-            '=',
-            'cursos.lineas_estrategicas.id_linea_estrategica'
-        )
-        ->leftJoin('sistema.provincias', 'cursos.cursos.id_provincia', '=', 'sistema.provincias.id_provincia')
-        ->select(
-            'cursos.cursos.id_curso',
-            'cursos.cursos.nombre',
-            'cursos.cursos.fecha',
-            'cursos.cursos.edicion',
-            'cursos.cursos.duracion',
-            'cursos.areas_tematicas.nombre as area_tematica',
-            'cursos.lineas_estrategicas.nombre as linea_estrategica',
-            'sistema.provincias.nombre as provincia'
-        )
-        ->withCount('alumnos')
+	logger()->warning(json_encode($filtered));
+
+        $query = Curso::with('provincia', 'areaTematica', 'lineaEstrategica')
+        //->withCount('alumnos')
         ->segunProvincia();
 
         foreach ($filtered as $key => $value) {

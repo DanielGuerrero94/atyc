@@ -46,7 +46,7 @@
 					<label class="control-label col-xs-5" for="linea_estrategica">Tipo de accion:</label>
 					<div class="col-xs-7">
 						<select class="form-control" id="linea_estrategica" title="Linea estrategica">
-							<option data-id="0">Todos los tipos</option>
+							<option data-id="">Todos los tipos</option>
 							@foreach ($lineas_estrategicas as $linea)
 							<option data-id="{{$linea->id_linea_estrategica}}">{{$linea->numero}}-{{$linea->nombre}}</option>
 							@endforeach
@@ -57,7 +57,7 @@
 					<label class="control-label col-xs-5" for="area_tematica">Areas Tematicas:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 						<select class="form-control"  id="area_tematica" title="Area tematica">
-							<option data-id="0">Todas las tematicas</option>
+							<option data-id="">Todas las tematicas</option>
 							@foreach ($areas_tematicas as $area)
 							<option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
 							@endforeach
