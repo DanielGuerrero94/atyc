@@ -3,12 +3,15 @@
 namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
+use Auth;
 
 class Pac extends Model
 {
     use SoftDeletes;
 
     protected $dates = ['deleted_at'];
+    
+    protected $fillable = ['nombre', 't1', 't2', 't3', 't4', 'observado', 'id_provincia'];
 
     /**
      * The table associated with the model.
@@ -29,6 +32,11 @@ class Pac extends Model
         return $this->hasOne('App\Models\Pac\Destinatario', 'id_destinatario', 'id_destinatario');
     }
 
+    public function acciones()
+    {
+        return $this->belongsToMany('App\Models\Cursos\Curso', 'pac.pacs_cursos', 'id_curso', 'id_pac');
+    }
+
     public function alcance()
     {
         return $this->hasOne('App\Models\Pac\Alcance', 'id_alcance', 'id_alcance');
@@ -42,16 +50,6 @@ class Pac extends Model
     public function modalidad()
     {
         return $this->hasOne('App\Models\Pac\Modalidad', 'id_modalidad', 'id_modalidad');
-    }
-
-    public function accion()
-    {
-        return $this->hasOne('App\Accion', 'id_accion', 'id_accion');
-    }
-
-    public function pautas()
-    {
-        return $this->belongsToMany('App\Models\Pac\Pauta', 'pac_pautas', 'id_pauta', 'id_pac')->withTimestamps();
     }
 
     public function insumos()
