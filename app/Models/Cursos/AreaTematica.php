@@ -32,6 +32,13 @@ class AreaTematica extends Model
     protected $fillable = ['nombre'];
 
     /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['pivot'];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array

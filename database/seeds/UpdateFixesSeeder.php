@@ -11,11 +11,12 @@ class UpdateFixesSeeder extends Seeder
      */
     public function run()
     {
-    	$this->updateAreasTematicas();
-    	$this->updateLineasEstrategicas();
-        $this->updateAcciones();
-        $this->updateParticipantes();
-        $this->updateDocentes();
+        // $this->updateAreasTematicas();
+        // $this->updateLineasEstrategicas();
+        // $this->updateAcciones();
+        // $this->updateParticipantes();
+        // $this->updateDocentes();
+    	$this->updateCursosAreasTematicas();
     }
 
     public function updateAreasTematicas()
@@ -37,5 +38,13 @@ class UpdateFixesSeeder extends Seeder
     public function updateParticipantes()
     {
         # code...
+    }
+
+    public function updateCursosAreasTematicas()
+    {
+        \App\Models\Cursos\Curso::get()
+        ->each(function ($model) {
+            $model->areasTematicas()->attach($model->id_area_tematica);
+        });
     }
 }
