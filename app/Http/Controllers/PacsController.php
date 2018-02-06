@@ -68,7 +68,13 @@ class PacsController extends Controller
 
         for ($i=0; $i < $repeticiones; $i++) { 
             $curso = new Curso();
-            $parametros = array_merge(['id_provincia' => $id_provincia, 'id_estado' => $estado ],$request->only(['nombre', 'id_linea_estrategica']));
+            
+            $parametros = array_merge(['id_estado' => $estado ],$request->only(['nombre', 'id_linea_estrategica', 'id_provincia']));
+
+            if ($request->has('areasTematicas')) {
+                $areasTematicas = explode(',', $request->get('areasTematicas'));
+                $curso->areasTematicas()->attach($areasTematicas);
+            }            
             $curso->create($parametros);
         }
 
@@ -176,7 +182,7 @@ class PacsController extends Controller
 
             $accion = $r->has('botones')?$r->botones:null;
 
-            $editarYEliminar = '<a href="'.url('cursos').'/'.$ret->id_pac.'"><button data-id="'.$ret->id_pac.
+            $editarYEliminar = '<a href="'.url('pacs').'/'.$ret->id_pac.'"><button data-id="'.$ret->id_pac.
             '" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones['editar'].
             '" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_pac.
             '" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones['eliminar'].

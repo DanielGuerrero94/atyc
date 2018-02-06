@@ -13,6 +13,11 @@ class AlterPacTable extends Migration
      */
     public function up()
     {
+
+        Schema::table('pac.pac', function (Blueprint $table) {
+            $table->dropColumn('id_provincia');
+        });
+
         Schema::table('pac.pac', function (Blueprint $table) {
             $table->dropColumn('consul_peatyc');
             $table->dropColumn('trimestre_planificacion');
@@ -39,6 +44,7 @@ class AlterPacTable extends Migration
             $table->string('t2',1);
             $table->string('t3',1);
             $table->string('t4',1);
+            $table->dropColumn('id_provincia');
         });
     }
 }

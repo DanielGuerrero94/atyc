@@ -15,6 +15,7 @@ class AlterCursosTable04 extends Migration
     {
         Schema::table('cursos.cursos', function (Blueprint $table) {
             $table->dropColumn('id_area_tematica');
+            
         });
     }
 
@@ -26,7 +27,7 @@ class AlterCursosTable04 extends Migration
     public function down()
     {
         Schema::table('cursos.cursos', function (Blueprint $table) {
-            $table->integer('id_area_tematica');
+            $table->integer('id_area_tematica')->nullable();
             $table->foreign('id_area_tematica')->references('id_area_tematica')->on('cursos.areas_tematicas');
         });
     }

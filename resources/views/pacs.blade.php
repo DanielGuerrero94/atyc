@@ -30,6 +30,7 @@
 			searching: false,
 			ajax : '{{ url('pacs/tabla') }}',
 			columns: [
+			{ data: 'nombre'},
 			{ data: 't1'},
 			{ data: 't2'},
 			{ data: 't3'},

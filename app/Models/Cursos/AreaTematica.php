@@ -29,11 +29,11 @@ class AreaTematica extends Model
     protected $fillable = ['nombre'];
     
     /**
-     * Las pacs.
+     * Las cursos.
      */
-    public function pacs()
+    public function cursos()
     {
-        return $this->belongsToMany('App\Models\Pacs\Pac', 'pac.pacs_areas_tematicas', 'id_pac', 'id_area_tematica')->withTimestamps();
+        return $this->belongsToMany('App\Curso', 'cursos.cursos_areas_tematicas', 'id_curso', 'id_area_tematica')->withTimestamps();
     }   
 
     public static function table()

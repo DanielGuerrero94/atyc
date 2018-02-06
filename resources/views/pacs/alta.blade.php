@@ -17,7 +17,7 @@
               <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
                 <div class="typeahead__field ">             
                   <span class="typeahead__query ">
-                    <input class="curso_typeahead form-control" name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
+                    <input class="curso_typeahead form-control" name="nombre"  type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
                   </span>
                 </div>
               </div>
@@ -28,13 +28,13 @@
             <div class="col-md-6">          
               <label for="repeticiones" class="control-label col-md-4 col-xs-3">Repeticiones</label>
               <div class="col-md-4 col-xs-3">
-                <input type="number" class="form-control" name="repeticion" id="repeticiones" placeholder="Repeticiones"> 
+                <input type="number" class="form-control" name="repeticiones" id="repeticiones" placeholder="Repeticiones"> 
               </div>
             </div>
             <div class="col-md-6">
               <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
               <div class="col-md-8 col-xs-9">
-                <select class="form-control" id="linea_estrategica" name="linea_estrategica">
+                <select class="form-control" id="linea_estrategica" name="id_linea_estrategica">
                   <option value="0">Seleccionar</option>
                   @foreach ($lineas_estrategicas as $linea)
                   <option data-id="{{$linea->id_linea_estrategica}}" value="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>

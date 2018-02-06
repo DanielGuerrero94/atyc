@@ -3,22 +3,23 @@
 namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
+use Auth;
 
 class Pac extends Model
 {
     protected $table = "pac.pac";
 
-    protected $fillable = ['t1', 't2', 't3', 't4', 'observado'];
+    protected $fillable = ['nombre', 't1', 't2', 't3', 't4', 'observado', 'id_provincia'];
 
     protected $primaryKey = 'id_pac';
 
     /**
      * Acciones planificadas.
      */
-    public function acciones()
+/*    public function acciones()
     {
         return $this->belongsToMany('App\Models\Cursos\Curso', 'pac.pacs_cursos', 'id_curso', 'id_pac');
-    }
+    }*/
 
     /**
      * Las pacs de una pauta.
@@ -55,18 +56,21 @@ class Pac extends Model
     /**
      * Areas tematicas.
      */
-    public function areasTematicas()
+/*    public function areasTematicas()
     {
         return $this->belongsToMany('App\Models\Cursos\AreaTematica', 'pac.pacs_areas_tematicas', 'id_area_tematica', 'id_pac');
-    }
+    }*/
 
     public function crear(Request $r)
     {
+        $id_provincia = Auth::user()->id_provincia;
+        $this->nombre = $r->nombre;
         $this->t1 = $r->t1;
         $this->t2 = $r->t2;
         $this->t3 = $r->t3;
         $this->t4 = $r->t4;
         $this->observado = $r->observado;
+        $this->id_provincia = $id_provincia;
         $this->save();
         return $this;
     }

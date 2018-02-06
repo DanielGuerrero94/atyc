@@ -18,6 +18,7 @@
 					<th>3er. Trimestre</th>
 					<th>4to. Trimestre</th>
 					<th>Observado</th>
+					<th>Acciones</th>
 				</tr>
 			</thead>
 		</table>

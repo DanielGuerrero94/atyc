@@ -29,7 +29,7 @@ class Curso extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre','id_provincia','id_area_tematica',
+    protected $fillable = ['nombre','id_provincia',
     'id_linea_estrategica','fecha','duracion','edicion','id_estado'];
 
     protected $hidden = ['pivot'];
@@ -61,19 +61,32 @@ class Curso extends Model
             ->withTimestamps();
     }
 
+    /**
+     * Areas tematicas.
+     */
+    public function areasTematicas()
+    {
+        return $this->belongsToMany(
+            'App\Models\Cursos\AreaTematica', 
+            'cursos.cursos_areas_tematicas', 
+            'id_curso',
+            'id_area_tematica' 
+            )->withTimestamps();
+    }
+
     public function provincia()
     {
         return $this->hasOne('App\Provincia', 'id_provincia', 'id_provincia');
     }
 
-    public function areaTematica()
+/*    public function areaTematica()
     {
         return $this->hasOne(
             'App\Models\Cursos\AreaTematica',
             'id_area_tematica',
             'id_area_tematica'
         );
-    }
+    }*/
 
     public function lineaEstrategica()
     {
