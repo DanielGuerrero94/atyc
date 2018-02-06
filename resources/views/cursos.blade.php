@@ -57,7 +57,7 @@
 			{ 
 				data: 'acciones',
 				render: function ( data, type, row, meta ) {
-					return participantesLabel(row.alumnos_count) + editButton(row.id_curso) + deleteButton(row.id_curso);
+					return /*participantesLabel(row.alumnos_count) + */editButton(row.id_curso) + deleteButton(row.id_curso);
 					// return data;
 				},
 				orderable: false

@@ -38,7 +38,7 @@ class Curso extends Model
      *
      * @var array
      */
-    protected $appends = ['tematica'];
+    // protected $appends = ['tematica'];
     
     /**
      * The attributes that are mass assignable.
@@ -83,6 +83,16 @@ class Curso extends Model
             'id_alumno'
         )
         ->withTimestamps();
+    }
+
+    //Retro compatibilidad rapida
+    public function areaTematica()
+    {
+        return $this->hasOne(
+            'App\Models\Cursos\AreaTematica',
+            'id_area_tematica',
+            'id_area_tematica'
+        );
     }
 
     /**
