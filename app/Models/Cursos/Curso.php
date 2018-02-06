@@ -103,15 +103,6 @@ class Curso extends Model
         return $this->hasOne('App\Provincia', 'id_provincia', 'id_provincia');
     }
 
-/*    public function areaTematica()
-    {
-        return $this->hasOne(
-            'App\Models\Cursos\AreaTematica',
-            'id_area_tematica',
-            'id_area_tematica'
-        );
-    }*/
-
     public function lineaEstrategica()
     {
         return $this->hasOne(
@@ -175,19 +166,5 @@ class Curso extends Model
     public function getDuracionAttribute($value)
     {
         return $value . " hs";
-    }
-
-    /**
-     * Retorna la tematica dependiendo de si la accion esta asociada a una pac.
-     *
-     * @var mixed
-     */
-    public function getTematicaAttribute($value)
-    {
-        if ($this->id_area_tematica) {
-            return $this->areaTematica()->withTrashed()->get();
-        } else {
-            //TODO
-        }
     }
 }
