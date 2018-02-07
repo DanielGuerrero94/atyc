@@ -47,18 +47,19 @@
 		<div class="col-xs-6 col-sm-6 col-md-8 col-lg-6">
 			<div class="box box-info">
 				<div class="box-header">
-					<h2 class="box-title">Datos del efector: {{ $efector->nombre }}
-						<div class="btn-group pull-right" role="group" aria-label="...">
-							<a href="http://200.69.210.3/sirge3/public/login" class="btn btn-square" title="Ver en SIRGE">
-								<i class="fa fa-link text-primary fa-lg"> SIRGE</i>
-							</a>
-						</div>
-					</h2>
+					<a href="{{url('/efectores')}}" class="btn pull-left" id="back" title="Volver"><i class="fa fa-arrow-left"></i></a>
+					<h3 class="box-tittle" style="margin-top: 5px;"> Datos del efector</h3>
+					<div class="box-tools pull-right" style="margin-top: 5px;">
+						<a href="http://200.69.210.3/sirge3/public/login" class="btn btn-square" title="Ver en SIRGE">
+							<i class="fa fa-link text-primary fa-lg"> SIRGE</i>
+						</a>
+					</div>
 				</div>
 				<div class="box-body">
 					<form class="form-horizontal">
 						<hr>
 						<h4><b>Información general</b></h4>
+						<hr>
 						<div class="row">
 							<div class="col-sm-6">
 								<div class="form-group">
@@ -97,6 +98,7 @@
 						</div>
 						<hr>
 						<h4><b>Domicilio</b></h4>
+						<hr>
 						<div class="row">						
 							<div class="col-sm-6">
 								<div class="form-group">
@@ -110,7 +112,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 control-label">Ciudad</label>
 									<div class="col-sm-8">
-										<p class="form-control-static">{{ $efector->ciudad }}</p>
+										<p class="form-control-static">{{ isset($efector->ciudad) }}</p>
 									</div>
 								</div>
 							</div>
@@ -135,21 +137,18 @@
 						</div>
 					</form>
 				</div>
-				<div class="box-footer">
-					<div class="btn-group " role="group">
-						<a href='{{url("/efectores")}}'><button class="btn btn-warning"><i class="fa fa-undo"></i>Volver</button></a>
-					</div>
-				</div>
-			</div>
+			</div>			
 		</div>
-		<div class="col-md-4">
+		<div class="col-xs-6 col-sm-6 col-md-4 col-lg-6">
 			<div class="box box-info">
 				<div class="box-header">
-					<h2 class="box-title">Historial: {{ $efector->nombre }}</h2>
+					<h3 class="box-tittle" style="margin-top: 5px;"> Historial</h3>
 				</div>
 				<div class="box-body">				
 					<div id="scroll-historial-div">												
-						<h4>Cursos realizados</h4>
+						<hr>
+						<h4><b>Acciones en las que formo parte</b></h4>
+						<hr>
 						@if( count($cursos))
 						<ul class="timeline">
 							@foreach ($cursos as $curso)
@@ -160,10 +159,12 @@
 								<i class="fa fa-graduation-cap text-blue"></i>
 								<div class="timeline-item">
 									<div class="timeline-body" style="background-color: #D8E4E8;">
+										<a href="{{url('/cursos').'/'.$curso->id_curso}}" class="btn btn-square pull-right" title="Ver en detalle">
+											<i class="fa text-primary fa-lg"> Ver en detalle</i>
+										</a>
 										<b>{{ $curso->nombre }}</b>
 										<br>
-										<span>Cantidad de alumnos: {{ $curso->alumnos }}  </span>
-										<a href='{{url("/cursos/$curso->id_curso")}}'><span class="btn btn-info btn-xs">Detalles</span></a>
+										<span>Cantidad de alumnos: <span class="label label-primary">{{ $curso->alumnos }}</span></span>										
 									</div>
 								</div>
 							</li>
@@ -172,10 +173,18 @@
 						@else
 						<div class="callout callout-warning">
 							<h4>Sin datos!</h4>
-							<p>No participó de ningún curso.</p>
+							<p>No participó de ninguna acción de capacitación.</p>
 						</div>
 						@endif
 					</div>				
+				</div>
+			</div>
+			<div class="box box-info">
+				<div class="box-header">
+					<h3 class="box-tittle" style="margin-top: 5px;"> Participantes</h3>
+				</div>
+				<div class="box-body">
+					<table id="participantes-table" class="table table-hover"></table>
 				</div>
 			</div>
 		</div>
@@ -184,10 +193,41 @@
 @endsection
 @section('script')
 <script type="text/javascript">
+
+	function seeButton(id_alumno) {
+		return '<a href="{{url("/alumnos")}}/' + id_alumno + '/see" data-id="' + id_alumno + '" class="btn btn-circle ver" title="Ver"><i class="fa fa-eye text-info fa-lg"></i></a>';
+	}
+
+	function editButton(id_alumno) {
+		return '<a href="{{url("/alumnos")}}/' + id_alumno + '" data-id="' + id_alumno + '" class="btn btn-circle editar" title="Editar"><i class="fa fa-pencil text-info fa-lg"></i></a>';
+	}
+
 	$(document).ready(function(){
 
 		$('#scroll-historial-div').slimScroll({
-			height: '450px'
+			height: '430px'
+		});
+
+		$('#participantes-table').DataTable({
+			destroy: true,
+			ajax : "{{'/efectores'}}/" + "{{$efector->cuie}}" + "/participantes",
+			columns: [
+			{ title: 'Nombres', data: 'nombres'},
+			{ title: 'Apellidos', data: 'apellidos'},
+			{ title: 'Nro Doc', data: 'nro_doc'},
+			{ title: 'Email', data: 'email'},
+			{ title: 'Rol', data: 'funcion', name: 'funcion'},
+			{ 
+				data: 'acciones',
+				render: function ( data, type, row, meta ) {
+					return seeButton(row.id_alumno) + editButton(row.id_alumno);
+				},
+				searchable: false,
+				orderable: false
+
+			}
+			],
+			responsive: true
 		});
 
 	});

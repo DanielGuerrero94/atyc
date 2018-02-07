@@ -2,43 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Cursos\Curso;
-use DB;
+use App\Provincia;
 use Auth;
+use DB;
 use Datatables;
+use Illuminate\Http\Request;
 
 class EfectoresController extends Controller
 {
     private $filters_map = [
-    'id_provincia' => 'p',
-    'descripcion' => 'p',
-    'siisa' => 'e',
-    'cuie' => 'e',
-    'nombre' => 'e',
-    'denominacion_legal' => 'e',
-    'domicilio' => 'e',
-    'id_departamento' => 'd',
-    'nombre_departamento' => 'd',
-    'id_localidad' => 'l',
-    'nombre_localidad' => 'l',
-    'codigo_postal' => 'e',
-    'ciudad' => 'dg',
+        'id_provincia' => 'p',
+        'descripcion' => 'p',
+        'siisa' => 'e',
+        'cuie' => 'e',
+        'nombre' => 'e',
+        'denominacion_legal' => 'e',
+        'domicilio' => 'e',
+        'id_departamento' => 'd',
+        'nombre_departamento' => 'd',
+        'id_localidad' => 'l',
+        'nombre_localidad' => 'l',
+        'codigo_postal' => 'e',
+        'ciudad' => 'dg',
     ];
 
     public function get()
     {
-        return view('efectores');
+        $provincias = [];
+
+        if (Auth::user()->id_provincia == 25) {
+            $provincias = Provincia::all()->where('id_provincia', '<>', '25');
+        }
+        
+        return view('efectores', compact('provincias'));
     }
 
     public function queryLogica(Request $r, $filtros = [])
     {
         $query = DB::table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'dg.id_efector', '=', 'e.id_efector')
-        ->leftJoin('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
-        ->leftJoin('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
-        ->leftJoin('geo.localidades as l', 'l.id', '=', 'dg.id_localidad')
-        ->select(
+        ->join('geo.provincias as p', 'p.id_provincia', '=', 'dg.id_provincia')
+        ->join('geo.departamentos as d', 'd.id', '=', 'dg.id_departamento')
+        ->join('geo.localidades as l', 'l.id', '=', 'dg.id_localidad');
+
+        if ($filtros->get('capacitados') == "true") {
+            $query = $query->join('alumnos.alumnos as al', 'al.establecimiento1', '=', 'e.cuie');
+            $query = $query->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'al.id_alumno');
+            $query = $query->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso');
+        }
+
+        $query = $query->select(
             'p.id_provincia',
             'p.descripcion as provincia',
             'e.siisa',
@@ -46,23 +60,55 @@ class EfectoresController extends Controller
             'e.nombre',
             'e.denominacion_legal',
             'e.domicilio',
-            'd.id_departamento',
+            'd.id as id_departamento',
             'd.nombre_departamento as departamento',
-            'l.id_localidad',
+            'l.id as id_localidad',
             'l.nombre_localidad as localidad',
             'e.codigo_postal',
             'dg.ciudad'
         )
         ->where('e.id_estado', 1);
 
-        foreach ($filtros as $key => $value) {
-            if ($key == 'id_provincia') {
-                $query = $this->segunProvincia($query, $value);
-            } else {
-                $query = $query->where($this->mapearColumna($key), $value);
-            }
+        if (($id_departamento = $filtros->get('id_departamento')) != 0) {
+            $query = $query->where("d.id", $id_departamento);
+        }
+
+        if (($id_localidad = $filtros->get('id_localidad')) != 0) {
+            logger()->warning('LOCALIDAD');
+            $query = $query->where("l.id", $id_localidad);
+        }
+
+        //Revisar posible bug, cuando hago pop de id_departamento y hago el filtro de arriba ya no tengo el id_localidad
+        $filtros->pop('id_departamento');
+        $filtros->pop('capacitados');
+        $filtros->pop('id_localidad');
+
+        if (Auth::user()->isUEC()) {
+            $query = $this->segunProvincia($query, $filtros->get('id_provincia'));
+        } else {
+            $id_provincia = $this->mapearProvincia(Auth::user()->id_provincia);
+            $query = $query->where('p.id_provincia', $id_provincia);
         }
         
+
+        $query = $query->groupBy(
+            'p.id_provincia',
+            'p.descripcion',
+            'e.siisa',
+            'e.cuie',
+            'e.nombre',
+            'e.denominacion_legal',
+            'e.domicilio',
+            'd.id',
+            'd.nombre_departamento',
+            'l.id',
+            'l.nombre_localidad',
+            'e.codigo_postal',
+            'dg.ciudad'
+        );
+
+        logger()->warning($query->toSql());
+
         return $query;
     }
 
@@ -141,7 +187,7 @@ class EfectoresController extends Controller
 
     public function getTabla(Request $r)
     {
-        $query = $this->queryLogica($r);
+        $query = $this->queryLogica($r, collect(['capacitados' => true]));
 
         return Datatables::of($query)
         ->addColumn('acciones', function ($ret) {
@@ -158,25 +204,17 @@ class EfectoresController extends Controller
             'status' => true,
             'error' => null,
             'data' => $array
-            ];
+        ];
     }
 
     public function nombresTypeahead(Request $r)
     {
-        return $this->toTypeahead(
-            array(
-                'nombres' => $this->getNombres($r)
-                )
-        );
+        return $this->toTypeahead(['nombres' => $this->getNombres($r)]);
     }
 
     public function cuiesTypeahead(Request $r)
     {
-        return $this->toTypeahead(
-            array(
-                'cuies' => $this->getCuies($r)
-                )
-        );
+        return $this->toTypeahead(['cuies' => $this->getCuies($r)]);
     }
 
     public function getNombres(Request $r)
@@ -184,15 +222,11 @@ class EfectoresController extends Controller
         $query = DB::table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'e.id_efector', '=', 'dg.id_efector')
         ->select('e.nombre')
-        ->where('e.nombre', 'ilike', '%'.$r->q.'%')
+        ->whereRaw("efectores.efectores.nombre ~* '{$r->q}'")
+        ->pluck('e.nombre')
         ->orderBy('e.nombre');
 
-        return $this->segunProvincia($query, $r->id_provincia)
-        ->get()
-        ->map(function ($item, $key) {
-            return $item->nombre;
-        })
-        ->toArray();
+        return $this->segunProvincia($query, $r->id_provincia)->all();
     }
 
     public function getCuies(Request $r)
@@ -200,25 +234,23 @@ class EfectoresController extends Controller
         $query = DB::table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'e.id_efector', '=', 'dg.id_efector')
         ->select('e.cuie')
-        ->where('e.cuie', 'ilike', '%'.$r->q.'%')
+        ->whereRaw("efectores.efectores.cuie ~* '{$r->q}'")
+        ->pluck('e.cuie')
         ->orderBy('e.cuie');
 
-        return $this->segunProvincia($query, $r->id_provincia)
-        ->get()
-        ->map(function ($item, $key) {
-            return $item->cuie;
-        })
-        ->toArray();
+        return $this->segunProvincia($query, $r->id_provincia)->all();
     }
 
-
+    public function mapearProvincia($id_provincia)
+    {
+        return $id_provincia < 10?"0".strval($id_provincia):strval($id_provincia);
+    }
 
     public function segunProvincia($query, $id_provincia)
     {
         if ($id_provincia != 0) {
-            $id_provincia = $id_provincia < 10?"0".strval($id_provincia):strval($id_provincia);
-
-            $query = $query->where('dg.id_provincia', $id_provincia);
+            $id_provincia = $this->mapearProvincia($id_provincia);
+            $query = $query->where('p.id_provincia', $id_provincia);
         }
 
         return $query;
@@ -226,23 +258,18 @@ class EfectoresController extends Controller
 
     public function historialCursos(Request $r, $cuie)
     {
-        $efector = $this->queryLogica($r);
+        $efector = $this->queryLogica($r, collect(['capacitados' => true]));
 
-        $provincia = Auth::user()->id_provincia;
-
-        if ($provincia != 25) {
-            $efector = $efector
-            ->where('dg.id_provincia', $provincia);
+        if (($id_provincia = Auth::user()->id_provincia) != 25) {
+            $id_provincia = $this->mapearProvincia($id_provincia);
+            $efector = $efector->where('dg.id_provincia', $id_provincia);
         }
 
-        $efector = $efector
-        ->where('e.cuie', $cuie)
-        ->first();
+        $efector = $efector->where('e.cuie', $cuie)->first();
 
         $cursos = (new Curso)->getByCuie($cuie);
 
-        $array = array('efector' => $efector,'cursos' => $cursos);
-        return view('efectores/historial_cursos', $array);
+        return view('efectores/historial_cursos', compact('efector', 'cursos'));
     }
 
     public function findCuie($string)
@@ -271,7 +298,7 @@ class EfectoresController extends Controller
 
     public function efectoresSegunProvincia($id_provincia)
     {
-        $request = new Illuminate\Http\Request(array('filtros' => array('id_provincia' => $id_provincia)));
+        $request = new Request(['filtros' => ['id_provincia' => $id_provincia]]);
         return $this->queryLogica($request)->get();
     }
 
@@ -293,29 +320,42 @@ class EfectoresController extends Controller
 
     public function selectDepartamentos(Request $r, $id_provincia)
     {
-        $query = DB::table('geo.provincias as p')
-        ->leftJoin('geo.departamentos as d', 'd.id_provincia', '=', 'p.id_provincia')
-        ->select('id', 'nombre_departamento')
-        ->orderBy('nombre_departamento');
-
-        $id_provincia = $id_provincia < 10?"0".strval($id_provincia):strval($id_provincia);
-        $query = $query->where('p.id_provincia', $id_provincia);
-
-        return $query->get();
+        return DB::table('geo.provincias as p')
+        ->join('geo.departamentos as d', 'd.id_provincia', '=', 'p.id_provincia')
+        ->select('id', 'nombre_departamento as departamento')
+        ->where('p.id_provincia', $this->mapearProvincia($id_provincia))
+        ->orderBy('nombre_departamento')
+        ->get();
     }
 
-    public function selectLocalidad(Request $r, $id_provincia, $id_departamento)
+    public function selectLocalidades(Request $r, $id_provincia, $id_departamento)
     {
-        $query = DB::table('geo.provincias as p')
-        ->leftJoin('geo.departamentos as d', 'd.id_provincia', '=', 'p.id_provincia')
-        ->leftJoin('geo.localidades as l', 'l.id_departamento', '=', 'd.id_departamento')
-        ->select('id', 'nombre_departamento')
-        ->orderBy('nombre_departamento');
+        return DB::table('geo.provincias as p')
+        ->join('geo.departamentos as d', 'd.id_provincia', '=', 'p.id_provincia')
+        ->join('geo.localidades as l', 'l.id_departamento', '=', 'd.id_departamento')
+        ->select('l.id', 'nombre_localidad as localidad')
+        ->where('p.id_provincia', $this->mapearProvincia($id_provincia))
+        ->where('d.id', $id_departamento)
+        ->orderBy('nombre_localidad')
+        ->get();
+    }
 
-        $id_provincia = $id_provincia < 10?"0".strval($id_provincia):strval($id_provincia);
-        $query = $query->where('p.id_provincia', $id_provincia);
-        $query = $query->where('d.id', $id_departamento);
+    public function getParticipantes($cuie)
+    {
+        $query = DB::table('efectores.efectores as e')
+        ->join('efectores.datos_geograficos as dg', 'dg.id_efector', '=', 'e.id_efector')
+        ->join('alumnos.alumnos as al', 'al.establecimiento1', '=', 'e.cuie')
+        ->join('alumnos.funciones as f', 'f.id_funcion', '=', 'al.id_funcion')
+        ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'al.id_alumno')
+        ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
+        ->where('e.cuie', $cuie)
+        ->select('al.id_alumno', 'al.nombres', 'al.apellidos', 'al.nro_doc', 'al.email', 'f.nombre as funcion');
 
-        return $query->get();
+        if (($id_provincia = Auth::user()->id_provincia) != 25) {
+            $id_provincia = $this->mapearProvincia($id_provincia);
+            $query = $query->where('dg.id_provincia', $id_provincia);
+        }
+
+        return Datatables::of($query->get())->make(true);
     }
 }

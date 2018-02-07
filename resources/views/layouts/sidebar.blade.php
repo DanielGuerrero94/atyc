@@ -89,14 +89,12 @@
             <span>Gestión de Acciones</span>
           </a>
         </li>      
-        @if(Auth::user()->isUec())
         <li>
           <a href="{{url("/efectores")}}">
             <i class="fa fa-h-square"></i>
             <span> Ver efectores</span>
           </a>
         </li>  
-        @endif  
         <li>
           <a href={{url("/materiales/etapa/4")}}>
             <i class="fa fa-book"></i>

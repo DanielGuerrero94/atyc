@@ -74,15 +74,15 @@
 			searching: false,
 			ajax : 'efectores/tabla',
 			columns: [
-			{ name: 'id_provincia', data: 'provincia', title: 'Provincia',searchable: false, orderable: false},
+			{ name: 'id_provincia', data: 'provincia', title: 'Provincia'},
 			{ data: 'siisa', title: 'Siisa'},
 			{ data: 'cuie', title: 'Cuie'},
-			{ data: 'nombre', title: 'Nombre',searchable: false, orderable: false},
-			{ data: 'denominacion_legal', title: 'Denominación legal',searchable: false, orderable: false},
-			{ name: 'id_departamento', data: 'departamento', title: 'Departamento',searchable: false, orderable: false},
-			{ name: 'id_localidad', data: 'localidad', title: 'Localidad',searchable: false, orderable: false},
-			{ data: 'codigo_postal', title: 'Codigo postal',searchable: false, orderable: false},
-			{ data: 'ciudad', title: 'Ciudad',searchable: false, orderable: false},
+			{ data: 'nombre', title: 'Nombre', orderable: false},
+			{ data: 'denominacion_legal', title: 'Denominación legal', orderable: false},
+			{ name: 'id_departamento', data: 'departamento', title: 'Departamento', orderable: false},
+			{ name: 'id_localidad', data: 'localidad', title: 'Localidad', orderable: false},
+			{ data: 'codigo_postal', title: 'Codigo postal', orderable: false},
+			{ data: 'ciudad', title: 'Ciudad', orderable: false},
 			{ 
 				data: 'acciones',
 				render: function ( data, type, row, meta ) {
@@ -94,14 +94,23 @@
 		});
 
 		function getFiltros(){
-			return $('#form-filtros :input')
+			filtros = $('#form-filtros :input')
 			.filter(function(i,e){return $(e).val() != ""})
 			.serializeArray()
 			.map(function(obj) { 
 				var r = {};
 				r[obj.name] = obj.value;
 				return r;
-			});
+			});/*
+
+			let select = $('#form-filtros select')
+			.filter(function(i,e){return $(e).val() != ""})
+			.serializeArray();
+
+			filtros = $.merge(filtros, select);*/
+
+			filtros.push({capacitados: $("#form-filtros #capacitados").data("check")});
+			return filtros;
 		}
 
 		$('#filtros').on('click','#filtrar',function () {
@@ -112,13 +121,13 @@
 				responsive: true,
 				searching: false,
 				ajax : {
-					url: 'efectores/filtrar',
+					url: "{{url('/efectores/filtrar')}}",
 					data: {
 						filtros: getFiltros()
 					}
 				},
 				columns: [
-				{ name: 'id_provincia', data: 'provincia', title: 'Provincia',searchable: false, orderable: false},
+				{ name: 'id_provincia', data: 'provincia', title: 'Provincia',searchable: false},
 				{ data: 'siisa', title: 'Siisa'},
 				{ data: 'cuie', title: 'Cuie'},
 				{ data: 'nombre', title: 'Nombre',searchable: false, orderable: false},
@@ -126,8 +135,14 @@
 				{ name: 'id_departamento', data: 'departamento', title: 'Departamento',searchable: false, orderable: false},
 				{ name: 'id_localidad', data: 'localidad', title: 'Localidad',searchable: false, orderable: false},
 				{ data: 'codigo_postal', title: 'Codigo postal',searchable: false, orderable: false},
-				{ data: 'ciudad', title: 'Ciudad',searchable: false, orderable: false},
-				{ data: 'acciones', title: 'Acciones', searchable: false, orderable: false}
+				{ data: 'ciudad', title: 'Ciudad',searchable: false},
+				{ 
+					data: 'acciones',
+					render: function ( data, type, row, meta ) {
+						return historialButton(row.cuie);
+					},
+					orderable: false
+				}
 				]
 			});
 		});	

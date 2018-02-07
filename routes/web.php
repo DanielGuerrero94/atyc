@@ -188,7 +188,9 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::post('encuestas/subida', 'Encuestas\EncuestasController@subida');
     Route::resource('encuestas', 'Encuestas\EncuestasController');
 
-    //Efectores informacion que pueden acceder las provincias.
+        //Efectores
+    Route::get('efectores', 'EfectoresController@get');
+    Route::get('efectores/tabla', 'EfectoresController@getTabla');
     Route::get('efectores/nombres', 'EfectoresController@getNombres');
     Route::get('efectores/cuies', 'EfectoresController@getCuiesTypeahead');
     Route::get('efectores/siisas', 'EfectoresController@getSiisas');
@@ -197,6 +199,12 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('efectores/cuies/typeahead', 'EfectoresController@cuiesTypeahead');
     Route::get('efectores/filtrar', 'EfectoresController@filtrar');
     Route::get('efectores/provincias/{id_provincia}/departamentos', 'EfectoresController@selectDepartamentos');
+    Route::get(
+        'efectores/provincias/{id_provincia}/departamentos/{id_departamento}/localidades',
+        'EfectoresController@selectLocalidades'
+    );
+    Route::get('efectores/{cuie}/cursos', 'EfectoresController@historialCursos');
+    Route::get('efectores/{cuie}/participantes', 'EfectoresController@getParticipantes');
 
     Route::get('provincias/localidades/typeahead', 'ProvinciasController@localidadesTypeahead');
 
@@ -256,11 +264,6 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         //Provincias
         Route::get('provincias', 'ProvinciasController@index');
         Route::get('provincias/{id}', 'ProvinciasController@show');
-
-        //Efectores
-        Route::get('efectores', 'EfectoresController@get');
-        Route::get('efectores/tabla', 'EfectoresController@getTabla');
-        Route::get('efectores/{cuie}/cursos', 'EfectoresController@historialCursos');
 
         //Logs
         Route::get('logs/mostrar/{date}','LogController@log');
