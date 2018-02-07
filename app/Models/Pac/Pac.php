@@ -2,8 +2,9 @@
 
 namespace App\Models\Pac;
 
-use Illuminate\Database\Eloquent\Model;
 use Auth;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pac extends Model
 {
