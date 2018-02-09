@@ -9,7 +9,6 @@
         <i class="fa fa-tachometer" aria-hidden="true"></i>
         <span>Dashboard</span>
       </a>
-
     </li>
     <li class="treeview" id="diagnostico">
       <a href="#">
@@ -260,6 +259,12 @@
             </li>
           </ul>
         </li>        
+        <li>
+          <a href="{{url('/dashboard/notificaciones')}}">
+            <i class="fa fa-tachometer" aria-hidden="true"></i>
+            <span>Historial</span>
+          </a>
+        </li>
       </ul>
     </li>
     <li>

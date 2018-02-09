@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Cursos\Curso;
+use Carbon\Carbon;
 use DB;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -349,5 +350,18 @@ class DashboardController extends Controller
                 '2' => $accion->cantidad,
             );
         })->toArray();
+    }
+
+    public function getHistorial()
+    {
+        $now = (new Carbon)->today();
+        $last_week = $now->subDays(7)->toDateTimeString();
+        //Por ahora busca el historial de una semana por default
+        $acciones = Curso::select('created_at', 'id_provincia', 'id_curso')
+        ->with('provincia')
+        ->whereDate('created_at', '>', $last_week)
+        ->orderBy('created_at', 'desc')
+        ->get();
+        return view('notificaciones.historial', compact('acciones'));
     }
 }

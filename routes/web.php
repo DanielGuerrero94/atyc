@@ -211,6 +211,8 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     //ADMIN
     Route::group(['middleware' => 'admin'], function () {
 
+        Route::get('dashboard/notificaciones', 'DashboardController@getHistorial');
+
         //Areas tematicas
         Route::get('areasTematicas', 'AreasTematicasController@getTodos');
         Route::get('areasTematicas/alta', 'AreasTematicasController@create');
