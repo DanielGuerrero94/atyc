@@ -38,10 +38,10 @@ class GetBackupCommand extends Command
      */
     public function handle()
     {
-	$tables = $this->allTables();
-	foreach ($tables as $table) {
-	    system("pg_dump -U daniel atyc -t {$table} --data-only --inserts > database/backups/{$table}.sql");
-	}        
+        $tables = $this->allTables();
+        foreach ($tables as $table) {
+            system("pg_dump -U daniel atyc -t {$table} --data-only --inserts > database/backups/{$table}.sql");
+        }
     }
 
     public function allTables()

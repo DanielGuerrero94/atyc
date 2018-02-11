@@ -96,7 +96,9 @@ class ProfesoresController extends AbmController
         logger('Quiere crear docente con: '.json_encode($request->all()));
         $v = Validator::make($request->all(), $this->rules);
         
-        if ($v->fails()) return response($v->errors(), 400);
+        if ($v->fails()) {
+            return response($v->errors(), 400);
+        }
 
         $docente = new Profesor();
         $docente = $docente->crear($request);

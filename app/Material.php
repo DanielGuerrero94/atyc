@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Material extends Model
 {
-	/**
+    /**
      * The table associated with the model.
      *
      * @var string
      */
-	protected $table = 'sistema.materiales';
+    protected $table = 'sistema.materiales';
 
     /**
      * The primary key for the model.

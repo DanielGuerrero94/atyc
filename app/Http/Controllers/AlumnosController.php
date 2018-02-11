@@ -547,10 +547,10 @@ class AlumnosController extends ModelController
             );
         }
 
-        return $this->toPdf($header,$data);
+        return $this->toPdf($header, $data);
     }
 
-    private function toPdf($header,$data)
+    private function toPdf($header, $data)
     {
         $column_size = [56,56,20,30,33];
         return Pdf::save($header, $column_size, 13, $data);

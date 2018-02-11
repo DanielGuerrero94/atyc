@@ -90,7 +90,7 @@ class FuncionesController extends Controller
     {
         //No es conveniente por ahora que puedan borrar
         //Funcion::findOrFail($id)->delete();
-        // return response('Deleted', 200);            
+        // return response('Deleted', 200);
         return response('DatabaseError', 403);
     }
 

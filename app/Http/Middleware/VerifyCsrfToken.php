@@ -14,7 +14,7 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-    	/*'areasTematicas/set'*/
+        /*'areasTematicas/set'*/
     ];
 
     /**
@@ -25,19 +25,19 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected function tokensMatch($request)
     {
-    	$sessionToken = $request->session()->token();
+        $sessionToken = $request->session()->token();
 
-    	$token = $request->input('_token') ?: $request->header('X-CSRF-TOKEN-ATYC');
+        $token = $request->input('_token') ?: $request->header('X-CSRF-TOKEN-ATYC');
 
-    	if (! $token && $header = $request->header('X-XSRF-TOKEN-ATYC')) {
-    		$token = $this->encrypter->decrypt($header);
-    	}
+        if (! $token && $header = $request->header('X-XSRF-TOKEN-ATYC')) {
+            $token = $this->encrypter->decrypt($header);
+        }
 
-    	if (! is_string($sessionToken) || ! is_string($token)) {
-    		return false;
-    	}
+        if (! is_string($sessionToken) || ! is_string($token)) {
+            return false;
+        }
 
-    	return hash_equals($sessionToken, $token);
+        return hash_equals($sessionToken, $token);
     }
 
     /**
@@ -49,15 +49,20 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected function addCookieToResponse($request, $response)
     {
-    	$config = config('session');
+        $config = config('session');
 
-    	$response->headers->setCookie(
-    		new Cookie(
-    			'XSRF-TOKEN-ATYC', $request->session()->token(), Carbon::now()->getTimestamp() + 60 * $config['lifetime'],
-    			$config['path'], $config['domain'], $config['secure'], false
-    		)
-    	);
+        $response->headers->setCookie(
+            new Cookie(
+                'XSRF-TOKEN-ATYC',
+                $request->session()->token(),
+                Carbon::now()->getTimestamp() + 60 * $config['lifetime'],
+                $config['path'],
+                $config['domain'],
+                $config['secure'],
+                false
+            )
+        );
 
-    	return $response;
+        return $response;
     }
 }

@@ -80,7 +80,7 @@ class DatabaseRestoreCommand extends Command
 
     public function restore()
     {
-        for ($step=0; !empty($this->restorePaths) && $step < 10; $step++) { 
+        for ($step=0; !empty($this->restorePaths) && $step < 10; $step++) {
             foreach ($this->restorePaths as $path) {
                 system($this->restoreCommand." -f {$path} -1 -q 1> /dev/null 2> /tmp/result.log");
                 $output = file_get_contents('/tmp/result.log');
@@ -92,7 +92,6 @@ class DatabaseRestoreCommand extends Command
                     $this->error[$step][] = $table;
                 }
             }
-            
         }
     }
 
@@ -106,7 +105,7 @@ class DatabaseRestoreCommand extends Command
             $path = $file->getRealPath();
             $name = $this->tableName($path);
             $paths[$name] = $path;
-        }   
+        }
         
         $this->restorePaths = $paths;
         return $this;
@@ -139,8 +138,8 @@ class DatabaseRestoreCommand extends Command
     public function formatOutput($array)
     {
         $output = [];
-        for ($i=0; $i < count($array); $i++) { 
-            for ($j=0; $j < count($array[$i]); $j++) { 
+        for ($i=0; $i < count($array); $i++) {
+            for ($j=0; $j < count($array[$i]); $j++) {
                 $output[] = [$array[$i][$j], $i];
             }
         }

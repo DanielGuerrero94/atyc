@@ -68,7 +68,7 @@ class ReportesController extends Controller
             $data = [];
             if (array_key_exists('desde', $r->filtros)) {
                 $desde = $r->filtros['desde'];
-                $hasta = $r->filtros['hasta'];                
+                $hasta = $r->filtros['hasta'];
                 $data = $query_default->get()
                     ->map(function ($value) use ($desde, $hasta) {
                         $value->periodo = "{$desde}-{$hasta}";
@@ -87,10 +87,10 @@ class ReportesController extends Controller
                 }
             }
         } elseif ($r->id_reporte == 4) {
-	    $data = $query_default->get();		
-	} else {
+            $data = $query_default->get();
+        } else {
             $data = DB::select($query_default);
-        } 
+        }
 
         return Datatables::of(collect($data))->make(true);
     }
@@ -123,7 +123,7 @@ class ReportesController extends Controller
         } elseif ($id_reporte == '6') {
             if ($id_periodo == '0') {
                 $periodos = Periodo::all();
-                //Armo todas las queries en un array                
+                //Armo todas las queries en un array
                 foreach ($periodos as $periodo) {
                     $query[] = [
                         'periodo' => $periodo,
@@ -163,7 +163,7 @@ class ReportesController extends Controller
             $data = [];
             if (array_key_exists('desde', $r->filtros)) {
                 $desde = $r->filtros['desde'];
-                $hasta = $r->filtros['hasta'];                
+                $hasta = $r->filtros['hasta'];
                 $data = $query_default->get()
                     ->map(function ($value) use ($desde, $hasta) {
                         $value->periodo = "{$desde}-{$hasta}";
@@ -182,10 +182,10 @@ class ReportesController extends Controller
                 }
             }
         } elseif ($r->id_reporte == 4) {
-	    $data = $query_default->get();		
-	} else {
+            $data = $query_default->get();
+        } else {
             $data = DB::select($query_default);
-        }         
+        }
 
         $datos = ['resultados' => $data,'nombre' => $excel_reporte];
         $path = $nombre_reporte."_".date("Y-m-d_H:i:s");
@@ -227,17 +227,17 @@ class ReportesController extends Controller
     public function reporte4($id_provincia, $id_periodo)
     {
         $query = DB::table("efectores.mv_reporte_4 as R")
-	->join('sistema.provincias as P', "P.id_provincia", '=', "R.id_provincia")
-	->join('sistema.periodos as PE', "PE.id_periodo", '=', DB::raw("{$id_periodo}"))
+        ->join('sistema.provincias as P', "P.id_provincia", '=', "R.id_provincia")
+        ->join('sistema.periodos as PE', "PE.id_periodo", '=', DB::raw("{$id_periodo}"))
         ->select('R.id_provincia', 'R.desde', 'R.hasta', 'R.capacitados', 'R.total', 'R.porcentaje', 'P.nombre as provincia', 'PE.nombre as periodo')
         ->whereColumn('R.desde', 'PE.desde')
         ->whereColumn('R.hasta', 'PE.hasta');
 
-	if ($id_provincia != 0) {
+        if ($id_provincia != 0) {
             $query = $query->where("R.id_provincia", $id_provincia);
         }
 
-	return $query;
+        return $query;
     }
 
     public function reporte5($id_provincia = '0', $desde = '2014-01-01', $hasta = '2014-12-31')

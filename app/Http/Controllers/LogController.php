@@ -120,7 +120,7 @@ class LogController extends Controller
 
         while (!feof($f)) {
             $line = fgets($f);
-            array_push($requests,$line);
+            array_push($requests, $line);
         }
         return $requests;
     }

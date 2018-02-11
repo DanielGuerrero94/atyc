@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Etapa extends Model
 {
-	/**
+    /**
      * The table associated with the model.
      *
      * @var string
@@ -18,7 +18,7 @@ class Etapa extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'id_etapa';    
+    protected $primaryKey = 'id_etapa';
 
     /**
      * Indicates if the model should be timestamped.

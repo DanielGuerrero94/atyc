@@ -197,16 +197,16 @@ class CursosController extends AbmController
 
         if ($request->has('alumnos')) {
             $curso->alumnos()->sync(explode(',', $request->get('alumnos')));
-        } else {            
+        } else {
             logger("Se deja el curso sin participantes");
-            $curso->alumnos()->detach();                
+            $curso->alumnos()->detach();
         }
 
         if ($request->has('profesores')) {
-            $curso->profesores()->sync(explode(',', $request->get('profesores')));              
-        } else {            
+            $curso->profesores()->sync(explode(',', $request->get('profesores')));
+        } else {
             logger("Se deja el curso sin docentes");
-            $curso->profesores()->detach();                
+            $curso->profesores()->detach();
         }
         
         return $curso->update($request->all());
@@ -437,7 +437,7 @@ class CursosController extends AbmController
             return $value != "" && $value != "0";
         });
 
-	logger()->warning(json_encode($filtered));
+        logger()->warning(json_encode($filtered));
 
         $query = Curso::with('provincia', 'areaTematica', 'lineaEstrategica')
         //->withCount('alumnos')
