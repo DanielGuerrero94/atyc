@@ -95,6 +95,7 @@ a:active {
 
 .btn-square {
   padding: 10px 10px 10px 10px;
+  font-family: 'Helvetica Neue';
 }
 
 .btn-square:hover {

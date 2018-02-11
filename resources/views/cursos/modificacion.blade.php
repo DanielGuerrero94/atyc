@@ -141,7 +141,7 @@
             </div> 
           </div>
           <div class="box-body">
-            <a href="{{url('cursos')}}">
+            <a href="{{url()->previous()}}">
               <div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i> Volver</div>
             </a>
             <div class="btn btn-primary pull-right" id="modificar" title="Modificar"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</div>

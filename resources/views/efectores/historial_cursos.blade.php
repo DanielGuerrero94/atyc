@@ -142,7 +142,7 @@
 		<div class="col-xs-6 col-sm-6 col-md-4 col-lg-6">
 			<div class="box box-info">
 				<div class="box-header">
-					<h3 class="box-tittle" style="margin-top: 5px;"> Historial</h3>
+					<h3 class="box-tittle" style="margin-top: 5px;"> Historial de acciones</h3>
 				</div>
 				<div class="box-body">				
 					<div id="scroll-historial-div">												
@@ -205,12 +205,12 @@
 	$(document).ready(function(){
 
 		$('#scroll-historial-div').slimScroll({
-			height: '430px'
+			height: '410px'
 		});
 
 		$('#participantes-table').DataTable({
 			destroy: true,
-			ajax : "{{'/efectores'}}/" + "{{$efector->cuie}}" + "/participantes",
+			ajax : "{{url('/efectores')}}/" + "{{$efector->cuie}}" + "/participantes",
 			columns: [
 			{ title: 'Nombres', data: 'nombres'},
 			{ title: 'Apellidos', data: 'apellidos'},

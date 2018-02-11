@@ -1,23 +1,25 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="row">
+<div class="container-fluid">
 	<div id="scroll-historial-div">												
 		@if( count($acciones))
 		<ul class="timeline">
-			@foreach ($acciones as $accion)
+        @foreach ($acciones as $accion)
+            @if(true)
 			<li class="time-label">
-				<span class="bg-blue">{{ $accion->created_at }}</span>
-			</li>
-			<li>
-				<i class="fa fa-graduation-cap text-blue"></i>
-				<div class="timeline-item">
-					<div class="timeline-body" style="background-color: #D8E4E8;">
-						<a href="{{url('/cursos').'/'.$curso->id_curso}}" class="btn btn-square pull-right" title="Ver en detalle">
-							<i class="fa text-primary fa-lg"> Ver en detalle</i>
-						</a>
-						<b>{{ $accion->provincia->nombre }} creo </b>
-						<b>{{ $accion->nombre }}</b>
+				<span class="bg-blue">{{ (new DateTime($accion->created_at))->format('y-m-d') }}</span>
+            </li>
+            @endif
+            <li>
+<!--<a href="{{url('/cursos').'/'.$accion->id_curso}}" title="Ver en detalle">-->
+                            <i class="fa fa-graduation-cap text-blue" data-id="{{$accion->id_curso}}"></i>
+<!--</a>-->
+                <div class="timeline-item">
+                    <div class="timeline-body" style="background-color: #D8E4E8;">
+	<span>{{ (new DateTime($accion->created_at))->format('H:i:s') }}</span>
+						<b> | {{ $accion->provincia->nombre }} creo </b>
+						<b>" {{ $accion->nombre }} "</b>
 						<br>
 					</div>
 				</div>
@@ -43,8 +45,12 @@
 	$(document).ready(function(){
 
 		$('#scroll-historial-div').slimScroll({
-			height: '430px'
-		});
+			height: '100%'
+    });
+
+        $(".container-fluid").on("click", ".fa-graduation-cap", function () {
+            location.href= "{{url('/cursos').'/'}}" + $(this).data('id');
+        });
 
 	});
 </script>

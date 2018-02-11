@@ -3,15 +3,14 @@
 <div class="container-fluid">	
 	<div class="col-sm-12">
 		<div class="box box-success ">
-			<div class="box-header with-border">
-				<h2 class="box-title">Participante</h2>
-				<!-- <div class="box-tools pull-right">
-					<button type="button" class="btn btn-box-tool btn-default" title="Datos del participante y las acciones que realizo">
-						<a href="{{url('cursos') . '/' . $alumno->id_alumno . '/excel'}}">
-							<i class="fa fa-file-excel-o text-success" aria-hidden="true"> Descargar</i> 
-						</a>
-					</button>
-				</div> -->
+            <div class="box-header with-border">
+<a href="{{url()->previous()}}" class="btn btn-square pull-left" id="volver" title="Volver"><i class="fa fa-arrow-left fa-lg text-warning" aria-hidden="true"></i></a>
+<a class="btn btn-square pull-left" id="modificar" title="Guardar modificaciones" data-id="{{$alumno->id_alumno}}">
+<i class="fa fa-floppy-o text-success fa-lg" aria-hidden="true"></i>
+</a>						
+<h3 class="box-title" style="font-weight: bold;display: grid;text-align: center;margin-top: 13px;">
+Participante
+</h3>
 			</div>
 			<div class="box-body">
 				<form class="form form-modificacion" role="form">
@@ -254,12 +253,8 @@
 												</div>
 											</div>
 										</form>
-									</div>
-									<div class="box-footer">
-										<a href="{{url()->previous()}}"><button class="btn btn-warning" id="volver" title="Volver a la lista"><i class="fa fa-undo" aria-hidden="true"></i> Volver</button></a>
-										<button class="btn btn-primary pull-right" id="modificar" title="Guardar modificaciones" data-id="{{$alumno->id_alumno}}"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</button>						
-									</div>
-								</div> 
+                                    </div>
+                                </div> 
 							</div>
 							<div class="col-sm-12">
 								<div class="box box-info">
