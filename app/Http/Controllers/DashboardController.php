@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cursos\Curso;
+use App\Alumno;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -357,11 +358,28 @@ class DashboardController extends Controller
         $now = (new Carbon)->today();
         $last_week = $now->subDays(7)->toDateTimeString();
         //Por ahora busca el historial de una semana por default
-        $acciones = Curso::select('created_at', 'id_provincia', 'id_curso')
+        $acciones = Curso::select('id_provincia', 'id_curso', 'nombre', 'created_at', 'fecha')
+        ->with('provincia')
+        ->whereDate('created_at', '>', $last_week)
+        ->orderBy('created_at', 'desc')
+        ->orderBy('id_provincia')
+        ->get();
+
+        $participantes = Alumno::select('id_provincia', 'id_alumno', 'nombres', 'apellidos', 'created_at')
+        ->with('provincia')
+        ->whereDate('created_at', '>', $last_week)
+        ->orderBy('created_at', 'desc')
+        ->orderBy('id_provincia')
+        ->get();
+
+/* Tengo que agregar el id provincia a los docentes haciendo un update en base a la primer accion en la que estuvieron
+        $docentes = Profesor::select('id_provincia', 'id_profesor', 'nombre', 'created_at')
         ->with('provincia')
         ->whereDate('created_at', '>', $last_week)
         ->orderBy('created_at', 'desc')
         ->get();
-        return view('notificaciones.historial', compact('acciones'));
+ */
+
+        return view('notificaciones.historial', compact('acciones', 'participantes'));
     }
 }
