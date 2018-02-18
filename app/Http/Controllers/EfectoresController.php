@@ -222,11 +222,12 @@ class EfectoresController extends Controller
         $query = DB::table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'e.id_efector', '=', 'dg.id_efector')
         ->select('e.nombre')
-        ->whereRaw("efectores.efectores.nombre ~* '{$r->q}'")
-        ->pluck('e.nombre')
+        ->whereRaw("e.nombre ~* '{$r->q}'")
         ->orderBy('e.nombre');
 
-        return $this->segunProvincia($query, $r->id_provincia)->all();
+        $query = $this->segunProvincia($query, $r->id_provincia);
+
+        return $query->pluck('e.nombre');
     }
 
     public function getCuies(Request $r)
@@ -234,11 +235,12 @@ class EfectoresController extends Controller
         $query = DB::table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'e.id_efector', '=', 'dg.id_efector')
         ->select('e.cuie')
-        ->whereRaw("efectores.efectores.cuie ~* '{$r->q}'")
-        ->pluck('e.cuie')
+        ->whereRaw("e.cuie ~* '{$r->q}'")
         ->orderBy('e.cuie');
+        
+        $query = $this->segunProvincia($query, $r->id_provincia);
 
-        return $this->segunProvincia($query, $r->id_provincia)->all();
+        return $query->pluck('e.cuie');
     }
 
     public function mapearProvincia($id_provincia)
@@ -250,7 +252,7 @@ class EfectoresController extends Controller
     {
         if ($id_provincia != 0) {
             $id_provincia = $this->mapearProvincia($id_provincia);
-            $query = $query->where('p.id_provincia', $id_provincia);
+            $query = $query->where('dg.id_provincia', $id_provincia);
         }
 
         return $query;
@@ -260,7 +262,7 @@ class EfectoresController extends Controller
     {
         $efector = $this->queryLogica($r, collect(['capacitados' => true]));
 
-        if (($id_provincia = Auth::user()->id_provincia) != 25) {
+        if (($id_provincia = Auth::user()->id_provincia) == 25) {
             $id_provincia = $this->mapearProvincia($id_provincia);
             $efector = $efector->where('dg.id_provincia', $id_provincia);
         }

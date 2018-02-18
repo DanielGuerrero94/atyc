@@ -40,7 +40,7 @@ class GetBackupCommand extends Command
     {
         $tables = $this->allTables();
         foreach ($tables as $table) {
-            system("pg_dump -U daniel atyc -t {$table} --data-only --inserts > database/backups/{$table}.sql");
+            system("pg_dump -U postgres atyc -h 192.6.0.66 -t {$table} --data-only --inserts > database/backups/{$table}.sql");
         }
     }
 
