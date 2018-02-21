@@ -5,6 +5,7 @@
       <li id="tab-pauta"><a href="#pautas" data-toggle="tab">Pautas</a></li>
       <li id="tab-destinatario"><a href="#destinatarios" data-toggle="tab">Destinatarios</a></li>      
       <li id="tab-componenteCa"><a href="#componentesCa" data-toggle="tab">Componentes CA</a></li>
+      <li id="tab-areaTematica"><a href="#areasTematicas" data-toggle="tab">Areas Tematicas</a></li>
       <li class="navbar-right"><div class="btn btn-success store">Guardar</div></li>
     </ul>
     <div class="tab-content">
@@ -87,6 +88,11 @@
             @include('componentesCa.asignacion')
 
       </div>
+            <div class="tab-pane" id="areasTematicas">
+   
+            @include('areasTematicas.asignacion')
+
+      </div>
     </div> 
   </div>      
 </form>
@@ -135,11 +141,17 @@
       });
     }
 
+    function getAreasTematicasSelected() {
+      return $('#form-alta #areasTematicas-de-la-pac .fa-minus').map(function(index, val) {
+        return $(val).data('id');
+      });
+    }    
+
     function getSelected() {
 
       var componentesCa = getComponentesCaSelected();
       var pautas = getPautasSelected();
-      
+      var areasTematicas = getAreasTematicasSelected();
       var destinatarios = getDestinatariosSelected();
       return [
       { 
@@ -149,6 +161,10 @@
       { 
         name: 'destinatarios',
         value: destinatarios.toArray()
+      },
+      { 
+        name: 'areasTematicas',
+        value: areasTematicas.toArray()
       },
       { 
         name: 'componentesCa',
@@ -221,3 +237,6 @@
 
 {{-- Script para asignacion de destinatarios --}}
 @include('destinatarios.asignacion-script')
+
+{{-- Script para asignacion de areas tematicas --}}
+@include('areasTematicas.asignacion-script')

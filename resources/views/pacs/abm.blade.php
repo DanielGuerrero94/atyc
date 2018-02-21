@@ -12,6 +12,7 @@
 		<table id="abm-table" class="table table-hover">
 			<thead>
 				<tr>
+					<th></th>
 					<th>Nombre de la accion</th>
 					<th>1er. Trimestre</th>
 					<th>2do. Trimestre</th>

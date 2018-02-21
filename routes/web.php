@@ -199,9 +199,10 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         //Areas tematicas
         Route::get('areasTematicas', 'AreasTematicasController@getTodos');
         Route::get('areasTematicas/alta', 'AreasTematicasController@create');
-        Route::get('areasTematicasTabla', 'AreasTematicasController@getTabla');
-        Route::get('areasTematicas/{id}', 'AreasTematicasController@edit');
+        Route::get('areasTematicas/Tabla', 'AreasTematicasController@getTabla');
 
+        Route::get('areasTematicas/{id}', 'AreasTematicasController@edit');
+        Route::get('areasTematicas/typeahead', 'AreasTematicasController@getTypeahead');
         Route::post('areasTematicas', 'AreasTematicasController@store');
 
         Route::put('areasTematicas/{id}', 'AreasTematicasController@update');
@@ -273,7 +274,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         //ComponentesCa
         Route::get('componentesCa', 'ComponentesCaController@getTodos');
         Route::get('componentesCa/alta', 'ComponentesCaController@create');
-        Route::get('componentesCaTabla', 'ComponentesCaController@getTabla');
+        Route::get('componentesCa/Tabla', 'ComponentesCaController@getTabla');
         Route::get('componentesCa/typeahead', 'ComponentesCaController@getTypeahead');
         Route::get('componentesCa/{id}', 'ComponentesCaController@edit');
 
