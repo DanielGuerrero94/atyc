@@ -46,8 +46,10 @@
 									<td>{{$profesor->apellidos}}</td>
 									<td>{{$profesor->nro_doc}}</td>
 									<td>
-										<div class="btn btn-xs btn-info"><a href="{{url('/profesores/'.$profesor->id_profesor)}}"><i class="fa fa-search" data-id="{{$profesor->id_profesor}}"></i></a></div>
-										<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
+                                        <div class="btn btn-xs btn-info"><a href="{{url('/profesores/'.$profesor->id_profesor)}}"><i class="fa fa-search" data-id="{{$profesor->id_profesor}}"></i></a></div>
+    @if(!isset($disabled))
+                                        <div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
+@endif
 									</td>
 								</tr>
 								@endforeach

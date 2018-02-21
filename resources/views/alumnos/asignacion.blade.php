@@ -47,7 +47,9 @@
 									<td>{{$alumno->nro_doc}}</td>
 									<td>
 										<div class="btn btn-xs btn-info"><a href="{{url('alumnos/'.$alumno->id_alumno)}}"><i class="fa fa-search" data-id="{{$alumno->id_alumno}}"></i></a></div>
-										<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
+    @if(!isset($disabled))
+                                    <div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
+        @endif
 									</td>
 								</tr>
 								@endforeach

@@ -162,7 +162,14 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    console.log(getInput());
+      console.log(getInput());
+
+    @if(isset($disabled)) 
+		$('.box input').each(function (k,v) {$(v).attr('disabled', true);});
+		$('.box select').each(function (k,v) {$(v).attr('disabled', true);});
+		$('.box-body #modificar').hide();
+	@endif
+
 
     //No se porque estoy teniendo que inicializarlo aca si ya se deberia haber inicializado en el layout de adminlte
     $('.datepicker').datepicker({

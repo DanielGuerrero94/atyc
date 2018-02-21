@@ -34,7 +34,7 @@
 		@include('profesores.tutorial-base')
 
 		function seeButton(id_profesor) {
-			return '<a href="{{url("/profesores")}}/' + id_profesor + '/see" data-id="' + id_profesor + '" class="btn btn-circle ver" title="Ver"><i class="fa fa-eye text-info fa-lg"></i></a>';
+			return '<a href="{{url("/profesores")}}/' + id_profesor + '/see" data-id="' + id_profesor + '" class="btn btn-circle ver" title="Ver"><i class="fa fa-search text-info fa-lg"></i></a>';
 		}
 
 		function editButton(id_profesor) {

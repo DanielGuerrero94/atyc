@@ -24,6 +24,10 @@
 
 	function participantesLabel(cantidad) {
 		return '<small class="label bg-blue" title="' + cantidad + ' Participantes"><i class="fa fa-users"> ' + cantidad + '</i></small>';
+    }
+
+    function seeButton(id_curso) {
+	    return '<a href="{{url("/cursos")}}/' + id_curso + '/see" data-id="' + id_curso + '" class="btn btn-circle ver" title="Ver"><i class="fa fa-search text-info fa-lg"></i></a>';
 	}
 
 	function editButton(id_curso) {
@@ -57,7 +61,8 @@
 			{ 
 				data: 'acciones',
 				render: function ( data, type, row, meta ) {
-					return /*participantesLabel(row.alumnos_count) + */editButton(row.id_curso) + deleteButton(row.id_curso);
+                    //return /*participantesLabel(row.alumnos_count) + */
+                    return seeButton(row.id_curso) + editButton(row.id_curso) + deleteButton(row.id_curso);
 					// return data;
 				},
 				orderable: false
@@ -166,8 +171,8 @@
 				{ title: 'Jurisdiccion', data: 'provincia.nombre', name: 'id_provincia'},
 				{ 
 					data: 'acciones',
-					render: function ( data, type, row, meta ) {
-						return /*participantesLabel(row.alumnos_count) + */editButton(row.id_curso) + deleteButton(row.id_curso);
+                        render: function ( data, type, row, meta ) {
+                        return seeButton(row.id_curso) + editButton(row.id_curso) + deleteButton(row.id_curso);
 						// return data;
 					},
 					orderable: false

@@ -135,17 +135,7 @@ class CursosController extends AbmController
      */
     public function show($id)
     {
-        $curso = Curso::select(
-            'id_curso',
-            'nombre',
-            'edicion',
-            'duracion',
-            'fecha',
-            'id_area_tematica',
-            'id_linea_estrategica',
-            'id_provincia'
-        )
-        ->with([
+        $curso = Curso::with([
             'alumnos' => function ($query) {
                 return $query->select(
                     'alumnos.id_alumno',
@@ -613,5 +603,16 @@ class CursosController extends AbmController
         })
         ->store('xls');
         return response()->download(storage_path("exports/{$path}.xls"))->deleteFileAfterSend(true);
+    }
+
+    /**
+     * Show the form for seeing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function see($id)
+    {
+        return view('cursos/modificacion', array_merge($this->show($id), $this->getSelectOptions(), ['disabled' => true]));
     }
 }

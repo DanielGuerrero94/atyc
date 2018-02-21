@@ -173,8 +173,9 @@ class Curso extends Model
      *
      * @var string
      */
-    public function getDuracionAttribute($value)
+    /*public function getDuracionAttribute($value)
     {
         return $value . " hs";
     }
+     */
 }
