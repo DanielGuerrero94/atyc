@@ -166,7 +166,7 @@
         </li>
       </ul>
     </li>             
-    @if(Auth::user()->id_provincia == 25)
+    @if(Auth::user()->tieneRol('admin'))
     <li class="header text-center">
       <span class="text-danger">ADMIN</span>
     </li>
@@ -259,20 +259,16 @@
             </li>
           </ul>
         </li>        
-        <li>
-          <a href="{{url('/dashboard/notificaciones')}}">
-            <i class="fa fa-tachometer" aria-hidden="true"></i>
-            <span>Historial</span>
-          </a>
-        </li>
-      </ul>
+        </ul>
     </li>
     <li>
       <a href="{{url("/efectores")}}">
         <i class="fa fa-h-square"></i>
         <span>Efectores</span>
       </a>
-    </li>      
+    </li>
+    @endif
+    @if(Auth::user()->tieneRol('dev'))
     <li class="header text-center">
       <span class="text-success">DESARROLLO</span>
     </li>
@@ -363,16 +359,10 @@
     </a>
     <ul class="treeview-menu">
       <li>
-        <a href="#">
-          <span class="pull-right-container">
-            <small class="badge pull-right bg-green">test</small>
-          </span>
-        </a>
-      </li>
-      <li>
         <a href="{{url("/encuestas/g_plannacer")}}">
           <i class="fa fa-circle-o"></i>
           <span>g_plannacer</span>
+          <span class="label label-success pull-right">test</span>
         </a>
       </li>
       <li>
@@ -394,8 +384,30 @@
         </a>
       </li>
     </ul>
-  </li>             
-
+  </li>
+  <li>
+  <a href="{{url('/dashboard/notificaciones')}}">
+    <i class="fa fa-tachometer" aria-hidden="true"></i>
+    <span>Historial</span>
+</a>
+</li>
+<li class="treeview">
+    <a href="#">
+      <i class="fa fa-lightbulb-o" aria-hidden="true" style="color: #ffff53"></i>
+      <span>Ideas</span>
+      <span class="pull-right">
+        <i class="fa fa-angle-down"></i>
+      </span>
+    </a>
+    <ul class="treeview-menu">
+      <li>
+        <a href="{{url("/ideas/historial-completo")}}">
+          <i class="fa fa-circle-o"></i>
+          <span>Historial Completo</span>
+        </a>
+      </li>
+   </ul>
+      </li>
   @endif             
   @endif
 </ul>

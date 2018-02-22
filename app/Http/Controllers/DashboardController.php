@@ -353,33 +353,54 @@ class DashboardController extends Controller
         })->toArray();
     }
 
-    public function getHistorial()
+    public function getHistorial(Request $request)
     {
         $now = (new Carbon)->today();
-        $last_week = $now->subDays(7)->toDateTimeString();
+        $antiguedad = $now->subDays($request->input('periodo', 30))->toDateTimeString();
         //Por ahora busca el historial de una semana por default
-        $acciones = Curso::select('id_provincia', 'id_curso', 'nombre', 'created_at', 'fecha')
-        ->with('provincia')
-        ->whereDate('created_at', '>', $last_week)
-        ->orderBy('created_at', 'desc')
-        ->orderBy('id_provincia')
-        ->get();
 
-        $participantes = Alumno::select('id_provincia', 'id_alumno', 'nombres', 'apellidos', 'created_at')
-        ->with('provincia')
-        ->whereDate('created_at', '>', $last_week)
-        ->orderBy('created_at', 'desc')
-        ->orderBy('id_provincia')
-        ->get();
+        if ($request->input('categoria', 'acciones') == 'acciones') {
+            $acciones = Curso::select('id_provincia', 'id_curso', 'nombre', 'created_at', 'fecha', 'edicion')
+            ->with('provincia')
+            ->whereDate('created_at', '>', $antiguedad)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id_provincia');
 
-/* Tengo que agregar el id provincia a los docentes haciendo un update en base a la primer accion en la que estuvieron
-        $docentes = Profesor::select('id_provincia', 'id_profesor', 'nombre', 'created_at')
-        ->with('provincia')
-        ->whereDate('created_at', '>', $last_week)
-        ->orderBy('created_at', 'desc')
-        ->get();
- */
+            if ($request->has('provincia')) {
+                $acciones = $acciones->where('id_provincia', $request->id_provincia);
+            }
+            
+            $acciones = $acciones->get();
+        }
+
+        if ($request->input('categoria', 'participantes') == 'participantes') {    
+            $participantes = Alumno::select('id_provincia', 'id_alumno', 'nombres', 'apellidos', 'created_at')
+            ->with('provincia')
+            ->whereDate('created_at', '>', $antiguedad)
+            ->orderBy('created_at', 'desc')
+            ->orderBy('id_provincia');
+
+            if ($request->has('provincia')) {
+                $participantes = $participantes->where('id_provincia', $request->id_provincia);
+            }   
+
+            $participantes = $participantes->get();
+        }
+
+        /* 
+           Tengo que agregar el id provincia a los docentes haciendo un update en base a la primer accion en la que estuvieron
+           $docentes = Profesor::select('id_provincia', 'id_profesor', 'nombre', 'created_at')
+           ->with('provincia')
+           ->whereDate('created_at', '>', $last_week)
+           ->orderBy('created_at', 'desc')
+           ->get();
+         */
 
         return view('notificaciones.historial', compact('acciones', 'participantes'));
+    }
+
+    public function getHistorialCompleto()
+    {
+        return view('ideas.historial-completo');
     }
 }

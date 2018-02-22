@@ -168,14 +168,16 @@
         @include('layouts.sidebar')
       </aside>
       <div class="content-wrapper">      
-        <section class="content" style="padding: 5px 5px 0px 5px;">          
+	<section class="content" style="padding: 5px 5px 0px 5px;">          
+          @include('layouts.testing')
           @include('layouts.header')
           @yield('content')
         </section>
       </div>
       @else
       <div class="content-wrapper" style="margin-left:0em;">      
-        <section class="content">
+	<section class="content">
+	      @include('layouts.testing')
           @yield('content')
         </section>
       </div>
