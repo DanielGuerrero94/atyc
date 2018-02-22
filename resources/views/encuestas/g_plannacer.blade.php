@@ -1,19 +1,5 @@
 @extends('layouts.adminlte')
 @section('content')
-<div class="row">
-	<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 col-xs-offset-3 col-sm-offset-3 col-md-offset-3 col-lg-offset-3">	
-		<div class="alert alert-warning alert-dismissible">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-			<h4 style="color: rgb(0,0,0);"><i class="icon fa fa-warning"></i> Aclaración</h4>
-			<span style="color: rgb(0,0,0);">
-				Estos graficos estan basados en todos los tipos de pregunta que se reportaban al g_plannacer.
-				<br>
-				Estos mismos graficos pero con puntaje del 0 al 10 se puede hacer para el excel importado desde el google form.
-				<br>
-				Mas adelante hare filtros por provincia, periodo, tipologia de accion y tematica</span>
-			</div>
-		</div>
-	</div>
 	<div class="row">		
 		<div class="box box-primary">
 			<div class="box-body">
@@ -43,12 +29,16 @@
 				</div>
 			</div>
 		</div>
-	</div>
 	@endsection
 	@section('script')
 	<script type="text/javascript">	
 
-		$(document).ready(function($) {
+$(document).ready(function($) {
+
+    $(".content-header .fa-thumb-tack").parent().on("click", function () {
+        alert('asd');
+    });
+
 
 			highcharts_init_options();		
 
@@ -170,6 +160,9 @@
 				}
 			});		
 		}	
-	</script>
+    </script>
+<script type="text/javascript">
+alert("Estos graficos estan basados en todos los tipos de pregunta que se reportaban al g_plannacer. Estos mismos graficos pero con puntaje del 0 al 10 se puede hacer para el excel importado desde el google form. Mas adelante hare filtros por provincia, periodo, tipologia de accion y tematica");
+</script>
 	@endsection
 
