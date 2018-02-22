@@ -163,7 +163,7 @@ class PacsController extends Controller
      */
     public function getTabla(Request $request)
     {
-        $query = Pac::all();
+        $query = Pac::with(['pautas','componentesCa','destinatarios'])->get();
 
         return $this->toDatatable($request, $query);
     }

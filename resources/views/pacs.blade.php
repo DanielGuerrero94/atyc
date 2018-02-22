@@ -18,9 +18,28 @@
 <script type="text/javascript">
 	
 	function format ( d ) {
-    return 'Full name: <br>'+
-        'Salary: <br>'+
-        'The child row can contain any data you wish, including links, images, inner tables etc.';
+	    var sum="";
+	    var ddata=d.pautas;
+	    console.log(d);
+	    sum = 'PAUTAS';
+	    ddata.forEach(function(item)  {
+	    	console.log(item.nombre);
+	  		sum += '<br>'+item.nombre;
+		});
+
+	    sum += '<br>DESTINATARIOS';
+	    d.destinatarios.forEach(function(item)  {
+	    	console.log(item.nombre);
+	  		sum += '<br>'+item.nombre;
+		});
+
+	    sum += '<br>COMPONENTES CA';
+	    d.componentes_ca.forEach(function(item)  {
+	    	console.log(item.nombre);
+	  		sum += '<br>'+item.nombre;
+		});
+
+	    return sum;
 	}
 
 	$(document).ready(function(){
