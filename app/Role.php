@@ -38,9 +38,9 @@ class Role extends Model
     {
         return $this->belongsToMany(
             'App\User',
-            'public.users',
-            'id_role',
-            'id_user'
+            'public.users_roles',
+            'id_user',
+            'id_role'
         )
             ->withTimestamps();
     }

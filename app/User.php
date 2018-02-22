@@ -4,12 +4,14 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+ use Illuminate\Database\Eloquent\SoftDeletes;
 use DB;
 use Auth;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -26,8 +28,15 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'pivot'
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 
     public function provincia()
     {
@@ -38,9 +47,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(
             'App\Role',
-            'public.roles',
-            'id_user',
-            'id_role'
+            'public.users_roles',
+            'id_role',
+            'id_user'
         )
             ->withTimestamps();
     }
@@ -48,5 +57,16 @@ class User extends Authenticatable
     public function isUEC()
     {
         return $this->id_provincia == 25;
+    }
+
+    public function tieneRol(string $role) {
+        return $this->whereHas('roles', function ($query) use ($role) {
+            $query->where('name', $role);
+        })->count() > 0;
+    }
+
+    public function darDeAlta() {
+        $this->deleted_at = null;
+        $this->save();
     }
 }

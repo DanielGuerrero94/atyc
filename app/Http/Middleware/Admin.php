@@ -35,8 +35,8 @@ class Admin
     public function handle($request, Closure $next)
     {
 
-        if ($this->auth->user()->id_provincia != 25) {
-                return redirect('/dashboard');
+        if (!$this->auth->user()->tieneRol('admin')) {
+            return redirect('/dashboard');
         }
 
         return $next($request);
