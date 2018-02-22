@@ -35,6 +35,13 @@ class AccionesControllerTest extends TestCase
         ->all();
     }
 
+    public function fakerRequestProvider()
+    {
+        return factory(Curso::class, 5)->make()->map(function ($model) {
+            return new Request($model->toArray());
+        });
+    }
+
     /**
      * Return date with the correct format. "16/10/2013"
      *
@@ -42,8 +49,7 @@ class AccionesControllerTest extends TestCase
      */
     public function showCorrectDateFormat()
     {
-        
-        $curso = factory(Curso::class)->create();
+        $curso = factory(Curso::class)->states('completo')->create();
         $curso = $this->controller->show($curso->id_curso);
         $curso = json_decode($curso['curso'], true);
         $fecha = $curso['fecha'];
@@ -54,14 +60,18 @@ class AccionesControllerTest extends TestCase
     /**
      * Store model with request
      *
-     * @param Request $request
-     * @dataProvider requestProvider
      * @test
+     * @return void
      */
-    public function store(Request $request)
+    public function create()
     {
-        $id = $this->controller->store($request)->id_curso;
-        $this->assertTrue($this->model->find($id)->exists, 'No se persistio');
+        $requests = factory(Curso::class, 2)->states('completo')->make()->map(function ($model) {
+            return new Request($model->toArray());
+        });
+        foreach ($requests as $request) {
+            $accion = $this->controller->store($request);
+            $this->assertNotNull($accion, json_encode($accion));
+        }
     }
 
     /**

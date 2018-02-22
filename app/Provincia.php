@@ -19,7 +19,7 @@ class Provincia extends Model
      * @var string
      */
     protected $primaryKey = 'id_provincia';
-
+    
     /**
      * Indicates if the model should be timestamped.
      *

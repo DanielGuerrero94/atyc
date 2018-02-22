@@ -158,11 +158,27 @@ $factory->define(App\Models\Cursos\Curso::class, function (Faker\Generator $fake
     ->first()
     ->id_linea_estrategica;
 
+    $id_provincia = App\Provincia::select('id_provincia')
+    ->pluck('id_provincia')
+    ->shuffle()
+    ->first();
+
+    $id_provincia = $id_provincia?:factory(App\Provincia::class, 10)
+    ->create()
+    ->first()
+    ->id_provincia;    
+
     return [
         'nombre' => substr($faker->name, 0, 10),
-        'id_provincia' => rand(1, 4),
+        'id_provincia' => $id_provincia,
         'id_area_tematica' => $id_area_tematica,
         'id_linea_estrategica' => $id_linea_estrategica,
+    ];
+});
+
+/** curso */
+$factory->state(App\Models\Cursos\Curso::class, 'completo', function (Faker\Generator $faker) {
+    return [
         'fecha' => $faker->date,
         'duracion' => rand(1, 3),
         'edicion' => rand(1, 10)
@@ -220,3 +236,19 @@ $factory->define(App\Models\Encuestas\Encuesta::class, function (Faker\Generator
 
     return compact('id_curso', 'id_pregunta', 'id_respuesta', 'cantidad');
 });
+
+
+/** pac */
+$factory->define(App\Models\Pac\Pac::class, function (Faker\Generator $faker) {
+
+    return [
+        'trimestre_planificacion' => strval(rand(1, 4)) . 'T',
+        't1' => boolval(rand(0, 1))?'X':'',
+        't2' => boolval(rand(0, 1))?'X':'',
+        't3' => boolval(rand(0, 1))?'X':'',
+        't4' => boolval(rand(0, 1))?'X':'',
+        'consul_peatyc' => boolval(rand(0, 1)),
+        'observado' => ''
+    ];
+});
+

@@ -217,9 +217,10 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         //Areas tematicas
         Route::get('areasTematicas', 'AreasTematicasController@getTodos');
         Route::get('areasTematicas/alta', 'AreasTematicasController@create');
-        Route::get('areasTematicasTabla', 'AreasTematicasController@getTabla');
-        Route::get('areasTematicas/{id}', 'AreasTematicasController@edit');
+        Route::get('areasTematicas/Tabla', 'AreasTematicasController@getTabla');
 
+        Route::get('areasTematicas/{id}', 'AreasTematicasController@edit');
+        Route::get('areasTematicas/typeahead', 'AreasTematicasController@getTypeahead');
         Route::post('areasTematicas', 'AreasTematicasController@store');
 
         Route::put('areasTematicas/{id}', 'AreasTematicasController@update');
@@ -248,6 +249,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         
         //Funciones/Roles del sumar
         Route::get('funciones/table', 'FuncionesController@table');
+        Route::get('funciones/typeahead', 'FuncionesController@getTypeahead');
         Route::resource('funciones', 'FuncionesController');
         
         //Tipo de docentes
@@ -270,5 +272,55 @@ Route::group(['middleware' => ['logueado','logging']], function () {
 
         //Logs
         Route::get('logs/mostrar/{date}','LogController@log');
+
+        //Estados
+        Route::get('estados', 'EstadosController@getTodos');
+        Route::get('estados/alta', 'EstadosController@create');
+        Route::get('estadosTabla', 'EstadosController@getTabla');
+        Route::get('estados/{id}', 'EstadosController@edit');
+
+        Route::post('estados', 'EstadosController@store');
+
+        Route::put('estados/{id}', 'EstadosController@update');
+
+        Route::delete('estados/{id}', 'EstadosController@destroy');
+
+        //ComponentesCa
+        Route::get('componentesCa', 'ComponentesCaController@getTodos');
+        Route::get('componentesCa/alta', 'ComponentesCaController@create');
+        Route::get('componentesCa/Tabla', 'ComponentesCaController@getTabla');
+        Route::get('componentesCa/typeahead', 'ComponentesCaController@getTypeahead');
+        Route::get('componentesCa/{id}', 'ComponentesCaController@edit');
+
+        Route::post('componentesCa', 'ComponentesCaController@store');
+
+        Route::put('componentesCa/{id}', 'ComponentesCaController@update');
+
+        Route::delete('componentesCa/{id}', 'ComponentesCaController@destroy');
+
+        //Pautas
+        Route::get('pautas', 'PautasController@get');
+        Route::get('pautas/tabla', 'PautasController@getTabla');
+        Route::get('pautas/alta', 'PautasController@create');
+        Route::get('pautas/filtrado', 'PautasController@getFiltrado');
+        Route::get('pautas/excel', 'PautasController@getExcel');
+        Route::get('pautas/pdf', 'PautasController@getPdf');
+        Route::get('pautas/typeahead', 'PautasController@getTypeahead');
+        Route::get('pautas/{id}', 'PautasController@edit');
+
+        Route::post('pautas', 'PautasController@store');
+
+        Route::put('pautas/{id}', 'PautasController@update');
+
+        Route::delete('pautas/{id}', 'PautasController@destroy');
+
+        //Pacs
+        Route::get('pacs', 'PacsController@getTodos');
+        Route::get('pacs/alta', 'PacsController@create');
+        Route::post('pacs', 'PacsController@store');
+        Route::get('pacs/tabla', 'PacsController@getTabla');
+        Route::put('pacs/{id}', 'PacsController@update');
+
+        Route::delete('pacs/{id}', 'PacsController@destroy');
     });
 });

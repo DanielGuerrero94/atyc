@@ -7,12 +7,9 @@ use Illuminate\Http\Request;
 
 class Estado extends Model
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = "cursos.estados";
+
+    protected $fillable = ['nombre'];
 
     /**
      * Primary key asociated with the table.
@@ -34,4 +31,26 @@ class Estado extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    public static function table()
+    {
+        return Estado::all();
+    }
+
+    /**
+    *
+    *
+    *
+    */
+    public function crear(Request $r)
+    {
+        $this->nombre = $r->nombre;
+        $this->save();
+    }
+
+    public function modificar(Request $r)
+    {
+        $this->nombre = $r->nombre;
+        $this->save();
+    }
 }

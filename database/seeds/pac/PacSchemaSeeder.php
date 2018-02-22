@@ -11,9 +11,6 @@ class PacSchemaSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(ModalidadesTableSeeder::class);
-        $this->call(ProfundizacionesTableSeeder::class);
-        $this->call(AlcancesTableSeeder::class);
-        $this->call(DestinatariosTableSeeder::class);
+        $this->call(ComponentesCaTableSeeder::class);
     }
 }

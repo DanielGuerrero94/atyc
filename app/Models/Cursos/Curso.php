@@ -62,6 +62,10 @@ class Curso extends Model
      */
     protected $dates = ['deleted_at'];
 
+    public function estado()
+    {
+        return $this->hasOne('App\Models\Pac\Estado', 'id_estado', 'id_estado');
+    }
 
     public function profesores()
     {
@@ -93,7 +97,7 @@ class Curso extends Model
             'id_area_tematica',
             'id_area_tematica'
         );
-    }
+    }*/
 
     /**
      * Areas tematicas.
