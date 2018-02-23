@@ -41,8 +41,7 @@
           areatematica = '<tr>'+       
           '<td>'+item.nombre+'</td>'+
           '<td>'+
-          '<div class="btn btn-xs btn-info"><a href="{{url('/areasTematicas')}}/'+item.id+'"><i class="fa fa-search" data-id="'+item.id+'"></i></a></div>'+
-          '<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>'+
+          '<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus" data-id="'+item.id+'"></i></div>'+
           '</td>'+
           '</tr>';
           existe = false;

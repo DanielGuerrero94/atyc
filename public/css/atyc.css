@@ -50,3 +50,11 @@
 .checkbox {
   padding-left: 20px;
 }
+
+td.details-control {
+    background: url('../dist/img/one-finger.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.details td.details-control {
+    background: url('../dist/img/cross.png') no-repeat center center;
+}

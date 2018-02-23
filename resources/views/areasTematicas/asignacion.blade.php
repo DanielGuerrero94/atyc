@@ -32,7 +32,6 @@
 						<table class="table table-striped" id="areasTematicas-de-la-pac">
 							<thead>
 								<tr>
-
 									<th>Nombre</th>
 									<th>Acciones</th>
 								</tr>
@@ -49,7 +48,7 @@
 											</a>
 										</div>
 										<div class="btn btn-xs btn-danger quitar">
-											<i class="fa fa-minus"></i>
+											<i class="fa fa-minus" data-id="{{$areaTematica->id_area_tematica}}"></i>
 										</div>
 									</td>
 								</tr>

@@ -34,7 +34,7 @@
               console.log(data);
             }
           }
-        },
+        }
       },
       callback: {
         onInit: function (node) {
