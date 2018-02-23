@@ -12,10 +12,10 @@ class EstadosSeeder extends Seeder
     public function run()
     {
         \DB::statement("INSERT INTO cursos.estados (id_estado,nombre) values
-    		(1,'No iniciado'),
-    		(2,'En ejecución'),
-    		(3,'Terminado'),
-    		(4,'Eliminado')
-    		");
+        	(1,'No iniciado'),
+        	(2,'En ejecución'),
+        	(3,'Terminado'),
+        	(4,'Eliminado')
+        	");
     }
 }

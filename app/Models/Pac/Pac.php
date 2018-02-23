@@ -8,53 +8,73 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pac extends Model
 {
-    use SoftDeletes;
+    protected $table = "pac.pac";
 
     protected $dates = ['deleted_at'];
     
     protected $fillable = ['nombre', 't1', 't2', 't3', 't4', 'observado', 'id_provincia'];
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'pac.pacs';
-
-    /**
-     * Primary key asociated with the table.
-     *
-     * @var string
-     */
     protected $primaryKey = 'id_pac';
 
-    public function destinatario()
-    {
-        return $this->hasOne('App\Models\Pac\Destinatario', 'id_destinatario', 'id_destinatario');
-    }
-
-    public function acciones()
+    /**
+     * Acciones planificadas.
+     */
+/*    public function acciones()
     {
         return $this->belongsToMany('App\Models\Cursos\Curso', 'pac.pacs_cursos', 'id_curso', 'id_pac');
+    }*/
+
+    /**
+     * Las pacs de una pauta.
+     */
+    public function pautas()
+    {
+        return $this->belongsToMany('App\Models\Pac\Pauta', 'pac.pacs_pautas', 'id_pac', 'id_pauta')->withTimestamps();
     }
 
-    public function alcance()
+    /**
+     * Componentes del compromiso anual.
+     */
+    public function componentesCa()
     {
-        return $this->hasOne('App\Models\Pac\Alcance', 'id_alcance', 'id_alcance');
+        return $this->belongsToMany('App\Models\Pac\ComponenteCa', 'pac.pacs_componentes_ca', 'id_pac', 'id_componente_ca')->withTimestamps();
     }
 
-    public function profundizacion()
+    /**
+     * Destinatarios de las acciones planificadas.
+     */
+    public function destinatarios()
     {
-        return $this->hasOne('App\Models\Pac\Profundizacion', 'id_profundizacion', 'id_profundizacion');
+        return $this->belongsToMany('App\Funcion', 'pac.pacs_destinatarios', 'id_pac', 'id_funcion')->withTimestamps();
     }
 
-    public function modalidad()
+    /**
+     * Ficha tecnica.
+     */
+    public function ficha_tecnica()
     {
-        return $this->hasOne('App\Models\Pac\Modalidad', 'id_modalidad', 'id_modalidad');
-    }
+        return $this->hasOne('App\Material', 'id_material', 'id_ficha_tecnica');
+    }    
+    
+    /**
+     * Areas tematicas.
+     */
+/*    public function areasTematicas()
+    {
+        return $this->belongsToMany('App\Models\Cursos\AreaTematica', 'pac.pacs_areas_tematicas', 'id_area_tematica', 'id_pac');
+    }*/
 
-    public function insumos()
+    public function crear(Request $r)
     {
-        return $this->belongsToMany('App\Models\Pac\Insumo', 'pac_insumos', 'id_insumo', 'id_pac')->withTimestamps();
+        $id_provincia = Auth::user()->id_provincia;
+        $this->nombre = $r->nombre;
+        $this->t1 = $r->t1;
+        $this->t2 = $r->t2;
+        $this->t3 = $r->t3;
+        $this->t4 = $r->t4;
+        $this->observado = $r->observado;
+        $this->id_provincia = $id_provincia;
+        $this->save();
+        return $this;
     }
 }

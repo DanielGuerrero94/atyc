@@ -16,7 +16,6 @@ class AlterProfesoresTable01 extends Migration
         Schema::table('sistema.profesores', function (Blueprint $table) {
             $table->foreign('id_tipo_documento')->references('id_tipo_documento')->on('sistema.tipos_documentos');
             $table->foreign('id_pais')->references('id_pais')->on('sistema.paises');
-            /*$table->foreign('id_tipo_docente')->references('id_tipo_docente')->on('sistema.tipos_docentes');*/
         });
     }
 

@@ -16,6 +16,31 @@
 
 @section('script')
 <script type="text/javascript">
+	
+	function format ( d ) {
+	    var sum="";
+	    var ddata=d.pautas;
+	    console.log(d);
+	    sum = 'PAUTAS';
+	    ddata.forEach(function(item)  {
+	    	console.log(item.nombre);
+	  		sum += '<br>'+item.nombre;
+		});
+
+	    sum += '<br>DESTINATARIOS';
+	    d.destinatarios.forEach(function(item)  {
+	    	console.log(item.nombre);
+	  		sum += '<br>'+item.nombre;
+		});
+
+	    sum += '<br>COMPONENTES CA';
+	    d.componentes_ca.forEach(function(item)  {
+	    	console.log(item.nombre);
+	  		sum += '<br>'+item.nombre;
+		});
+
+	    return sum;
+	}
 
 	$(document).ready(function(){
 
@@ -26,10 +51,13 @@
 		});
 
 		var datatable = $('#abm-table').DataTable({
+	        processing: true,
+	        serverSide: true,
 			destroy: true,
 			searching: false,
 			ajax : '{{ url('pacs/tabla') }}',
 			columns: [
+			{ data: null, class: 'details-control' },
 			{ data: 'nombre'},
 			{ data: 't1'},
 			{ data: 't2'},
@@ -41,8 +69,40 @@
 			rowReorder: {
 				selector: 'td:nth-child(2)'
 			},
-			responsive: true
 		});
+	 // Array to track the ids of the details displayed rows
+	    var detailRows = [];
+	 
+	    $('#abm-table tbody').on( 'click', 'tr td.details-control', function () {
+	        var tr = $(this).closest('tr');
+	        var row = datatable.row( tr );
+	        var idx = $.inArray( tr.attr('id'), detailRows );
+	 
+	        if ( row.child.isShown() ) {
+	            tr.removeClass( 'details' );
+	            row.child.hide();
+	 
+	            // Remove from the 'open' array
+	            detailRows.splice( idx, 1 );
+	        }
+	        else {
+	            tr.addClass( 'details' );
+	            row.child( format( row.data() ) ).show();
+	 
+	            // Add to the 'open' array
+	            if ( idx === -1 ) {
+	                detailRows.push( tr.attr('id') );
+	            }
+	        }
+	    } );
+	 
+	    // On each draw, loop over the `detailRows` array and show any child rows
+	    datatable.on( 'draw', function () {
+	        $.each( detailRows, function ( i, id ) {
+	            $('#'+id+' td.details-control').trigger( 'click' );
+	        } );
+	    } );
+
 
 		$('#alta_pac').on("click",function(){
 
