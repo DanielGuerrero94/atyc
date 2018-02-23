@@ -237,6 +237,15 @@ $factory->define(App\Models\Encuestas\Encuesta::class, function (Faker\Generator
     return compact('id_curso', 'id_pregunta', 'id_respuesta', 'cantidad');
 });
 
+/** pac */
+$factory->define(App\Models\Pac\CategoriaPauta::class, function (Faker\Generator $faker) {
+    return [
+        'nombre' => $faker->word,
+        'item' => rand(1,10),
+        'descripcion' => $faker->word,
+        'anio_vigencia' => '2018'
+    ];
+});
 
 /** pac */
 $factory->define(App\Models\Pac\Pac::class, function (Faker\Generator $faker) {

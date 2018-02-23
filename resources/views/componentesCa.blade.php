@@ -43,7 +43,7 @@
 
 		$('#table').DataTable({
 			scrollCollapse: true,
-			ajax : 'componentesCaTabla',
+			ajax : 'componentesCa/Tabla',
 			columns: [
 			{ data: 'id_componente_ca'},
 			{ data: 'nombre'},

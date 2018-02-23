@@ -9,8 +9,6 @@ class Estado extends Model
 {
     protected $table = "cursos.estados";
 
-    protected $fillable = ['nombre'];
-
     /**
      * Primary key asociated with the table.
      *

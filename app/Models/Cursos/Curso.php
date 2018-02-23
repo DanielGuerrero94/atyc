@@ -97,7 +97,7 @@ class Curso extends Model
             'id_area_tematica',
             'id_area_tematica'
         );
-    }*/
+    }
 
     /**
      * Areas tematicas.

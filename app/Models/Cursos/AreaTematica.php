@@ -30,17 +30,9 @@ class AreaTematica extends Model
      * @var array
      */
     protected $fillable = ['nombre'];
-    
-    /**
-     * Las cursos.
-     */
-    public function cursos()
-    {
-        return $this->belongsToMany('App\Curso', 'cursos.cursos_areas_tematicas', 'id_curso', 'id_area_tematica')->withTimestamps();
-    }   
 
     /**
-     * The attributes that should be hidden for arrays.
+    * The attributes that should be hidden for arrays.
      *
      * @var array
      */
