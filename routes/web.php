@@ -220,8 +220,8 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('areasTematicas/alta', 'AreasTematicasController@create');
         Route::get('areasTematicas/Tabla', 'AreasTematicasController@getTabla');
 
-        Route::get('areasTematicas/{id}', 'AreasTematicasController@edit');
         Route::get('areasTematicas/typeahead', 'AreasTematicasController@getTypeahead');
+        Route::get('areasTematicas/{id}', 'AreasTematicasController@edit');
         Route::post('areasTematicas', 'AreasTematicasController@store');
 
         Route::put('areasTematicas/{id}', 'AreasTematicasController@update');

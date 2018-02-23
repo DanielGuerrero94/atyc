@@ -19,25 +19,27 @@
 	
 	function format ( d ) {
 	    var sum="";
-	    var ddata=d.pautas;
-	    console.log(d);
-	    sum = 'PAUTAS';
-	    ddata.forEach(function(item)  {
+
+	    sum = '<div class="container" style="float: left; border: 1px solid; width: 800px; border-color: #009900aa"><div style="float: left; width: 250px;"><strong>PAUTAS</strong>';
+	    d.pautas.forEach(function(item)  {
 	    	console.log(item.nombre);
 	  		sum += '<br>'+item.nombre;
 		});
+	    sum += '</div>'
 
-	    sum += '<br>DESTINATARIOS';
+	    sum += '<div style="float: left; width: 250px;"><strong>DESTINATARIOS</strong>';
 	    d.destinatarios.forEach(function(item)  {
 	    	console.log(item.nombre);
 	  		sum += '<br>'+item.nombre;
 		});
+	    sum += '</div>'
 
-	    sum += '<br>COMPONENTES CA';
+	    sum += '<div style="float: left; width: 250px;"><strong>COMPONENTES CA</strong>';
 	    d.componentes_ca.forEach(function(item)  {
 	    	console.log(item.nombre);
 	  		sum += '<br>'+item.nombre;
 		});
+	    sum += '</div></div>'
 
 	    return sum;
 	}
@@ -57,7 +59,7 @@
 			searching: false,
 			ajax : '{{ url('pacs/tabla') }}',
 			columns: [
-			{ data: null, class: 'details-control' },
+			{ data: null, class: 'details-control', defaultContent: "" },
 			{ data: 'nombre'},
 			{ data: 't1'},
 			{ data: 't2'},
@@ -69,6 +71,7 @@
 			rowReorder: {
 				selector: 'td:nth-child(2)'
 			},
+			responsive: false
 		});
 	 // Array to track the ids of the details displayed rows
 	    var detailRows = [];

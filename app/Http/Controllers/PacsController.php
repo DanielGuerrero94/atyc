@@ -70,13 +70,14 @@ class PacsController extends Controller
             $curso = new Curso();
             
             $parametros = array_merge(['id_estado' => $estado ],$request->only(['nombre', 'id_linea_estrategica', 'id_provincia']));
+            
+            $curso = $curso->create($parametros);
 
             if ($request->has('areasTematicas')) {
                 $areasTematicas = explode(',', $request->get('areasTematicas'));
                 $curso->areasTematicas()->attach($areasTematicas);
             }            
-            $curso->create($parametros);
-        }
+                    }
 
         
         $pac = Pac::create($request->all());

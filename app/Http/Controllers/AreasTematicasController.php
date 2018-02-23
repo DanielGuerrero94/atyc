@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Cursos\AreaTematica;
 use Datatables;
 
-class AreasTematicasController extends ModelController
+class AreasTematicasController extends AbmController
 {
     /**
      * Rules for the validator
@@ -96,6 +96,8 @@ class AreasTematicasController extends ModelController
         $typed = $r->input('q');
 
         $nombre = explode(' ', $typed);
+
+        logger()->warning(json_encode($nombre));
 
         foreach ($nombre as $key => $value) {
             $query = $query->orWhereRaw("nombre ~* '{$value}'");
