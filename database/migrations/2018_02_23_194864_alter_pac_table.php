@@ -15,7 +15,7 @@ class AlterPacTable extends Migration
     {
 
         Schema::table('pac.pac', function (Blueprint $table) {
-            $table->dropColumn('id_provincia');
+            //$table->dropColumn('id_provincia');
         });
 
         Schema::table('pac.pac', function (Blueprint $table) {
