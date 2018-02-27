@@ -11,8 +11,22 @@ use App\Models\Cursos\LineaEstrategica;
 use Datatables;
 use Auth;
 
-class PacsController extends Controller
+class PacsController extends ModelController
 {
+
+    /**
+     * Rules for the validator
+     *
+     * @var array
+     **/
+    protected $rules = [];
+    
+    /**
+     * Name of the Model
+     *
+     * @var string
+     **/
+    protected $name = 'pac';
 
     /**
      * Icono de botones
@@ -24,15 +38,11 @@ class PacsController extends Controller
         'eliminar' => 'fa fa-trash-o',
         'buscar' => 'fa fa-search',
         'agregar' => 'fa fa-plus-circle'
-    ];    
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
+    ];
 
+    public function __construct(Pac $model)
+    {
+        $this->model = $model;
     }
 
     /**
@@ -53,63 +63,27 @@ class PacsController extends Controller
      */
     public function store(Request $request)
     {
-
-        $repeticiones = $request->repeticiones;
-
-        $request->request->add(['t1' => $request->has('t1')]);        
+        $request->request->add(['t1' => $request->has('t1')]);
         $request->request->add(['t2' => $request->has('t2')]);
         $request->request->add(['t3' => $request->has('t3')]);
         $request->request->add(['t4' => $request->has('t4')]);
-     
+        $request->request->add(['id_estado' => 1]);
 
-        $id_provincia = Auth::user()->id_provincia;
-        $estado = 1;
-        $request->request->add(['id_provincia' => $id_provincia]);
-
-        for ($i=0; $i < $repeticiones; $i++) { 
-            $curso = new Curso();
-            
-            $parametros = array_merge(['id_estado' => $estado ],$request->only(['nombre', 'id_linea_estrategica', 'id_provincia']));
-            
-            $curso = $curso->create($parametros);
-
-            if ($request->has('areasTematicas')) {
-                $areasTematicas = explode(',', $request->get('areasTematicas'));
-                $curso->areasTematicas()->attach($areasTematicas);
-            }            
-                    }
-
-        
-        $pac = Pac::create($request->all());
-
-        if ($request->has('destinatarios')) {
-            $destinatarios = explode(',', $request->get('destinatarios'));
-            $pac->destinatarios()->attach($destinatarios);
+        if (!$request->has('id_provincia')) {
+            $id_provincia = Auth::user()->id_provincia;
+            $request->request->add(['id_provincia' => $id_provincia]);
         }
 
-        if ($request->has('componentesCa')) {
-            $componentes = explode(',', $request->get('componentesCa'));
-            $pac->componentesCa()->attach($componentes);
-        }
+        $acciones = $request->only(['repeticiones', 'nombre', 'id_linea_estrategica', 'id_provincia', 'id_estado', 'areasTematicas']);
 
-        if ($request->has('pautas')) {
-            $pautas = explode(',', $request->get('pautas'));
-            $pac->pautas()->attach($pautas);
-        }
+        $relaciones = $request->only(['destinatarios', 'componentesCa', 'pautas']);
 
-        return $pac->id;
-    }
-
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        $pac = $this->model
+            ->create($request->all())
+            ->generarAcciones($acciones)
+            ->llenarRelaciones($relaciones);
+                
+        return $pac->id_pac;
     }
 
     /**
@@ -120,7 +94,9 @@ class PacsController extends Controller
      */
     public function edit($id)
     {
-        return view('pacs.modificacion', array_merge($this->getSelectOptions(), $this->show($id)));
+        $data = array_merge($this->getSelectOptions(), $this->show($id));
+
+        return view('pacs.modificacion', $data);
     }
 
     /**
@@ -134,18 +110,7 @@ class PacsController extends Controller
     {
         //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
+    
     /**
      * View para abm.
      *
@@ -164,9 +129,17 @@ class PacsController extends Controller
      */
     public function getTabla(Request $request)
     {
-        $query = Pac::with(['pautas','componentesCa','destinatarios'])->get();
+        $data = $this->model
+            ->with(['pautas', 'componentesCa', 'destinatarios', 'acciones'])
+            ->get()
+            ->map(function ($model) {
+                $model->areas_tematicas = $model->acciones->first()->areasTematicas;
+                return $model;
+            });
 
-        return $this->toDatatable($request, $query);
+        logger(json_encode($data));
+
+        return $this->toDatatable($request, $data);
     }
 
     /**
@@ -178,37 +151,21 @@ class PacsController extends Controller
      */
     public function toDatatable(Request $r, $resultados)
     {
-        return Datatables::of($resultados)
-        ->addColumn('acciones', function ($ret) use ($r) {
-
-            $accion = $r->has('botones')?$r->botones:null;
-
-            $editarYEliminar = '<a href="'.url('pacs').'/'.$ret->id_pac.'"><button data-id="'.$ret->id_pac.
-            '" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones['editar'].
-            '" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_pac.
-            '" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones['eliminar'].
-            '" aria-hidden="true"></i></button>';
-            
-            $agregar = '<button data-id="'.$ret->id_pac.'" class="btn btn-info btn-xs agregar" '.
-            'title="Agregar"><i class="'.$this->botones['agregar'].'" aria-hidden="true"></i></button>';
-
-            return $accion == 'agregar'?$agregar:$editarYEliminar;
-        })
-        ->make(true);
-    }   
+        return Datatables::of($resultados)->make(true);
+    }
 
     /**
      * Opciones para los selects del front end.
      *
      * @return array
      */
-    private function getSelectOptions()
+    public function getSelectOptions()
     {
 
-        $lineas = LineaEstrategica::all();
+        $tipologias = LineaEstrategica::orderBy('numero')->get();
 
-        return [
-            'lineas_estrategicas' => $lineas
-        ];
-    }             
+        $tematicas = [];
+
+        return compact('tipologias', 'tematicas');
+    }
 }

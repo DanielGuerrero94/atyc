@@ -15,7 +15,7 @@ class LineasEstrategicasControllerSpec extends ObjectBehavior
 
     function it_returns_correct_json()
     {
-    	$this->show(1);
-    	$this->shouldReturn(12);
+        $this->show(1);
+        $this->shouldReturn(12);
     }
 }

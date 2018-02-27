@@ -8,11 +8,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 class ModelController extends Controller
 {
-/*
-    use ValidatesRequests {
-        validate as validateRequest;
-    }
-*/
 
     /**
      * Rules for the validator
@@ -93,7 +88,10 @@ class ModelController extends Controller
     public function edit($id)
     {
         $name = lower_camel_case($this->name);
-        return view("{$name}.modificacion", $this->show($id));
+
+        $data = array_merge($this->getSelectOptions(), $this->show($id));
+
+        return view("{$name}.modificacion", $data);
     }
 
     /**
@@ -142,5 +140,10 @@ class ModelController extends Controller
             logger($e->getMessage());
             return $e->getMessage();
         }
+    }
+
+    private function getSelectOptions()
+    {
+        return [];
     }
 }

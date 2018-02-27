@@ -14,30 +14,27 @@ class PacControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
-    protected $model;
-    protected $controller;
-
     public function setUp()
     {
         parent::setUp();
-        $this->model = new Pac;
-        $this->controller = new PacsController;
+        $this->controller = $this->app->make(PacsController::class);
+        $this->model = $this->app->make(Pac::class);
     }
 
     public function PacDataProvider()
     {
         $this->refreshApplication();
 
-        return factory(\App\Models\Pac\Pac::class, 3)
+        return factory(Pac::class, 3)
         ->make()
-        ->map(function($model){
+        ->map(function ($model) {
             return [new Request($model->toArray())];
         })
         ->all();
     }
 
     /**
-     * A basic test example.
+     * Store model with request
      *
      * @dataProvider PacDataProvider
      * @test
@@ -67,7 +64,7 @@ class PacControllerTest extends TestCase
         $request->query->set('destinatarios', $id_destinatario);
         $model_instance_id = $this->controller->store($request);
         $model = $this->model->with('destinatarios')->findOrFail($model_instance_id);
-        $this->assertTrue(is_numeric($model->destinatarios()->get()->first()->id_funcion));
+        $this->assertTrue(is_numeric($model->destinatarios()->first()->id_funcion));
     }
 
     /**
@@ -96,6 +93,7 @@ class PacControllerTest extends TestCase
      */
     public function storeOneAccion(Request $request)
     {
+        $this->markTestIncomplete();
         $accion = true;
         $nombre = 'asd';
         $id_linea_estrategica = 5;
@@ -111,14 +109,16 @@ class PacControllerTest extends TestCase
 
     /**
      * A basic test example.
-
+     *
      * @dataProvider PacDataProvider
      * @test
      * @return void
      */
     public function show(Request $request)
     {
-        $this->assertTrue(true);
+        $id = $this->controller->store($request);
+        $array = $this->controller->show($id);
+        $this->assertArrayHasKey('pac', $array);
     }
 
     /**
@@ -130,6 +130,20 @@ class PacControllerTest extends TestCase
      */
     public function update(Request $request)
     {
-        $this->assertTrue(true);
+        $this->markTestIncomplete();
+    }
+
+    /**
+     * Assert that all options keys get passed to the views.
+     *
+     * @test
+     */
+    public function getSelectOptions()
+    {
+        $data = $this->controller->getSelectOptions();
+
+        $expected = ['tipologias', 'tematicas'];
+
+        $this->assertArraySubset($expected, array_keys($data));
     }
 }

@@ -1,3 +1,4 @@
+<section class="control-sidebar control-sidebar-dark control-sidebar-open" style="height: auto;">
 <section class="sidebar" style="height: auto;">
   <ul class="sidebar-menu tree" data-widget="tree">
     <li class="header text-center">
@@ -289,18 +290,6 @@
         </a>
       </li>              
       <li>
-        <a href="#">
-          <i class="fa fa-circle-o"></i>
-          <span>Pautas</span>
-        </a>
-      </li>
-      <li>
-        <a href="#">
-          <i class="fa fa-circle-o"></i>
-          <span>Ficha tecnica</span>
-        </a>
-      </li>
-      <li>
         <a href='{{url("/pacs")}}'>
           <i class="fa fa-circle-o"></i>
           <span>Matriz</span>
@@ -401,4 +390,5 @@
   @endif             
   @endif
 </ul>
+</section>
 </section>

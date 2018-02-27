@@ -91,7 +91,7 @@ class AreasTematicasController extends AbmController
      */
     public function getTypeahead(Request $r)
     {
-        $query = AreaTematica::select('id_area_tematica as id','nombre');
+        $query = AreaTematica::select('id_area_tematica as id', 'nombre');
 
         $typed = $r->input('q');
 
@@ -106,5 +106,5 @@ class AreasTematicasController extends AbmController
         $matchs = $query->get();
 
         return $this->typeaheadResponse($matchs);
-    } 
+    }
 }

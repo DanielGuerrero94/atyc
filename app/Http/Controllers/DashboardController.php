@@ -77,8 +77,8 @@ class DashboardController extends Controller
     {
         return [
             'capacitados' => $this->mvCapacitados($request),
-            'talleres' => $this->talleresSumarte($request)
-            // 'efectores' => $this->efectores($request)
+            'talleres' => $this->talleresSumarte($request),
+            'distancia' => $this->capacitacionesADistancia($request)
         ];
     }
 
@@ -137,6 +137,21 @@ class DashboardController extends Controller
     public function talleresSumarte(Request $request)
     {
         $query = Curso::whereRaw("nombre ~* 'sumarte'");
+
+        if (is_numeric($anio = $request->get('anio'))) {
+            $query = $query->whereYear('fecha', $anio);
+        }
+
+        if (is_numeric($division = $request->get('division'))) {
+            $query = $query->where('id_provincia', $division);
+        }
+
+        return $query->count();
+    }
+
+    public function capacitacionesADistancia(Request $request)
+    {
+        $query = Curso::where("id_linea_estrategica", 5);
 
         if (is_numeric($anio = $request->get('anio'))) {
             $query = $query->whereYear('fecha', $anio);
@@ -373,7 +388,7 @@ class DashboardController extends Controller
             $acciones = $acciones->get();
         }
 
-        if ($request->input('categoria', 'participantes') == 'participantes') {    
+        if ($request->input('categoria', 'participantes') == 'participantes') {
             $participantes = Alumno::select('id_provincia', 'id_alumno', 'nombres', 'apellidos', 'created_at')
             ->with('provincia')
             ->whereDate('created_at', '>', $antiguedad)
@@ -382,12 +397,12 @@ class DashboardController extends Controller
 
             if ($request->has('provincia')) {
                 $participantes = $participantes->where('id_provincia', $request->id_provincia);
-            }   
+            }
 
             $participantes = $participantes->get();
         }
 
-        /* 
+        /*
            Tengo que agregar el id provincia a los docentes haciendo un update en base a la primer accion en la que estuvieron
            $docentes = Profesor::select('id_provincia', 'id_profesor', 'nombre', 'created_at')
            ->with('provincia')

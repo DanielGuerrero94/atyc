@@ -59,13 +59,15 @@ class User extends Authenticatable
         return $this->id_provincia == 25;
     }
 
-    public function tieneRol(string $role) {
+    public function tieneRol(string $role)
+    {
         return $this->whereHas('roles', function ($query) use ($role) {
             $query->where('name', $role);
         })->count() > 0;
     }
 
-    public function darDeAlta() {
+    public function darDeAlta()
+    {
         $this->deleted_at = null;
         $this->save();
     }

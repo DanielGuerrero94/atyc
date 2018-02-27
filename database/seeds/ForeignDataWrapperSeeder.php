@@ -16,8 +16,8 @@ class ForeignDataWrapperSeeder extends Seeder
         $dbname = env('SERVER_DBNAME');
         $port = env('SERVER_PORT');
         $user = env('SERVER_USER');
-	$password = env('SERVER_PASSWORD');
-	$local_user = env('DB_USERNAME');
+        $password = env('SERVER_PASSWORD');
+        $local_user = env('DB_USERNAME');
 
         if ($host && $dbname && $port) {
             \DB::statement("

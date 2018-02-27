@@ -11,7 +11,7 @@ class EtapasSeeder extends Seeder
      */
     public function run()
     {
-    	\DB::statement("INSERT INTO sistema.etapas (id_etapa, nombre) values 
+        \DB::statement("INSERT INTO sistema.etapas (id_etapa, nombre) values 
     		(1, 'Diagnóstico'),
     		(2, 'Diseño'),
     		(3, 'Planificación'),

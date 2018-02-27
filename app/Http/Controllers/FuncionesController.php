@@ -149,5 +149,5 @@ class FuncionesController extends AbmController
         $matchs = $query->get();
 
         return $this->typeaheadResponse($matchs);
-    } 
+    }
 }

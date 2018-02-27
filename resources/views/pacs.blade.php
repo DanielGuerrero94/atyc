@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 	<div class="row">		
-		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			@include('pacs.abm')
 		</div>
 	</div>
@@ -16,6 +16,14 @@
 
 @section('script')
 <script type="text/javascript">
+
+    function editButton(id_pac) {
+		return '<a href="{{url("/pacs")}}/' + id_pac + '" data-id="' + id_pac + '" class="btn btn-circle editar" title="Editar"><i class="fa fa-pencil text-info fa-lg"></i></a>';
+	}
+
+	function deleteButton(id_pac) {
+		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
+    }
 	
 	function format ( d ) {
 	    var sum="";
@@ -42,7 +50,39 @@
 	    sum += '</div></div>'
 
 	    return sum;
-	}
+    }
+
+    function checkEstadoFichaTecnica(id_ficha_tecnica) {
+        
+        if (id_ficha_tecnica == 1) return '<a class="btn btn-warning btn-xs" title="Modificar">Vacia</a>';
+        
+        if (isFinite(id_ficha_tecnica)) return '<a class="btn btn-success btn-xs" title="Modificar">Modificada</a>';
+
+		return '<a class="btn btn-default btn-xs" disabled>No requiere</a>';
+    }
+
+    function progresoAcciones(row) {
+        //Hardcodeo para test
+        let now = 7;
+        let max = 8;
+        let width = now * 100 / max;
+        return '<div class="progress" style="margin-top: 1px;"><div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="'+now+'" aria-valuemin="0" aria-valuemax="'+max+'" style="width: '+width+'%">'+now+'/'+max+' Completas</div></div>';
+    }
+
+    function trimestre(row) {
+
+        let trimestres = '';
+
+        //Hardcodeo 
+        row.t1 = true;
+
+        if (row.t1) trimestres += '<span class="badge">1ro</span>';
+        if (row.t2) trimestres += '<span class="badge">2do</span>';
+        if (row.t3) trimestres += '<span class="badge">3ro</span>';
+        if (row.t4) trimestres += '<span class="badge">4to</span>';
+
+        return trimestres;
+    }
 
 	$(document).ready(function(){
 
@@ -57,20 +97,47 @@
 	        serverSide: true,
 			destroy: true,
 			searching: false,
-			ajax : '{{ url('pacs/tabla') }}',
+			ajax : '{{ url("/pacs/tabla") }}',
 			columns: [
-			{ data: null, class: 'details-control', defaultContent: "" },
-			{ data: 'nombre'},
-			{ data: 't1'},
-			{ data: 't2'},
-			{ data: 't3'},
-			{ data: 't4'},
-			{ data: 'observado'},
-			{ data: 'acciones',"orderable": false}
-			],			
-			rowReorder: {
-				selector: 'td:nth-child(2)'
-			},
+            { 
+                data: null,
+                class: 'details-control',
+                defaultContent: "",
+                orderable: false
+            },
+            { data: 'acciones', title: 'Tipo de Acción'}, 
+            { data: 'nombre', title: 'Nombre'}, 
+            {
+                data: 'null',
+                title: 'Ficha Técnica',
+                render: function ( data, type, row, meta ) {
+					return checkEstadoFichaTecnica(1);
+				},
+                orderable: false
+            },
+            {
+                data: 'null',
+                title: 'Repeticiones',
+                render: function ( data, type, row, meta ) {
+					return progresoAcciones(row);
+				},
+                orderable: false
+            },
+            { 
+                data: 'null',
+                title: 'Trimestre',
+                render: function ( data, type, row, meta ) {
+					return trimestre(row);
+				},
+                orderable: false
+            },
+            { data: 'observado', title: 'Obsevado'},
+            { data: 'acciones',
+				render: function ( data, type, row, meta ) {
+					return editButton(row.id_pac) + deleteButton(row.id_pac);
+				},
+                orderable: false
+            }],
 			responsive: false
 		});
 	 // Array to track the ids of the details displayed rows
@@ -128,20 +195,6 @@
 			$('#alta-pac').html("");
 			$('#abm').show();
 			$('#filtros').show();
-		});
-
-		$('#abm').on('click','.expand',function () {
-			$('#abm').removeClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
-			datatable.draw();
-			$('.compress').show();	
-			$(this).hide();
-		});
-
-		$('#abm').on('click','.compress',function () {
-			$('#abm').addClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
-			datatable.draw();
-			$('.expand').show();	
-			$(this).hide();	
 		});
 
 		$('#abm').on("click",".eliminar",function(){
@@ -206,7 +259,7 @@
 			var pac = $(this).data('id');
 
 			$.ajax({				
-				url : 'pacs/'+pac,
+				url : '{{"/pacs"}}/' + pac,
 				method : 'put',
 				data : $('form').serialize(),
 				success : function(data){

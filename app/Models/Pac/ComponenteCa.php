@@ -7,25 +7,34 @@ use Illuminate\Http\Request;
 
 class ComponenteCa extends Model
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = "pac.componentes_ca";
 
-    protected $fillable = ['nombre', 'anio_vigencia'];
-
     /**
-     * Primary key asociated with the table.
+     * The primary key for the model.
      *
      * @var string
      */
     protected $primaryKey = 'id_componente_ca';
 
     /**
-     * Las pacs de un caComponente.
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
      */
-    public function pacs()
-    {
-        return $this->belongsToMany('App\Models\Pacs\Pac', 'pac.pacs_componentes_ca', 'id_pac', 'id_componente_ca')->withTimestamps();
-    }	
-
+    protected $hidden = ['pivot'];
+    
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['nombre', 'anio_vigencia'];
+    
     public static function table()
     {
         return ComponenteCa::all();

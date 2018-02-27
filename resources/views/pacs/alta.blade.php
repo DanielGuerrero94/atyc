@@ -3,7 +3,7 @@
     <ul class="nav nav-tabs">
       <li id="tab-pac" class="active"><a href="#inicial" data-toggle="tab">Inicial</a></li>
       <li id="tab-pauta"><a href="#pautas" data-toggle="tab">Pautas</a></li>
-      <li id="tab-destinatario"><a href="#destinatarios" data-toggle="tab">Destinatarios</a></li>      
+      <li id="tab-destinatario"><a href="#destinatarios-pane" data-toggle="tab">Destinatario</a></li>
       <li id="tab-componenteCa"><a href="#componentesCa" data-toggle="tab">Componentes CA</a></li>
       <li id="tab-areaTematica"><a href="#areasTematicas" data-toggle="tab">Areas Tematicas</a></li>
       <li class="navbar-right"><div class="btn btn-success store">Guardar</div></li>
@@ -37,8 +37,8 @@
               <div class="col-md-8 col-xs-9">
                 <select class="form-control" id="linea_estrategica" name="id_linea_estrategica">
                   <option value="0">Seleccionar</option>
-                  @foreach ($lineas_estrategicas as $linea)
-                  <option data-id="{{$linea->id_linea_estrategica}}" value="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
+                  @foreach ($tipologias as $tipologia)
+                  <option data-id="{{$tipologia->id_linea_estrategica}}" value="{{$tipologia->id_linea_estrategica}}">{{$tipologia->numero}}-{{$tipologia->nombre}}</option>
                   @endforeach
                 </select>
               </div>
@@ -64,7 +64,7 @@
           </div>
           
           <div class="row">
-            <div class="form-group col-xs-12 col-md-6">          
+            <div class="form-group col-xs-12 col-md-6">
               <label for="observado" class="control-label col-md-4 col-xs-3">Observado</label>
               <div class="col-md-8 col-xs-9">
                 <input type="text" class="form-control" name="observado" id="observado" placeholder="Observado"> 
@@ -73,14 +73,14 @@
           </div>          
         </form>  
       </div>
-      <div class="tab-pane" id="pautas">  
+      <div class="tab-pane" id="pautas"> 
 
-            @include('pautas.asignacion')  
+            @include('pautas.asignacion')
 
       </div>
-      <div class="tab-pane" id="destinatarios">
+      <div class="tab-pane" id="destinatarios-pane">
 
-          @include('destinatarios.asignacion')  
+            @include('destinatarios.asignacion')
 
       </div>            
       <div class="tab-pane" id="componentesCa">
@@ -88,9 +88,9 @@
             @include('componentesCa.asignacion')
 
       </div>
-            <div class="tab-pane" id="areasTematicas">
+      <div class="tab-pane" id="areasTematicas">
    
-            @include('areasTematicas.asignacion')
+          @include('areasTematicas.asignacion')
 
       </div>
     </div> 

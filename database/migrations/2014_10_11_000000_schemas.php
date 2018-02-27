@@ -30,14 +30,12 @@ class Schemas extends Migration
 
         /*SQLITE*/
         if (env('DB_CONNECTION') === "testing") {
-
             foreach ($this->schemas as $schema) {
                 $path = database_path($schema.'.sqlite');
                 system('touch '.$path);
                 DB::statement('attach database "'.$path.'" as '.$schema);
             }
         }
-        
     }
 
     /**
@@ -61,7 +59,6 @@ class Schemas extends Migration
 
         /*SQLITE*/
         if (env('DB_CONNECTION') === "testing") {
-
             foreach ($this->schemas as $schema) {
                 $path = database_path($schema.'.sqlite');
                 system('rm '.$path);

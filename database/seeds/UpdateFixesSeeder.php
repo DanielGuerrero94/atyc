@@ -16,14 +16,14 @@ class UpdateFixesSeeder extends Seeder
         // $this->updateAcciones();
         // $this->updateParticipantes();
         // $this->updateDocentes();
-    	$this->updateCursosAreasTematicas();
+        $this->updateCursosAreasTematicas();
     }
 
     public function updateAreasTematicas()
     {
         \App\Models\Cursos\AreaTematica::get()
         ->each(function ($model) {
-        	$model->setUpdatedAt('2013-01-01')->setCreatedAt('2013-01-01')->save();
+            $model->setUpdatedAt('2013-01-01')->setCreatedAt('2013-01-01')->save();
         });
     }
 
@@ -31,7 +31,7 @@ class UpdateFixesSeeder extends Seeder
     {
         \App\Models\Cursos\LineaEstrategica::get()
         ->each(function ($model) {
-        	$model->setUpdatedAt('2013-01-01')->setCreatedAt('2013-01-01')->save();
+            $model->setUpdatedAt('2013-01-01')->setCreatedAt('2013-01-01')->save();
         });
     }
 

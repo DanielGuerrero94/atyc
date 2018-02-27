@@ -13,7 +13,7 @@ class PivotCursosComponentesCaTable extends Migration
      */
     public function up()
     {
-        Schema::create('pac.pacs_componentes_ca', function(Blueprint $table){
+        Schema::create('pac.pacs_componentes_ca', function (Blueprint $table) {
             $table->primary(['id_pac', 'id_componente_ca']);
             $table->integer('id_pac')->unsigned();
             $table->integer('id_componente_ca')->unsigned();

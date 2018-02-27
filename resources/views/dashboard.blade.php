@@ -77,11 +77,11 @@
         <span class="info-box-number">0</span>
       </div>      
     </div>
-    <div class="info-box bg-teal">
-      <span class="info-box-icon"><i class=""></i></span>
+    <div class="info-box bg-teal" id="acciones-a-distancia">
+      <span class="info-box-icon"><i class="fa fa-laptop"></i></span>
       <div class="info-box-content">
-        <span class="info-box-text"></span>
-        <span class="info-box-number"></span>
+        <span class="info-box-text">Acciones a distancia</span>
+        <span class="info-box-number">0</span>
       </div>      
     </div>
   </div>
@@ -153,9 +153,9 @@
       },
       dataType: 'json',
       success: function (data) {
-        console.log(data);
         $("#efectores-capacitados").find(".info-box-number").html(data.capacitados);
         $("#talleres-sumarte").find(".info-box-number").html(data.talleres);
+        $("#acciones-a-distancia").find(".info-box-number").html(data.distancia);
       }
     };
   }

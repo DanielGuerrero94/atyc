@@ -166,7 +166,7 @@ $factory->define(App\Models\Cursos\Curso::class, function (Faker\Generator $fake
     $id_provincia = $id_provincia?:factory(App\Provincia::class, 10)
     ->create()
     ->first()
-    ->id_provincia;    
+    ->id_provincia;
 
     return [
         'nombre' => substr($faker->name, 0, 10),
@@ -237,27 +237,114 @@ $factory->define(App\Models\Encuestas\Encuesta::class, function (Faker\Generator
     return compact('id_curso', 'id_pregunta', 'id_respuesta', 'cantidad');
 });
 
-/** pac */
+$factory->define(App\Models\Pac\ComponenteCa::class, function (Faker\Generator $faker) {
+    return [
+        'nombre' => $faker->word,
+        'anio_vigencia' => '2018'
+    ];
+});
+
 $factory->define(App\Models\Pac\CategoriaPauta::class, function (Faker\Generator $faker) {
     return [
         'nombre' => $faker->word,
-        'item' => rand(1,10),
+        'item' => rand(1, 10),
         'descripcion' => $faker->word,
         'anio_vigencia' => '2018'
     ];
 });
 
-/** pac */
-$factory->define(App\Models\Pac\Pac::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Pac\Pauta::class, function (Faker\Generator $faker) {
+
+    $id_categoria_pauta = App\Models\Pac\CategoriaPauta::pluck('id_categoria_pauta')
+    ->shuffle()
+    ->first();
+
+    $id_categoria_pauta = $id_categoria_pauta?:factory(App\Models\Pac\CategoriaPauta::class, 12)
+    ->create()
+    ->first()
+    ->id_categoria_pauta;
+
+    $id_provincia = App\Provincia::pluck('id_provincia')
+    ->shuffle()
+    ->first();
+
+    $id_provincia = $id_provincia?:factory(App\Provincia::class, 10)
+    ->create()
+    ->first()
+    ->id_provincia;
 
     return [
-        'trimestre_planificacion' => strval(rand(1, 4)) . 'T',
-        't1' => boolval(rand(0, 1))?'X':'',
-        't2' => boolval(rand(0, 1))?'X':'',
-        't3' => boolval(rand(0, 1))?'X':'',
-        't4' => boolval(rand(0, 1))?'X':'',
-        'consul_peatyc' => boolval(rand(0, 1)),
-        'observado' => ''
+        'nombre' => $faker->word,
+        'item' => rand(1, 10),
+        'descripcion' => $faker->word,
+        'vigencia' => '2018',
+        'id_provincia' => $id_provincia,
+        'id_categoria_pauta' => $id_categoria_pauta
     ];
 });
 
+$factory->define(App\Models\Pac\Pac::class, function (Faker\Generator $faker) {
+
+    $curso =  factory(App\Models\Cursos\Curso::class)->make()->first();
+    $nombre = $curso->nombre;
+    $id_provincia = $curso->id_provincia;
+    $id_area_tematica = $curso->id_area_tematica;
+    $id_linea_estrategica = $curso->id_linea_estrategica;
+
+    $areasTematicas = "$id_area_tematica";
+
+    $destinatarios = App\Funcion::take(rand(1, 3))
+        ->pluck('id_funcion')
+        ->toArray();
+
+    $destinatarios = $destinatarios?:factory(App\Funcion::class, 12)
+    ->create()
+    ->take(rand(1, 3))
+    ->pluck('id_funcion')
+    ->toArray();
+    
+    $destinatarios = implode(",", $destinatarios);
+
+    $componentesCa = App\Models\Pac\ComponenteCa::take(rand(1, 3))
+        ->pluck('id_componente_ca')
+        ->toArray();
+
+    $componentesCa = $componentesCa?:factory(App\Models\Pac\ComponenteCa::class, 12)
+    ->create()
+    ->take(rand(1, 3))
+    ->pluck('id_componente_ca')
+    ->toArray();
+    
+    $componentesCa = implode(",", $componentesCa);
+    
+    $pautas = App\Models\Pac\Pauta::take(rand(1, 3))
+        ->pluck('id_pauta')
+        ->toArray();
+
+    $pautas = $pautas?:factory(App\Models\Pac\Pauta::class, 12)
+    ->create()
+    ->take(rand(1, 3))
+    ->pluck('id_pauta')
+    ->toArray();
+    
+    $pautas = implode(",", $pautas);
+
+    $parametros_pac = [
+        'trimestre_planificacion' => strval(rand(1, 4)) . 'T',
+        't1' => boolval(rand(0, 1)),
+        't2' => boolval(rand(0, 1)),
+        't3' => boolval(rand(0, 1)),
+        't4' => boolval(rand(0, 1)),
+        'consul_peatyc' => boolval(rand(0, 1)),
+        'repeticiones' => rand(1, 10),
+        'observado' => $faker->text
+    ];
+
+    $relaciones_pac = compact('destinatarios', 'componentesCa', 'pautas');
+
+    $parametros_pac = array_merge($relaciones_pac, $parametros_pac);
+
+    $parametros_acciones = compact('nombre', 'id_provincia', 'areasTematicas', 'id_linea_estrategica');
+
+    return array_merge($parametros_pac, $parametros_acciones);
+});

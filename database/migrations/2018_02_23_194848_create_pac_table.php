@@ -15,15 +15,15 @@ class CreatePacTable extends Migration
     {
         Schema::create('pac.pac', function (Blueprint $table) {
             $table->increments('id_pac');
-            $table->string('trimestre_planificacion',2);
-            $table->string('t1',1);
-            $table->string('t2',1);
-            $table->string('t3',1);
-            $table->string('t4',1);
+            $table->string('trimestre_planificacion', 2);
+            $table->string('t1', 1);
+            $table->string('t2', 1);
+            $table->string('t3', 1);
+            $table->string('t4', 1);
             $table->boolean('consul_peatyc');
             $table->text('observado');
             $table->integer('id_ficha_tecnica')->nullable();
-            $table->timestamps();            
+            $table->timestamps();
         });
     }
 

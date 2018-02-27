@@ -2,27 +2,58 @@
 
 namespace App\Models\Pac;
 
-use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pac extends Model
 {
+    use SoftDeletes;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = "pac.pac";
 
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id_pac';
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = ['pivot'];
+
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
     protected $dates = ['deleted_at'];
     
-    protected $fillable = ['nombre', 't1', 't2', 't3', 't4', 'observado', 'id_provincia'];
-
-    protected $primaryKey = 'id_pac';
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['nombre', 't1', 't2', 't3', 't4', 'observado', 'id_provincia', 'id_ficha_tecnica'];
 
     /**
      * Acciones planificadas.
      */
-/*    public function acciones()
+    public function acciones()
     {
-        return $this->belongsToMany('App\Models\Cursos\Curso', 'pac.pacs_cursos', 'id_curso', 'id_pac');
-    }*/
+        return $this->belongsToMany('App\Models\Cursos\Curso', 'pac.pacs_cursos', 'id_pac', 'id_curso')
+            //->withTimestamps()
+            ;
+    }
 
     /**
      * Las pacs de una pauta.
@@ -53,28 +84,35 @@ class Pac extends Model
      */
     public function ficha_tecnica()
     {
-        return $this->hasOne('App\Material', 'id_material', 'id_ficha_tecnica');
-    }    
-    
-    /**
-     * Areas tematicas.
-     */
-/*    public function areasTematicas()
-    {
-        return $this->belongsToMany('App\Models\Cursos\AreaTematica', 'pac.pacs_areas_tematicas', 'id_area_tematica', 'id_pac');
-    }*/
+        return $this->hasOne('App\FichaTecnica', 'id_ficha_tecnica', 'id_ficha_tecnica');
+    }
 
-    public function crear(Request $r)
+    public function generarAcciones($accion)
     {
-        $id_provincia = Auth::user()->id_provincia;
-        $this->nombre = $r->nombre;
-        $this->t1 = $r->t1;
-        $this->t2 = $r->t2;
-        $this->t3 = $r->t3;
-        $this->t4 = $r->t4;
-        $this->observado = $r->observado;
-        $this->id_provincia = $id_provincia;
-        $this->save();
+
+        $areasTematicas = explode(',', $accion['areasTematicas']);
+
+        while ($accion['repeticiones']--) {
+            $this->acciones()
+                ->create($accion)
+                ->areasTematicas()
+                ->attach($areasTematicas);
+        }
+
+        return $this;
+    }
+
+    public function llenarRelaciones($relaciones)
+    {
+
+        $destinatarios = explode(',', $relaciones['destinatarios']);
+        $componentes = explode(',', $relaciones['componentesCa']);
+        $pautas = explode(',', $relaciones['pautas']);
+
+        $this->destinatarios()->attach($destinatarios);
+        $this->componentesCa()->attach($componentes);
+        $this->pautas()->attach($pautas);
+
         return $this;
     }
 }

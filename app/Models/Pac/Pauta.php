@@ -7,18 +7,33 @@ use Illuminate\Http\Request;
 
 class Pauta extends Model
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
     protected $table = "pac.pautas";
 
-    protected $fillable = ['nombre', 'descripcion', 'id_categoria_pauta', 'vigencia', 'id_provincia'];
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id_pauta';
 
     /**
-     * Las pacs de una pauta.
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
      */
-    public function pacs()
-    {
-        return $this->belongsToMany('App\Models\Pac\Pac', 'pac.pacs_pautas', 'id_pac', 'id_pauta')->withTimestamps();
-    }
+    protected $hidden = ['pivot'];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['nombre', 'descripcion', 'id_categoria_pauta', 'vigencia', 'id_provincia'];
 
     /**
      * Get la PautaAction de una Pauta.
@@ -32,6 +47,7 @@ class Pauta extends Model
     {
         return $this->hasOne('App\Models\Pac\CategoriaPauta', 'id_categoria_pauta', 'id_categoria_pauta');
     }
+        
     /**
     *
     *

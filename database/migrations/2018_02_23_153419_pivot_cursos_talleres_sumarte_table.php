@@ -13,7 +13,7 @@ class PivotCursosTalleresSumarteTable extends Migration
      */
     public function up()
     {
-        Schema::create('cursos.talleres_sumarte_destinatarios', function(Blueprint $table){
+        Schema::create('cursos.talleres_sumarte_destinatarios', function (Blueprint $table) {
             $table->primary(['id_taller_sumarte', 'id_destinatario']);
             $table->integer('id_destinatario')->unsigned();
             $table->integer('id_taller_sumarte')->unsigned();

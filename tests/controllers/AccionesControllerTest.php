@@ -180,7 +180,7 @@ class AccionesControllerTest extends TestCase
         $ids_participantes = array_values($ids_participantes);
         $accion->alumnos()->attach($ids_participantes);
         $capacitados = $this->model->getByCuie('N95802')->first();
-        $this->assertEquals('N95802', $capacitados->establecimiento1);   
-        $this->assertEquals(3, $capacitados->alumnos);   
+        $this->assertEquals('N95802', $capacitados->establecimiento1);
+        $this->assertEquals(3, $capacitados->alumnos);
     }
 }

@@ -102,7 +102,7 @@ return [
             'driver' => 'pgsql',
             'host' => env('DB_HOST'),
             'port' => env('DB_PORT'),
-            'database' => 'atyc_testing',
+            'database' => 'atyc_phpunit',
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
             'charset' => 'utf8',

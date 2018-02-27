@@ -1,5 +1,5 @@
 <form>
-	<div class="row">
+    <div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form role="form">
 				<div class="row" id="busqueda-destinatarios">
@@ -15,10 +15,9 @@
 					</div> 
 				</div>
 			</form>
-		</div>
+        </div>
 	</div>
     <br>	
-<!--    
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="box box-default no-padding">
@@ -61,5 +60,4 @@
 				</div>
 			</div>
         </div>
--->
-	</form>
+    </form>

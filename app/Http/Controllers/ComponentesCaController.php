@@ -143,5 +143,5 @@ class ComponentesCaController extends AbmController
         $matchs = $query->get();
 
         return $this->typeaheadResponse($matchs);
-    }    
+    }
 }

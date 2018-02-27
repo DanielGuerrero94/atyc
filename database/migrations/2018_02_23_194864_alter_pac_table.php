@@ -39,11 +39,11 @@ class AlterPacTable extends Migration
     {
         Schema::table('pac.pac', function (Blueprint $table) {
             $table->boolean('consul_peatyc');
-            $table->string('trimestre_planificacion',2);
-            $table->string('t1',1);
-            $table->string('t2',1);
-            $table->string('t3',1);
-            $table->string('t4',1);
+            $table->string('trimestre_planificacion', 2);
+            $table->string('t1', 1);
+            $table->string('t2', 1);
+            $table->string('t3', 1);
+            $table->string('t4', 1);
             $table->dropColumn('id_provincia');
         });
     }
