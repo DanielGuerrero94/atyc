@@ -133,11 +133,13 @@ class PacsController extends ModelController
             ->with(['pautas', 'componentesCa', 'destinatarios', 'acciones'])
             ->get()
             ->map(function ($model) {
-                $model->areas_tematicas = $model->acciones->first()->areasTematicas;
+                $accion = $model->acciones->first();
+                $model->areas_tematicas = $accion->areasTematicas;
+                $tipologia_numero = $accion->lineaEstrategica()->first()->numero;
+                $tipologia_nombre = $accion->lineaEstrategica()->first()->nombre;
+                $model->tipologia = $tipologia_numero . ' - ' . $tipologia_nombre; 
                 return $model;
             });
-
-        logger(json_encode($data));
 
         return $this->toDatatable($request, $data);
     }

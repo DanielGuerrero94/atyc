@@ -59,7 +59,9 @@
 		datatable = $('#abm-table').DataTable({
 			destroy: true,
 			searching: false,
-			ajax : 'alumnos/tabla',
+            ajax : {
+                url: 'alumnos/tabla'
+            },
 			columns: [
 			{ title: 'Nombres', data: 'nombres'},
 			{ title: 'Apellidos', data: 'apellidos'},
@@ -96,11 +98,11 @@
 				destroy: true,
 				searching: false,
 				ajax: {
-					url: 'alumnos/filtrado',
+					url: '{{url("/alumnos/filtrado")}}',
 					data: {
 						filtros: getFiltros()
-					}
-				},
+                    }
+                },
 				columns: [
 				{ title: 'Nombres', data: 'nombres'},
 				{ title: 'Apellidos', data: 'apellidos'},

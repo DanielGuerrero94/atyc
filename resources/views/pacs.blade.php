@@ -17,6 +17,10 @@
 @section('script')
 <script type="text/javascript">
 
+    function seeButton(id_pac) {
+		return '<a href="{{url("/pacs")}}/' + id_pac + '/see" data-id="' + id_pac+ '" class="btn btn-circle ver" title="Ver"><i class="fa fa-search text-info fa-lg"></i></a>';
+	}
+
     function editButton(id_pac) {
 		return '<a href="{{url("/pacs")}}/' + id_pac + '" data-id="' + id_pac + '" class="btn btn-circle editar" title="Editar"><i class="fa fa-pencil text-info fa-lg"></i></a>';
 	}
@@ -27,8 +31,15 @@
 	
 	function format ( d ) {
 	    var sum="";
+        sum = '<div class="container" style="float: left; border: 1px solid; width: 1100px; border-color: #009900aa">';
 
-	    sum = '<div class="container" style="float: left; border: 1px solid; width: 800px; border-color: #009900aa"><div style="float: left; width: 250px;"><strong>PAUTAS</strong>';
+        sum += '<div style="float: left; width: 250px;"><strong>TEMATICAS</strong>';
+	    d.areas_tematicas.forEach(function(item)  {
+	    	console.log(item.nombre);
+	  		sum += '<br>'+item.nombre;
+		});
+	    sum += '</div>'
+        sum += '<div style="float: left; width: 250px;"><strong>PAUTAS</strong>';
 	    d.pautas.forEach(function(item)  {
 	    	console.log(item.nombre);
 	  		sum += '<br>'+item.nombre;
@@ -105,7 +116,7 @@
                 defaultContent: "",
                 orderable: false
             },
-            { data: 'acciones', title: 'Tipo de Acción'}, 
+            { data: 'tipologia', title: 'Tipo de Acción'}, 
             { data: 'nombre', title: 'Nombre'}, 
             {
                 data: 'null',
@@ -134,7 +145,7 @@
             { data: 'observado', title: 'Obsevado'},
             { data: 'acciones',
 				render: function ( data, type, row, meta ) {
-					return editButton(row.id_pac) + deleteButton(row.id_pac);
+					return seeButton(row.id_pac) + editButton(row.id_pac) + deleteButton(row.id_pac);
 				},
                 orderable: false
             }],
