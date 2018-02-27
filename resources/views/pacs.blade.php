@@ -17,10 +17,18 @@
 @section('script')
 <script type="text/javascript">
 
-    function seeButton(id_pac) {
-		return '<a href="{{url("/pacs")}}/' + id_pac + '/see" data-id="' + id_pac+ '" class="btn btn-circle ver" title="Ver"><i class="fa fa-search text-info fa-lg"></i></a>';
-	}
+    function informarAccionButton(id_pac) {
+		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle informar-accion" title="Informar repetición concretada"><i class="fa fa-calendar-plus-o text-success fa-lg"></i></a>';
+    }
 
+    function fichaTecnicaButton(id_pac) {
+		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle ficha-tecnica" title="Ficha técnica"><i class="fa fa-file-text-o fa-lg"></i></a>';
+    }
+
+    function seeButton(id_pac) {
+		return '<a href="{{url("/pacs")}}/' + id_pac + '/see" data-id="' + id_pac + '" class="btn btn-circle ver" title="Ver"><i class="fa fa-search text-info fa-lg"></i></a>';
+	}
+    
     function editButton(id_pac) {
 		return '<a href="{{url("/pacs")}}/' + id_pac + '" data-id="' + id_pac + '" class="btn btn-circle editar" title="Editar"><i class="fa fa-pencil text-info fa-lg"></i></a>';
 	}
@@ -65,19 +73,20 @@
 
     function checkEstadoFichaTecnica(id_ficha_tecnica) {
         
-        if (id_ficha_tecnica == 1) return '<a class="btn btn-warning btn-xs" title="Modificar">Vacia</a>';
+        if (id_ficha_tecnica == 1) return '<small class="label bg-yellow">Requiere completar</small>';
         
-        if (isFinite(id_ficha_tecnica)) return '<a class="btn btn-success btn-xs" title="Modificar">Modificada</a>';
+        if (id_ficha_tecnica != null) return '<small class="label bg-green" title="Modificada">Modificada</small>';
 
-		return '<a class="btn btn-default btn-xs" disabled>No requiere</a>';
+		return '<small class="label bg-aqua" disabled>No requiere</small>';
     }
 
     function progresoAcciones(row) {
+        console.log(row)
         //Hardcodeo para test
-        let now = 7;
-        let max = 8;
+        let now = row.completadas_count;
+        let max = row.planificadas_count;
         let width = now * 100 / max;
-        return '<div class="progress" style="margin-top: 1px;"><div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="'+now+'" aria-valuemin="0" aria-valuemax="'+max+'" style="width: '+width+'%">'+now+'/'+max+' Completas</div></div>';
+        return '<div class="progress" style="margin-top: 1px;"><div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="'+now+'" aria-valuemin="0" aria-valuemax="'+max+'" style="width: '+width+'%;color: #444;display: grid;">'+now+'/'+max+' Completas</div></div>';
     }
 
     function trimestre(row) {
@@ -119,10 +128,10 @@
             { data: 'tipologia', title: 'Tipo de Acción'}, 
             { data: 'nombre', title: 'Nombre'}, 
             {
-                data: 'null',
+                data: 'id_ficha_tecnica',
                 title: 'Ficha Técnica',
                 render: function ( data, type, row, meta ) {
-					return checkEstadoFichaTecnica(1);
+					return checkEstadoFichaTecnica(data);
 				},
                 orderable: false
             },
@@ -143,10 +152,19 @@
                 orderable: false
             },
             { data: 'observado', title: 'Obsevado'},
-            { data: 'acciones',
-				render: function ( data, type, row, meta ) {
-					return seeButton(row.id_pac) + editButton(row.id_pac) + deleteButton(row.id_pac);
-				},
+            { 
+                data: 'acciones',
+                render: function ( data, type, row, meta ) {
+                    let buttons = "";
+
+                    buttons += informarAccionButton(row.id_pac); 
+                    
+                    if (row.requiere_ficha_tecnica) buttons += fichaTecnicaButton(row.id_pac);
+                    
+                    buttons += seeButton(row.id_pac) + editButton(row.id_pac) + deleteButton(row.id_pac);
+
+                    return buttons;				
+                 },
                 orderable: false
             }],
 			responsive: false

@@ -130,14 +130,48 @@ class PacsController extends ModelController
     public function getTabla(Request $request)
     {
         $data = $this->model
-            ->with(['pautas', 'componentesCa', 'destinatarios', 'acciones'])
+            ->with([
+                'pautas' => function ($query) {
+                    $query->select('nombre');
+                },
+                'componentesCa' => function ($query) {
+                    $query->select('nombre');
+                },
+                'destinatarios' => function ($query) {
+                    $query->select('nombre');
+                }
+            ])
+            ->withCount([
+                "acciones as completadas" => function ($query) {
+                    $query->where('id_estado', 3);
+                },
+                "acciones as planificadas" => function ($query) {
+                    $query->where('id_estado', 1);
+                }        
+            ])
             ->get()
             ->map(function ($model) {
-                $accion = $model->acciones->first();
+
+                $accion = $model->with([
+                    "acciones" => function ($query) {
+                        return $query->limit(1);}
+                    ])
+                ->first()->acciones->first();
+
                 $model->areas_tematicas = $accion->areasTematicas;
-                $tipologia_numero = $accion->lineaEstrategica()->first()->numero;
-                $tipologia_nombre = $accion->lineaEstrategica()->first()->nombre;
-                $model->tipologia = $tipologia_numero . ' - ' . $tipologia_nombre; 
+
+                $linea_estrategica = $accion->lineaEstrategica()->first();
+
+                $model->tipologia = $linea_estrategica->numero . ' - ' . $linea_estrategica->nombre;
+
+                $requiere = $model->pautas()
+                    ->get()
+                    ->first(function ($model) {
+                        return $model->requiere_ficha_tecnica;
+                    });
+
+                $model->requiere_ficha_tecnica = !is_null($requiere);
+
                 return $model;
             });
 
@@ -167,6 +201,8 @@ class PacsController extends ModelController
         $tipologias = LineaEstrategica::orderBy('numero')->get();
 
         $tematicas = [];
+
+        $destinatarios =[]; 
 
         return compact('tipologias', 'tematicas');
     }

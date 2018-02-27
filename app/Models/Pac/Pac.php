@@ -86,7 +86,7 @@ class Pac extends Model
     {
         return $this->hasOne('App\FichaTecnica', 'id_ficha_tecnica', 'id_ficha_tecnica');
     }
-
+    
     public function generarAcciones($accion)
     {
 
