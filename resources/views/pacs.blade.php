@@ -18,7 +18,7 @@
 <script type="text/javascript">
 
     function informarAccionButton(id_pac) {
-		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle informar-accion" title="Informar repetición concretada"><i class="fa fa-calendar-plus-o text-success fa-lg"></i></a>';
+		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle informar-accion" title="Informar avance de repetición"><i class="fa fa-calendar-plus-o text-success fa-lg"></i></a>';
     }
 
     function fichaTecnicaButton(id_pac) {
@@ -159,7 +159,7 @@
 
                     buttons += informarAccionButton(row.id_pac); 
                     
-                    if (row.requiere_ficha_tecnica) buttons += fichaTecnicaButton(row.id_pac);
+                    buttons += fichaTecnicaButton(row.id_pac);
                     
                     buttons += seeButton(row.id_pac) + editButton(row.id_pac) + deleteButton(row.id_pac);
 
@@ -206,10 +206,10 @@
 		$('#alta_pac').on("click",function(){
 
 			$.ajax({
-				url: "{{url('pacs/alta')}}",
+				url: "{{url('/pacs/alta')}}",
 				type: 'get',
                 beforeSend: function () {
-                        $("#alta-pac").html("Procesando, espere por favor...");
+                    $("#alta-pac").html("Procesando, espere por favor...");
                 },				
 				success: function(data){
 					$('#alta-pac').html(data);
@@ -217,6 +217,7 @@
 					$('#abm').hide();
 				}
 			});
+
 		});
 
 		$("#alta-pac").on("click","#volver",function(){
@@ -224,18 +225,44 @@
 			$('#alta-pac').html("");
 			$('#abm').show();
 			$('#filtros').show();
+        });
+
+	    var downloadButton = $('<a href="#" class="btn btn-square download"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>');	
+        var updateButton = $('<a href="#" class="btn btn-square update" title="Remplazar archivo"><i class="fa fa-cloud-upload fa-lg text-primary"> Actualizar</i></a>');
+
+        var box = $('<div class="box" id="box"></div>');
+        var boxBody = $('<div class="box-body" id="box-body"><p>Nombre: ficha tecnica particular</p><p>Última actualización: dd/mm/aaaa </p></div>');
+        var boxFooter = $('<div class="box-footer" id="box-footer"></div>');
+
+        $("#abm").on("change", "#update input", function(event) {
+			data = new FormData($(this).closest(".box").find("form")[0]);
+			let id = $(this).closest(".box-footer").data("id");			
+			$.ajax({
+				url: "{{url('/materiales')}}" + "/" + id,
+				type: 'post',
+				data: data,
+				processData: false,
+				contentType: false,
+				success: function (data) {
+					console.log("success");
+					location.reload();
+				},
+				error: function (data) {
+					alert("Error al actualizar el archivo.");
+					location.reload();
+				}
+			});
 		});
 
-		$('#abm').on("click",".eliminar",function(){
-			var pac = $(this).data('id');
-			var data = '_token='+$('#abm input').first().val();
-			jQuery('<div/>', {
-				id: 'dialogABM',
-				text: ''
-			}).appendTo('.container-fluid');
 
-			$("#dialogABM").dialog({
-				title: "Verificacion",
+        $("#abm").on("click", ".ficha-tecnica", function(event) {
+        
+			event.preventDefault();
+
+			$('<div id="dialogFichaTecnica"></div>').appendTo('.container-fluid');
+
+			$("#dialogFichaTecnica").dialog({
+				title: "Actualización de ficha técnica",
 				show: {
 					effect: "fold"
 				},
@@ -244,51 +271,91 @@
 				},
 				modal: true,
 				width : 360,
+				height : 230,
+				closeOnEscape: true,
+				resizable: false,
+				dialogClass: "alert",
+				open: function () {
+					box.appendTo('#dialogFichaTecnica');
+					boxBody.appendTo('#box');
+					boxFooter.appendTo('#box');
+					downloadButton.appendTo('#box');
+				    updateButton.appendTo('#box');
+				},
+				close : function () {
+					$(this).dialog("destroy").remove();
+				}
+			});			
+		});		
+				
+        var dialogDeleteInput =  jQuery('<textarea/>', {
+            id: 'motivo',
+            name: 'motivo',
+            class: 'form-control',
+            placeholder: 'Ingrese el motivo por el cual quiere cancelar la acción',
+            type: 'text',
+            rows: '4'
+        });
+
+        $("#abm").on("click", ".eliminar", function(event) {
+        
+			event.preventDefault();
+
+			$('<div id="dialogDelete"></div>').appendTo('.container-fluid');
+
+			$("#dialogDelete").dialog({
+				title: "Verificación",
+				show: {
+					effect: "fold"
+				},
+				hide: {
+					effect: "fade"
+				},
+				modal: true,
+				width : 380,
 				height : 220,
 				closeOnEscape: true,
 				resizable: false,
 				dialogClass: "alert",
 				open: function () {
-					jQuery('<p/>', {
-						id: 'dialogABM',
-						text: '¿Esta seguro que quiere dar de baja al profesor?'
-					}).appendTo('#dialogABM');
+					dialogDeleteInput.appendTo('#dialogDelete');
+				},
+				close : function () {
+					$(this).dialog("destroy").remove();
 				},
 				buttons :
 				{
 					"Aceptar" : function () {
-						$(this).dialog("destroy");
-						$("#dialogABM").html("");
-						$.ajax ({
-							url: 'pacs/'+pac,
-							method: 'delete',
-							data: data,
-							success: function(data){
-								console.log('Se borro la pac.');
-								location.reload();
+                        $(this).dialog("destroy");
+
+                        let id = $(this).data('id');
+						let _token = $('#abm input').first().val();
+
+						$.ajax({
+							url: "{{url('/pacs')}}" + "/" + id,
+							type: 'delete',
+							data: {'_token': _token},
+							success: function (data) {
+								location.reload("true");
 							},
 							error: function (data) {
-								console.log('Hubo un error.');
-								console.log(data);
+								alert(data.responseText);
 							}
 						});
-
 					},
 					"Cancelar" : function () {
-						$(this).dialog("destroy");
-						$("#dialogABM").html("");
-						location.reload("true");
+						$(this).dialog("close");
 					}
 				}
-			});
-		});
+			});			
+		});		
+        
+        $('#alta-pac').on('click','#modificar',function() {
 
-		$('#alta-pac').on('click','#modificar',function() {
-
-			var pac = $(this).data('id');
+			let id = $(this).data('id');
 
 			$.ajax({				
-				url : '{{"/pacs"}}/' + pac,
+				url : '{{url("/pacs")}}/' + id,
 				method : 'put',
 				data : $('form').serialize(),
 				success : function(data){

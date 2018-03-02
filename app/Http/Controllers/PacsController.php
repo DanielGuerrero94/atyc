@@ -152,11 +152,7 @@ class PacsController extends ModelController
             ->get()
             ->map(function ($model) {
 
-                $accion = $model->with([
-                    "acciones" => function ($query) {
-                        return $query->limit(1);}
-                    ])
-                ->first()->acciones->first();
+                $accion = $model->acciones()->first();
 
                 $model->areas_tematicas = $accion->areasTematicas;
 
