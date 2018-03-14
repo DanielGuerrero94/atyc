@@ -13,14 +13,16 @@ class DatabaseRestoreCommand extends Command
      * @var string
      */
     protected $signature = 'db:restore
-    {--m|migrate=0 : Migrate}';
+    {--m|migrate=0 : Migrate}
+    {--t|table= : Table Name}';
+
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Restore table data using inserts from a .sql file';
 
     /**
      * Restore command
@@ -67,6 +69,12 @@ class DatabaseRestoreCommand extends Command
      */
     public function handle()
     {
+        if ($table = $this->option('table')) {
+            $this->restoreSingleTable($table); 
+            $this->info($table . " was restored;");
+            return;
+        }
+
         if ($this->option('migrate')) {
             $this->call('migrate:refresh');
         }
@@ -144,5 +152,11 @@ class DatabaseRestoreCommand extends Command
             }
         }
         return $output;
+    }
+
+    public function restoreSingleTable($table) { 
+        $this->setRestoreConnection();
+        $path = database_path("backups/{$table}.sql");
+        system($this->restoreCommand." -f {$path} -1 -q");
     }
 }

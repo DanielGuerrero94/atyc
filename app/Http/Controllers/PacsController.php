@@ -96,6 +96,8 @@ class PacsController extends ModelController
     {
         $data = array_merge($this->getSelectOptions(), $this->show($id));
 
+        dump($data);
+
         return view('pacs.modificacion', $data);
     }
 
@@ -108,7 +110,25 @@ class PacsController extends ModelController
      */
     public function update(Request $request, $id)
     {
-        //
+        $pac = $this->model->findOrFail($id);
+        $pac->id_ficha_tecnica = $request->input('id_ficha_tecnica');
+        $pac->save();
+        return $pac->id_pac;
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function replaceFichaTecnica(Request $request, $id, $id_ficha_tecnica)
+    {
+        $pac = $this->model->findOrFail($id);
+        $pac->id_ficha_tecnica = $id_ficha_tecnica;
+        $pac->save();
+        return $pac->id_pac;
     }
     
     /**
@@ -139,7 +159,8 @@ class PacsController extends ModelController
                 },
                 'destinatarios' => function ($query) {
                     $query->select('nombre');
-                }
+                },
+                'fichaTecnica'
             ])
             ->withCount([
                 "acciones as completadas" => function ($query) {
@@ -167,6 +188,8 @@ class PacsController extends ModelController
                     });
 
                 $model->requiere_ficha_tecnica = !is_null($requiere);
+
+                $model->aprobada = false;
 
                 return $model;
             });

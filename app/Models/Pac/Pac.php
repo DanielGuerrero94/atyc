@@ -82,9 +82,9 @@ class Pac extends Model
     /**
      * Ficha tecnica.
      */
-    public function ficha_tecnica()
+    public function fichaTecnica()
     {
-        return $this->hasOne('App\FichaTecnica', 'id_ficha_tecnica', 'id_ficha_tecnica');
+        return $this->hasOne('App\Models\Pac\FichaTecnica', 'id_ficha_tecnica', 'id_ficha_tecnica');
     }
     
     public function generarAcciones($accion)

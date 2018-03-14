@@ -4,6 +4,7 @@ use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AlumnosController;
 use App\Alumno;
+use App\Material;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,10 +40,24 @@ Artisan::command('test:apellidosTypea {typeahead}', function () {
 
 Artisan::command('test:show {id_participante}', function () {
 	Auth::attempt(['name' => 'uec', 'password' => 'uec001']);
-	/*Auth::attempt(['name' => 'jujuy', 'password' => 'jujuy001']);*/
+
 	$c = new AlumnosController();
 	
 	$participante = $c->show($this->argument('id_participante'));
 
 	$this->comment(json_encode($participante));
 })->describe('Command for testing.');
+
+Artisan::command('test:get-materiales', function (Material $material) {
+    $materiales = $material::select('path')->get();
+
+    foreach ($materiales as $material) {
+        $this->info($material->path);
+        $this->call('get:file', [
+            'name' => $material->path,
+            '--path' => "app/material"
+        ]);
+    }
+
+})->describe('Get Materiales files from production');
+

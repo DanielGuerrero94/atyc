@@ -56,6 +56,10 @@ Route::get('dashboard/draw/progress', 'DashboardController@progress');
 //Logueado
 Route::group(['middleware' => ['logueado','logging']], function () {
 
+    //Fichas tecnicas
+    Route::get('fichas-tecnicas/{id}/download', 'FichaTecnicaController@download');
+    Route::post('fichas-tecnicas', 'FichaTecnicaController@store');
+
     //Materiales
     Route::get('materiales/etapa/{id_etapa}/table', 'MaterialesController@table');
     Route::get('materiales/etapa/{id_etapa}/list', 'MaterialesController@listar');
@@ -320,8 +324,12 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         //Pacs
         Route::get('pacs', 'PacsController@getTodos');
         Route::get('pacs/alta', 'PacsController@create');
-        Route::post('pacs', 'PacsController@store');
         Route::get('pacs/tabla', 'PacsController@getTabla');
+        Route::get('pacs/{id}/see', 'PacsController@edit');
+
+        Route::post('pacs', 'PacsController@store');
+        Route::post('pacs/{id}/ficha-tecnica/{id_ficha_tecnica}', 'PacsController@replaceFichaTecnica');
+
         Route::put('pacs/{id}', 'PacsController@update');
 
         Route::delete('pacs/{id}', 'PacsController@destroy');

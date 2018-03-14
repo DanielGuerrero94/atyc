@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Storage;
 
 class GetFileCommand extends Command
 {
@@ -12,6 +13,7 @@ class GetFileCommand extends Command
      * @var string
      */
     protected $signature = 'get:file 
+        {--p|path : Path of the file}
         {name : Name of the file}';
 
     /**
@@ -22,16 +24,6 @@ class GetFileCommand extends Command
     protected $description = 'Gets a file with sftp';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
@@ -39,9 +31,7 @@ class GetFileCommand extends Command
     public function handle()
     {
         $name = $this->argument('name');
-        system(
-            'sshpass -p \''.env('SSH_PASS').'\' sftp administrador@192.6.0.224 << EOF 
-            get /var/www/html/sirge3/storage/uploads/prestaciones/'.$name
-        );
+        $path = $this->option('path') or '';
+        system("sshpass -p '".env('SSH_PASS')."' sftp administrador@192.6.0.224 << EOF get /var/www/html/atyc/{$path}/{$name} EOF");
     }
 }

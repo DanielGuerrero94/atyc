@@ -21,8 +21,8 @@
 		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle informar-accion" title="Informar avance de repetición"><i class="fa fa-calendar-plus-o text-success fa-lg"></i></a>';
     }
 
-    function fichaTecnicaButton(id_pac) {
-		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle ficha-tecnica" title="Ficha técnica"><i class="fa fa-file-text-o fa-lg"></i></a>';
+    function fichaTecnicaButton(row) {
+		return '<a href="#" data-id-pac="' + row.id_pac + '" data-id-ficha-tecnica="' + row.id_ficha_tecnica  + '" data-nombre="' + row.ficha_tecnica.original  + '" data-updated-at="' + row.ficha_tecnica.updated_at  + '" class="btn btn-circle ficha-tecnica" title="Ficha técnica"><i class="fa fa-file-text-o fa-lg"></i></a>';
     }
 
     function seeButton(id_pac) {
@@ -71,13 +71,16 @@
 	    return sum;
     }
 
-    function checkEstadoFichaTecnica(id_ficha_tecnica) {
-        
-        if (id_ficha_tecnica == 1) return '<small class="label bg-yellow">Requiere completar</small>';
-        
-        if (id_ficha_tecnica != null) return '<small class="label bg-green" title="Modificada">Modificada</small>';
+    function checkEstadoFichaTecnica(row) {
 
-		return '<small class="label bg-aqua" disabled>No requiere</small>';
+        if (!row.requiere_ficha_tecnica) return '<small class="label bg-aqua" disabled>No requiere</small>';
+
+        if (row.id_ficha_tecnica === 1) return '<small class="label bg-red">Requiere completar</small>';
+
+        if (!row.aprobada) return '<small class="label bg-yellow">Pendiente de aprobación</small>';
+        
+        return '<small class="label bg-green">Aprobada</small>';
+
     }
 
     function progresoAcciones(row) {
@@ -125,13 +128,25 @@
                 defaultContent: "",
                 orderable: false
             },
-            { data: 'tipologia', title: 'Tipo de Acción'}, 
-            { data: 'nombre', title: 'Nombre'}, 
+            { 
+                data: 'tipologia',
+                title: 'Tipo de Acción',
+                render: function (data, type, row, meta) {
+                    return '<span title="' + data  + '">' + data.substr(0,15) + '...</span>';
+                }
+            }, 
+            { 
+                data: 'nombre',
+                title: 'Nombre',
+                render: function (data, type, row, meta) {
+                    return '<span title="' + data  + '">' + data.substr(0,15) + '...</span>';
+                }                
+            }, 
             {
-                data: 'id_ficha_tecnica',
+                data: 'null',
                 title: 'Ficha Técnica',
                 render: function ( data, type, row, meta ) {
-					return checkEstadoFichaTecnica(data);
+					return checkEstadoFichaTecnica(row);
 				},
                 orderable: false
             },
@@ -151,7 +166,14 @@
 				},
                 orderable: false
             },
-            { data: 'observado', title: 'Obsevado'},
+            {
+                data: 'observado',
+                title: 'Obsevado',
+                render: function (data, type, row, meta) {
+                    return '<span title="' + data  + '">' + data.substr(0,15) + '...</span>';
+                },
+                orderable: false
+            },
             { 
                 data: 'acciones',
                 render: function ( data, type, row, meta ) {
@@ -159,7 +181,7 @@
 
                     buttons += informarAccionButton(row.id_pac); 
                     
-                    buttons += fichaTecnicaButton(row.id_pac);
+                    buttons += fichaTecnicaButton(row);
                     
                     buttons += seeButton(row.id_pac) + editButton(row.id_pac) + deleteButton(row.id_pac);
 
@@ -227,11 +249,18 @@
 			$('#filtros').show();
         });
 
-	    var downloadButton = $('<a href="#" class="btn btn-square download"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>');	
-        var updateButton = $('<a href="#" class="btn btn-square update" title="Remplazar archivo"><i class="fa fa-cloud-upload fa-lg text-primary"> Actualizar</i></a>');
+	    var downloadButton = $('<a href="#" class="btn btn-square download pull-right" title="Descargar archivo"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>');	
+        var updateButton = $('<a href="#" class="btn btn-square update pull-right" title="Remplazar archivo"><i class="fa fa-cloud-upload fa-lg text-primary"> Actualizar</i></a>');
+        var checkButton = $('<a href="#" class="btn btn-square check-ficha-tecnica pull-right" title="Aprobar ficha tecnica"><i class="fa fa-check-circle-o fa-lg text-success"> Aprobar</i></a>');
 
-        var box = $('<div class="box" id="box"></div>');
-        var boxBody = $('<div class="box-body" id="box-body"><p>Nombre: ficha tecnica particular</p><p>Última actualización: dd/mm/aaaa </p></div>');
+        function box(id_pac) {
+            return  $('<div class="box" id="box" data-id-pac="' + id_pac  + '"></div>');
+        }
+
+        function boxBody(nombre, updated_at) {
+            return $('<div class="box-body" id="box-body"><p><b>Nombre:</b> ' + nombre  + '</p><p><b>Última actualización:</b> ' + updated_at  + '</p></div>');
+        }
+
         var boxFooter = $('<div class="box-footer" id="box-footer"></div>');
 
         $("#abm").on("change", "#update input", function(event) {
@@ -254,10 +283,14 @@
 			});
 		});
 
-
         $("#abm").on("click", ".ficha-tecnica", function(event) {
         
-			event.preventDefault();
+            event.preventDefault();
+
+            let button = $(this);
+            let nombre = button.data('nombre');
+            let updated_at = button.data('updated-at');
+            let id_pac = button.data('id-pac');
 
 			$('<div id="dialogFichaTecnica"></div>').appendTo('.container-fluid');
 
@@ -270,24 +303,89 @@
 					effect: "fade"
 				},
 				modal: true,
-				width : 360,
+				width : 390,
 				height : 230,
 				closeOnEscape: true,
 				resizable: false,
 				dialogClass: "alert",
 				open: function () {
-					box.appendTo('#dialogFichaTecnica');
-					boxBody.appendTo('#box');
+					box(id_pac).appendTo('#dialogFichaTecnica');
+					boxBody(nombre, updated_at).appendTo('#box');
 					boxFooter.appendTo('#box');
-					downloadButton.appendTo('#box');
 				    updateButton.appendTo('#box');
+				    checkButton.appendTo('#box');
+					downloadButton.appendTo('#box');
 				},
 				close : function () {
 					$(this).dialog("destroy").remove();
 				}
 			});			
+        });
+
+        formUpdate = '<form id="update" name="update" style="display: none;">{{ csrf_field() }}<label><input type="file" name="csv" style="display: none;"></label></form>';
+
+        $(document).on("click", ".update", function(event) {
+			let buttons = $(this).parent();
+			$(formUpdate).appendTo(buttons);
+			buttons.find("#update input").eq(1).click();
+		});
+	    
+        $(document).on("change", "#update input", function(event) {
+            alert("update");
+            console.log($(this));
+            data = new FormData($(this).closest(".box").find("form")[0]);
+            token = data;
+
+            console.log("POST de archivo");
+            
+            let id_pac = $(this).closest(".box").data("id-pac");
+
+            var id_ficha_tecnica;
+
+			$.ajax({
+				url: "{{url('/fichas-tecnicas')}}",
+				type: 'post',
+				data: data,
+				processData: false,
+				contentType: false,
+                success: function (data) {
+                    id_ficha_tecnica = data;
+                    console.log("se guardo la ficha tecnica");
+
+                    $.ajax({
+	        			url: "{{url('/pacs')}}" + "/" + id_pac + "/ficha-tecnica/" + id_ficha_tecnica,
+	        			type: 'post',
+		        		data: token,
+		        		processData: false,
+		        		contentType: false,
+		        		success: function (data) {
+			        		console.log("success");
+				        	location.reload();
+				        },
+        				error: function (data) {
+	        				alert("Error al actualizar el archivo.");
+		        			location.reload();
+		        		}
+                     });
+
+					location.reload();
+				},
+				error: function (data) {
+					alert("Error al actualizar el archivo.");
+					//location.reload();
+				}
+            });
+
+
+		});
+	
+        $(document).on("click", ".download", function(event) {
+            event.preventDefault();
+            let id_ficha_tecnica = 1;
+            let url = "{{url('/fichas-tecnicas')}}" + "/" + id_ficha_tecnica + "/download";
+            window.location = url;
 		});		
-				
+	
         var dialogDeleteInput =  jQuery('<textarea/>', {
             id: 'motivo',
             name: 'motivo',

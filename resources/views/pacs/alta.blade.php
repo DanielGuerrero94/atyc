@@ -2,8 +2,8 @@
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
       <li id="tab-pac" class="active"><a href="#inicial" data-toggle="tab">Planificación</a></li>
-      <li id="tab-areaTematica"><a href="#areasTematicas" data-toggle="tab">Areas Tematicas</a></li>
-      <li id="tab-destinatario"><a href="#destinatarios-pane" data-toggle="tab">Destinatario</a></li>
+      <li id="tab-areaTematica"><a href="#areasTematicas" data-toggle="tab">Áreas Temáticas</a></li>
+      <li id="tab-destinatario"><a href="#destinatarios-pane" data-toggle="tab">Destinatarios</a></li>
       <li id="tab-componenteCa"><a href="#componentesCa" data-toggle="tab">Componentes CA</a></li>
       <li id="tab-pauta"><a href="#pautas" data-toggle="tab">Pautas</a></li>
       <li class="navbar-right"><div class="btn btn-success store">Guardar</div></li>
@@ -13,26 +13,7 @@
         <form>
           {{ csrf_field() }}
           <div class="row">
-            <div class="form-group col-xs-12 col-md-6">       
-              <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
-              <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
-                <div class="typeahead__field ">             
-                  <span class="typeahead__query ">
-                    <input class="curso_typeahead form-control" name="nombre"  type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="row">
-            <div class="col-md-6">          
-              <label for="repeticiones" class="control-label col-md-4 col-xs-3">Repeticiones</label>
-              <div class="col-md-4 col-xs-3">
-                <input type="number" class="form-control" name="repeticiones" id="repeticiones" placeholder="Repeticiones"> 
-              </div>
-            </div>
-            <div class="col-md-6">
+                        <div class="col-md-6">
               <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
               <div class="col-md-8 col-xs-9">
                 <select class="form-control" id="linea_estrategica" name="id_linea_estrategica">
@@ -44,12 +25,29 @@
               </div>
             </div>
           </div>
-                    
+          <br>
           <div class="row">
-            <div class="col-md-6">
-            <ul>
-              <li>Trimestre de ejecucion:</li>
-                  <div class="form-check form-check-inline">
+            <div class="form-group col-xs-12 col-md-6">       
+              <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
+              <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
+                <div class="typeahead__field ">             
+                  <span class="typeahead__query ">
+                    <input class="curso_typeahead form-control" name="nombre"  type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">          
+              <div class="col-md-4 col-xs-3">
+                <input type="number" class="form-control" name="repeticiones" id="repeticiones" placeholder="Repeticiones"> 
+              </div>
+            </div>
+          </div>
+          <br> 
+          <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+              <label for="form-check" class="control-label col-md-4 col-xs-3">Trimestre planificación: </label>
+                  <div class="form-check form-check-inline col-md-8 col-xs-9" id="form-check">
                       <input type="checkbox" id="t1" name="t1">
                       <label for="t1">1ro</label>
                       <input type="checkbox" id="t2" name="t2">
@@ -59,15 +57,13 @@
                       <input type="checkbox" id="t4" name="t4">
                       <label for="t4">4to</label>
                   </div>
-            </ul>
             </div>         
           </div>
-          
+         <hr> 
           <div class="row">
-            <div class="form-group col-xs-12 col-md-6">
-              <label for="observado" class="control-label col-md-4 col-xs-3">Observado</label>
-              <div class="col-md-8 col-xs-9">
-                <input type="text" class="form-control" name="observado" id="observado" placeholder="Observado"> 
+            <div class="form-group">
+              <div class="col-xs-12">
+                <textarea type="textarea" class="form-control" name="observado" id="observado" placeholder="Observaciones que quiera hacer.."></textarea>
               </div>
             </div>
           </div>          

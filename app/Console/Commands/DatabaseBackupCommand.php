@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Symfony\Component\Finder\Finder;
 
-class GetBackupCommand extends Command
+class DatabaseBackupCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'get:backup';
+    protected $signature = 'db:backup {--t|table=}';
 
     /**
      * The console command description.
@@ -22,29 +22,20 @@ class GetBackupCommand extends Command
     protected $description = 'Crea un .sql para replicar inserts';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
+     *
+     * Uses pg_dump on unix-like systems
      *
      * @return mixed
      */
     public function handle()
     {
-        $tables = $this->allTables();
-        foreach ($tables as $table) {
-            system("pg_dump -U postgres atyc -h 192.6.0.66 -t {$table} --data-only --inserts > database/backups/{$table}.sql");
-        }
+        $this->chooseTables();
+
+        $this->saveBackupFiles();
     }
 
-    public function allTables()
+    public function getAllTablesNames()
     {
         $tables = [];
         //Consigue los archivos en migrations que usen create table
@@ -58,4 +49,23 @@ class GetBackupCommand extends Command
         }
         return $tables;
     }
+
+    public function chooseTables() {
+        if ($table = $this->option('table')) {
+            $this->tables[] = $table;
+        } else {
+            $this->tables = $this->getAllTablesNames();
+        }
+    }
+
+    public function setTablePathName($table) {
+        return database_path("backups/{$table}.sql");
+    }
+
+    public function saveBackupFiles() {
+        foreach ($this->tables as $table) {
+            system("pg_dump -U postgres atyc -h 192.6.0.66 -t {$table} --data-only --inserts > ". $this->setTablePathName($table));
+        }
+    }
+
 }
