@@ -21,7 +21,6 @@ class PautasController extends AbmController
 
     private $rules = [
         'item' => 'required|string',
-        'nombre' => 'required|string',
         'descripcion' => 'required|string',
         'id_categoria_pauta' => 'required|numeric'
     ];
@@ -82,6 +81,7 @@ class PautasController extends AbmController
         if ($v->fails()) {
             return response($v->errors(), 400);
         }
+        $this->agregaRequest($request);
 
         $pauta = new Pauta();
         $pauta = $pauta->crear($request);
@@ -126,10 +126,18 @@ class PautasController extends AbmController
         logger('Quiere actualizar pauta {$id} con: '.json_encode($request->all()));
         try {
             $pauta = Pauta::findOrFail($id);
+            $this->agregaRequest($request);
             return $pauta->modificar($request);
         } catch (ModelNotFoundException $e) {
             return json_encode($e->message);
         }
+    }
+
+    private function agregaRequest(Request $r)
+    {
+        $categoriaPauta = CategoriaPauta::findOrFail($r->id_categoria_pauta);
+        $r->request->add(['nombre' => $categoriaPauta->item.".".$r->item]);
+        $r->request->add(['vigencia' => date('Y')]);
     }
 
     /**

@@ -33,7 +33,7 @@ class Pauta extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre', 'descripcion', 'id_categoria_pauta', 'vigencia', 'id_provincia'];
+    protected $fillable = ['descripcion', 'id_categoria_pauta', 'vigencia', 'id_provincia'];
 
     /**
      * Get la PautaAction de una Pauta.

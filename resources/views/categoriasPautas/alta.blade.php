@@ -1,5 +1,5 @@
 <div class="box box-success">
-	<div class="box-header with-border">Alta de pauta</div>
+	<div class="box-header with-border">Alta de categoria pauta</div>
 	<div class="box-body">
 		<form id="form-alta">
 			{{ csrf_field() }}
@@ -11,50 +11,17 @@
 					</div>
 				</div>
 				<div class="form-group col-sm-6">
+					<label for="nombre" class="control-label col-xs-4">Nmbre:</label>
+					<div class="col-xs-8">
+						<input name="nombre" type="text" class="form-control" id="nombre">
+					</div>
+				</div>
+				<div class="form-group col-sm-6">
 					<label for="descripcion" class="control-label col-xs-4">Descripcion:</label>
 					<div class="col-xs-8">
 						<input name="descripcion" type="text" class="form-control" id="descripcion">
 					</div>
-				</div>
-				<div class="form-group col-sm-6">
-					<label class="control-label col-xs-4" for="id_categoria_pauta">Categoria Pauta:</label>
-					<div class="col-xs-8">
-						@if(Auth::user()->id_provincia == 25)
-							<select class="form-control" id="id_categoria_pauta" title="Categoria Pauta" name="id_categoria_pauta">
-								@foreach ($categoriaPauta as $categoria)
-								
-								<option data-id="{{$categoria->id_categoria_pauta}}" title="{{$categoria->item}}" value="{{$categoria->id_categoria_pauta}}">{{$categoria->nombre}}</option>					
-								@endforeach
-							</select>
-						@else
-
-							<select class="form-control" id="id_categoria_pauta" name="id_categoria_pauta" >
-								@foreach ($categoriaPauta as $categoria)
-									@if($categoria->item == '10')
-							    		<option data-id="{{ $categoria->id_categoria_pauta }}" title="{{ $categoria->nombre }}" value="{{ $categoria->id_categoria_pauta }}">{{ $categoria->nombre }}</option> 
-							    		@break
-							  		@endif
-								@endforeach
-							</select>
-						@endif
-					</div>
-				</div>
-	            <div class="form-group col-sm-6">          
-		            <label for="provincia" class="control-label col-xs-4">Provincia:</label>
-		            <div class="col-xs-8">
-		                @if(Auth::user()->id_provincia == 25)
-			                <select class="form-control" id="id_provincia" name="id_provincia">
-			                    @foreach ($provincias as $provincia)                
-			                       <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->nombre}}" value="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>           
-			                    @endforeach
-			                </select>
-		                @else
-			                <select class="form-control" id="id_provincia" name="id_provincia" name="id_provincia" disabled>
-			                    <option data-id="{{Auth::user()->id_provincia}}" value="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>  
-			                </select>
-		                @endif
-		            </div>        
-	            </div>            				
+				</div>           				
 			</div>	
 			<hr>
 
@@ -71,7 +38,7 @@
 
 
 		//Pregunta si el alta se esta dando desde el abm de participantes o desde el de acciones
-		if ($('.container-fluid #creando-pauta').length) {
+/*		if ($('.container-fluid #creando-pauta').length) {
 
 			function backToCreate () {
 				$('.container-fluid #creando-pauta').remove();
@@ -100,16 +67,18 @@
 				location.reload();
 			}
 			
+		}*/
+		function transitionAfterSubmit(data) {
+			location.reload();
 		}
-
 
 		jQuery.validator.addMethod("requerido", function(value, element) {
 			return value != "";
 		}, "Campo obligatorio");	
 
-		$('#alta').on("click","#volver",backToCreate);
+		/*$('#alta').on("click","#volver",backToCreate);*/
 
-		function agregarPauta(item, nombre, descripcion, id) {
+/*		function agregarPauta(item, nombre, descripcion, id) {
 			pauta = '<tr>'+
 			'<td>'+item+'</td>'+
 			'<td>'+nombre+'</td>'+
@@ -133,12 +102,12 @@
 				$('#pautas-del-curso').closest('div').show();
 				refreshCounter();
 			}
-		}
+		}*/
 
-		function refreshCounter() {
+/*		function refreshCounter() {
 			let count = $('#pautas-del-curso tbody').children().length;
 			$('#contador-pautas').html(count);
-		}
+		}*/
 
 		function getInput() {					
 			return $('#alta #form-alta').serializeArray().filter(function(v){return v.value != ""});
@@ -148,10 +117,12 @@
 			debug: true,				
 			rules : {
 				item 		: {required: true, number: true },
+				nombre      : {required: true},
 				descripcion : {required: true}
 			},
 			messages:{
 				descripcion : "Campo obligatorio",
+				nombre : "Campo obligatorio",
 				item : "Campo obligatorio o Tiene que ser un numero"
 			},
 			highlight: function(element)
@@ -165,15 +136,15 @@
 			submitHandler : function(form){
 				console.log($('form').serialize());
 				$.ajax({
-					url: 'pautas',
+					url: 'categoriasPautas',
 					method : 'post',						
 					data : $('form').serialize(),
 					success: function(data, textStatus, xhr) {
-						console.log("Se creo la pauta y devolvio: " + data);
+						console.log("Se creo la categoria de la pauta y devolvio: " + data);
 						transitionAfterSubmit(data);
 					},
 					error: function(xhr, textStatus, errorThrown) {
-						alert('No se pudo dar de alta la pauta.');
+						alert('No se pudo dar de alta la categoria de la pauta.');
 					}
 				});
 			}	
@@ -182,11 +153,7 @@
 		$('#alta').on('click','#crear',function(e) {
 			e.preventDefault();		
 			if(validator.valid()){
-
-				$('#vigencia').prop('disabled', false);
-				$('#id_provincia').prop('disabled', false);
 				$('#alta #form-alta').submit();
-
 			}
 		});
 
