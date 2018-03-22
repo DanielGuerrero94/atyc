@@ -58,7 +58,12 @@ Route::group(['middleware' => ['logueado','logging']], function () {
 
     //Fichas tecnicas
     Route::get('fichas-tecnicas/{id}/download', 'FichaTecnicaController@download');
+
     Route::post('fichas-tecnicas', 'FichaTecnicaController@store');
+    Route::post('fichas-tecnicas/{id}', 'FichaTecnicaController@replace');
+
+    Route::put('fichas-tecnicas/{id}/aprobar', 'FichaTecnicaController@aprobar');
+    Route::put('fichas-tecnicas/{id}', 'FichaTecnicaController@update');
 
     //Materiales
     Route::get('materiales/etapa/{id_etapa}/table', 'MaterialesController@table');

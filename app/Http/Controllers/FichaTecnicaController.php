@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pac\FichaTecnica;
+use App\Models\Pac\FichaTecnica as Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Datatables;
 
 class FichaTecnicaController extends Controller
 {
+    protected $model;
+
+    public function __construct(Model $model) {
+        $this->model = $model;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -17,12 +23,8 @@ class FichaTecnicaController extends Controller
      */
     public function store(Request $request)
     {
-        $path = $request->file('csv')->store('ficha_tecnica');
-        $path = explode('/', $path);
-        $path = $path[1];
-        $original = $request->file('csv')->getClientOriginalName();
-        
-        return FichaTecnica::create(compact('original', 'path'))->id_ficha_tecnica;
+        $data = $this->formatRequestData($request);        
+        return $this->model->create($data)->id_ficha_tecnica;
     }
 
     public function download($id)
@@ -34,15 +36,24 @@ class FichaTecnicaController extends Controller
 
     public function replace(Request $request, $id)
     {
-        $path = $request->file('csv')->store('material');
+        $data = $this->formatRequestData($request);        
+        $material = $this->model->findOrFail($id);
+        Storage::delete($material->path);
+        $material->update($data);
+        return response('Replaced', 200);
+    }
+    
+    public function aprobar($id) {
+       return $this->model->findOrFail($id)->aprobar(); 
+    }
+
+    public function formatRequestData(Request $request) {
+        $path = $request->file('csv')->store('ficha_tecnica');
         $path = explode('/', $path);
         $path = $path[1];
         $original = $request->file('csv')->getClientOriginalName();
-        $material = Material::findOrFail($id);
-        $replaced = $material->path;
-        $material->update(compact('original', 'path'));
-        Storage::delete($replaced);
-        return response('Replaced', 200);
+
+        return compact('original', 'path');
     }
 
 }

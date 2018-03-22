@@ -189,8 +189,6 @@ class PacsController extends ModelController
 
                 $model->requiere_ficha_tecnica = !is_null($requiere);
 
-                $model->aprobada = false;
-
                 return $model;
             });
 
