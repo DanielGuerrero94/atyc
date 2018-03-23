@@ -216,9 +216,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('provincias/localidades/typeahead', 'ProvinciasController@localidadesTypeahead');
 
     //ADMIN
-    //Route::group(['middleware' => 'admin'], function () {
-    //Logueado
-    Route::group(['middleware' => ['logueado','logging']], function () {
+    Route::group(['middleware' => 'admin'], function () {
         Route::get('dashboard/notificaciones', 'DashboardController@getHistorial');
         Route::get('ideas/historial-completo', 'DashboardController@getHistorialCompleto');
 
@@ -326,7 +324,6 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('categoriasPautas', 'CategoriasPautasController@get');
         Route::get('categoriasPautas/tabla', 'CategoriasPautasController@getTabla');
         Route::get('categoriasPautas/alta', 'CategoriasPautasController@create');
-        Route::put('categoriasPautas/{id}', 'CategoriasPautasController@update');
         Route::get('categoriasPautas/{id}', 'CategoriasPautasController@edit');
 
         Route::post('categoriasPautas', 'CategoriasPautasController@store');

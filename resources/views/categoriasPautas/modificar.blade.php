@@ -7,6 +7,7 @@
 			<div class="box-body">				
 				<form id="form-alta">
 				{{ csrf_field() }}
+				{{ method_field('PUT') }}
 				
 					<div class="row">
 						<div class="form-group col-sm-6">
@@ -34,7 +35,7 @@
 			<a href="{{url()->previous()}}">
 				<button class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i>Volver</button>
 			</a>
-				<div class="btn btn-primary pull-right" id="modificar" title="Modificar" data-id="{{$categoriaPauta->id_pauta}}"><i class="fa fa-plus" aria-hidden="true"></i>Modificar</div>
+				<div class="btn btn-primary pull-right" id="modificar" title="Modificar" data-id="{{$categoriaPauta->id_categoria_pauta}}"><i class="fa fa-plus" aria-hidden="true"></i>Modificar</div>
 			</div>
 		</div> 
 	</div>
@@ -49,14 +50,14 @@
 			console.log('Se vuelve sin crear categoria pauta.');
 			$('#alta').html("");
 			$('#abm').show();
-			$('#filtros').show();
 		});
 
-		var categoria = $('.container #modificar').data('id');
 
 		$(".container").on("click","#modificar",function () {
 			var data = $('#form-alta').serialize();
-
+			console.log(data);
+			var categoria = $('.container #modificar').data('id');
+			console.log(categoria);
 			$.ajax({
 				url: "{{url('/categoriasPautas')}}"+"/"+categoria,
 				method: 'put',

@@ -13,13 +13,13 @@ class CategoriasPautasController extends Controller
 {
 
     private $rules = [
-        'item'        => 'required|string',
+        'item'        => 'required|numeric',
         'nombre'      => 'required|string',
         'descripcion' => 'required|string'
     ];
 
     private $filters = [
-        'item'        => 'string',
+        'item'        => 'numeric',
         'nombre'      => 'string',
         'descripcion' => 'string'
     ];

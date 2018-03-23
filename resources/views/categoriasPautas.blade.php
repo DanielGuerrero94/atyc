@@ -19,10 +19,6 @@
 
 	$(document).ready(function(){		
 
-		$('#abm').on('click','.filter',function () {			
-			$('#filtros .box').show();
-		});
-
 		var datatable = $('#table').DataTable({
 			destroy: true,
 			searching: false,
@@ -39,46 +35,19 @@
 			responsive: true
 		});
 
-		$('#filtros').on('click','#filtrar',function () {
-
-			filtros = $('#form-filtros :input')
-			.filter(function(i,e){return $(e).val() != ""})
-			.serializeArray();
-
-			var datatable = $('#table').DataTable({
-				destroy: true,
-				searching: false,
-				ajax: {
-					url: 'categoriasPautas/filtrado',
-					data: {
-						filtros: filtros 
-					}
-				},
-				columns: [
-				{ data: 'item'},
-				{ data: 'nombre'},
-				{ data: 'descripcion'},
-				{ data: 'acciones', orderable: false}
-				],			
-				rowReorder: {
-					selector: 'td:nth-child(2)'
-				},
-				responsive: true
-			});
-		});
-
 
 		$('#alta_categoria_pauta').on('click',function () {
 			$('#filtros').hide();
 			$('#abm').hide();
 			$.ajax({
 				url: 'categoriasPautas/alta',
-				method: 'get',
-				success: function(data){
-					$('#alta').html(data);
-					$('#alta').show();
-				}
-			})
+				method: 'get'
+			}).done(function(data){
+				$('#alta').html(data);
+				$('#alta').show();
+			}).fail(function(){
+				alert("error");
+			});
 		});
 
 		$('#abm').on("click",".eliminar",function(){
@@ -118,14 +87,14 @@
 						$.ajax ({
 							url: 'categoriasPautas/'+categoria,
 							method: 'delete',
-							data: data,
-							success: function(data){
-								console.log('Se borro la categoria pauta.');
-							},
-							error: function (data) {
-								console.log('Hubo un error.');
-								console.log(data);
-							}
+							data: data
+						}).done(function(data){
+							console.log('Se borro la categoria pauta.');
+							alert('Se borro la categoria pauta.');
+						}).fail(function(){
+							console.log('Hubo un error.');
+							console.log(data);
+							alert("Error, no se puede borrar");
 						});
 
 						location.reload("true");

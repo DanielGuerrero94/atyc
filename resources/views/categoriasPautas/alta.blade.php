@@ -37,37 +37,6 @@
 	$(document).ready(function () {
 
 
-		//Pregunta si el alta se esta dando desde el abm de participantes o desde el de acciones
-/*		if ($('.container-fluid #creando-pauta').length) {
-
-			function backToCreate () {
-				$('.container-fluid #creando-pauta').remove();
-				$('.container-fluid #alta-accion').closest('.row').show();
-				$('.container-fluid #alta').remove();
-			}
-			
-			function transitionAfterSubmit(data) {
-				$('.container-fluid #creando-pauta').remove();
-				$('.container-fluid #alta-accion').closest('.row').show();
-				$('.container-fluid #alta').remove();
-				console.log("Se intenta agregar al pauta a la accion.");
-				agregarPauta(data.item, data.nombre, data.descripcion, data.id_pauta);
-			}
-
-		} else {
-
-			function backToCreate () {
-				console.log("Vuelve sin crear la pauta");
-				$("#alta").hide();
-				$("#filtros").show();
-				$("#abm").show();
-			}
-			
-			function transitionAfterSubmit(data) {
-				location.reload();
-			}
-			
-		}*/
 		function transitionAfterSubmit(data) {
 			location.reload();
 		}
@@ -76,38 +45,6 @@
 			return value != "";
 		}, "Campo obligatorio");	
 
-		/*$('#alta').on("click","#volver",backToCreate);*/
-
-/*		function agregarPauta(item, nombre, descripcion, id) {
-			pauta = '<tr>'+
-			'<td>'+item+'</td>'+
-			'<td>'+nombre+'</td>'+
-			'<td>'+descripcion+'</td>'+
-			'<td>'+
-			'<div class="btn btn-xs btn-info "><a href="{{url('/pautas')}}/'+id+'"><i class="fa fa-search" data-id="'+id+'"></i></a></div>'+
-			'<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>'+
-			'</td>'+
-			'</tr>';
-			existe = false;
-
-			$.each($('#pautas-del-curso tbody tr .fa-search'),function(k,v){
-				if($(v).data('id') == id){
-					existe = true;
-				}
-			});
-
-			if(!existe){
-				console.log("No esta en la tabla entonces se agrega.");
-				$('#pautas-del-curso tbody').append(pauta);     
-				$('#pautas-del-curso').closest('div').show();
-				refreshCounter();
-			}
-		}*/
-
-/*		function refreshCounter() {
-			let count = $('#pautas-del-curso tbody').children().length;
-			$('#contador-pautas').html(count);
-		}*/
 
 		function getInput() {					
 			return $('#alta #form-alta').serializeArray().filter(function(v){return v.value != ""});
