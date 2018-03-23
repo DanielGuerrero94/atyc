@@ -12,7 +12,10 @@ class DatabaseMaterializedViews extends Command
      *
      * @var string
      */
-    protected $signature = 'db:matviews';
+    protected $signature = 'db:matviews
+    {--i|interactive : Run interactively}
+    {--d|describe= : Describe a matview}
+    {--r|refresh-all : Refresh all matviews}';
 
     /**
      * The console command description.
@@ -28,33 +31,82 @@ class DatabaseMaterializedViews extends Command
      */
     public function handle()
     {
-        $matviews = DB::select("select * from pg_matviews;");        
-        /*
-         * Deberia tener aca una estructura que me permita saber cuando fue la ultima vez que se actualizo una matview
-         * Voy a mostrar una tabla con todos los nombres de las vistas materializadas y cada cuanto tiene planificado si es que tiene en el scheduler refreshearse
-         */
+        $this->identifyMatviews();
 
-        $this->showTableStatus($matviews);
+        $this->handleOptions();
+    
+        $this->showTableStatus();
     }
 
-    public function showTableStatus($matviews) {
+    public function handleOptions() {
+
+        if ($this->option('interactive')) {
+
+            $option = $this->choice("Pick one: ", ['describe', 'refresh']);
+            $this->info("Materialized views: " . json_encode($this->matviews));
+
+            if ($option == 'refresh') {
+            $matview = $this->anticipate('Refresh matview: ', $this->matviews); 
+            $this->info($matview);
+            }
+
+            if ($option == 'describe') {
+                $matview = $this->anticipate('Describe matview: ', $this->matviews); 
+                $this->describe($matview);
+
+                //$this->call('db:matviews', ['--describe']);
+            }
+
+            exit;
+        }
+
+        if ($matview = $this->option('describe')) {
+            $this->describe($matview);
+        }
+    }
+
+    public function identifyMatviews() {
+        $this->matviews = collect(DB::select("select * from pg_matviews;"))
+            ->map(function ($matview) {
+                return $matview->schemaname . "." . $matview->matviewname;
+            })->toArray();
+    }
+
+    public function showTableStatus() {
         
-        $matviews = $this->format($matviews);
+        $matviews = $this->format();
 
         $this->table(['fullname', 'count', 'schedule', 'last_refresh'], $matviews);
     }
 
-    public function format($matviews) {
-        return collect($matviews)->map(function ($matview) {
-            $matview_fullname = $matview->schemaname . "." . $matview->matviewname;
-            $count = $this->count($matview_fullname);
+    public function format() {
+        return collect($this->matviews)->map(function ($matview) {
+            $count = $this->count($matview);
             $schedule = 'none';
             $last_refresh = 'never';
-            return compact('matview_fullname', 'count', 'schedule', 'last_refresh');
+            return compact('matview', 'count', 'schedule', 'last_refresh');
         })->toArray();
     }
 
-    public function count($matview_fullname) {
-        return DB::table($matview_fullname)->count();
+    public function count($matview) {
+        return DB::table($matview)->count();
+    }
+
+    public function describe($matview) {
+    
+            if (!in_array($matview, $this->matviews)) {
+                $this->error($matview . " does not exists.");
+                exit;
+            }
+
+            list($schemaname, $matviewname) = explode('.',$matview);
+
+            $query = "select definition from pg_matviews where schemaname = '{$schemaname}' and matviewname = '{$matviewname}';";
+
+            $definition = DB::select($query);
+            $definition = $definition[0]->definition;
+
+            $this->info("Definition for {$matview}: {$definition}");
+            exit;
     }
 }
