@@ -7,13 +7,7 @@
 				<div class="form-group col-sm-6">
 					<label for="item" class="control-label col-xs-4">Item:</label>
 					<div class="col-xs-8">
-						<input name="item" type="text" class="form-control" id="item">
-					</div>
-				</div>
-				<div class="form-group col-sm-6">
-					<label for="nombre" class="control-label col-xs-4">Nombre:</label>
-					<div class="col-xs-8">
-						<input name="nombre" type="text" class="form-control" id="nombre">	
+						<input name="item" type="number" class="form-control" id="item">
 					</div>
 				</div>
 				<div class="form-group col-sm-6">
@@ -25,12 +19,24 @@
 				<div class="form-group col-sm-6">
 					<label class="control-label col-xs-4" for="id_categoria_pauta">Categoria Pauta:</label>
 					<div class="col-xs-8">
-						<select class="form-control" id="id_categoria_pauta" title="Categoria Pauta" name="id_categoria_pauta">
-							@foreach ($categoriaPauta as $categoria)
-							
-							<option data-id="{{$categoria->id_categoria_pauta}}" title="{{$categoria->item}}" value="{{$categoria->id_categoria_pauta}}">{{$categoria->nombre}}</option>					
-							@endforeach
-						</select>
+						@if(Auth::user()->id_provincia == 25)
+							<select class="form-control" id="id_categoria_pauta" title="Categoria Pauta" name="id_categoria_pauta">
+								@foreach ($categoriaPauta as $categoria)
+								
+								<option data-id="{{$categoria->id_categoria_pauta}}" title="{{$categoria->item}}" value="{{$categoria->id_categoria_pauta}}">{{$categoria->nombre}}</option>					
+								@endforeach
+							</select>
+						@else
+
+							<select class="form-control" id="id_categoria_pauta" name="id_categoria_pauta" >
+								@foreach ($categoriaPauta as $categoria)
+									@if($categoria->item == '10')
+							    		<option data-id="{{ $categoria->id_categoria_pauta }}" title="{{ $categoria->nombre }}" value="{{ $categoria->id_categoria_pauta }}">{{ $categoria->nombre }}</option> 
+							    		@break
+							  		@endif
+								@endforeach
+							</select>
+						@endif
 					</div>
 				</div>
 	            <div class="form-group col-sm-6">          
@@ -48,13 +54,7 @@
 			                </select>
 		                @endif
 		            </div>        
-	            </div>
-	            <div class="form-group col-sm-6">          
-		            <label for="vigencia" class="control-label col-xs-4">Año de vigencia:</label>
-		            <div class="col-xs-8">
-						<input name="vigencia" type="text" class="form-control" id="vigencia" value="{{date('Y')}}" disabled>		            	
-		            </div>
-		        </div>	            				
+	            </div>            				
 			</div>	
 			<hr>
 
@@ -148,11 +148,9 @@
 			debug: true,				
 			rules : {
 				item 		: {required: true, number: true },
-				nombre 		: {required: true},
 				descripcion : {required: true}
 			},
 			messages:{
-				nombre : "Campo obligatorio",
 				descripcion : "Campo obligatorio",
 				item : "Campo obligatorio o Tiene que ser un numero"
 			},
@@ -184,10 +182,13 @@
 		$('#alta').on('click','#crear',function(e) {
 			e.preventDefault();		
 			if(validator.valid()){
+
 				$('#vigencia').prop('disabled', false);
 				$('#id_provincia').prop('disabled', false);
-				$('#alta #form-alta').submit();	
+				$('#alta #form-alta').submit();
+
 			}
 		});
+
 	});
 </script>

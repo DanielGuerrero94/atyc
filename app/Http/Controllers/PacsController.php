@@ -174,7 +174,7 @@ class PacsController extends ModelController
             ->map(function ($model) {
 
                 $accion = $model->acciones()->first();
-
+                logger(json_encode($accion));
                 $model->areas_tematicas = $accion->areasTematicas;
 
                 $linea_estrategica = $accion->lineaEstrategica()->first();

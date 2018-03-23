@@ -12,15 +12,9 @@
 						<div class="form-group col-sm-6">
 							<label class="control-label col-xs-4" for="nro_doc">Item:</label>
 							<div class="col-xs-8">
-								<input name="item" type="text" class="form-control" id="item" value="{{$pauta->item}}">
+								<input name="item" type="number" class="form-control" id="item" value="{{$pauta->item}}">
 							</div>
 						</div>						
-						<div class="form-group col-sm-6">
-							<label for="nombre" class="control-label col-xs-4">Nombre:</label>
-							<div class="col-xs-8">
-								<input name="nombre" type="text" class="form-control" id="nombres" value="{{$pauta->nombre}}">	
-							</div>
-						</div>
 						<div class="form-group col-sm-6">
 							<label for="descripcion" class="control-label col-xs-4">Descripcion:</label>
 							<div class="col-xs-8">
@@ -28,15 +22,39 @@
 							</div>
 						</div>
 						<div class="form-group col-sm-6">
-							<label class="control-label col-xs-4" for="id_accion_pauta">Accion de la Pauta:</label>
+							<label class="control-label col-xs-4" for="id_categoria_pauta">Accion de la Pauta:</label>
 							<div class="col-xs-8">
-								<select class="form-control" id="id_accion_pauta" name="id_accion_pauta">
-									@foreach ($accionPauta as $accion)							
-										<option value="{{$accion->id_accion_pauta}}" title="{{$accion->item}}">{{$accion->nombre}}</option>
+								<select class="form-control" id="id_categoria_pauta" name="id_categoria_pauta">
+									@foreach ($categoriaPauta as $categoria)
+									@if($pauta->id_categoria_pauta == $categoria->id_categoria_pauta)
+										<option value="{{$categoria->id_categoria_pauta}}" title="{{$categoria->item}}" selected>{{$categoria->nombre}}</option>
+									@else
+										<option value="{{$categoria->id_categoria_pauta}}" title="{{$categoria->item}}">{{$categoria->nombre}}</option>
+									@endif
 									@endforeach
 								</select>
 							</div>
 						</div>
+			            <div class="form-group col-sm-6">          
+				            <label for="provincia" class="control-label col-xs-4">Provincia:</label>
+				            <div class="col-xs-8">
+				                @if(Auth::user()->id_provincia == 25)
+					                <select class="form-control" id="id_provincia" name="id_provincia">
+					                    @foreach ($provincias as $provincia)
+					                    @if($pauta->id_provincia == $provincia->id_provincia)           
+					                       <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->nombre}}" value="{{$provincia->id_provincia}}" selected>{{$provincia->nombre}}</option>
+					                    @else
+					                    	<option data-id="{{$provincia->id_provincia}}" title="{{$provincia->nombre}}" value="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>
+					                    @endif
+					                    @endforeach
+					                </select>
+				                @else
+					                <select class="form-control" id="id_provincia" name="id_provincia" name="id_provincia" disabled>
+					                    <option data-id="{{Auth::user()->id_provincia}}" value="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>  
+					                </select>
+				                @endif
+				            </div>        
+			            </div>
 					</div>
 				</form>
 			</div>
@@ -56,7 +74,7 @@
 
 		//Para setear como seleccionado lo que ya tiene seteado
 
-		$('#alta #id_accion_pauta').val($('#alta #id_accion_pauta').attr('value'));
+		$('#alta #id_categoria_pauta').val($('#alta #id_categoria_pauta').attr('value'));
 
 
 		$("#alta").on("click","#volver",function(){
