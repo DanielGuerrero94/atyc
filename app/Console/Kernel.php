@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         \App\Console\Commands\DatabaseRestoreCommand::class,
         \App\Console\Commands\DatabaseSyncCommand::class,
         \App\Console\Commands\DatabaseBackupCommand::class,
+        \App\Console\Commands\DatabaseMaterializedViews::class,
         \App\Console\Commands\GetFileCommand::class,
         \App\Console\Commands\GetLogCommand::class,
         \App\Console\Commands\ViewMakeCommand::class,
