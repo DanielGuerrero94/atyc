@@ -16,7 +16,6 @@
 
 @section('script')
 <script type="text/javascript">
-
     function informarAccionButton(id_pac) {
 		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle informar-accion" title="Informar avance de repetición"><i class="fa fa-calendar-plus-o text-success fa-lg"></i></a>';
     }
@@ -37,32 +36,32 @@
 		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
     }
 	
-	function format ( d ) {
+	function format (d) {
 	    var sum="";
         sum = '<div class="container" style="float: left; border: 1px solid; width: 1100px; border-color: #009900aa">';
 
         sum += '<div style="float: left; width: 250px;"><strong>TEMATICAS</strong>';
-	    d.areas_tematicas.forEach(function(item)  {
+	    d.areas_tematicas.forEach(function(item) {
 	    	console.log(item.nombre);
 	  		sum += '<br>'+item.nombre;
 		});
 	    sum += '</div>'
         sum += '<div style="float: left; width: 250px;"><strong>PAUTAS</strong>';
-	    d.pautas.forEach(function(item)  {
+	    d.pautas.forEach(function(item) {
 	    	console.log(item.nombre);
 	  		sum += '<br>'+item.nombre;
 		});
 	    sum += '</div>'
 
 	    sum += '<div style="float: left; width: 250px;"><strong>DESTINATARIOS</strong>';
-	    d.destinatarios.forEach(function(item)  {
+	    d.destinatarios.forEach(function(item) {
 	    	console.log(item.nombre);
 	  		sum += '<br>'+item.nombre;
 		});
 	    sum += '</div>'
 
 	    sum += '<div style="float: left; width: 250px;"><strong>COMPONENTES CA</strong>';
-	    d.componentes_ca.forEach(function(item)  {
+	    d.componentes_ca.forEach(function(item) {
 	    	console.log(item.nombre);
 	  		sum += '<br>'+item.nombre;
 		});
@@ -72,15 +71,13 @@
     }
 
     function checkEstadoFichaTecnica(row) {
-
-        if (!row.requiere_ficha_tecnica) return '<small class="label bg-aqua" disabled>No requiere</small>';
+        if (!row.requiere_ficha_tecnica && row.id_ficha_tecnica === 1) return '<small class="label bg-aqua" disabled>No requiere</small>';
 
         if (row.id_ficha_tecnica === 1) return '<small class="label bg-red">Requiere completar</small>';
 
-        if (!row.aprobada) return '<small class="label bg-yellow">Pendiente de aprobación</small>';
+        if (!row.ficha_tecnica.aprobada) return '<small class="label bg-yellow">Pendiente de aprobación</small>';
         
         return '<small class="label bg-green">Aprobada</small>';
-
     }
 
     function progresoAcciones(row) {
@@ -109,6 +106,7 @@
 
 	$(document).ready(function(){
 
+        @include('pacs.ficha-tecnica-script')
 		var datatable;
 
 		$('#abm').on('click','.filter',function () {
@@ -248,144 +246,7 @@
 			$('#abm').show();
 			$('#filtros').show();
         });
-
-	    var downloadButton = $('<a href="#" class="btn btn-square download pull-right" title="Descargar archivo"><i class="fa fa-cloud-download fa-lg" style="color: #2F2D2D;"> Descargar</i></a>');	
-        var updateButton = $('<a href="#" class="btn btn-square update pull-right" title="Remplazar archivo"><i class="fa fa-cloud-upload fa-lg text-primary"> Actualizar</i></a>');
-        var checkButton = $('<a href="#" class="btn btn-square check-ficha-tecnica pull-right" title="Aprobar ficha tecnica"><i class="fa fa-check-circle-o fa-lg text-success"> Aprobar</i></a>');
-
-        function box(id_pac) {
-            return  $('<div class="box" id="box" data-id-pac="' + id_pac  + '"></div>');
-        }
-
-        function boxBody(nombre, updated_at) {
-            return $('<div class="box-body" id="box-body"><p><b>Nombre:</b> ' + nombre  + '</p><p><b>Última actualización:</b> ' + updated_at  + '</p></div>');
-        }
-
-        var boxFooter = $('<div class="box-footer" id="box-footer"></div>');
-
-        $("#abm").on("change", "#update input", function(event) {
-			data = new FormData($(this).closest(".box").find("form")[0]);
-			let id = $(this).closest(".box-footer").data("id");			
-			$.ajax({
-				url: "{{url('/materiales')}}" + "/" + id,
-				type: 'post',
-				data: data,
-				processData: false,
-				contentType: false,
-				success: function (data) {
-					console.log("success");
-					location.reload();
-				},
-				error: function (data) {
-					alert("Error al actualizar el archivo.");
-					location.reload();
-				}
-			});
-		});
-
-        $("#abm").on("click", ".ficha-tecnica", function(event) {
-        
-            event.preventDefault();
-
-            let button = $(this);
-            let nombre = button.data('nombre');
-            let updated_at = button.data('updated-at');
-            let id_pac = button.data('id-pac');
-
-			$('<div id="dialogFichaTecnica"></div>').appendTo('.container-fluid');
-
-			$("#dialogFichaTecnica").dialog({
-				title: "Actualización de ficha técnica",
-				show: {
-					effect: "fold"
-				},
-				hide: {
-					effect: "fade"
-				},
-				modal: true,
-				width : 390,
-				height : 230,
-				closeOnEscape: true,
-				resizable: false,
-				dialogClass: "alert",
-				open: function () {
-					box(id_pac).appendTo('#dialogFichaTecnica');
-					boxBody(nombre, updated_at).appendTo('#box');
-					boxFooter.appendTo('#box');
-				    updateButton.appendTo('#box');
-				    checkButton.appendTo('#box');
-					downloadButton.appendTo('#box');
-				},
-				close : function () {
-					$(this).dialog("destroy").remove();
-				}
-			});			
-        });
-
-        formUpdate = '<form id="update" name="update" style="display: none;">{{ csrf_field() }}<label><input type="file" name="csv" style="display: none;"></label></form>';
-
-        $(document).on("click", ".update", function(event) {
-			let buttons = $(this).parent();
-			$(formUpdate).appendTo(buttons);
-			buttons.find("#update input").eq(1).click();
-		});
-	    
-        $(document).on("change", "#update input", function(event) {
-            alert("update");
-            console.log($(this));
-            data = new FormData($(this).closest(".box").find("form")[0]);
-            token = data;
-
-            console.log("POST de archivo");
-            
-            let id_pac = $(this).closest(".box").data("id-pac");
-
-            var id_ficha_tecnica;
-
-			$.ajax({
-				url: "{{url('/fichas-tecnicas')}}",
-				type: 'post',
-				data: data,
-				processData: false,
-				contentType: false,
-                success: function (data) {
-                    id_ficha_tecnica = data;
-                    console.log("se guardo la ficha tecnica");
-
-                    $.ajax({
-	        			url: "{{url('/pacs')}}" + "/" + id_pac + "/ficha-tecnica/" + id_ficha_tecnica,
-	        			type: 'post',
-		        		data: token,
-		        		processData: false,
-		        		contentType: false,
-		        		success: function (data) {
-			        		console.log("success");
-				        	location.reload();
-				        },
-        				error: function (data) {
-	        				alert("Error al actualizar el archivo.");
-		        			location.reload();
-		        		}
-                     });
-
-					location.reload();
-				},
-				error: function (data) {
-					alert("Error al actualizar el archivo.");
-					//location.reload();
-				}
-            });
-
-
-		});
-	
-        $(document).on("click", ".download", function(event) {
-            event.preventDefault();
-            let id_ficha_tecnica = 1;
-            let url = "{{url('/fichas-tecnicas')}}" + "/" + id_ficha_tecnica + "/download";
-            window.location = url;
-		});		
-	
+ 
         var dialogDeleteInput =  jQuery('<textarea/>', {
             id: 'motivo',
             name: 'motivo',
@@ -453,7 +314,7 @@
 			let id = $(this).data('id');
 
 			$.ajax({				
-				url : '{{url("/pacs")}}/' + id,
+				url : '{{url("/pacs")}}' + "/" + id,
 				method : 'put',
 				data : $('form').serialize(),
 				success : function(data){
