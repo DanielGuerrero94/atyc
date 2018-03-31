@@ -94,7 +94,7 @@
         let trimestres = '';
 
         //Hardcodeo 
-        row.t1 = true;
+        //row.t1 = true;
 
         if (row.t1) trimestres += '<span class="badge">1ro</span>';
         if (row.t2) trimestres += '<span class="badge">2do</span>';

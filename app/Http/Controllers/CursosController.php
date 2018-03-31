@@ -198,6 +198,7 @@ class CursosController extends AbmController
             logger("Se deja el curso sin docentes");
             $curso->profesores()->detach();
         }
+        dump($request);
         
         return $curso->update($request->all());
     }
@@ -613,6 +614,7 @@ class CursosController extends AbmController
      */
     public function see($id)
     {
+        dump(array_merge($this->show($id), $this->getSelectOptions(), ['disabled' => true]));
         return view('cursos/modificacion', array_merge($this->show($id), $this->getSelectOptions(), ['disabled' => true]));
     }
 }

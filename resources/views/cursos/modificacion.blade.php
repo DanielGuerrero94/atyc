@@ -54,7 +54,7 @@
                 <div class="form-group col-xs-12 col-md-6">          
                   <label for="edicion" class="control-label col-md-4 col-xs-3">Edición:</label>
                   <div class="col-md-8 col-xs-9">
-                    <input type="number" class="form-control" name="edicion" id="edicion" placeholder="Edición de la accion" value="{{$curso->edicion}}" disabled="true"> 
+                    <input type="number" class="form-control" name="edicion" id="edicion" placeholder="Edición de la accion" value="{{$curso->edicion}}" > 
                   </div>
                 </div>
               </div>
@@ -302,10 +302,10 @@
           success : function(data){
             console.log("Success.");
             alert("Se modifico la acción.");
-            window.location = "{{url('cursos')}}";
+            window.location = "{{url('pacs')}}";
           },
           error : function(data){
-            console.log("Error.");
+            console.log(data);
             alert("No se pudo modificar la acción.");
           }
         });

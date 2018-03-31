@@ -341,7 +341,8 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('pacs', 'PacsController@getTodos');
         Route::get('pacs/alta', 'PacsController@create');
         Route::get('pacs/tabla', 'PacsController@getTabla');
-        Route::get('pacs/{id}/see', 'PacsController@edit');
+        Route::get('pacs/{id}', 'PacsController@edit');
+        Route::get('pacs/{id}/see', 'PacsController@see');
 
         Route::post('pacs', 'PacsController@store');
         Route::post('pacs/{id}/ficha-tecnica/{id_ficha_tecnica}', 'PacsController@replaceFichaTecnica');

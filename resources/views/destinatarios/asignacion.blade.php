@@ -38,10 +38,11 @@
 							</thead>
 							<tbody>
 								@if(isset($pac))
-								@foreach($pac->funciones as $funcion)
+								@foreach($pac->destinatarios as $funcion)
 								<tr>
 									<td>{{$funcion->nombre}}</td>
 									<td>
+										@if(!isset($disabled))
 										<div class="btn btn-xs btn-info">
 											<a href="{{url('/funciones/'.$funcion->id_funcion)}}">
 												<i class="fa fa-search" data-id="{{$funcion->id_funcion}}"></i>
@@ -50,6 +51,7 @@
 										<div class="btn btn-xs btn-danger quitar">
 											<i class="fa fa-minus" data-id="{{$funcion->id_funcion}}"></i>
 										</div>
+										@endif
 									</td>
 								</tr>
 								@endforeach

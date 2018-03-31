@@ -46,6 +46,7 @@
 									<td>{{$pauta->nombre}}</td>
 									<td>{{$pauta->descripcion}}</td>
 									<td>
+										@if(!isset($disabled))
 										<div class="btn btn-xs btn-info">
 											<a href="{{url('/pautas/'.$pauta->id_pauta)}}">
 												<i class="fa fa-search" data-id="{{$pauta->id_pauta}}"></i>
@@ -54,6 +55,7 @@
 										<div class="btn btn-xs btn-danger quitar">
 											<i class="fa fa-minus"></i>
 										</div>
+										@endif
 									</td>
 								</tr>
 								@endforeach

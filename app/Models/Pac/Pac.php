@@ -4,6 +4,8 @@ namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Cursos\Curso;
+use Auth;
 
 class Pac extends Model
 {
@@ -115,4 +117,30 @@ class Pac extends Model
 
         return $this;
     }
+
+    public function modificarRelaciones($relaciones)
+    {
+
+        $destinatarios  = explode(',', $relaciones['destinatarios']);
+        $componentes    = explode(',', $relaciones['componentesCa']);
+        $pautas         = explode(',', $relaciones['pautas']);
+        $areasTematicas = explode(',', $relaciones['areasTematicas']);
+
+        $this->destinatarios()->sync($destinatarios);
+        $this->componentesCa()->sync($componentes);
+        $this->pautas()->sync($pautas);
+        foreach ($this->acciones() as $accion) {
+            $accion->areasTematicas()->sync($areasTematicas);
+        }
+
+        return $this;
+    }
+
+    public function scopeSegunProvincia($query)
+    {
+        $id_provincia = Auth::user()->id_provincia;
+        if ($id_provincia != 25) {
+            return $query->where('pac.id_provincia', $id_provincia);
+        }
+    } 
 }

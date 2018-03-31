@@ -13,7 +13,7 @@
         <form>
           {{ csrf_field() }}
           <div class="row">
-                        <div class="col-md-6">
+            <div class="col-md-6">
               <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
               <div class="col-md-8 col-xs-9">
                 <select class="form-control" id="linea_estrategica" name="id_linea_estrategica">

@@ -87,6 +87,63 @@ class PacsController extends ModelController
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+
+        $pac = Pac::with([
+            'componentesCa' => function ($query) {
+                return $query->select(
+                    'pac.componentes_ca.id_componente_ca',
+                    'nombre',
+                    'anio_vigencia'
+                );
+            },
+            'pautas' => function ($query) {
+                return $query->select(
+                    'pac.pautas.id_pauta',
+                    'item',
+                    'nombre',
+                    'descripcion'
+                );
+            },
+            'destinatarios' => function ($query) {
+                return $query->select(
+                    'alumnos.funciones.id_funcion',
+                    'nombre'
+                );
+            },
+            'acciones' => function ($query) {
+                return $query->select(
+                    'cursos.cursos.id_curso',
+                    'nombre',
+                    'id_linea_estrategica',
+                    'edicion',
+                    'fecha',
+                    'duracion',
+                    'id_estado'
+                );
+            }
+        ])
+        ->where('id_pac', $id)
+        ->segunProvincia()
+        ->get()
+        ->map(function ($model) {
+            $accion = $model->acciones()->first();
+            $model->areas_tematicas = $accion->areasTematicas;
+
+            return $model;
+        })
+        ->first();
+
+        return ['pac' => $pac];
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -96,7 +153,7 @@ class PacsController extends ModelController
     {
         $data = array_merge($this->getSelectOptions(), $this->show($id));
 
-        dump($data);
+        
 
         return view('pacs.modificacion', $data);
     }
@@ -110,10 +167,22 @@ class PacsController extends ModelController
      */
     public function update(Request $request, $id)
     {
+        $request->request->add(['t1' => $request->has('t1')]);
+        $request->request->add(['t2' => $request->has('t2')]);
+        $request->request->add(['t3' => $request->has('t3')]);
+        $request->request->add(['t4' => $request->has('t4')]);
+
         $pac = $this->model->findOrFail($id);
-        $pac->id_ficha_tecnica = $request->input('id_ficha_tecnica');
-        $pac->save();
-        return $pac->id_pac;
+        if($request->input('id_ficha_tecnica')==null){
+            $pac->id_ficha_tecnica = 1;    
+        }else{
+            $pac->id_ficha_tecnica = $request->input('id_ficha_tecnica');
+        }
+        $relaciones = $request->only(['destinatarios', 'componentesCa', 'pautas', 'areasTematicas']);
+        $pac->modificarRelaciones($relaciones);
+        $pac->update($request->all());
+        //dump($pac);
+        return $pac->id_pac;        
     }
 
     /**
@@ -148,7 +217,7 @@ class PacsController extends ModelController
      * @return \Illuminate\Http\Response
      */
     public function getTabla(Request $request)
-    {
+    {     
         $data = $this->model
             ->with([
                 'pautas' => function ($query) {
@@ -170,6 +239,7 @@ class PacsController extends ModelController
                     $query->where('id_estado', 1);
                 }        
             ])
+            ->segunProvincia()
             ->get()
             ->map(function ($model) {
 
@@ -219,8 +289,20 @@ class PacsController extends ModelController
 
         $tematicas = [];
 
-        $destinatarios =[]; 
+        $destinatarios = []; 
 
         return compact('tipologias', 'tematicas');
     }
+
+    /**
+     * Show the form for seeing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function see($id)
+    {
+        $data = $this->show($id);
+        return view('pacs/modificacion', array_merge($this->show($id), $this->getSelectOptions(), ['disabled' => true]));
+    }   
 }

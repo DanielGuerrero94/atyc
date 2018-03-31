@@ -42,6 +42,7 @@
 								<tr>
 									<td>{{$componenteCa->nombre}}</td>
 									<td>
+										@if(!isset($disabled))
 										<div class="btn btn-xs btn-info">
 											<a href="{{url('/componentesCa/'.$componenteCa->id_componente_ca)}}">
 												<i class="fa fa-search" data-id="{{$componenteCa->id_componente_ca}}"></i>
@@ -50,6 +51,7 @@
 										<div class="btn btn-xs btn-danger quitar">
 											<i class="fa fa-minus" data-id="{{$componenteCa->id_componente_ca}}"></i>
 										</div>
+										@endif
 									</td>
 								</tr>
 								@endforeach

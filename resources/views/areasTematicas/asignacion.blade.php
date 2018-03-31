@@ -42,6 +42,7 @@
 								<tr>
 									<td>{{$areaTematica->nombre}}</td>
 									<td>
+										@if(!isset($disabled))
 										<div class="btn btn-xs btn-info">
 											<a href="{{url('/areasTematicas/'.$areaTematica->id_area_tematica)}}">
 												<i class="fa fa-search" data-id="{{$areaTematica->id_area_tematica}}"></i>
@@ -50,6 +51,7 @@
 										<div class="btn btn-xs btn-danger quitar">
 											<i class="fa fa-minus" data-id="{{$areaTematica->id_area_tematica}}"></i>
 										</div>
+										@endif
 									</td>
 								</tr>
 								@endforeach
