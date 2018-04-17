@@ -11,6 +11,9 @@
               <a href="#inicial" data-toggle="tab">Inicial</a>
             </li>
             <li>
+              <a href="#areasTematicas" data-toggle="tab">Areas Tematicas</a>
+            </li>
+            <li>
               <a href="#alumnos" data-toggle="tab">Participantes</a>
             </li>
             <li>
@@ -38,6 +41,23 @@
                       </span>
                     </div>
                   </div>
+                </div>
+                <div class="col-md-6">  
+                <div class="form-group col-xs-12 col-md-6">   
+                  <label for="estado" class="control-label col-md-4 col-xs-3">Estado:</label>     
+                  <div class="col-md-7 col-xs-8">
+                    <select class="form-control" id="estado" name="estado">
+                      <option>Seleccionar</option>
+                      @foreach ($estados as $estado)
+                        @if ($estado->id_estado === $curso->id_estado)
+                          <option data-id="{{$estado->id_estado}}" selected="selected">{{$estado->nombre}}</option>
+                        @else
+                          <option data-id="{{$estado->id_estado}}">{{$estado->nombre}}</option>
+                        @endif  
+                      @endforeach
+                    </select> 
+                  </div>
+                </div>
                 </div>
               </div>
               <br>
@@ -77,11 +97,11 @@
                     <select class="form-control" id="area_tematica" name="area_tematica">
                       <option>Seleccionar</option>
                       @foreach ($areas_tematicas as $area)
-                      @if ($area->id_area_tematica === $curso->id_area_tematica)
-                      <option data-id="{{$area->id_area_tematica}}" selected="selected">{{$area->nombre}}</option>
-                      @else
-                      <option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
-                      @endif  
+                        @if ($area->id_area_tematica === $curso->id_area_tematica)
+                          <option data-id="{{$area->id_area_tematica}}" selected="selected">{{$area->nombre}}</option>
+                        @else
+                          <option data-id="{{$area->id_area_tematica}}">{{$area->nombre}}</option>
+                        @endif  
                       @endforeach
                     </select>          
                   </div>
@@ -133,12 +153,15 @@
                 </div>
               </div>  
             </div>
+            <div class="tab-pane" id="areasTematicas">
+                @include('areasTematicas.asignacion')
+            </div> 
             <div class="tab-pane" id="alumnos">   
               @include('alumnos.asignacion')             
             </div>
             <div class="tab-pane" id="profesores">
               @include('profesores.asignacion')          
-            </div> 
+            </div>
           </div>
           <div class="box-body">
             <a href="{{url()->previous()}}">
@@ -230,30 +253,41 @@
     	});
     }
 
+    function getAreasTematicasSelected() {
+      return $('#form-modificacion #areasTematicas-de-la-pac .fa-minus').map(function(index, val) {
+        return $(val).data('id');
+      });
+    } 
+
     function getSelected() {
     	var id_linea_estrategica = $('#form-modificacion #linea_estrategica option:selected').data('id');
-    	var id_area_tematica = $('#form-modificacion #area_tematica option:selected').data('id');
     	var id_provincia = $('#form-modificacion #provincia option:selected').data('id');
+      var id_estado = $('#form-modificacion #estado option:selected').data('id');
 
     	var alumnos = getAlumnosSelected();
     	var profesores = getProfesoresSelected();
+      var areasTematicas = getAreasTematicasSelected(); 
     	return [
     	{ 
     		name: 'id_linea_estrategica',
     		value: id_linea_estrategica
     	},
     	{ 
-    		name: 'id_area_tematica',
-    		value: id_area_tematica
-    	},
-    	{ 
     		name: 'id_provincia',
     		value: id_provincia
     	},
+      { 
+        name: 'id_estado',
+        value: id_estado
+      },
     	{ 
     		name: 'alumnos',
     		value: alumnos.toArray()
     	},
+      { 
+        name: 'areasTematicas',
+        value: areasTematicas.toArray()
+      },
     	{ 
     		name: 'profesores',
     		value: profesores.toArray()
@@ -278,7 +312,6 @@
         fecha : {
           required: true
         },
-        area_tematica: { selecciono : true},
         linea_estrategica: { selecciono : true},
         provincia: { selecciono : true},
       },
@@ -302,7 +335,7 @@
           success : function(data){
             console.log("Success.");
             alert("Se modifico la acción.");
-            window.location = "{{url('pacs')}}";
+            window.location = "{{url()->previous()}}";
           },
           error : function(data){
             console.log(data);
@@ -330,4 +363,7 @@
 
 {{-- Script para asignacion de docentes --}}
 @include('profesores.asignacion-script')
+
+{{-- Script para asignacion de areas tematicas --}}
+@include('areasTematicas.asignacion-script')
 @endsection

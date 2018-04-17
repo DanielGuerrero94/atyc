@@ -62,6 +62,16 @@ class Curso extends Model
      */
     protected $dates = ['deleted_at'];
 
+    /**
+     * Obtiene las acciones en las que participo.
+     */
+    public function pacs()
+    {
+        return $this
+        ->belongsToMany('App\Models\Pac\Pac', 'pac.pacs_cursos', 'id_pac', 'id_curso')
+        ->withTimestamps();
+    }
+
     public function estado()
     {
         return $this->hasOne('App\Models\Pac\Estado', 'id_estado', 'id_estado');

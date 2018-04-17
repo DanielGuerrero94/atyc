@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Cursos\AreaTematica;
 use App\Models\Cursos\LineaEstrategica;
+use App\Models\Cursos\Estado;
 use App\Provincia;
 use App\Periodo;
 use App\Models\Cursos\Curso;
@@ -197,6 +198,13 @@ class CursosController extends AbmController
         } else {
             logger("Se deja el curso sin docentes");
             $curso->profesores()->detach();
+        }
+
+        if ($request->has('areasTematicas')) {
+            $curso->areasTematicas()->sync(explode(',', $request->get('areasTematicas')));
+        } else {
+            logger("Se deja el curso sin areas tematicas");
+            $curso->areasTematicas()->detach();
         }
         dump($request);
         
@@ -418,7 +426,11 @@ class CursosController extends AbmController
             return Periodo::all();
         });
 
-        return compact('areas_tematicas', 'lineas_estrategicas', 'provincias', 'periodos');
+        $estados = Cache::remember('estados', 5, function () {
+            return Estado::all();
+        });
+
+        return compact('areas_tematicas', 'estados', 'lineas_estrategicas', 'provincias', 'periodos');
     }
 
     private function queryLogica(Request $r, $filtros, $orderBy)

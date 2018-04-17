@@ -343,6 +343,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('pacs/tabla', 'PacsController@getTabla');
         Route::get('pacs/{id}', 'PacsController@edit');
         Route::get('pacs/{id}/see', 'PacsController@see');
+        Route::get('pacs/{id}/agregaraccion', 'PacsController@agregarAccion');
 
         Route::post('pacs', 'PacsController@store');
         Route::post('pacs/{id}/ficha-tecnica/{id_ficha_tecnica}', 'PacsController@replaceFichaTecnica');

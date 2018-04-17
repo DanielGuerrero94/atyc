@@ -74,7 +74,11 @@ class PacsController extends ModelController
             $request->request->add(['id_provincia' => $id_provincia]);
         }
 
-        $acciones = $request->only(['repeticiones', 'nombre', 'id_linea_estrategica', 'id_provincia', 'id_estado', 'areasTematicas']);
+        //foreach ($request->areasTematicas as $areaTematica) {
+        //    $request->id_area_tematica = $areaTematica->id_area_tematica;
+       // }
+        logger("Quiere actualizar con: ".json_encode($request->all()));
+        $acciones = $request->only(['repeticiones', 'nombre', 'id_linea_estrategica', 'id_provincia', 'id_estado', 'areasTematicas', 'id_area_tematica']);
 
         $relaciones = $request->only(['destinatarios', 'componentesCa', 'pautas']);
 
@@ -125,7 +129,8 @@ class PacsController extends ModelController
                     'edicion',
                     'fecha',
                     'duracion',
-                    'id_estado'
+                    'id_estado',
+                    'cursos.cursos.created_at'
                 );
             }
         ])
@@ -305,4 +310,20 @@ class PacsController extends ModelController
         $data = $this->show($id);
         return view('pacs/modificacion', array_merge($this->show($id), $this->getSelectOptions(), ['disabled' => true]));
     }   
+
+    /**
+     * Show the form for seeing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function agregarAccion($id)
+    {
+        $pac = $this->model->findOrFail($id);
+        $accion = $pac->acciones()->first()->toArray();
+
+        $pac->acciones()->create(array_merge($accion, ['fecha' => date('Y-m-d')]));
+
+        return back();
+    } 
 }

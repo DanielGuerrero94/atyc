@@ -40,30 +40,30 @@
 	    var sum="";
         sum = '<div class="container" style="float: left; border: 1px solid; width: 1100px; border-color: #009900aa">';
 
-        sum += '<div style="float: left; width: 250px;"><strong>TEMATICAS</strong>';
+        sum += '<div style="float: left; width: 260px;"><strong>TEMATICAS</strong>';
 	    d.areas_tematicas.forEach(function(item) {
 	    	console.log(item.nombre);
-	  		sum += '<br>'+item.nombre;
+	  		sum += '<br>° '+item.nombre;
 		});
 	    sum += '</div>'
         sum += '<div style="float: left; width: 250px;"><strong>PAUTAS</strong>';
 	    d.pautas.forEach(function(item) {
 	    	console.log(item.nombre);
-	  		sum += '<br>'+item.nombre;
+	  		sum += '<br>° '+item.nombre;
 		});
 	    sum += '</div>'
 
 	    sum += '<div style="float: left; width: 250px;"><strong>DESTINATARIOS</strong>';
 	    d.destinatarios.forEach(function(item) {
 	    	console.log(item.nombre);
-	  		sum += '<br>'+item.nombre;
+	  		sum += '<br>° '+item.nombre;
 		});
 	    sum += '</div>'
 
 	    sum += '<div style="float: left; width: 250px;"><strong>COMPONENTES CA</strong>';
 	    d.componentes_ca.forEach(function(item) {
 	    	console.log(item.nombre);
-	  		sum += '<br>'+item.nombre;
+	  		sum += '<br>° '+item.nombre;
 		});
 	    sum += '</div></div>'
 

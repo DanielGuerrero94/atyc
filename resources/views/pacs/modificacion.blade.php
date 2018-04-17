@@ -8,11 +8,9 @@
         <div class="nav-tabs-custom">
           <ul class="nav nav-tabs">
             <li id="tab-pac" class="active"><a href="#inicial" data-toggle="tab">Planificación</a></li>
-            <li id="tab-areaTematica"><a href="#areasTematicas" data-toggle="tab">Áreas Temáticas</a></li>
             <li id="tab-destinatario"><a href="#destinatarios-pane" data-toggle="tab">Destinatarios</a></li>
             <li id="tab-componenteCa"><a href="#componentesCa" data-toggle="tab">Componentes CA</a></li>
             <li id="tab-pauta"><a href="#pautas" data-toggle="tab">Pautas</a></li>
-            <li class="navbar-right"><div class="btn btn-success store">Guardar</div></li>
           </ul>
 
           <div class="tab-content">
@@ -57,27 +55,27 @@
                     <label for="form-check" class="control-label col-md-4 col-xs-3">Trimestre planificación: </label>
                         <div class="form-check form-check-inline col-md-8 col-xs-9" id="form-check">
                             @if($pac->t1)
-                            <input type="checkbox" id="t1" name="t1" checked>
+                              <input type="checkbox" id="t1" name="t1" checked>
                             @else
-                            <input type="checkbox" id="t1" name="t1">
+                              <input type="checkbox" id="t1" name="t1">
                             @endif
                             <label for="t1">1ro</label>
                             @if($pac->t2)
-                            <input type="checkbox" id="t2" name="t2" checked>
+                              <input type="checkbox" id="t2" name="t2" checked>
                             @else
-                            <input type="checkbox" id="t2" name="t2">
+                              <input type="checkbox" id="t2" name="t2">
                             @endif
                             <label for="t2">2do</label>
                             @if($pac->t3)
-                            <input type="checkbox" id="t3" name="t3" checked>
+                              <input type="checkbox" id="t3" name="t3" checked>
                             @else
-                            <input type="checkbox" id="t3" name="t3">
+                              <input type="checkbox" id="t3" name="t3">
                             @endif
                             <label for="t3">3ro</label>
                             @if($pac->t4)
-                            <input type="checkbox" id="t4" name="t4" checked>
+                              <input type="checkbox" id="t4" name="t4" checked>
                             @else
-                            <input type="checkbox" id="t4" name="t4">
+                              <input type="checkbox" id="t4" name="t4">
                             @endif
                             <label for="t4">4to</label>
                         </div>
@@ -108,11 +106,7 @@
                   @include('componentesCa.asignacion')
 
             </div>
-            <div class="tab-pane" id="areasTematicas">
-         
-                @include('areasTematicas.asignacion')
 
-            </div>
           </div> 
           <div class="box-body">
             <a href="{{url()->previous()}}">
@@ -152,9 +146,6 @@
                         <i class="fa fa-search" data-id="{{$accion->id_curso}}"></i>
                       </a>
                     </div>
-                    <div class="btn btn-xs btn-danger quitar">
-                      <i class="fa fa-minus"></i>
-                    </div>
                     @endif
                   </td>
                 </tr>
@@ -162,6 +153,11 @@
                 @endif
               </tbody>
             </table>
+            <div class="btn btn-circle pull-right" title="Agregar Acción">
+              <a href="{{url('/pacs/'.$pac->id_pac).'/agregaraccion'}}">
+                <i class="fa fa-plus" data-id="{{$pac->id_pac}}"></i>Agregar
+              </a>
+            </div>
           </div>
       </div>
     </form> 
@@ -225,17 +221,10 @@
       });
     }
 
-    function getAreasTematicasSelected() {
-      return $('#form-modificacion #areasTematicas-de-la-pac .fa-minus').map(function(index, val) {
-        return $(val).data('id');
-      });
-    }    
-
     function getSelected() {
 
       var componentesCa = getComponentesCaSelected();
       var pautas = getPautasSelected();
-      var areasTematicas = getAreasTematicasSelected();
       var destinatarios = getDestinatariosSelected();
       return [
       { 
@@ -245,10 +234,6 @@
       { 
         name: 'destinatarios',
         value: destinatarios.toArray()
-      },
-      { 
-        name: 'areasTematicas',
-        value: areasTematicas.toArray()
       },
       { 
         name: 'componentesCa',
@@ -332,5 +317,3 @@
 {{-- Script para asignacion de destinatarios --}}
 @include('destinatarios.asignacion-script')
 
-{{-- Script para asignacion de areas tematicas --}}
-@include('areasTematicas.asignacion-script')

@@ -36,13 +36,8 @@ class Pauta extends Model
     protected $fillable = ['descripcion', 'id_categoria_pauta', 'vigencia', 'id_provincia'];
 
     /**
-     * Get la PautaAction de una Pauta.
+     * Get la CategoriaPauta de una Pauta.
      */
-    public function accionesPautas()
-    {
-        return $this->belongsTo('App\Models\Pac\AccionPauta');
-    }
-
     public function categoriaPauta()
     {
         return $this->hasOne('App\Models\Pac\CategoriaPauta', 'id_categoria_pauta', 'id_categoria_pauta');
