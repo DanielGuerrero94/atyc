@@ -348,3 +348,13 @@ $factory->define(App\Models\Pac\Pac::class, function (Faker\Generator $faker) {
 
     return array_merge($parametros_pac, $parametros_acciones);
 });
+
+
+$factory->define(App\Models\Pac\FichaTecnica::class, function (Faker\Generator $faker) {
+    return [
+        'path' => $faker->word,
+        'original' => $faker->word,
+        'comentarios' => $faker->text
+    ];
+});
+

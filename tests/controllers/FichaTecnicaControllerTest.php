@@ -7,7 +7,9 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\FichaTecnicaController;
+use App\Models\Pac\FichaTecnica;
 use Tests\TestCase;
+use DB;
 
 class FichaTecnicaControllerTest extends TestCase
 {
@@ -16,14 +18,21 @@ class FichaTecnicaControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->controller = $this->app->make(FichaTencicaController::class);
+        $this->controller = $this->app->make(FichaTecnicaController::class);
         $this->model = $this->app->make(FichaTecnica::class);
+        DB::statement("ALTER SEQUENCE pac.fichas_tecnicas_id_ficha_tecnica_seq restart with 1;");
+    }
+
+
+    /** @test */
+    public function factory_working() {
+        $ficha_tecnica = factory(FichaTecnica::class)->create();
+        $this->assertEquals(1, $ficha_tecnica->id_ficha_tecnica);
     }
 
     /**
      * Store model with request
      *
-     * @test
      * @return void
      */
     public function store()
