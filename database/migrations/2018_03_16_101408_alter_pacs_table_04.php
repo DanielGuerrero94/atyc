@@ -27,6 +27,7 @@ class AlterPacsTable04 extends Migration
     public function down()
     {
         Schema::table('pac.pac', function (Blueprint $table) {
+            $table->dropForeign('pac_pac_id_ficha_tecnica_foreign');
             $table->integer('id_ficha_tecnica')->nullable()->change();
         });
     }

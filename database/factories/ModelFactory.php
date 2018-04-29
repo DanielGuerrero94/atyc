@@ -285,7 +285,7 @@ $factory->define(App\Models\Pac\Pauta::class, function (Faker\Generator $faker) 
 
 $factory->define(App\Models\Pac\Pac::class, function (Faker\Generator $faker) {
 
-    $curso =  factory(App\Models\Cursos\Curso::class)->make()->first();
+    $curso =  factory(App\Models\Cursos\Curso::class)->make();
     $nombre = $curso->nombre;
     $id_provincia = $curso->id_provincia;
     $id_area_tematica = $curso->id_area_tematica;

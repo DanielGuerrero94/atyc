@@ -20,13 +20,14 @@ class Schemas extends Migration
     public function up()
     {
 
-        if (env('DB_CONNECTION') === "pgsql") {
+        DB::statement('CREATE SCHEMA IF NOT EXISTS sistema');
+        //if (env('DB_CONNECTION') === "pgsql") {
             DB::statement('CREATE EXTENSION IF NOT EXISTS dblink');
             DB::statement('CREATE EXTENSION IF NOT EXISTS postgres_fdw');
             foreach ($this->schemas as $schema) {
                 DB::statement('CREATE SCHEMA IF NOT EXISTS '.$schema);
             }
-        }
+//        }
 
         /*SQLITE*/
         if (env('DB_CONNECTION') === "testing") {
@@ -46,15 +47,15 @@ class Schemas extends Migration
     public function down()
     {
         if (env('DB_CONNECTION') === "pgsql") {
-            DB::statement('DROP SCHEMA alumnos CASCADE');
-            DB::statement('DROP SCHEMA cursos CASCADE');
-            DB::statement('DROP SCHEMA encuestas CASCADE');
-            DB::statement('DROP SCHEMA pac CASCADE');
-            DB::statement('DROP SCHEMA sistema CASCADE');
-            DB::statement('DROP SCHEMA beneficiarios CASCADE');
-            DB::statement('DROP SCHEMA efectores CASCADE');
-            DB::statement('DROP SCHEMA geo CASCADE');
-            DB::statement('DROP SCHEMA dw CASCADE');
+            DB::statement('DROP SCHEMA IF EXISTS alumnos CASCADE');
+            DB::statement('DROP SCHEMA IF EXISTS cursos CASCADE');
+            DB::statement('DROP SCHEMA IF EXISTS encuestas CASCADE');
+            DB::statement('DROP SCHEMA IF EXISTS pac CASCADE');
+            DB::statement('DROP SCHEMA IF EXISTS sistema CASCADE');
+            DB::statement('DROP SCHEMA IF EXISTS beneficiarios CASCADE');
+            DB::statement('DROP SCHEMA IF EXISTS efectores CASCADE');
+            DB::statement('DROP SCHEMA IF EXISTS geo CASCADE');
+            DB::statement('DROP SCHEMA IF EXISTS dw CASCADE');
         }
 
         /*SQLITE*/

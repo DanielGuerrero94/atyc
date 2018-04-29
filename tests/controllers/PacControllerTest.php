@@ -8,27 +8,35 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\PacsController;
 use App\Models\Pac\Pac;
-use App\Models\Pac\FichaTecnica;
 use Tests\TestCase;
 
 class PacControllerTest extends TestCase
 {
     use DatabaseTransactions;
+    use DatabaseMigrations;
 
     public function setUp()
     {
         parent::setUp();
         $this->controller = $this->app->make(PacsController::class);
         $this->model = $this->app->make(Pac::class);
+    }
 
-        factory(FichaTecnica::class)->create();
+    public function loginFakeUser()
+    {
+        $this->be(factory(\App\User::class)->create());
+    }
+
+    public function makeDestinatarios($cantidad)
+    {
+        return factory(\App\Funcion::class, $cantidad)->create();
     }
 
     public function PacDataProvider()
     {
         $this->refreshApplication();
 
-        return factory(Pac::class, 3)
+        return factory(Pac::class, 2)
         ->make()
         ->map(function ($model) {
             return array(new Request($model->toArray()));
@@ -45,15 +53,8 @@ class PacControllerTest extends TestCase
      */
     public function store(Request $request)
     {
-        $this->markTestSkipped();
-        factory(FichaTecnica::class)->create();
         $model_instance_id = $this->controller->store($request);
         $this->assertTrue(is_numeric($model_instance_id));
-    }
-
-    public function makeDestinatarios($cantidad)
-    {
-        return factory(\App\Funcion::class, $cantidad)->create();
     }
 
     /**
@@ -65,7 +66,6 @@ class PacControllerTest extends TestCase
      */
     public function storeOneDestinatario(Request $request)
     {
-        $this->markTestSkipped();
         $id_destinatario = $this->makeDestinatarios(1)->id_funcion;
         $request->query->set('destinatarios', $id_destinatario);
         $model_instance_id = $this->controller->store($request);
@@ -81,7 +81,6 @@ class PacControllerTest extends TestCase
      */
     public function storeManyDestinatarios(Request $request)
     {
-        $this->markTestSkipped();
         $destinatarios = $this->makeDestinatarios(2)->map(function ($destinatario) {
             return $destinatario->id_funcion;
         });
@@ -100,7 +99,6 @@ class PacControllerTest extends TestCase
      */
     public function storeOneAccion(Request $request)
     {
-        $this->markTestIncomplete();
         $accion = true;
         $nombre = 'asd';
         $id_linea_estrategica = 5;
@@ -111,7 +109,7 @@ class PacControllerTest extends TestCase
         $request->query->set('id_area_tematica', $id_area_tematica);
         $model_instance_id = $this->controller->store($request);
         $model = $this->model->with('acciones')->findOrFail($model_instance_id);
-        $this->assertTrue($model->acciones()->get()->id_curso);
+        $this->assertTrue(is_numeric($model->acciones()->first()->id_curso));
     }
 
     /**
@@ -123,7 +121,7 @@ class PacControllerTest extends TestCase
      */
     public function show(Request $request)
     {
-        $this->markTestSkipped();
+        $this->loginFakeUser();
         $id = $this->controller->store($request);
         $array = $this->controller->show($id);
         $this->assertArrayHasKey('pac', $array);
@@ -148,11 +146,9 @@ class PacControllerTest extends TestCase
      */
     public function getSelectOptions()
     {
-        $this->markTestSkipped();
         $data = $this->controller->getSelectOptions();
 
         $expected = ['tipologias', 'tematicas'];
-
         $this->assertArraySubset($expected, array_keys($data));
     }
 }

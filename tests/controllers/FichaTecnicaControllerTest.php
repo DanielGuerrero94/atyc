@@ -25,7 +25,8 @@ class FichaTecnicaControllerTest extends TestCase
 
 
     /** @test */
-    public function factory_working() {
+    public function factory_working()
+    {
         $ficha_tecnica = factory(FichaTecnica::class)->create();
         $this->assertEquals(1, $ficha_tecnica->id_ficha_tecnica);
     }
@@ -42,5 +43,4 @@ class FichaTecnicaControllerTest extends TestCase
         $model_instance_id = $this->controller->store($request);
         $this->assertTrue(is_numeric($model_instance_id));
     }
-
 }
