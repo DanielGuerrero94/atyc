@@ -40,12 +40,14 @@ class ExampleTest extends TestCase
      */
     public function login()
     {
+	$user = factory(\App\User::class)->create(['password' => 'test']);
+
         $this->visit('/dashboard')
         ->click('Entrar')
         ->see('Iniciar sesión')
         ->seePageIs('/entrar')
-        ->type('jujuy', 'name')
-        ->type('jujuy001', 'password')
+        ->type($user->name, 'name')
+        ->type('test', 'password')
         ->press('entrar')
         ->seePageIs('/dashboard');
     }

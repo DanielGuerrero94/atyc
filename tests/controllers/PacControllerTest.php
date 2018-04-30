@@ -91,13 +91,7 @@ class PacControllerTest extends TestCase
         $this->assertEquals(2, $model->destinatarios()->get()->count());
     }
 
-    /**
-     * A basic test example.
-     * @dataProvider PacDataProvider
-     * @test
-     * @return void
-     */
-    public function storeOneAccion(Request $request)
+    public function accionRequest(Request $request)
     {
         $accion = true;
         $nombre = 'asd';
@@ -106,7 +100,19 @@ class PacControllerTest extends TestCase
         $request->query->set('accion', $accion);
         $request->query->set('nombre', $nombre);
         $request->query->set('id_linea_estrategica', $id_linea_estrategica);
-        $request->query->set('id_area_tematica', $id_area_tematica);
+	$request->query->set('id_area_tematica', $id_area_tematica);
+	return $request;
+    }
+
+    /**
+     * A basic test example.
+     * @dataProvider PacDataProvider
+     * @test
+     * @return void
+     */
+    public function storeOneAccion(Request $request)
+    {
+	$request = $this->accionRequest($request);
         $model_instance_id = $this->controller->store($request);
         $model = $this->model->with('acciones')->findOrFail($model_instance_id);
         $this->assertTrue(is_numeric($model->acciones()->first()->id_curso));
@@ -136,7 +142,31 @@ class PacControllerTest extends TestCase
      */
     public function update(Request $request)
     {
-        $this->markTestIncomplete();
+        $request = $this->accionRequest($request);
+	$id = $this->controller->store($request);
+	$model = $this->model->findOrFail($id);
+
+	$destinatarios = $model->with('destinatarios')->first()->destinatarios->map(function($value) {
+	    return $value->id_funcion;
+	})->toArray();
+
+	$destinatarios = implode(",", $destinatarios);
+
+	$this->assertEquals($destinatarios, $this->model->getAllDestinatarios());
+
+	$request = new Request();
+	$request->query->set('nombre', 'updated');
+	$request->query->set('destinatarios', $destinatarios);
+	$request->query->set('componentesCa', []);
+	$request->query->set('pautas', []);
+	$request->query->set('areasTematicas', []);
+
+	$response = $this->controller->update($request, $id);
+	$this->assertNull($response->getContent());
+	$this->assertEquals(200, $response->getStatusCode());
+        $model = $this->model->findOrFail($id);
+        $this->assertEquals('updated', $model->nombre);
+
     }
 
     /**

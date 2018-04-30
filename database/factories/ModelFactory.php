@@ -81,18 +81,30 @@ $factory->define(App\Models\Cursos\AreaTematica::class, function (Faker\Generato
         'nombre' => substr($faker->name, 0, 10)
     ];
 });
-
-/** alumno */
-$factory->define(App\Alumno::class, function (Faker\Generator $faker) {
-    $id_convenio = App\Convenio::select('id_convenio')
-    ->pluck('id_convenio')
+ 
+function dependency($class, $id_name, $quantity) 
+{
+    $id = $class::select($id_name)
+    ->pluck($id_name)
     ->shuffle()
     ->first();
 
-    $id_convenio = $id_convenio?:factory(App\Convenio::class, 2)
+    $id = $id?:factory($class, $quantity)
     ->create()
+    ->shuffle()
     ->first()
-    ->id_convenio;
+    ->id_name;
+
+    return $id;
+}
+
+/** alumno */
+$factory->define(App\Alumno::class, function (Faker\Generator $faker) {
+    dependency('App\Convenio', 'id_convenio', 4);
+    dependency('App\TipoDocumento', 'id_tipo_documento', 4);
+    dependency('App\Pais', 'id_pais', 20);
+    dependency('App\Funcion', 'id_funcion', 4);
+    dependency('App\Trabajo', 'id_trabajo', 4);
 
     return [
         'nombres' => substr($faker->name, 0, 10),
@@ -106,7 +118,7 @@ $factory->define(App\Alumno::class, function (Faker\Generator $faker) {
         'id_trabajo' => rand(1, 4),
         'id_funcion' => rand(1, 4),
         'id_provincia' => rand(1, 4),
-        'id_convenio' => $id_convenio,
+        'id_convenio' => rand(1, 2),
         'establecimiento1' => substr($faker->name, 0, 10),
         'establecimiento2' => substr($faker->name, 0, 10),
         'organismo1' => substr($faker->name, 0, 10),

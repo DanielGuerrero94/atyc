@@ -146,7 +146,11 @@ class AlumnosController extends ModelController
         logger('Quiere crear participante con: '.json_encode($request->all()));
         $v = Validator::make($request->all(), $this->rules);
 
-        if (!$v->fails()) {
+        if ($v->fails()) {
+            logger()->warning("No se pudo crear el alumno: ".json_encode($v->errors()));
+	    return response($v->errors(), 400);
+	}
+
             if ($request->has('pais')) {
                 $id_pais = Pais::select('id_pais')->where('nombre', $request->pais)->get('id_pais')->first();
                 $request->pais = $id_pais;
@@ -163,10 +167,6 @@ class AlumnosController extends ModelController
             }
             $alumno = Alumno::crear($request);
             return response(['data' => $alumno->toArray()], 200);
-        } else {
-            logger()->warning("No se pudo crear el alumno: ".json_encode($v->errors()));
-            return response($v->errors(), 400);
-        }
     }
 
     /**

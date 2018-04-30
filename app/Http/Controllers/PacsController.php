@@ -13,13 +13,17 @@ use Auth;
 
 class PacsController extends ModelController
 {
-
     /**
-     * Rules for the validator
+     * Rules for validate the request
      *
      * @var array
      **/
-    protected $rules = [];
+    protected $rules = [
+        'destinatarios' => 'required|string',
+        'componentesCa' => 'required|string',
+        'pautas' => 'required|string',
+        'areasTematicas' => 'required|string'
+    ];
     
     /**
      * Name of the Model
@@ -172,6 +176,12 @@ class PacsController extends ModelController
      */
     public function update(Request $request, $id)
     {
+        $error = $this->validate($request, $this->rules);
+
+        if ($error) {
+            return response($error, 400);
+        }
+
         $request->request->add(['t1' => $request->has('t1')]);
         $request->request->add(['t2' => $request->has('t2')]);
         $request->request->add(['t3' => $request->has('t3')]);
@@ -249,7 +259,6 @@ class PacsController extends ModelController
             ->map(function ($model) {
 
                 $accion = $model->acciones()->first();
-                logger(json_encode($accion));
                 $model->areas_tematicas = $accion->areasTematicas;
 
                 $linea_estrategica = $accion->lineaEstrategica()->first();

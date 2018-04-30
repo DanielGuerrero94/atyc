@@ -142,5 +142,15 @@ class Pac extends Model
         if ($id_provincia != 25) {
             return $query->where('pac.id_provincia', $id_provincia);
         }
-    } 
+    }
+
+    public function getAllDestinatarios()
+    {
+	$destinatarios = $this->destinatarios()->get()->map(function ($value) {
+	    return $value->id_funcion;    
+	});
+	return implode(",", $destinatarios);
+    }
+
+
 }
