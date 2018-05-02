@@ -70,7 +70,7 @@ class DatabaseRestoreCommand extends Command
     public function handle()
     {
         if ($table = $this->option('table')) {
-            $this->restoreSingleTable($table); 
+            $this->restoreSingleTable($table);
             $this->info($table . " was restored;");
             return;
         }
@@ -154,7 +154,8 @@ class DatabaseRestoreCommand extends Command
         return $output;
     }
 
-    public function restoreSingleTable($table) { 
+    public function restoreSingleTable($table)
+    {
         $this->setRestoreConnection();
         $path = database_path("backups/{$table}.sql");
         system($this->restoreCommand." -f {$path} -1 -q");

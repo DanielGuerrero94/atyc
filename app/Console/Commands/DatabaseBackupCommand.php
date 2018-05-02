@@ -50,7 +50,8 @@ class DatabaseBackupCommand extends Command
         return $tables;
     }
 
-    public function chooseTables() {
+    public function chooseTables()
+    {
         if ($table = $this->option('table')) {
             $this->tables[] = $table;
         } else {
@@ -58,14 +59,15 @@ class DatabaseBackupCommand extends Command
         }
     }
 
-    public function setTablePathName($table) {
+    public function setTablePathName($table)
+    {
         return database_path("backups/{$table}.sql");
     }
 
-    public function saveBackupFiles() {
+    public function saveBackupFiles()
+    {
         foreach ($this->tables as $table) {
             system("pg_dump -U postgres atyc -h 192.6.0.66 -t {$table} --data-only --inserts > ". $this->setTablePathName($table));
         }
     }
-
 }

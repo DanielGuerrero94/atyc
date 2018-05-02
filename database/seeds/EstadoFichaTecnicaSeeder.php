@@ -41,6 +41,5 @@ class EstadoFichaTecnicaSeeder extends Seeder
             "descripcion" => "Aprobado",
             "class" => "bg-green"
         ]);
-
     }
 }

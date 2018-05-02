@@ -146,11 +146,9 @@ class Pac extends Model
 
     public function getAllDestinatarios()
     {
-	$destinatarios = $this->destinatarios()->get()->map(function ($value) {
-	    return $value->id_funcion;    
-	});
-	return implode(",", $destinatarios);
+        $destinatarios = $this->destinatarios()->get()->map(function ($value) {
+            return $value->id_funcion;
+        });
+        return implode(",", $destinatarios);
     }
-
-
 }

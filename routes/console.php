@@ -18,34 +18,34 @@ use App\Material;
 */
 
 Artisan::command('inspire', function () {
-	$this->comment(Inspiring::quote());
+    $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
 
 Artisan::command('test:make-model {name}', function () {
-	$this->call('make:model', [
-		'name' => $this->argument('name'),
-		'--migration' => true,
-		'--resource' => true,
-		'--controller' => true,
-	]);
+    $this->call('make:model', [
+        'name' => $this->argument('name'),
+        '--migration' => true,
+        '--resource' => true,
+        '--controller' => true,
+    ]);
 })->describe('Command for testing.');
 
 Artisan::command('test:apellidosTypea {typeahead}', function () {
-	$c = new AlumnosController();
-	$r = new Request(['q' => $this->argument('typeahead')]);
-	$this->comment(json_encode($r->all()));
-	Auth::attempt(['name' => 'uec', 'password' => 'uec001']);
-	$this->info($c->getApellidos($r));
+    $c = new AlumnosController();
+    $r = new Request(['q' => $this->argument('typeahead')]);
+    $this->comment(json_encode($r->all()));
+    Auth::attempt(['name' => 'uec', 'password' => 'uec001']);
+    $this->info($c->getApellidos($r));
 })->describe('Command for testing.');
 
 Artisan::command('test:show {id_participante}', function () {
-	Auth::attempt(['name' => 'uec', 'password' => 'uec001']);
+    Auth::attempt(['name' => 'uec', 'password' => 'uec001']);
 
-	$c = new AlumnosController();
-	
-	$participante = $c->show($this->argument('id_participante'));
+    $c = new AlumnosController();
+    
+    $participante = $c->show($this->argument('id_participante'));
 
-	$this->comment(json_encode($participante));
+    $this->comment(json_encode($participante));
 })->describe('Command for testing.');
 
 Artisan::command('test:get-materiales', function (Material $material) {
@@ -58,6 +58,4 @@ Artisan::command('test:get-materiales', function (Material $material) {
             '--path' => "app/material"
         ]);
     }
-
 })->describe('Get Materiales files from production');
-

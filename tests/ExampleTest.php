@@ -40,7 +40,7 @@ class ExampleTest extends TestCase
      */
     public function login()
     {
-	$user = factory(\App\User::class)->create(['password' => 'test']);
+        $user = factory(\App\User::class)->create(['password' => 'test']);
 
         $this->visit('/dashboard')
         ->click('Entrar')

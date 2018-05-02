@@ -37,19 +37,21 @@ class DatabaseSyncCommand extends Command
         $this->restore();
     }
 
-    public function truncate() {
+    public function truncate()
+    {
         $status = DB::statement("TRUNCATE TABLE " . $this->table);
         $this->info($this->table . " was truncated.");
     }
 
-    public function getBackup() {
+    public function getBackup()
+    {
         $this->call('db:backup', ['--table' => $this->table]);
         $this->info($this->table . " was backed up.");
     }
 
-    public function restore() {
+    public function restore()
+    {
         $this->call('db:restore', ['--table' => $this->table]);
         $this->info($this->table . " was restored.");
     }
-
 }

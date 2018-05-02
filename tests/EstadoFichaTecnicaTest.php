@@ -10,7 +10,8 @@ use App\Models\Pac\EstadoFichaTecnica as Model;
 class EstadoFichaTecnicaTest extends TestCase
 {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->model = $this->app->make(Model::class);
         $this->model->truncate();
@@ -24,7 +25,7 @@ class EstadoFichaTecnicaTest extends TestCase
     }
 
     /** @test */
-    public function can_create_state() 
+    public function can_create_state()
     {
         $data = [
             "id_estado_ficha_tecnica" => '1',
@@ -34,5 +35,4 @@ class EstadoFichaTecnicaTest extends TestCase
 
         $this->model->create($data);
     }
-
 }

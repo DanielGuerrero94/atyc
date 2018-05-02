@@ -27,14 +27,15 @@ class FichaTecnica extends Model
      */
     protected $fillable = ['path', 'original', 'comentarios'];
 
-    public function aprobar() {
+    public function aprobar()
+    {
         $this->aprobada = true;
         $this->save();
         return $this;
     }
 
-    public function getAprobadaAttribute($value) {
+    public function getAprobadaAttribute($value)
+    {
         return (boolean) $value;
     }
 }
-

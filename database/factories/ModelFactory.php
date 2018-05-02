@@ -81,7 +81,8 @@ $factory->define(App\Models\Cursos\AreaTematica::class, function (Faker\Generato
         'nombre' => substr($faker->name, 0, 10)
     ];
 });
- 
+
+if (! function_exists('dependency')) {
 function dependency($class, $id_name, $quantity) 
 {
     $id = $class::select($id_name)
@@ -96,6 +97,7 @@ function dependency($class, $id_name, $quantity)
     ->id_name;
 
     return $id;
+}
 }
 
 /** alumno */

@@ -188,16 +188,16 @@ class PacsController extends ModelController
         $request->request->add(['t4' => $request->has('t4')]);
 
         $pac = $this->model->findOrFail($id);
-        if($request->input('id_ficha_tecnica')==null){
-            $pac->id_ficha_tecnica = 1;    
-        }else{
+        if ($request->input('id_ficha_tecnica')==null) {
+            $pac->id_ficha_tecnica = 1;
+        } else {
             $pac->id_ficha_tecnica = $request->input('id_ficha_tecnica');
         }
         $relaciones = $request->only(['destinatarios', 'componentesCa', 'pautas', 'areasTematicas']);
         $pac->modificarRelaciones($relaciones);
         $pac->update($request->all());
         //dump($pac);
-        return $pac->id_pac;        
+        return $pac->id_pac;
     }
 
     /**
@@ -232,7 +232,7 @@ class PacsController extends ModelController
      * @return \Illuminate\Http\Response
      */
     public function getTabla(Request $request)
-    {     
+    {
         $data = $this->model
             ->with([
                 'pautas' => function ($query) {
@@ -252,7 +252,7 @@ class PacsController extends ModelController
                 },
                 "acciones as planificadas" => function ($query) {
                     $query->where('id_estado', 1);
-                }        
+                }
             ])
             ->segunProvincia()
             ->get()
@@ -303,7 +303,7 @@ class PacsController extends ModelController
 
         $tematicas = [];
 
-        $destinatarios = []; 
+        $destinatarios = [];
 
         return compact('tipologias', 'tematicas');
     }
@@ -318,7 +318,7 @@ class PacsController extends ModelController
     {
         $data = $this->show($id);
         return view('pacs/modificacion', array_merge($this->show($id), $this->getSelectOptions(), ['disabled' => true]));
-    }   
+    }
 
     /**
      * Show the form for seeing the specified resource.
@@ -334,5 +334,5 @@ class PacsController extends ModelController
         $pac->acciones()->create(array_merge($accion, ['fecha' => date('Y-m-d')]));
 
         return back();
-    } 
+    }
 }

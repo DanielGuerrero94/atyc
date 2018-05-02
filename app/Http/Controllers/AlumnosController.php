@@ -148,23 +148,23 @@ class AlumnosController extends ModelController
 
         if ($v->fails()) {
             logger()->warning("No se pudo crear el alumno: ".json_encode($v->errors()));
-	    return response($v->errors(), 400);
-	}
+            return response($v->errors(), 400);
+        }
 
-            if ($request->has('pais')) {
-                $id_pais = Pais::select('id_pais')->where('nombre', $request->pais)->get('id_pais')->first();
-                $request->pais = $id_pais;
-            }
+        if ($request->has('pais')) {
+            $id_pais = Pais::select('id_pais')->where('nombre', $request->pais)->get('id_pais')->first();
+            $request->pais = $id_pais;
+        }
 
-            if ($request->has('efector')) {
-                $con = new EfectoresController();
-                $cuie = $con->findCuie($request->efector);
-                if ($cuie) {
-                    $request->efector = $cuie;
-                } else {
-                    return response(['error' =>'No existe el efector'], 400);
-                }
+        if ($request->has('efector')) {
+            $con = new EfectoresController();
+            $cuie = $con->findCuie($request->efector);
+            if ($cuie) {
+                $request->efector = $cuie;
+            } else {
+                return response(['error' =>'No existe el efector'], 400);
             }
+        }
             $alumno = Alumno::crear($request);
             return response(['data' => $alumno->toArray()], 200);
     }

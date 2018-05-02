@@ -10,12 +10,15 @@
     processIsolation="false"
     stopOnFailure="false">
     <testsuites>        
-        <testsuite name="Controller Test Suite">
+        <testsuite name="Controllers">
             <directory suffix="ControllerTest.php">./tests/controllers</directory>
         </testsuite>
-        <!-- <testsuite name="Application Test Suite">
-            <directory suffix="Test.php">./tests</directory>
-        </testsuite> -->
+        <testsuite name="Models">
+		<directory suffix="Test.php">./tests/models</directory>
+        </testsuite>
+        <testsuite name="Factories">
+		<directory suffix="Test.php">./tests/factories</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

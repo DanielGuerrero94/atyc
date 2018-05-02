@@ -37,7 +37,7 @@ class CategoriasPautasController extends Controller
     public function get()
     {
         return view('categoriasPautas');
-    }    
+    }
 
     /**
      * Display a listing of the resource.

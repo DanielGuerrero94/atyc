@@ -29,5 +29,5 @@ class CreateComponentesCaTable extends Migration
     public function down()
     {
          Schema::dropIfExists('pac.componentes_ca');
-    } 
+    }
 }

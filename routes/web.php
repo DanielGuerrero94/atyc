@@ -282,7 +282,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('provincias/{id}', 'ProvinciasController@show');
 
         //Logs
-        Route::get('logs/mostrar/{date}','LogController@log');
+        Route::get('logs/mostrar/{date}', 'LogController@log');
 
         //Estados
         Route::get('estados', 'EstadosController@getTodos');

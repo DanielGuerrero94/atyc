@@ -24,9 +24,9 @@ class Schemas extends Migration
         //if (env('DB_CONNECTION') === "pgsql") {
             DB::statement('CREATE EXTENSION IF NOT EXISTS dblink');
             DB::statement('CREATE EXTENSION IF NOT EXISTS postgres_fdw');
-            foreach ($this->schemas as $schema) {
-                DB::statement('CREATE SCHEMA IF NOT EXISTS '.$schema);
-            }
+        foreach ($this->schemas as $schema) {
+            DB::statement('CREATE SCHEMA IF NOT EXISTS '.$schema);
+        }
 //        }
 
         /*SQLITE*/
