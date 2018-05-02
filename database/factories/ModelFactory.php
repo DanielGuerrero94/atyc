@@ -83,21 +83,21 @@ $factory->define(App\Models\Cursos\AreaTematica::class, function (Faker\Generato
 });
 
 if (! function_exists('dependency')) {
-function dependency($class, $id_name, $quantity) 
-{
-    $id = $class::select($id_name)
-    ->pluck($id_name)
-    ->shuffle()
-    ->first();
+    function dependency($class, $id_name, $quantity)
+    {
+        $id = $class::select($id_name)
+        ->pluck($id_name)
+        ->shuffle()
+        ->first();
 
-    $id = $id?:factory($class, $quantity)
-    ->create()
-    ->shuffle()
-    ->first()
-    ->id_name;
+        $id = $id?:factory($class, $quantity)
+        ->create()
+        ->shuffle()
+        ->first()
+        ->id_name;
 
-    return $id;
-}
+        return $id;
+    }
 }
 
 /** alumno */
@@ -371,4 +371,3 @@ $factory->define(App\Models\Pac\FichaTecnica::class, function (Faker\Generator $
         'comentarios' => $faker->text
     ];
 });
-
