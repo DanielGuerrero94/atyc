@@ -10,3 +10,4 @@ public/*.pdf
 database/*.sqlite
 database/backups/*.sql
 .htaccess
+.swp

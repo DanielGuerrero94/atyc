@@ -11,6 +11,8 @@ class EstadosSeeder extends Seeder
      */
     public function run()
     {
+        var_dump("Seeder deprecated");
+        return;
         \DB::statement("INSERT INTO cursos.estados (id_estado,nombre) values
         	(1,'No iniciado'),
         	(2,'En ejecución'),

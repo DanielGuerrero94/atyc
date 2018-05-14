@@ -11,15 +11,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        //$this->call(SistemaSchemaSeeder::class);
-        //$this->call(PublicSchemaSeeder::class);
-        //$this->call(AlumnosSchemaSeeder::class);
-        //$this->call(CursosSchemaSeeder::class);
-        //$this->call(EncuestasSchemaSeeder::class);
+
+
+        //Muchos seeder eran dependientes del anterior sistema y quedan deprecados
+        $this->call(SistemaSchemaSeeder::class);
+        $this->call(PublicSchemaSeeder::class);
+        /*
+        $this->call(AlumnosSchemaSeeder::class);
+        $this->call(CursosSchemaSeeder::class);
+        $this->call(EncuestasSchemaSeeder::class);
         $this->call(PacSchemaSeeder::class);
-        // $this->call(StoredProceduresSeeder::class);
-        //$this->call(ForeignDataWrapperSeeder::class);
-        // $this->call(ExternasSeeder::class);
+        $this->call(StoredProceduresSeeder::class);
+        $this->call(ForeignDataWrapperSeeder::class);
+        $this->call(ExternasSeeder::class);
+         */
     }
 
     /*public function run()

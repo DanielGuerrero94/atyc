@@ -180,4 +180,19 @@ class PacControllerTest extends TestCase
         $expected = ['tipologias', 'tematicas'];
         $this->assertArraySubset($expected, array_keys($data));
     }
+
+    /**
+     * A basic test example.
+     * @dataProvider PacDataProvider
+     * @test
+     * @return void
+     */
+    public function storeOneAccionWithTimestamp(Request $request)
+    {
+        $request = $this->accionRequest($request);
+        $model_instance_id = $this->controller->store($request);
+        $model = $this->model->with('acciones')->findOrFail($model_instance_id);
+        $this->assertNull($model->acciones()->first()->updated_at);
+    }
+
 }

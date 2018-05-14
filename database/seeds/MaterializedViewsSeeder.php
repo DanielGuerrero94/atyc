@@ -11,7 +11,12 @@ class MaterializedViewsSeeder extends Seeder
      */
     public function run()
     {
-        \DB::statement("CREATE MATERIALIZED VIEW efectores.mv_efectores_conveniados AS 
+        $this->efectoresConveniados();
+        $this->reporte4();
+    }
+
+    public function efectoresConveniados() {
+         \DB::statement("CREATE MATERIALIZED VIEW efectores.mv_efectores_conveniados AS 
     		SELECT dg.id_provincia,
     		count(DISTINCT e.cuie) AS count
     		FROM efectores.efectores e
@@ -25,7 +30,9 @@ class MaterializedViewsSeeder extends Seeder
     		JOIN efectores.datos_geograficos dg USING (id_efector)
     		WHERE e.id_estado = 1 AND e.integrante = 'S'::bpchar AND e.compromiso_gestion = 'S'::bpchar
     		WITH DATA;");
+    }
 
+    public function reporte4() {
         \DB::statement("CREATE MATERIALIZED VIEW efectores.mv_reporte_4 AS 
     		SELECT p.id_provincia, pe.desde, pe.hasta,
     		CASE WHEN sub.capacitados IS NULL THEN 0::bigint
