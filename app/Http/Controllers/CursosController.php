@@ -256,10 +256,7 @@ class CursosController extends AbmController
             'lineaEstrategica',
             'provincia'
         ])
-        //->withCount('alumnos')
         ->segunProvincia();
-
-        //logger()->warning(json_encode($query->first()));
 
         return $this->toDatatable($request, $query);
     }
@@ -631,7 +628,6 @@ class CursosController extends AbmController
      */
     public function see($id)
     {
-        dump(array_merge($this->show($id), $this->getSelectOptions(), ['disabled' => true]));
         return view('cursos/modificacion', array_merge($this->show($id), $this->getSelectOptions(), ['disabled' => true]));
     }
 }

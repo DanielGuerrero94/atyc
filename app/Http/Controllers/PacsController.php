@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Pac\Pac;
 use App\Models\Pac\Pauta;
+use App\Models\Pac\ComponenteCa;
 use App\Models\Cursos\Curso;
 use App\Models\Cursos\AreaTematica;
 use App\Models\Cursos\LineaEstrategica;
@@ -302,7 +303,18 @@ class PacsController extends ModelController
 
         $destinatarios = [];
 
-        return compact('tipologias', 'tematicas');
+        //Solo puede mostrar los componentes que corresponden al anio actual
+        $year = date_create()->format("Y");
+        $componentesCa = ComponenteCa::where('anio_vigencia', $year)
+            ->orderBy('item')
+            ->get();
+
+        $pautas = Pauta::where('vigencia', $year)
+            ->orderBy('nombre')
+            ->get();
+
+
+        return compact('tipologias', 'tematicas', 'pautas', 'componentesCa');
     }
 
     /**

@@ -4,8 +4,8 @@
       <li id="tab-pac" class="active"><a href="#inicial" data-toggle="tab">Planificación</a></li>
       <li id="tab-areaTematica"><a href="#areasTematicas" data-toggle="tab">Áreas Temáticas</a></li>
       <li id="tab-destinatario"><a href="#destinatarios-pane" data-toggle="tab">Destinatarios</a></li>
-      <li id="tab-componenteCa"><a href="#componentesCa" data-toggle="tab">Componentes CA</a></li>
       <li id="tab-pauta"><a href="#pautas" data-toggle="tab">Pautas</a></li>
+      <li id="tab-componenteCa"><a href="#componentesCa" data-toggle="tab">Componentes CA</a></li>
       <li class="navbar-right"><div class="btn btn-success store">Guardar</div></li>
     </ul>
     <div class="tab-content">

@@ -325,7 +325,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
 
         Route::delete('pautas/{id}', 'PautasController@destroy');
 
-        //CATEGORIAS Pautas
+        //Categorias Pautas
         Route::get('categoriasPautas', 'CategoriasPautasController@get');
         Route::get('categoriasPautas/tabla', 'CategoriasPautasController@getTabla');
         Route::get('categoriasPautas/alta', 'CategoriasPautasController@create');

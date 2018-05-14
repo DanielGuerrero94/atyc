@@ -33,7 +33,7 @@ class ComponenteCa extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre', 'anio_vigencia'];
+    protected $fillable = ['item', 'nombre', 'anio_vigencia'];
     
     public static function table()
     {
