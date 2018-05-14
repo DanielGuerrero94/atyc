@@ -1,8 +1,12 @@
 <script type="text/javascript">
 
+function removeButton(id) {
+    return '<a data-id="' + id + '" class="btn btn-circle quitar" title="Remover"><i class="fa fa-minus text-danger fa-lg"></i></a>';
+}
+
   $(document).ready(function() {
     //Inicial
-    refreshCounter();
+    refreshCounterPautas();
 
     $.typeahead({
       input: '.pautas_typeahead',
@@ -70,12 +74,10 @@
         },
         onClick: function (node,  a, item, event) {
           pauta = '<tr>'+
-          '<td>'+item.item+'</td>'+          
           '<td>'+item.nombre+'</td>'+
           '<td>'+item.descripcion+'</td>'+
           '<td>'+
-          '<div class="btn btn-xs btn-info"><a href="{{url('/pautas')}}/'+item.id+'"><i class="fa fa-search" data-id="'+item.id+'"></i></a></div>'+
-          '<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>'+
+          removeButton(item.id) +
           '</td>'+
           '</tr>';
           existe = false;
@@ -89,7 +91,7 @@
           if(!existe){
             $('#pautas-de-la-pac tbody').append(pauta);  
             $('#pautas-de-la-pac').closest('div').show();
-            refreshCounter();           
+            refreshCounterPautas();           
           }
           $('#pautas .pautas_typeahead').val('');
         }
@@ -133,10 +135,10 @@
 
     $('#pautas-de-la-pac').on('click','.quitar', function(event) {
       this.closest('tr').remove();
-      refreshCounter();
+      refreshCounterPautas();
     });
 
-    function refreshCounter() {
+    function refreshCounterPautas() {
       let count = $('#pautas-de-la-pac tbody').children().length;
       $('#contador-pautas').html(count);
     }

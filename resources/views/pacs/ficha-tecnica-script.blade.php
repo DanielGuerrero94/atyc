@@ -152,7 +152,7 @@ var downloadButton = $('<a href="#" class="btn btn-square download" title="Desca
 	
         $(document).on("click", ".download", function(event) {
             event.preventDefault();
-            let id_ficha_tecnica = 1;
+			let id_ficha_tecnica = $(this).closest(".box").data("id-ficha-tecnica");			
             let url = "{{url('/fichas-tecnicas')}}" + "/" + id_ficha_tecnica + "/download";
             window.location = url;
 		});		

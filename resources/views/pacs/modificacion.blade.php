@@ -8,9 +8,10 @@
         <div class="nav-tabs-custom">
           <ul class="nav nav-tabs">
             <li id="tab-pac" class="active"><a href="#inicial" data-toggle="tab">Planificación</a></li>
+            <li id="tab-areasTematicas"><a href="#areasTematicas" data-toggle="tab">Areas Tematicas</a></li>
             <li id="tab-destinatario"><a href="#destinatarios-pane" data-toggle="tab">Destinatarios</a></li>
-            <li id="tab-componenteCa"><a href="#componentesCa" data-toggle="tab">Componentes CA</a></li>
             <li id="tab-pauta"><a href="#pautas" data-toggle="tab">Pautas</a></li>
+            <li id="tab-componenteCa"><a href="#componentesCa" data-toggle="tab">Componentes CA</a></li>
           </ul>
 
           <div class="tab-content">
@@ -45,7 +46,7 @@
                   </div>
                   <div class="col-md-6">          
                     <div class="col-md-4 col-xs-3">
-                      <input type="number" class="form-control" name="repeticiones" id="repeticiones" placeholder="Repeticiones" value="{{$pac->repeticiones}}" disabled> 
+                      <input type="number" class="form-control" name="repeticiones" id="repeticiones" placeholder="Repeticiones" data-original="{{$pac->repeticiones}}" value="{{$pac->repeticiones}}"> 
                     </div>
                   </div>
                 </div>
@@ -106,63 +107,28 @@
                   @include('componentesCa.asignacion')
 
             </div>
+          <div class="tab-pane" id="areasTematicas">
+    
+              @include('areasTematicas.asignacion')
+
+          </div>
+
 
           </div> 
           <div class="box-body">
-            <a href="{{url()->previous()}}">
+            <a href="{{url("/pacs")}}">
               <div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i> Volver</div>
             </a>
             <div class="btn btn-primary pull-right" id="modificar" title="Modificar"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</div>
           </div>
         </div>
-          <div class="box-body">
-            <table class="table table-striped" id="acciones">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Provincia</th>
-                  <th>Linea Estrategica</th>
-                  <th>Fecha</th>
-                  <th>Duracion</th>
-                  <th>Edicion</th>
-                  <th>Fecha de Creacion</th>
-                </tr>
-              </thead>
-              <tbody>
-                @if(isset($pac))
-                @foreach($pac->acciones as $accion)
-                <tr>
-                  <td>{{$accion->nombre}}</td>
-                  <td>{{$accion->provincia}}</td>
-                  <td>{{$accion->lineaEstrategica->numero." - ".$accion->lineaEstrategica->nombre}}</td>
-                  <td>{{$accion->fecha}}</td>
-                  <td>{{$accion->duracion}}</td>
-                  <td>{{$accion->edicion}}</td>
-                  <td>{{$accion->created_at}}</td>
-                  <td>
-                    @if(!isset($disabled))
-                    <div class="btn btn-xs btn-info">
-                      <a href="{{url('/cursos/'.$accion->id_curso)}}">
-                        <i class="fa fa-search" data-id="{{$accion->id_curso}}"></i>
-                      </a>
-                    </div>
-                    @endif
-                  </td>
-                </tr>
-                @endforeach
-                @endif
-              </tbody>
-            </table>
-            <div class="btn btn-circle pull-right" title="Agregar Acción">
-              <a href="{{url('/pacs/'.$pac->id_pac).'/agregaraccion'}}">
-                <i class="fa fa-plus" data-id="{{$pac->id_pac}}"></i>Agregar
-              </a>
-            </div>
-          </div>
       </div>
     </form> 
   </div>
   </div>
+<div class="row">
+@include('pacs.acciones')
+</div>
 </div>
 @endsection
 
@@ -172,7 +138,6 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    console.log("Entro al if");
     $(".js-example-basic-single").select2();    
 
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
@@ -210,7 +175,7 @@
     }
 
     function getDestinatariosSelected() {
-      return $('#form-modificacion #destinatarios-de-la-pac .fa-minus').map(function(index, val) {
+      return $('#form-modificacion #destinatarios .fa-minus').map(function(index, val) {
         return $(val).data('id');
       });
     }
@@ -303,6 +268,31 @@
       }else{
         alert('Hay campos que no cumplen con la validacion.');
       }
+    });
+
+    $(".container-fluid").on("change", "#repeticiones", function(e) { 
+        e.preventDefault();
+
+        alert("Cambiando repeticiones.");
+        let repeticiones = $(this);
+        let nuevo_valor = repeticiones.val();
+        let original = repeticiones.data('original');
+
+        let mensaje = "Ingrese el motivo por el cual quiere crear nuevas repeticiones.";
+
+        if (nuevo_valor < original) {
+           mensaje = "Ingrese el motivo por el cual quiere eliminar X repeticiones.";
+        }
+
+        let motivo = "";
+        while (motivo === "") {
+            motivo = prompt(mensaje);
+        }
+
+        if (motivo === null) {
+            repeticiones.val(original);
+        }
+        
     });
 
   });

@@ -60,7 +60,7 @@ class Curso extends Model
      *
      * @var array
      */
-    protected $dates = ['deleted_at'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * Obtiene las acciones en las que participo.
@@ -74,7 +74,7 @@ class Curso extends Model
 
     public function estado()
     {
-        return $this->hasOne('App\Models\Pac\Estado', 'id_estado', 'id_estado');
+        return $this->hasOne('App\Models\Cursos\Estado', 'id_estado', 'id_estado');
     }
 
     public function profesores()

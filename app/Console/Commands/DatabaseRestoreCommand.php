@@ -13,9 +13,8 @@ class DatabaseRestoreCommand extends Command
      * @var string
      */
     protected $signature = 'db:restore
-    {--m|migrate=0 : Migrate}
+    {--m|migrate : Migrate}
     {--t|table= : Table Name}';
-
 
     /**
      * The console command description.

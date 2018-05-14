@@ -52,8 +52,7 @@ class Pac extends Model
      */
     public function acciones()
     {
-        return $this->belongsToMany('App\Models\Cursos\Curso', 'pac.pacs_cursos', 'id_pac', 'id_curso')
-            //->withTimestamps()
+        return $this->belongsToMany('App\Models\Cursos\Curso', 'pac.pacs_cursos', 'id_pac', 'id_curso')->withTimestamps()
             ;
     }
 
@@ -91,12 +90,11 @@ class Pac extends Model
     
     public function generarAcciones($accion)
     {
-
         $areasTematicas = explode(',', $accion['areasTematicas']);
 
-        while ($accion['repeticiones']--) {
+        for ($i = 1; $i <= $accion['repeticiones']; $i++) {
             $this->acciones()
-                ->create($accion)
+                ->create(array_merge($accion, ['edicion' => $i]))
                 ->areasTematicas()
                 ->attach($areasTematicas);
         }
@@ -146,9 +144,16 @@ class Pac extends Model
 
     public function getAllDestinatarios()
     {
-        $destinatarios = $this->destinatarios()->get()->map(function ($value) {
-            return $value->id_funcion;
+    	$destinatarios = $this->destinatarios()->get()->map(function ($value) {
+	        return $value->id_funcion;    
         });
-        return implode(",", $destinatarios);
+
+	    return implode(",", $destinatarios);
     }
+
+    public function getRepeticionesAttribute()
+    {
+        return $this->acciones()->count();
+    }
+
 }

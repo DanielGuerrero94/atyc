@@ -1,4 +1,5 @@
 <form>
+    @if(!isset($disabled)) 
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form role="form">
@@ -17,7 +18,8 @@
 			</form>
 		</div>	
 	</div>
-	<br>
+    <br>
+    @endif
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="box box-default no-padding">

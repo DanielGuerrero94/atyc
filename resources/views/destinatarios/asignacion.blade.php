@@ -1,4 +1,5 @@
 <form>
+										@if(!isset($disabled))
     <div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form role="form">
@@ -18,6 +19,7 @@
         </div>
 	</div>
     <br>	
+@endif
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="box box-default no-padding">
@@ -29,11 +31,13 @@
 					@else
 					<div class="box-body" style="display: none;">
 						@endif
-						<table class="table table-striped" id="destinatarios-de-la-pac">
+						<table class="table table-striped" id="destinatarios">
 							<thead>
 								<tr>
 									<th>Nombre</th>
+										@if(!isset($disabled))
 									<th>Acciones</th>
+@endif
 								</tr>
 							</thead>
 							<tbody>
@@ -43,14 +47,7 @@
 									<td>{{$funcion->nombre}}</td>
 									<td>
 										@if(!isset($disabled))
-										<div class="btn btn-xs btn-info">
-											<a href="{{url('/funciones/'.$funcion->id_funcion)}}">
-												<i class="fa fa-search" data-id="{{$funcion->id_funcion}}"></i>
-											</a>
-										</div>
-										<div class="btn btn-xs btn-danger quitar">
-											<i class="fa fa-minus" data-id="{{$funcion->id_funcion}}"></i>
-										</div>
+									<a data-id="{{$funcion->id_funcion}}" class="btn btn-circle quitar" title="Remover"><i class="fa fa-minus text-danger fa-lg"></i></a>
 										@endif
 									</td>
 								</tr>

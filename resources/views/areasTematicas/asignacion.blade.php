@@ -1,4 +1,5 @@
 <form>
+										@if(!isset($disabled))
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form role="form">
@@ -18,11 +19,12 @@
 		</div>	
 	</div>
 	<br>
+										@endif
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="box box-default no-padding">
 				<div class="box-header">
-					<p>Areas Tematicas de la Pac - Cantidad: <b><span id="contador-areasTematicas"></span></b></p>
+					<p>Areas Tematicas - Cantidad: <b><span id="contador-areasTematicas"></span></b></p>
 				</div>
 				@if(isset($curso))
 				<div class="box-body">
@@ -33,7 +35,9 @@
 							<thead>
 								<tr>
 									<th>Nombre</th>
+										@if(!isset($disabled))
 									<th>Acciones</th>
+										@endif
 								</tr>
 							</thead>
 							<tbody>
@@ -42,15 +46,8 @@
 								<tr>
 									<td>{{$areaTematica->nombre}}</td>
 									<td>
-										@if(!isset($disabled))
-										<div class="btn btn-xs btn-info">
-											<a href="{{url('/areasTematicas/'.$areaTematica->id_area_tematica)}}">
-												<i class="fa fa-search" data-id="{{$areaTematica->id_area_tematica}}"></i>
-											</a>
-										</div>
-										<div class="btn btn-xs btn-danger quitar">
-											<i class="fa fa-minus" data-id="{{$areaTematica->id_area_tematica}}"></i>
-										</div>
+                                        @if(!isset($disabled))
+									<a data-id="{{$areaTematica->id_area_tematica}}" class="btn btn-circle quitar" title="Remover"><i class="fa fa-minus text-danger fa-lg"></i></a>
 										@endif
 									</td>
 								</tr>

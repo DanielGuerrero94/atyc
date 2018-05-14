@@ -42,6 +42,21 @@ class Pauta extends Model
     {
         return $this->hasOne('App\Models\Pac\CategoriaPauta', 'id_categoria_pauta', 'id_categoria_pauta');
     }
+
+    /**
+     * Relacion con los componentes del compromiso anual.
+     */
+    public function componentes()
+    {
+        return $this->belongsToMany(
+            'App\Models\Pac\ComponenteCa',
+            'pac.pautas_componentes',
+            'id_componente_ca',
+            'id_pauta'
+        )
+            ->withTimestamps();
+    }
+
         
     /**
     *

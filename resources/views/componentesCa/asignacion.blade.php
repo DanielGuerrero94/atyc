@@ -1,4 +1,5 @@
 <form>
+										@if(!isset($disabled))
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form role="form">
@@ -17,7 +18,8 @@
 			</form>
 		</div>				
 	</div>
-	<br>
+    <br>
+@endif
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="box box-default no-padding">
@@ -33,7 +35,9 @@
 							<thead>
 								<tr>
 									<th>Nombre</th>
-									<th>Acciones</th>
+										@if(!isset($disabled))
+                                    <th>Acciones</th>
+@endif
 								</tr>
 							</thead>
 							<tbody>
@@ -42,15 +46,8 @@
 								<tr>
 									<td>{{$componenteCa->nombre}}</td>
 									<td>
-										@if(!isset($disabled))
-										<div class="btn btn-xs btn-info">
-											<a href="{{url('/componentesCa/'.$componenteCa->id_componente_ca)}}">
-												<i class="fa fa-search" data-id="{{$componenteCa->id_componente_ca}}"></i>
-											</a>
-										</div>
-										<div class="btn btn-xs btn-danger quitar">
-											<i class="fa fa-minus" data-id="{{$componenteCa->id_componente_ca}}"></i>
-										</div>
+                                        @if(!isset($disabled))
+									<a data-id="{{$componenteCa->id_componente_ca}}" class="btn btn-circle quitar" title="Remover"><i class="fa fa-minus text-danger fa-lg"></i></a>
 										@endif
 									</td>
 								</tr>

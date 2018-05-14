@@ -202,12 +202,12 @@
           data : getInput(),
           success : function(data){
             console.log("Success.");
-            alert("Se crea el pac.");
+            alert("Se crea la pac.");
             location.replace('pacs');
           },
           error : function(data){
             console.log("Error.");
-            alert("No se pudo crear el pac.");
+            alert("No se pudo crear la pac.");
           }
         });
       }

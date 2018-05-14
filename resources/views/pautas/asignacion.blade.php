@@ -1,4 +1,5 @@
 <form>
+										@if(!isset($disabled))
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form role="form">
@@ -18,11 +19,12 @@
 		</div>	
 	</div>
 	<br>
+@endif
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="box box-default no-padding">
 				<div class="box-header">
-					<p>Pautas de la Pac - Cantidad: <b><span id="contador-pautas"></span></b></p>
+					<p>Pautas - Cantidad: <b><span id="contador-pautas"></span></b></p>
 				</div>
 				@if(isset($pac))
 				<div class="box-body">
@@ -32,30 +34,23 @@
 						<table class="table table-striped" id="pautas-de-la-pac">
 							<thead>
 								<tr>
-									<th>Item</th>
-									<th>Nombre</th>
-									<th>Descripcion</th>
+									<th>Número</th>
+									<th>Descripción</th>
+									@if(!isset($disabled))
 									<th>Acciones</th>
+                                    @endif
 								</tr>
 							</thead>
 							<tbody>
 								@if(isset($pac))
 								@foreach($pac->pautas as $pauta)
 								<tr>
-									<td>{{$pauta->item}}</td>
 									<td>{{$pauta->nombre}}</td>
 									<td>{{$pauta->descripcion}}</td>
 									<td>
-										@if(!isset($disabled))
-										<div class="btn btn-xs btn-info">
-											<a href="{{url('/pautas/'.$pauta->id_pauta)}}">
-												<i class="fa fa-search" data-id="{{$pauta->id_pauta}}"></i>
-											</a>
-										</div>
-										<div class="btn btn-xs btn-danger quitar">
-											<i class="fa fa-minus"></i>
-										</div>
-										@endif
+                                        @if(!isset($disabled))
+                                    <a data-id="{{$pauta->id_pauta}}" class="btn btn-circle quitar" title="Remover"><i class="fa fa-minus text-danger fa-lg"></i></a>
+                                        @endif
 									</td>
 								</tr>
 								@endforeach

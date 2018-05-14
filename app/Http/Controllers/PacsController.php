@@ -78,9 +78,6 @@ class PacsController extends ModelController
             $request->request->add(['id_provincia' => $id_provincia]);
         }
 
-        //foreach ($request->areasTematicas as $areaTematica) {
-        //    $request->id_area_tematica = $areaTematica->id_area_tematica;
-       // }
         logger("Quiere actualizar con: ".json_encode($request->all()));
         $acciones = $request->only(['repeticiones', 'nombre', 'id_linea_estrategica', 'id_provincia', 'id_estado', 'areasTematicas', 'id_area_tematica']);
 
@@ -134,7 +131,8 @@ class PacsController extends ModelController
                     'fecha',
                     'duracion',
                     'id_estado',
-                    'cursos.cursos.created_at'
+                    'cursos.cursos.created_at',
+                    'cursos.cursos.updated_at'
                 );
             }
         ])
@@ -143,13 +141,15 @@ class PacsController extends ModelController
         ->get()
         ->map(function ($model) {
             $accion = $model->acciones()->first();
+            $model->accion = $accion;
             $model->areas_tematicas = $accion->areasTematicas;
-
             return $model;
         })
         ->first();
 
-        return ['pac' => $pac];
+        $curso = $pac->accion;
+
+        return compact('pac', 'curso');
     }
 
     /**
@@ -161,9 +161,6 @@ class PacsController extends ModelController
     public function edit($id)
     {
         $data = array_merge($this->getSelectOptions(), $this->show($id));
-
-        
-
         return view('pacs.modificacion', $data);
     }
 
@@ -196,7 +193,6 @@ class PacsController extends ModelController
         $relaciones = $request->only(['destinatarios', 'componentesCa', 'pautas', 'areasTematicas']);
         $pac->modificarRelaciones($relaciones);
         $pac->update($request->all());
-        //dump($pac);
         return $pac->id_pac;
     }
 
@@ -272,6 +268,7 @@ class PacsController extends ModelController
                     });
 
                 $model->requiere_ficha_tecnica = !is_null($requiere);
+                $model->provincia = $accion->provincia->nombre;
 
                 return $model;
             });

@@ -125,7 +125,13 @@
                 class: 'details-control',
                 defaultContent: "",
                 orderable: false
-            },
+        },
+            @if(Auth::user()->isUec())
+            { 
+                data: 'provincia',
+                title: 'Provincia'
+                }, 
+                @endif
             { 
                 data: 'tipologia',
                 title: 'Tipo de Acción',
@@ -181,7 +187,7 @@
                     
                     buttons += fichaTecnicaButton(row);
                     
-                    buttons += seeButton(row.id_pac) + editButton(row.id_pac) + deleteButton(row.id_pac);
+                    buttons += seeButton(row.id_pac) + editButton(row.id_pac);// + deleteButton(row.id_pac);
 
                     return buttons;				
                  },

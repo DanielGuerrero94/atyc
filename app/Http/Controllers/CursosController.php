@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Cursos\AreaTematica;
 use App\Models\Cursos\LineaEstrategica;
 use App\Models\Cursos\Estado;
+use App\Models\Cursos\Responsable;
 use App\Provincia;
 use App\Periodo;
 use App\Models\Cursos\Curso;
@@ -430,7 +431,11 @@ class CursosController extends AbmController
             return Estado::all();
         });
 
-        return compact('areas_tematicas', 'estados', 'lineas_estrategicas', 'provincias', 'periodos');
+        $responsables = Cache::remember('responsables', 5, function () {
+            return Responsable::all();
+        });
+
+        return compact('areas_tematicas', 'estados', 'lineas_estrategicas', 'provincias', 'periodos', 'responsables');
     }
 
     private function queryLogica(Request $r, $filtros, $orderBy)

@@ -1,5 +1,9 @@
 <script type="text/javascript">
 
+function removeButton(id) {
+    return '<a data-id="' + id + '" class="btn btn-circle quitar" title="Remover"><i class="fa fa-minus text-danger fa-lg"></i></a>';
+}
+
   $(document).ready(function() {
     //Inicial
     refreshCounter();
@@ -41,7 +45,7 @@
           areatematica = '<tr>'+       
           '<td>'+item.nombre+'</td>'+
           '<td>'+
-          '<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus" data-id="'+item.id+'"></i></div>'+
+          removeButton(item.id) +
           '</td>'+
           '</tr>';
           existe = false;

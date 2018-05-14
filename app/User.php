@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'id_provincia', 'title'
     ];
 
     /**
@@ -43,6 +43,10 @@ class User extends Authenticatable
         return $this->hasOne('App\Provincia', 'id_provincia', 'id_provincia');
     }
 
+    /**
+     * Relacion de multiples roles de los usuarios 
+     *
+     */
     public function roles()
     {
         return $this->belongsToMany(

@@ -1,5 +1,9 @@
 <script type="text/javascript">
 
+function removeButton(id) {
+    return '<a data-id="' + id + '" class="btn btn-circle quitar" title="Remover"><i class="fa fa-minus text-danger fa-lg"></i></a>';
+}
+
   $(document).ready(function() {
     //Inicial
     refreshCounter();
@@ -44,20 +48,20 @@
           funcion = '<tr>'+         
           '<td>'+item.nombre+'</td>'+
           '<td>'+
-          '<div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus" data-id="'+item.id+'"></i></div>'+
+          removeButton(item.id) +
           '</td>'+
           '</tr>';
           existe = false;
 
-          $.each($('#destinatarios-de-la-pac tbody tr .fa-minus'),function(k,v){
+          $.each($('#destinatarios tbody tr .fa-minus'),function(k,v){
             if($(v).data('id') == item.id){
               existe = true;
             }
           });
 
           if(!existe){
-            $('#destinatarios-de-la-pac tbody').append(funcion);  
-            $('#destinatarios-de-la-pac').closest('div').show();
+            $('#destinatarios tbody').append(funcion);  
+            $('#destinatarios').closest('div').show();
             refreshCounter();           
           }
           $('#destinatarios .destinatarios_typeahead').val('');
@@ -66,14 +70,14 @@
       debug: true
     });
 
-    $('#destinatarios-de-la-pac').on('click','.quitar', function(event) {
+    $('#destinatarios').on('click','.quitar', function(event) {
       this.closest('tr').remove();
       refreshCounter();
     });
 
     function refreshCounter() {
-      let count = $('#destinatarios-de-la-pac tbody').children().length;
-      $('#contador-destinatarios').html(count);
+      let count = $("#destinatarios tbody").children().length;
+      $("#contador-destinatarios").html(count);
     }
 
   });

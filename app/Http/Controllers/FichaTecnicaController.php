@@ -30,7 +30,7 @@ class FichaTecnicaController extends Controller
 
     public function download($id)
     {
-        $ficha_tecnica = FichaTecnica::findOrFail($id);
+        $ficha_tecnica = $this->model->findOrFail($id);
         $path = storage_path("app/ficha_tecnica/".$ficha_tecnica->path);
         return response()->download($path, $ficha_tecnica->original);
     }
@@ -41,6 +41,8 @@ class FichaTecnicaController extends Controller
         $material = $this->model->findOrFail($id);
         Storage::delete($material->path);
         $material->update($data);
+
+        dd($material);
         return response('Replaced', 200);
     }
     

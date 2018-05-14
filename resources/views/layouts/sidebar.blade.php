@@ -1,4 +1,4 @@
-<section class="control-sidebar control-sidebar-dark control-sidebar-open" style="height: auto;">
+<section class="control-sidebar control-sidebar-dark control-sidebar-open" style="height: 100%;">
 <section class="sidebar" style="height: auto;">
   <ul class="sidebar-menu tree" data-widget="tree">
     <li class="header text-center">
@@ -37,6 +37,12 @@
         </span>
       </a>
       <ul class="treeview-menu">
+        <li>
+          <a href='{{url("/pacs")}}'>
+            <i class="fa fa-bars"></i>
+            <span>Matriz</span>
+          </a>
+        </li>
         <li>
           <a href={{url("/materiales/etapa/3")}}>
             <i class="fa fa-book"></i>
@@ -238,6 +244,43 @@
           </ul>
         </li>
         <li class="treeview">
+<a href="#">
+            <i class="fa fa-sitemap" aria-hidden="true"></i>
+            <span>PAC</span>
+            <span class="pull-right">
+              <i class="fa fa-angle-down"></i>
+            </span>
+          </a>
+
+        <ul class="treeview-menu">
+            <li>
+                <a href='{{url("/categoriasPautas")}}'><i class="fa fa-circle-o"></i>
+                  <span>Categorias</span>
+                </a>
+              </li>
+              <li>
+                <a href='{{url("/pautas")}}'><i class="fa fa-circle-o"></i>
+                  <span>Pautas</span>
+                </a>
+              </li>
+          <li>
+            <a href='{{url("/componentesCa")}}'><i class="fa fa-circle-o"></i>
+              <span>Componentes CA</span>
+            </a>
+          </li>
+          <li>
+            <a href='{{url("/estados")}}'><i class="fa fa-circle-o"></i>
+              <span>Estados</span>
+            </a>
+          </li>
+          <li>
+            <a href="#"><i class="fa fa-circle-o"></i>
+              <span>Talleres Sumarte</span>
+            </a>
+          </li>
+        </ul>
+        </li> 
+        <li class="treeview">
           <a href="#">
             <i class="fa fa-circle-o" aria-hidden="true"></i>
             <span>Otros</span>
@@ -259,7 +302,8 @@
               </a>
             </li>
           </ul>
-        </li>        
+        </li> 
+
         </ul>
     </li>
     <li>
@@ -289,12 +333,6 @@
           </span>
         </a>
       </li>              
-      <li>
-        <a href='{{url("/pacs")}}'>
-          <i class="fa fa-circle-o"></i>
-          <span>Matriz</span>
-        </a>
-      </li>
       <li class="treeview">
         <a href="#">
           <i class="fa fa-plus" aria-hidden="true"></i>
@@ -303,44 +341,7 @@
             <i class="fa fa-angle-left pull-right"></i>
           </span>
         </a>
-        <ul class="treeview-menu">
-          <li>
-            <a href='{{url("/componentesCa")}}'><i class="fa fa-circle-o"></i>
-              <span>Componentes CA</span>
-            </a>
-          </li>
-          <li class="treeview">
-            <a href="#">
-              <i class="fa fa-plus" aria-hidden="true"></i>
-              <span>Pautas</span>
-              <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-              </span>
-            </a>
-            <ul class="treeview-menu">
-              <li>
-                <a href='{{url("/categoriasPautas")}}'><i class="fa fa-circle-o"></i>
-                  <span>Categorias de las Pautas</span>
-                </a>
-              </li>
-              <li>
-                <a href='{{url("/pautas")}}'><i class="fa fa-circle-o"></i>
-                  <span>Pautas</span>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href='{{url("/estados")}}'><i class="fa fa-circle-o"></i>
-              <span>Estados</span>
-            </a>
-          </li>
-          <li>
-            <a href="#"><i class="fa fa-circle-o"></i>
-              <span>Talleres Sumarte</span>
-            </a>
-          </li>
-        </ul>
+
       </li>
     </ul>
   </li>             
