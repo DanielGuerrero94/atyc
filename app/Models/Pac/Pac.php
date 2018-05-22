@@ -91,6 +91,7 @@ class Pac extends Model
     public function generarAcciones($accion)
     {
         $areasTematicas = explode(',', $accion['areasTematicas']);
+        logger("Asocia las areas tematicas " . json_encode($areasTematicas));
 
         for ($i = 1; $i <= $accion['repeticiones']; $i++) {
             $this->acciones()

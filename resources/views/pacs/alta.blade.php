@@ -120,26 +120,26 @@
     });
 
     function getPautasSelected() {
-      return $('#form-alta #pautas-de-la-pac .fa-search').map(function(index, val) {
-        return $(val).data('id');
+      return $('#form-alta #pautas-de-la-pac .fa-minus').map(function(index, val) {
+            return $(val).parent().data('id');
       });
     }
 
     function getDestinatariosSelected() {
-      return $('#form-alta #destinatarios-de-la-pac .fa-minus').map(function(index, val) {
-        return $(val).data('id');
+      return $('#form-alta #destinatarios-pac .fa-minus').map(function(index, val) {
+            return $(val).parent().data('id');
       });
     }
 
     function getComponentesCaSelected() {
       return $('#form-alta #componentesCa-de-la-pac .fa-minus').map(function(index, val) {
-        return $(val).data('id');
+            return $(val).parent().data('id');
       });
     }
 
     function getAreasTematicasSelected() {
-      return $('#form-alta #areasTematicas-de-la-pac .fa-minus').map(function(index, val) {
-        return $(val).data('id');
+        return $('#form-alta #areasTematicas-de-la-pac .fa-minus').map(function(index, val) {
+            return $(val).parent().data('id');
       });
     }    
 
@@ -195,8 +195,8 @@
         $(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
       },
       submitHandler : function(form){
-
-        $.ajax({
+        console.log(getInput());
+		$.ajax({
           method : 'post',
           url : 'pacs',
           data : getInput(),

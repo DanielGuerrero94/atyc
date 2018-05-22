@@ -9,6 +9,7 @@ use App\Models\Pac\ComponenteCa;
 use App\Models\Cursos\Curso;
 use App\Models\Cursos\AreaTematica;
 use App\Models\Cursos\LineaEstrategica;
+use App\Funcion;
 use Datatables;
 use Auth;
 
@@ -68,6 +69,12 @@ class PacsController extends ModelController
      */
     public function store(Request $request)
     {
+        $error = $this->validate($request, $this->rules);
+
+        if ($error) {
+            return response($error, 400);
+        }
+
         $request->request->add(['t1' => $request->has('t1')]);
         $request->request->add(['t2' => $request->has('t2')]);
         $request->request->add(['t3' => $request->has('t3')]);
@@ -79,7 +86,7 @@ class PacsController extends ModelController
             $request->request->add(['id_provincia' => $id_provincia]);
         }
 
-        logger("Quiere actualizar con: ".json_encode($request->all()));
+        logger("Quiere crear una pac con: " . json_encode($request->all()));
         $acciones = $request->only(['repeticiones', 'nombre', 'id_linea_estrategica', 'id_provincia', 'id_estado', 'areasTematicas', 'id_area_tematica']);
 
         $relaciones = $request->only(['destinatarios', 'componentesCa', 'pautas']);
@@ -299,9 +306,9 @@ class PacsController extends ModelController
 
         $tipologias = LineaEstrategica::orderBy('numero')->get();
 
-        $tematicas = [];
+        $tematicas = AreaTematica::orderBy('nombre')->get();
 
-        $destinatarios = [];
+        $destinatarios = Funcion::orderBy('nombre')->get();
 
         //Solo puede mostrar los componentes que corresponden al anio actual
         $year = date_create()->format("Y");
@@ -309,12 +316,13 @@ class PacsController extends ModelController
             ->orderBy('item')
             ->get();
 
+        //Solo puede mostrar las pautas que corresponden al anio actual
         $pautas = Pauta::where('vigencia', $year)
             ->orderBy('nombre')
             ->get();
 
 
-        return compact('tipologias', 'tematicas', 'pautas', 'componentesCa');
+        return compact('tipologias', 'tematicas', 'pautas', 'componentesCa', 'destinatarios');
     }
 
     /**

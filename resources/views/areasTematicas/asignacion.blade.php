@@ -1,25 +1,20 @@
 <form>
-										@if(!isset($disabled))
-	<div class="row">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<form role="form">
-				<div class="row" id="busqueda-areasTematicas">
-					<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">  
-						<label for="areaTematica" class="control-label">Buscar Area Tematica:</label>
-						<div class="typeahead__container">
-							<div class="typeahead__field">             
-								<span class="typeahead__query">
-									<input class="areasTematicas_typeahead form-control" name="areaTematica" type="search" placeholder="Nombres areaTematica -- Min 3 caracteres" autocomplete="off" id="areaTematica">
-								</span>
-							</div>
-						</div> 
-					</div> 
-				</div>
-			</form>
-		</div>	
-	</div>
-	<br>
-										@endif
+@if(!isset($disabled))
+    <div class="row">
+        <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <label for="area-tematica" class="control-label col-md-2 col-xs-2">Tematica: </label>
+            <div class="col-md-10 col-xs-10">
+                <select class="form-control" id="select-areas-tematicas" name="area-tematica">
+                    <option selected disabled>Seleccionar</option>
+                    @foreach($tematicas as $tematica)
+                    <option value="{{$tematica->id_area_tematica}}" data-id="{{$tematica->id_area_tematica}}" data-nombre="{{$tematica->nombre}}">{{$tematica->nombre}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+    <br>
+@endif
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="box box-default no-padding">

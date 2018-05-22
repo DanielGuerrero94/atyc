@@ -1,32 +1,13 @@
 <form>
 @if(!isset($disabled))
-	<div class="row">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<form role="form">
-				<div class="row" id="busqueda-pautas">
-					<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">  
-						<label for="pauta" class="control-label">buscar pauta:</label>
-						<div class="typeahead__container">
-							<div class="typeahead__field">             
-								<span class="typeahead__query">
-									<input class="pautas_typeahead form-control" name="pauta" type="search" placeholder="nro. item, nombres, descripcion -- min 3 caracteres" autocomplete="off" id="pauta">
-								</span>
-							</div>
-						</div> 
-					</div> 
-				</div>
-			</form>
-		</div>	
-	</div>
-	<br>
     <div class="row">
 		<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
               <label for="pauta" class="control-label col-md-2 col-xs-2">Pauta: </label>
               <div class="col-md-10 col-xs-10">
-                <select class="form-control" id="pauta" name="pauta">
+                <select class="form-control" id="select-pauta" name="pauta">
                   <option selected disabled>Seleccionar</option>
                   @foreach($pautas as $pauta)
-                  <option value="{{$pauta->id_pauta}}" title="{{$pauta->descripcion}}">{{$pauta->nombre . " - " . substr($pauta->descripcion, 0, 70) . "..."}}</option>
+                  <option value="{{$pauta->id_pauta}}" title="{{$pauta->descripcion}}" data-id-pauta="{{$pauta->id_pauta}}" data-descripcion="{{$pauta->descripcion}}" data-nombre="{{$pauta->nombre}}">{{$pauta->nombre . " - " . substr($pauta->descripcion, 0, 70) . "..."}}</option>
 				  @endforeach
                 </select>
               </div>
