@@ -20,13 +20,13 @@ class PautasController extends AbmController
 {
 
     private $rules = [
-        'item' => 'required|string',
+        'item' => 'required|numeric',
         'descripcion' => 'required|string',
         'id_categoria_pauta' => 'required|numeric'
     ];
 
     private $filters = [
-        'item' => 'string',
+        'item' => 'numeric',
         'nombre' => 'string',
         'descripcion' => 'string',
         'id_categoria_pauta' => 'numeric'
@@ -36,6 +36,11 @@ class PautasController extends AbmController
         'fa fa-pencil-square-o',
         'fa fa-trash-o'
     ];
+
+    public function __construct(Pauta $pauta)
+    {
+        $this->model = $pauta;
+    }
 
     /**
     * View para abm.
@@ -81,6 +86,7 @@ class PautasController extends AbmController
         if ($v->fails()) {
             return response($v->errors(), 400);
         }
+
         $this->agregaRequest($request);
 
         $pauta = new Pauta();
@@ -124,13 +130,9 @@ class PautasController extends AbmController
     public function update(Request $request, $id)
     {
         logger('Quiere actualizar pauta {$id} con: '.json_encode($request->all()));
-        try {
             $pauta = Pauta::findOrFail($id);
             $this->agregaRequest($request);
             return $pauta->modificar($request);
-        } catch (ModelNotFoundException $e) {
-            return json_encode($e->message);
-        }
     }
 
     private function agregaRequest(Request $r)
@@ -160,7 +162,6 @@ class PautasController extends AbmController
     {
         $query = Pauta::select('id_pauta', 'item', 'nombre', 'descripcion', 'id_categoria_pauta')
         ->with('categoriaPauta');
-
 
         return $this->toDatatable($r, $query);
     }
@@ -270,5 +271,17 @@ class PautasController extends AbmController
         ->get();
 
         return $this->typeaheadResponse($matchs);
+    }
+
+    /**
+     * Devuelve los componentes asociados a la pautas.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  int  $id_pauta
+     * @return \Illuminate\Http\Response
+     */
+    public function conComponentes(Request $request, $id_pauta)
+    {
+        return $this->model->with('componentes')->findOrFail($id_pauta)->toJson();
     }
 }

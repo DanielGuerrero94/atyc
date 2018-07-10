@@ -44,6 +44,15 @@ Route::get('dashboard/draw/progress', 'DashboardController@progress');
 
 /*
 |--------------------------------------------------------------------------
+| Dashboard Subviews
+|--------------------------------------------------------------------------
+*/
+
+Route::get('dashboard/acciones', 'DashboardController@viewAcciones');
+Route::get('dashboard/participantes', 'DashboardController@viewParticipantes');
+
+/*
+|--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
 |
@@ -53,8 +62,16 @@ Route::get('dashboard/draw/progress', 'DashboardController@progress');
 |
 */
 
-//Logueado
 Route::group(['middleware' => ['logueado','logging']], function () {
+
+/*
+|--------------------------------------------------------------------------
+| Menu Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('omeka', 'OmekaController@iframe');
+
 
     //Fichas tecnicas
     Route::get('fichas-tecnicas/{id}/download', 'FichaTecnicaController@download');

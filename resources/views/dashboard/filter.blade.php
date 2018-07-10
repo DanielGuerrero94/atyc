@@ -19,11 +19,10 @@
       </div>
       <div class="btn-group" id="dashboard-anio">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <b><span id="anio">Histórico</span></b>
+          <b><span id="anio">{{date('Y')}}</span></b>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-          <li><a href="#">Histórico</a></li>
           <li><a href="#">{{date('Y')}}</a></li>
           <li role="separator" class="divider"></li>
           @for($i = intval(date('Y')) - 1; $i > 2012 ; $i--)

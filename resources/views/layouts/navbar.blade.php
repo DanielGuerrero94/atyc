@@ -14,12 +14,18 @@
     </form>
   </li>
   @else
-
-  <div class="navbar-custom-menu">
-    <ul class="nav navbar-nav">
-      <li>
-        <a href="{{url("/entrar")}}">Entrar</a>
-      </li>
+  <div class="navbar-custom-menu" style="width: 100%;"> 
+    <ul class="nav navbar-nav" style="width: 100%;">
+     <li>
+      <div>
+       <span style="text-align: center;">
+        This is some text in a div element!
+       </span>
+      </div>
+     </li>
+     <li class="pull-right">
+      <a href="{{url("/entrar")}}">Entrar</a>
+     </li>
       @endif
     </ul>
   </div>

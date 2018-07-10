@@ -418,4 +418,25 @@ class DashboardController extends Controller
     {
         return view('ideas.historial-completo');
     }
+
+    /**
+     * Returns a subview showing actions.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function viewAcciones()
+    {
+        return view('dashboard.acciones');
+    }
+
+    /**
+     * Returns a subview showing participants.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function viewParticipantes()
+    {
+        return view('dashboard.participantes');
+    }
+
 }

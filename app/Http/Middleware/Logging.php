@@ -38,7 +38,12 @@ class Logging
         $url = substr($request->url(), strpos($request->url(), 'atyc')+12);
         $method = $request->getMethod();
         $ip = $request->getClientIp();
-        $user = $request->user();
+
+        $user = (object) ["id" => null, "name" => null];
+
+        if ($request->user()) {
+            $user = $request->user();
+        }
 
         $json = array(
             'ip' => $ip,

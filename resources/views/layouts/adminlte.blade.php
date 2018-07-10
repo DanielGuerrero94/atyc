@@ -221,11 +221,6 @@
 
     $(document).ready(function(){     
 
-      /*
-      history.replaceState(null, null, location.href);
-      console.log(window.history);
-      */
-
       /*Traduccion a español para DataTable*/
       $.extend( $.fn.dataTable.defaults, {
         processing: true,
@@ -253,43 +248,7 @@
         }
       });
 
-      /*
-      $(".main-sidebar").on("click", "#destinatarios", function (e) {
-        e.preventDefault();
-        let url = $(this).attr("href");
-
-        $.ajax({
-          url: url,
-          success: function (html) {
-            $(".content").html(html);
-            history.pushState(url, null, url);
-            console.log(window.history);
-          },
-          error: function (html) {
-            alert("El modulo no funciona.");
-          },
-        })
-        .done(function() {
-
-        })
-        .fail(function() {
-          console.log("error");
-        })
-        .always(function() {
-          console.log("complete");
-        });
-
-      })
-      */
-
     });
-
-    /*
-    window.onpopstate = function (e) {
-      console.log(e);
-      location.href = e.state.url;
-    }
-    */
 
     var timer;
     window.onload = resetTimer;
@@ -310,5 +269,3 @@
 </script>
 @yield('script')
 @stack('moreScripts')
-
-

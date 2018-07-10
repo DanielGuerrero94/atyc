@@ -173,6 +173,34 @@
         </li>
       </ul>
     </li>             
+    <li class="treeview">
+      <a href="#">
+        <i class="fa fa-wrench" aria-hidden="true"></i>
+        <span>Otras herramientas</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu" role="menu">
+        <li class="treeview">
+      <a href="#">
+        <i class="fa fa-book" aria-hidden="true"></i>
+        <span>Catalogación</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu" role="menu">
+        <li>
+          <a href='{{url("/omeka")}}'>
+            <span>Omeka</span>
+          </a>
+        </li>
+      </ul>
+    </li>             
+      </ul>
+    </li>             
+
     @if(Auth::user()->tieneRol('admin'))
     <li class="header text-center">
       <span class="text-danger">ADMIN</span>

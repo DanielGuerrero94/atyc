@@ -21,6 +21,8 @@ class PacsController extends ModelController
      * @var array
      **/
     protected $rules = [
+        'nombre' => 'required|string',
+        'repeticiones' => 'required|numeric',
         'destinatarios' => 'required|string',
         'componentesCa' => 'required|string',
         'pautas' => 'required|string',
@@ -75,10 +77,8 @@ class PacsController extends ModelController
             return response($error, 400);
         }
 
-        $request->request->add(['t1' => $request->has('t1')]);
-        $request->request->add(['t2' => $request->has('t2')]);
-        $request->request->add(['t3' => $request->has('t3')]);
-        $request->request->add(['t4' => $request->has('t4')]);
+        $request = $this->mapeoTrimestres($request);
+
         $request->request->add(['id_estado' => 1]);
 
         if (!$request->has('id_provincia')) {
@@ -92,10 +92,14 @@ class PacsController extends ModelController
         $relaciones = $request->only(['destinatarios', 'componentesCa', 'pautas']);
 
         $pac = $this->model
-            ->create($request->all())
-            ->generarAcciones($acciones)
-            ->llenarRelaciones($relaciones);
-                
+            ->create($request->all());
+
+        $pac = $pac->generarAcciones($acciones);
+
+
+        $pau = $pac->llenarRelaciones($relaciones);
+
+
         return $pac->id_pac;
     }
 
@@ -187,10 +191,7 @@ class PacsController extends ModelController
             return response($error, 400);
         }
 
-        $request->request->add(['t1' => $request->has('t1')]);
-        $request->request->add(['t2' => $request->has('t2')]);
-        $request->request->add(['t3' => $request->has('t3')]);
-        $request->request->add(['t4' => $request->has('t4')]);
+        $request = $this->mapeoTrimestres($request);
 
         $pac = $this->model->findOrFail($id);
         if ($request->input('id_ficha_tecnica')==null) {
@@ -200,8 +201,36 @@ class PacsController extends ModelController
         }
         $relaciones = $request->only(['destinatarios', 'componentesCa', 'pautas', 'areasTematicas']);
         $pac->modificarRelaciones($relaciones);
+    
+        //Es necesario verificar si cambio la cantidad de repeticiones
+        //Si es menor tengo que buscar cuales no fueron concretadas y cancelarlas
+        //Si es mayor tengo que calcular la diferencia y crear las nuevas
+        if ($pac->repeticiones != $request->get('repeticiones')) {
+            $this->modificarRepeticiones($pac, $request);
+        }
+
         $pac->update($request->all());
+        
         return $pac->id_pac;
+    }
+
+    private function modificarRepeticiones($pac, $request)
+    {   
+        
+    }
+
+    /**
+     * Esta funcion tiene que desaparecer y tienen que ser numeros
+     * Que sumados no excedan la cantidad de repticiones
+     * Verficiar en front end que se corriga esta planificacion cuando se quita una repeticion o se agrega una
+     */
+    private function mapeoTrimestres(Request $request)
+    {
+        $request->request->add(['t1' => $request->has('t1')]);
+        $request->request->add(['t2' => $request->has('t2')]);
+        $request->request->add(['t3' => $request->has('t3')]);
+        $request->request->add(['t4' => $request->has('t4')]);
+        return $request;
     }
 
     /**

@@ -14,7 +14,7 @@ class AlterComponentesCaTableAddItemColumn extends Migration
     public function up()
     {
         Schema::table('pac.componentes_ca', function (Blueprint $table) {
-            $table->integer("item");
+            $table->integer("item")->nullable();
         });
     }
 

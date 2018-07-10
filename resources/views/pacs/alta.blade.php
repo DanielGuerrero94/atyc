@@ -38,7 +38,7 @@
               </div>
             </div>
             <div class="col-md-6">          
-              <div class="col-md-4 col-xs-3">
+              <div class="form-group col-md-4 col-xs-3">
                 <input type="number" class="form-control" name="repeticiones" id="repeticiones" placeholder="Repeticiones"> 
               </div>
             </div>
@@ -177,14 +177,13 @@
         nombre : {
           required: true
         },
-        planificar : {
-          required: true,
-          number: true
+        repeticiones : {
+          required: true
         },
       },
       messages:{
         nombre : "Campo obligatorio",
-        planificar : "Campo obligatorio",
+        repeticiones : "Campo obligatorio",
       },
       highlight: function(element)
       {
