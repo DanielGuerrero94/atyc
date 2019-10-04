@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -32,13 +33,13 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $path = base_path('storage/exports/*');
-            system("rm {$path}");
-        })->everyMinute();
-
+//            $runned = DB::statement("REFRESH MATERIALIZED VIEW efectores.mv_efectores_conveniados");
+        })->dailyAt('07:00');
+        
         $schedule->call(function () {
-            system('date=$(date +%T); file="$date.txt"; echo $file | xargs touch');
-        })->everyMinute();
+  //          $runned = DB::statement("refresh materialized view efectores.mv_reporte_4");
+        })->dailyat('07:02');
+
     }
 
     /**

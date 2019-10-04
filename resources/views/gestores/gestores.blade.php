@@ -13,7 +13,7 @@
 				<div class="box-body">
 					<table id="abm-table" class="table table-hover"/>
 					<div class="box-footer">
-					<a class="pull-right" href="{{url('/registrar')}}">Registrar</a>
+					<a class="btn btn-success pull-right" href="{{url('/registrar')}}">Registrar</a>
 				</div>
 				</div>			
 			</div>			

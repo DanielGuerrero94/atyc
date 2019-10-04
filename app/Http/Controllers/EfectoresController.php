@@ -187,7 +187,8 @@ class EfectoresController extends Controller
 
     public function getTabla(Request $r)
     {
-        $query = $this->queryLogica($r, collect(['capacitados' => true]));
+        //$query = $this->queryLogica($r, collect(['capacitados' => true]));
+        $query = $this->queryLogica($r, collect([]));
 
         return Datatables::of($query)
         ->addColumn('acciones', function ($ret) {
@@ -262,7 +263,7 @@ class EfectoresController extends Controller
     {
         $efector = $this->queryLogica($r, collect(['capacitados' => true]));
 
-        if (($id_provincia = Auth::user()->id_provincia) == 25) {
+        if (($id_provincia = Auth::user()->id_provincia) != 25) {
             $id_provincia = $this->mapearProvincia($id_provincia);
             $efector = $efector->where('dg.id_provincia', $id_provincia);
         }

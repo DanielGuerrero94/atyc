@@ -159,7 +159,7 @@
 								<i class="fa fa-graduation-cap text-blue"></i>
 								<div class="timeline-item">
 									<div class="timeline-body" style="background-color: #D8E4E8;">
-										<a href="{{url('/cursos').'/'.$curso->id_curso}}" class="btn btn-square pull-right" title="Ver en detalle">
+										<a href="{{url('/cursos').'/'.$curso->id_curso.'/see'}}" class="btn btn-square pull-right" title="Ver en detalle">
 											<i class="fa text-primary fa-lg"> Ver en detalle</i>
 										</a>
 										<b>{{ $curso->nombre }}</b>
@@ -195,7 +195,7 @@
 <script type="text/javascript">
 
 	function seeButton(id_alumno) {
-		return '<a href="{{url("/alumnos")}}/' + id_alumno + '/see" data-id="' + id_alumno + '" class="btn btn-circle ver" title="Ver"><i class="fa fa-eye text-info fa-lg"></i></a>';
+		return '<a href="{{url("/alumnos")}}/' + id_alumno + '/see" data-id="' + id_alumno + '" class="btn btn-circle ver" title="Ver"><i class="fa fa-search text-info fa-lg"></i></a>';
 	}
 
 	function editButton(id_alumno) {

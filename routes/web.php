@@ -56,6 +56,7 @@ Route::get('dashboard/draw/progress', 'DashboardController@progress');
 //Logueado
 Route::group(['middleware' => ['logueado','logging']], function () {
 
+    Route::get('omeka', 'OmekaController@iframe');
     //Materiales
     Route::get('materiales/etapa/{id_etapa}/table', 'MaterialesController@table');
     Route::get('materiales/etapa/{id_etapa}/list', 'MaterialesController@listar');

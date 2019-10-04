@@ -56,6 +56,8 @@ class ReportesController extends Controller
         $provincia_usuario = Provincia::findOrFail(Auth::user()->id_provincia);
 
         $data = array_merge($this->getSelectOptions(), compact('reporte', 'provincia_usuario'));
+            
+        logger($reporte->view);
 
         return view('reportes.'.$reporte->view, $data);
     }

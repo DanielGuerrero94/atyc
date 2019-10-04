@@ -4,9 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Convenio extends Model
+class Gestion extends Model
 {
-
 
 	protected $connection = 'sirge';
     /**
@@ -14,7 +13,7 @@ class Convenio extends Model
 	 *
 	 * @var string
 	 */
-	protected $table = 'efectores.convenio_administrativo';
+	protected $table = 'efectores.compromiso_gestion';
 
 	/**
 	 * Primary key asociated with the table.
@@ -35,7 +34,7 @@ class Convenio extends Model
      *
      * @var array
      */
-    protected $fillable = ['numero_convenio','numero_compromiso','firmante','fecha_suscripcion','fecha_inicio','fecha_fin','nombre_tercer_administrador','codigo_tercer_administrador'];
+    protected $fillable = ['numero_compromiso','firmante','fecha_suscripcion','fecha_inicio','fecha_fin','pago_indirecto'];
 
 	/**
      * Devuelve la fecha formateada
@@ -80,28 +79,5 @@ class Convenio extends Model
     {
         $this->attributes['firmante'] = mb_strtoupper($value);
     }
-
-    /**
-     * Guardar la dependencia sanitaria del efector.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function setNombreTercerAdministradorAttribute($value)
-    {
-        $this->attributes['nombre_tercer_administrador'] = mb_strtoupper($value);
-    }
-
-    /**
-     * Guardar la dependencia sanitaria del efector.
-     *
-     * @param  string  $value
-     * @return string
-     */
-    public function setCodigoTercerAdministradorAttribute($value)
-    {
-        $this->attributes['codigo_tercer_administrador'] = mb_strtoupper($value);
-    }
-
 
 }

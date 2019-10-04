@@ -109,7 +109,21 @@ return [
             'prefix' => '',
             'schema' => 'public',
             'sslmode' => 'prefer',
+        ],
+
+        'sirge' => [
+            'driver' => 'pgsql',
+            'host' => env('DB_HOST_S'),
+            'port' => env('DB_PORT'),
+            'database' => env('DB_DATABASE_S'),
+            'username' => env('DB_USERNAME_S'),
+            'password' => env('DB_PASSWORD_S'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'public',
+            'sslmode' => 'prefer',
         ]
+
     ],
 
     /*

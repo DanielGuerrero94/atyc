@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Auth;
-use Pais;
+use Pais as Geo;
 
 class Profesor extends Model
 {
@@ -60,7 +60,7 @@ class Profesor extends Model
         $this->id_tipo_documento = $r->id_tipo_documento;
 
         if ($this->esExtranjero($r)) {
-            $id_pais = Pais::select('id_pais')->where('nombre', '=', $r->pais)->get('id_pais')->first();
+            $id_pais = Geo::select('id_pais')->where('nombre', '=', $r->pais)->get('id_pais')->first();
             $this->id_pais = $id_pais['id_pais'];
         }
 
@@ -102,12 +102,8 @@ class Profesor extends Model
 
     public function getNombrePais()
     {
-        $nombre_pais = null;
-
         if ($this->id_tipo_documento == 5 || $this->id_tipo_documento == 6) {
-            $pais = Pais::findOrFail($this->id_pais);
-            $nombre_pais = $pais->nombre;
+            return Geo::findOrFail($this->id_pais)->nombre;
         }
-        return $nombre_pais;
     }
 }

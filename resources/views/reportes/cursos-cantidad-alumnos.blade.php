@@ -62,9 +62,8 @@
 
 		});		
 
-		$('#excel').on('click',function (event) {
+		$('.excel').on('click',function (event) {
 			event.preventDefault();
-
 			mostrarDialogDescarga();
 
 			$.ajax({
