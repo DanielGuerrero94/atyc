@@ -228,7 +228,8 @@ class ReportesController extends Controller
 
     public function reporte4($id_provincia, $id_periodo)
     {
-        $query = DB::table("efectores.mv_reporte_4 as R")
+        logger('Reporte 4');
+        $query = DB::table("efectores.mv_reporte_4_2 as R")
         ->join('sistema.provincias as P', "P.id_provincia", '=', "R.id_provincia")
         ->join('sistema.periodos as PE', "PE.id_periodo", '=', DB::raw("{$id_periodo}"))
         ->select('R.id_provincia', 'R.desde', 'R.hasta', 'R.capacitados', 'R.total', 'R.porcentaje', 'P.nombre as provincia', 'PE.nombre as periodo')

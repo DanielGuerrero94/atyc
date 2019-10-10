@@ -13,7 +13,7 @@
 				<div class="box-header">
 					<h2 class="box-tittle">Efectores
 						<div class="btn-group pull-right" role="group" aria-label="...">
-							<a href="http://200.69.210.3/sirge3/public/login" class="btn btn-square" title="Ver en SIRGE">
+							<a href="http://170.150.155.102/sirge3/public/login" class="btn btn-square" title="Ver en SIRGE">
 								<i class="fa fa-link text-primary fa-lg"> SIRGE</i>
 							</a>
 							<a href="#" class="btn btn-square" title="Solo consulta de los que tienen georeferenciamiento.">

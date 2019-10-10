@@ -50,7 +50,7 @@
 					<a href="{{url('/efectores')}}" class="btn pull-left" id="back" title="Volver"><i class="fa fa-arrow-left"></i></a>
 					<h3 class="box-tittle" style="margin-top: 5px;"> Datos del efector</h3>
 					<div class="box-tools pull-right" style="margin-top: 5px;">
-						<a href="http://200.69.210.3/sirge3/public/login" class="btn btn-square" title="Ver en SIRGE">
+						<a href="http://170.150.155.102/sirge3/public/login" class="btn btn-square" title="Ver en SIRGE">
 							<i class="fa fa-link text-primary fa-lg"> SIRGE</i>
 						</a>
 					</div>
