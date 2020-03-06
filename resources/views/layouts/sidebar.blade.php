@@ -167,32 +167,23 @@
       </ul>
     </li>             
     @if(Auth::user()->tieneRol('admin'))
-<li class="treeview">
+    <li class="treeview" id="tablero">
       <a href="#">
-        <i class="fa fa-wrench" aria-hidden="true"></i>
-        <span>Otras herramientas</span>
+        <i class="fa fa-bar-chart" aria-hidden="true"></i>
+        <span>Tablero</span>
         <span class="pull-right">
           <i class="fa fa-angle-down"></i>
         </span>
       </a>
-      <ul class="treeview-menu" role="menu">
-        <li class="treeview">
-      <a href="#">
-        <i class="fa fa-book" aria-hidden="true"></i>
-        <span>Catalogación</span>
-        <span class="pull-right">
-          <i class="fa fa-angle-down"></i>
-        </span>
-      </a>            
-      <ul class="treeview-menu" role="menu">
+      <ul class="treeview-menu">
         <li>
-          <a href='{{url("/omeka")}}'>
-            <span>Omeka</span>
+          <a href={{url("/calidad/formulario")}}>
+            <i class="fa fa-book"></i>
+            <span>Formulario</span>
           </a>
         </li>
       </ul>
     </li>
-      </ul>
     </li>
     @endif
     @if(Auth::user()->id_provincia == 25)

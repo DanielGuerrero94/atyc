@@ -220,7 +220,8 @@ class EfectoresController extends Controller
 
     public function getNombres(Request $r)
     {
-        $query = DB::table('efectores.efectores as e')
+        $query = DB::connection('sirge')
+        ->table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'e.id_efector', '=', 'dg.id_efector')
         ->select('e.nombre')
         ->whereRaw("e.nombre ~* '{$r->q}'")
@@ -233,7 +234,8 @@ class EfectoresController extends Controller
 
     public function getCuies(Request $r)
     {
-        $query = DB::table('efectores.efectores as e')
+        $query = DB::connectio('sirge')
+        ->table('efectores.efectores as e')
         ->join('efectores.datos_geograficos as dg', 'e.id_efector', '=', 'dg.id_efector')
         ->select('e.cuie')
         ->whereRaw("e.cuie ~* '{$r->q}'")

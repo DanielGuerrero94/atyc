@@ -283,6 +283,10 @@
 							q: "@{{query}}",
 							id_provincia: $('#alta #form-alta #provincia').val()
 						},
+						success: function(data){
+							console.log("ajax success");
+							console.log(data);
+						},
 						error: function(data){
 							console.log("ajax error");
 							console.log(data);

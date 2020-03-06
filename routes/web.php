@@ -1,5 +1,7 @@
 <?php
 
+Route::resource('calidad', 'CalidadController');
+
 /*
 |--------------------------------------------------------------------------
 | Test Routes
@@ -210,6 +212,10 @@ Route::group(['middleware' => ['logueado','logging']], function () {
 
     Route::get('provincias/localidades/typeahead', 'ProvinciasController@localidadesTypeahead');
 
+    //CALIDAD
+    Route::get('calidad/formulario', function() {
+            return view('idasdasdas'); 
+    });
     //ADMIN
     Route::group(['middleware' => 'admin'], function () {
 

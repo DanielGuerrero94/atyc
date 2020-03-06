@@ -275,15 +275,12 @@ class DashboardController extends Controller
 
         $acciones = \DB::select($query);
 
-        $contadorColores = 0;
-
         return collect($acciones)
-        ->map(function ($accion) use (&$contadorColores) {
-            $contadorColores++;
+        ->map(function ($accion) {
             return [
                 'name' => $accion->tipo,
                 'value' => $accion->cantidad,
-                'colorValue' => $contadorColores,
+                'colorValue' => $accion->cantidad,
                 'label' => $accion->titulo
             ];
         })
@@ -309,15 +306,13 @@ class DashboardController extends Controller
 
         $acciones = \DB::select($query);
 
-        $contadorColores = 0;
 
         return collect($acciones)
-        ->map(function ($accion) use (&$contadorColores) {
-            $contadorColores++;
+        ->map(function ($accion) {
             return [
                 'name' => $accion->tematica,
                 'value' => $accion->cantidad,
-                'colorValue' => $contadorColores
+                'colorValue' => $accion->cantidad
             ];
         })
         ->values()
