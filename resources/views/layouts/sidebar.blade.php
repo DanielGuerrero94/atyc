@@ -1,7 +1,7 @@
 <section class="sidebar" style="height: auto;">
   <ul class="sidebar-menu tree" data-widget="tree">
     <li class="header text-center">
-      <b><span class="text-primary">MENU</span></b>
+      <b><span class="text-primary">PROCESO DE CAPACITACIÓN</span></b>
     </li>
     @if (!Auth::guest())            
     <li>
@@ -169,7 +169,7 @@
     @if(Auth::user()->tieneRol('admin'))
     <li class="treeview" id="tablero">
       <a href="#">
-        <i class="fa fa-bar-chart" aria-hidden="true"></i>
+        <i class="fa fa-clipboard" aria-hidden="true"></i>
         <span>Tablero</span>
         <span class="pull-right">
           <i class="fa fa-angle-down"></i>
@@ -177,7 +177,98 @@
       </a>
       <ul class="treeview-menu">
         <li>
-          <a href={{url("/calidad/formulario")}}>
+          <a href={{url("/materiales/etapa/7")}}>
+            <i class="fa fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="header text-center">
+      <b><span class="text-warning">MEJORA CONTINUA</span></b>
+    </li>
+    <li class="treeview" id="planesEvaluacion">
+      <a href="#">
+        <i class="fa fa-clipboard" aria-hidden="true"></i>
+        <span>Planes de Evaluación</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/8")}}>
+            <i class="fa fa-book"></i>
+            <span>Formulario</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+   <li class="treeview" id="buenasPracticas">
+      <a href="#">
+        <i class="fa fa-check-circle" aria-hidden="true"></i>
+        <span>Buenas Practicas</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/11")}}>
+            <i class="fa fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="treeview" id="simulador">
+      <a href="#">
+        <i class="fa fa-tablet" aria-hidden="true"></i>
+        <span>Simulador</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/12")}}>
+            <i class="fa fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="header text-center">
+        <b><span class="text-secondary">NODO DE GESTIÓN</span></b>
+    </li>
+    <li class="treeview" id="minutas">
+      <a href="#">
+        <i class="fa fa-copy" aria-hidden="true"></i>
+        <span>Minutas</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/9")}}>
+            <i class="fa fa-book"></i>
+            <span>Formulario</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+   <li class="treeview" id="matrizPlanificacion">
+      <a href="#">
+        <i class="fa fa-table" aria-hidden="true"></i>
+        <span>Matriz de Planificación</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/10")}}>
             <i class="fa fa-book"></i>
             <span>Formulario</span>
           </a>

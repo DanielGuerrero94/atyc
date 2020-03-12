@@ -27,9 +27,9 @@ td {
 		<td>{{$curso->fecha}}</td>
 		<td>{{$curso->edicion}}</td>
 		<td>{{$curso->duracion}}</td>
-		<td>{{$curso->area_tematica}}</td>
-		<td>{{$curso->linea_estrategica}}</td>
-		<td>{{$curso->provincia}}</td>
+		<td>{{$curso->areaTematica->nombre}}</td>
+		<td>{{$curso->lineaEstrategica->nombre}}</td>
+		<td>{{$curso->provincia->nombre}}</td>
 	</tr>
 	@endforeach
 </table>

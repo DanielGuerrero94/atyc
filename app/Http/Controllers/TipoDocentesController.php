@@ -31,7 +31,7 @@ class TipoDocentesController extends ModelController
      */
     public function index()
     {
-        return $this->model->all();
+        return view('tipoDocentes');
     }
 
     /**

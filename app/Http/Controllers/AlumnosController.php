@@ -483,6 +483,7 @@ class AlumnosController extends ModelController
 
         $data = $this->queryLogica($r, $filtros, $order_by)->get();
         $datos = ['alumnos' => $data];
+
         $path = "participantes_".date("Y-m-d_H:i:s");
 
         Excel::create(
@@ -505,7 +506,7 @@ class AlumnosController extends ModelController
     /**
      * Corre la query segun filtros y order_by
      * Guarda el resultado en un .pdf
-     *
+     
      * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      * @return string path al archivo generado
@@ -541,7 +542,7 @@ class AlumnosController extends ModelController
                         $item->nombres,
                         $item->apellidos,
                         $item->id_tipo_documento,
-                        $item->nro_doc,
+                        $item->nro_doc
                     ];
                 }
             );
