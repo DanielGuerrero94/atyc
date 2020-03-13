@@ -166,7 +166,6 @@
         </li>
       </ul>
     </li>             
-    @if(Auth::user()->tieneRol('admin'))
     <li class="treeview" id="tablero">
       <a href="#">
         <i class="fa fa-clipboard" aria-hidden="true"></i>
@@ -276,8 +275,7 @@
       </ul>
     </li>
     </li>
-    @endif
-    @if(Auth::user()->id_provincia == 25)
+    @if(Auth::user()->tieneRol('admin'))
     <li class="header text-center">
       <span class="text-danger">ADMIN</span>
     </li>
