@@ -79,9 +79,9 @@ class EfectoresController extends Controller
         }
 
         //Revisar posible bug, cuando hago pop de id_departamento y hago el filtro de arriba ya no tengo el id_localidad
-        $filtros->pop('id_departamento');
-        $filtros->pop('capacitados');
-        $filtros->pop('id_localidad');
+//        $filtros->pop('id_departamento');
+//        $filtros->pop('capacitados');
+//        $filtros->pop('id_localidad');
 
         if (Auth::user()->isUEC()) {
             $query = $this->segunProvincia($query, $filtros->get('id_provincia'));
@@ -313,6 +313,9 @@ class EfectoresController extends Controller
         ->mapWithKeys(function ($item) {
             return $item;
         });
+
+        logger()->warning($filtros);
+
         $query = $this->queryLogica($r, $filtros);
         return Datatables::of($query)
         ->addColumn('acciones', function ($ret) {
