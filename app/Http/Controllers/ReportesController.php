@@ -155,6 +155,8 @@ class ReportesController extends Controller
 
     public function getExcelReporte(Request $r)
     {
+        ini_set('memory_limit', '1024M');
+
         $reporte = Reporte::findOrFail($r->id_reporte);
         $query_default = $this->queryLogica($r);
         $nombre_reporte = $reporte->view;
@@ -226,15 +228,24 @@ class ReportesController extends Controller
         return $path;
     }
 
+
     public function reporte4($id_provincia, $id_periodo)
     {
-        logger('Reporte 4');
-        $query = DB::table("efectores.mv_reporte_4_2 as R")
-        ->join('sistema.provincias as P', "P.id_provincia", '=', "R.id_provincia")
-        ->join('sistema.periodos as PE', "PE.id_periodo", '=', DB::raw("{$id_periodo}"))
-        ->select('R.id_provincia', 'R.desde', 'R.hasta', 'R.capacitados', 'R.total', 'R.porcentaje', 'P.nombre as provincia', 'PE.nombre as periodo')
+        $query = DB::table("efectores.mv_reporte_4 as R")
+        ->join('sistema.provincias as P', "P.id_provincia", '=', "R.id_provincia");
+
+        if($id_periodo != 0){
+            $query = $query->join('sistema.periodos as PE', "PE.id_periodo", '=', DB::raw("{$id_periodo}"));
+        } else {
+            $query = $query->crossJoin('sistema.periodos as PE');
+        }
+        $query = $query->select('R.id_provincia', 'R.desde', 'R.hasta', 'R.capacitados', 'R.total', 'R.porcentaje', 'P.nombre as provincia', 'PE.nombre as periodo')
         ->whereColumn('R.desde', 'PE.desde')
-        ->whereColumn('R.hasta', 'PE.hasta');
+        ->whereColumn('R.hasta', 'PE.hasta')
+        ->orderBy('PE.hasta', 'ASC')
+        ->orderBy('PE.desde', 'DESC')
+ 		->orderBy('P.id_provincia', 'ASC');
+       
 
         if ($id_provincia != 0) {
             $query = $query->where("R.id_provincia", $id_provincia);
@@ -289,6 +300,8 @@ class ReportesController extends Controller
         if ($id_provincia != 0) {
             $query = $query->whereRaw("dg.id_provincia::integer = {$id_provincia} ");
         }
+
+        logger()->info($query->toSql());
 
         return $query->groupBy('p.descripcion', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'd.nombre_departamento', 'l.nombre_localidad', 'c.nombre', 'at.nombre', 'c.fecha');
     }

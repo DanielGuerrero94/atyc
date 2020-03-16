@@ -27,9 +27,9 @@ td {
 		<tr>
 			<td>{{$alumno->nombres}}</td>
 			<td>{{$alumno->apellidos}}</td>
-			<td>{{$alumno->tipoDocumento->nombre}}</td>
+			<td>{{$alumno->tipo_documento}}</td>
 			<td>{{$alumno->nro_doc}}</td>
-			<td>{{$alumno->provincia->nombre}}</td>
+			<td>{{$alumno->provincia}}</td>
 		</tr>
 		@endforeach
 	@else

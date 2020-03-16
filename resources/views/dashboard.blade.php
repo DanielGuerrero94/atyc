@@ -66,7 +66,7 @@
     <div class="info-box bg-teal" id="efectores-capacitados">
       <span class="info-box-icon"><i class="fa fa-h-square"></i></span>
       <div class="info-box-content">
-        <span class="info-box-text">Efectores capacitados</span>
+        <span class="info-box-text">Efectores <br>capacitados</span>
         <span class="info-box-number">0</span>
       </div>
     </div>
@@ -78,10 +78,10 @@
       </div>      
     </div>
     <div class="info-box bg-teal">
-      <span class="info-box-icon"><i class=""></i></span>
+      <span class="info-box-icon"><i class="fa fa-telegram"></i></span>
       <div class="info-box-content">
-        <span class="info-box-text"></span>
-        <span class="info-box-number"></span>
+        <span class="info-box-text">Simulador de <br>  Mejora de <br>Facturación</span>
+        <span class="info-box-number">Proximamente</span>
       </div>      
     </div>
   </div>

@@ -189,7 +189,7 @@
     <li class="treeview" id="planesEvaluacion">
       <a href="#">
         <i class="fa fa-clipboard" aria-hidden="true"></i>
-        <span>Planes de Evaluación</span>
+        <span>Planes de Evaluación y</span><br><span style="padding-left:23px;">Mejora</span>
         <span class="pull-right">
           <i class="fa fa-angle-down"></i>
         </span>
@@ -221,21 +221,21 @@
       </ul>
     </li>
     <li class="treeview" id="simulador">
-      <a href="#">
-        <i class="fa fa-tablet" aria-hidden="true"></i>
-        <span>Simulador</span>
-        <span class="pull-right">
-          <i class="fa fa-angle-down"></i>
-        </span>
-      </a>
-      <ul class="treeview-menu">
-        <li>
-          <a href={{url("/materiales/etapa/12")}}>
-            <i class="fa fa-book"></i>
-            <span>Documentación</span>
-          </a>
-        </li>
-      </ul>
+        <a href="#">
+            <i class="fa fa-tablet" aria-hidden="true"></i>
+            <span>Simulador de </span><br><span style="padding-left:23px;">Mejora de Facturación</span>
+            <span class="pull-right">
+               <i class="fa fa-angle-down"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li>
+            <a href={{url("/materiales/etapa/12")}}>
+                <i class="fa fa-book"></i>
+                <span>Documentación</span>
+            </a>
+            </li>
+        </ul>
     </li>
     <li class="header text-center">
         <b><span class="text-secondary">NODO DE GESTIÓN</span></b>

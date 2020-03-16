@@ -137,7 +137,15 @@
 						</div>
 					</form>
 				</div>
-			</div>			
+            </div>
+            <div class="box box-info">
+                <div class="box-header">
+                    <h3 class="box-tittle" style="margin-top: 10px;"> Participantes</h3>
+                </div>
+                <div class="box-body">
+                    <table id="participantes-table" class="table table-hover"></table>
+                </div>
+            </div>            
 		</div>
 		<div class="col-xs-6 col-sm-6 col-md-4 col-lg-6">
 			<div class="box box-info">
@@ -178,17 +186,11 @@
 						@endif
 					</div>				
 				</div>
-			</div>
-			<div class="box box-info">
-				<div class="box-header">
-					<h3 class="box-tittle" style="margin-top: 5px;"> Participantes</h3>
-				</div>
-				<div class="box-body">
-					<table id="participantes-table" class="table table-hover"></table>
-				</div>
-			</div>
-		</div>
+            </div>
 	</div>
+    </div>
+    <div class="row">
+    </div>
 </div>
 @endsection
 @section('script')
@@ -205,7 +207,7 @@
 	$(document).ready(function(){
 
 		$('#scroll-historial-div').slimScroll({
-			height: '410px'
+			height: '1058px'
 		});
 
 		$('#participantes-table').DataTable({

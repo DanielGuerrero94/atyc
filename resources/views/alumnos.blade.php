@@ -105,8 +105,8 @@
 				{ title: 'Nombres', data: 'nombres'},
 				{ title: 'Apellidos', data: 'apellidos'},
 				{ title: 'Nro Doc', data: 'nro_doc'},
-				{ title: 'Tipo Documento', data: 'tipo_documento.nombre', name: 'id_tipo_documento'},			
-				{ title: 'Provincia', data: 'provincia.nombre', name: 'id_provincia'},
+				{ title: 'Tipo Documento', data: 'tipo_documento', name: 'id_tipo_documento'},			
+				{ title: 'Provincia', data: 'provincia', name: 'id_provincia'},
 				{ 
 					data: 'acciones',
 					render: function ( data, type, row, meta ) {

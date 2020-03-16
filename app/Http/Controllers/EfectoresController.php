@@ -357,7 +357,8 @@ class EfectoresController extends Controller
         ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'al.id_alumno')
         ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
         ->where('e.cuie', $cuie)
-        ->select('al.id_alumno', 'al.nombres', 'al.apellidos', 'al.nro_doc', 'al.email', 'f.nombre as funcion');
+        ->select('al.id_alumno', 'al.nombres', 'al.apellidos', 'al.nro_doc', 'al.email', 'f.nombre as funcion')
+        ->distinct();
 
         if (($id_provincia = Auth::user()->id_provincia) != 25) {
             $id_provincia = $this->mapearProvincia($id_provincia);

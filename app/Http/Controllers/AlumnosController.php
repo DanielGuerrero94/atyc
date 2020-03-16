@@ -397,25 +397,22 @@ class AlumnosController extends ModelController
     {
         logger()->warning(json_encode($filtros));
 
-        $query = Alumno::segunProvincia()
-        ->with('tipoDocumento', 'provincia')
-        ->select(
-            'id_alumno',
-            'nombres',
-            'apellidos',
-            'id_tipo_documento',
-            'nro_doc',
-            'id_provincia'
-        );
+        $query = DB::table('alumnos.v_alumnos_excel');
 
+        $id_provincia = Auth::user()->id_provincia;
+        if ($id_provincia != 25) {
+            $query = $query->where('id_provincia', $id_provincia);
+        }
+ 
         foreach ($filtros as $key => $value) {
             if ($this->filters[$key] == 'string') {
-                $query = $query->whereRaw("alumnos.alumnos.{$key} ~* '{$value}'");
+                $query = $query->whereRaw("{$key} ~* '{$value}'");
             } else {
-                $query = $query->where('alumnos.'.$key, $value);
+                $query = $query->where($key, $value);
             }
         }
 
+        logger()->info($query->toSql());
         return $query;
     }
 
@@ -474,6 +471,8 @@ class AlumnosController extends ModelController
      */
     public function getExcel(Request $r)
     {
+        ini_set('memory_limit', '1024M');
+
         $filtros = collect($r->get('filtros'))
         ->mapWithKeys(function ($item) {
             return [$item['name'] => $item['value']] ;
@@ -482,9 +481,11 @@ class AlumnosController extends ModelController
         $order_by = $r->order_by;
 
         $data = $this->queryLogica($r, $filtros, $order_by)->get();
-        $datos = ['alumnos' => $data];
+        //$query = $this->queryLogica($r, $filtros, $order_by);
 
         $path = "participantes_".date("Y-m-d_H:i:s");
+        //DB::statement("\copy ({$query->toSql()}) to '/var/www/html/atyc/exports/{$path}' delimiter ';' csv header;");
+        $datos = ['alumnos' => $data];
 
         Excel::create(
             $path,
@@ -498,7 +499,7 @@ class AlumnosController extends ModelController
                 );
             }
         )
-        ->store('xls');
+            ->store('xls');
 
         return $path;
     }
