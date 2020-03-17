@@ -4,21 +4,21 @@ namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Modalidad extends Model
+class Tematica extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
-     */
-    protected $table = 'pac.modalidades';
+    */
+    protected $table = 'pac.tematicas';
 
     /**
      * Primary key asociated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id_modalidad';
+    protected $primaryKey = 'id_tematica';
 
     /**
      * Indicates if the model should be timestamped.
@@ -27,3 +27,4 @@ class Modalidad extends Model
      */
     public $timestamps = false;
 }
+

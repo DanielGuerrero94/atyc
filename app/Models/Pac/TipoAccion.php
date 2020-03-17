@@ -4,21 +4,21 @@ namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Profundizacion extends Model
+class tipoAccion extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'pac.profundizaciones';
+    protected $table = 'pac.tipos_accion';
 
     /**
      * Primary key asociated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id_profundizacion';
+    protected $primaryKey = 'id_accion';
 
     /**
      * Indicates if the model should be timestamped.

@@ -10,9 +10,9 @@ class Pac extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['deleted_at'];
-    
-    protected $fillable = ['nombre', 't1', 't2', 't3', 't4', 'observado', 'id_provincia'];
+    protected $dates = ['fecha','deleted_at'];
+
+    protected $fillable = ['nombre', 'fecha', 'id_tipo_accion', 'ediciones', 'ficha_tecnica', 'id_provincia'];
 
     /**
      * The table associated with the model.
@@ -28,33 +28,33 @@ class Pac extends Model
      */
     protected $primaryKey = 'id_pac';
 
-    public function destinatario()
-    {
-        return $this->hasOne('App\Models\Pac\Destinatario', 'id_destinatario', 'id_destinatario');
-    }
-
     public function acciones()
     {
-        return $this->belongsToMany('App\Models\Cursos\Curso', 'pac.pacs_cursos', 'id_curso', 'id_pac');
+        return $this->belongsToMany('App\Models\Cursos\Curso', 'pac.pacs_cursos', 'id_pac', 'id_curso');
     }
 
-    public function alcance()
+    public function tipoAccion()
     {
-        return $this->hasOne('App\Models\Pac\Alcance', 'id_alcance', 'id_alcance');
+        return $this->hasOne('App\Models\Pac\TipoAccion', 'id_accion', 'id_accion');
     }
 
-    public function profundizacion()
+    public function componentes()
     {
-        return $this->hasOne('App\Models\Pac\Profundizacion', 'id_profundizacion', 'id_profundizacion');
+        return $this->belongsToMany('App\Models\Pac\Componente', 'pac.pacs_componentes', 'id_pac', 'id_componente');
     }
 
-    public function modalidad()
+    public function tematicas()
     {
-        return $this->hasOne('App\Models\Pac\Modalidad', 'id_modalidad', 'id_modalidad');
+        return $this->belongsToMany('App\Models\Pac\Tematica', 'pac.pacs_tematicas', 'id_pac', 'id_tematica');
     }
 
-    public function insumos()
+    public function pautas()
     {
-        return $this->belongsToMany('App\Models\Pac\Insumo', 'pac_insumos', 'id_insumo', 'id_pac')->withTimestamps();
+        return $this->belongsToMany('App\Models\Pac\Pauta', 'pac.pacs_pautas', 'id_pac', 'id_pauta');
+    }
+
+    public function destinatarios()
+    {
+        return $this->belongsToMany('App\Models\Pac\Destinatario', 'pac.pacs_destinatarios', 'id_pac', 'id_destinatario');
     }
 }

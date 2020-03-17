@@ -37,6 +37,12 @@
       </a>
       <ul class="treeview-menu">
         <li>
+          <a href={{url("/pac")}}>
+            <i class="fa fa-columns"></i>
+            <span>Gestión de PAC</span>
+          </a>
+        </li>
+        <li>
           <a href={{url("/materiales/etapa/3")}}>
             <i class="fa fa-book"></i>
             <span>Documentación</span>
