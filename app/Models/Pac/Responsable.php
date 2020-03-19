@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Responsable extends Model
 {
+    
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
     /**
      * The table associated with the model.
      *

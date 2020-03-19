@@ -131,7 +131,7 @@ $factory->define(App\Profesor::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Pac\Pac::class, function (Faker\Generator $faker) {
     return [
-        'nombre' => $faker->name,
+	    'nombre' => $faker->name,
         'fecha' => $faker->date,
         'id_tipo_accion' => rand(1, 15),
         'ediciones' => rand(1, 5),

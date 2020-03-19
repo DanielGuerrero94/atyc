@@ -2,7 +2,10 @@
 
 @section('content')
 <div class="container-fluid">
-	<div class="row">		
+	<div class="row">
+		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+			@include('pacs.filtros')
+		</div>
 		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
 			@include('pacs.abm')
 		</div>
@@ -16,6 +19,78 @@
 
 @section('script')
 <script type="text/javascript">
+	
+	function getFiltros(){
+			filtros = $('#form-filtros :input')
+			.filter(function(i,e){return $(e).val() != "" || $(e).val() != "0"})
+			.serializeArray()
+			.map(function(obj) { 
+				var r = {};
+				r[obj.name] = obj.value;
+				return r;
+			});
+
+			filtros.push({capacitados: $("#form-filtros #capacitados").data("check")});
+			return filtros;
+		}
+
+	function createDatatable(){
+	
+	datatable = $('#abm-table').DataTable({
+			destroy: true,
+			responsive: true,
+			searching: false,
+			ajax : {
+				url: "{{url('pacs/filtrar')}}",
+				data: {
+					filtros: getFiltros()
+				}
+			},
+			columns: [
+			{ data: 'nombre'},
+			{ data: 'tipo_accion'},
+			{ data: 'duracion'},
+			{ data: 't3'},
+			{ data: 't4'},
+			{ data: 'observado'},
+			{ data: 'acciones',"orderable": false}
+			],			
+			rowReorder: {
+				selector: 'td:nth-child(2)'
+			},
+		});
+	// datatable = $('.table').DataTable({
+	// 		destroy: true,
+	// 		responsive: true,
+	// 		searching: false,
+	// 		ajax : {
+	// 				url: "{{url('/efectores/filtrar')}}",
+	// 				data: {
+	// 					filtros: getFiltros()
+	// 				}
+	// 			},
+	// 		columns: [
+	// 		{ name: 'id_provincia', data: 'provincia', title: 'Provincia'},
+	// 		{ data: 'siisa', title: 'Siisa'},
+	// 		{ data: 'cuie', title: 'Cuie'},
+	// 		{ data: 'nombre', title: 'Nombre', orderable: false},
+	// 		{ data: 'denominacion_legal', title: 'Denominación legal', orderable: false},
+	// 		{ name: 'id_departamento', data: 'departamento', title: 'Departamento', orderable: false},
+	// 		{ name: 'id_localidad', data: 'localidad', title: 'Localidad', orderable: false},
+	// 		{ data: 'codigo_postal', title: 'Codigo postal', orderable: false},
+	// 		{ data: 'ciudad', title: 'Ciudad', orderable: false},
+	// 		{ 
+	// 			data: 'acciones',
+	// 			render: function ( data, type, row, meta ) {
+	// 				return historialButton(row.cuie);
+	// 			},
+	// 			orderable: false
+	// 		}
+	// 		]
+	// });
+		
+		return datatable;
+	}
 
 	$(document).ready(function(){
 
@@ -25,24 +100,7 @@
 			$('#filtros .box').show();
 		});
 
-		var datatable = $('#abm-table').DataTable({
-			destroy: true,
-			searching: false,
-			ajax : '{{ url('pacs/tabla') }}',
-			columns: [
-			{ data: 'nombre'},
-			{ data: 't1'},
-			{ data: 't2'},
-			{ data: 't3'},
-			{ data: 't4'},
-			{ data: 'observado'},
-			{ data: 'acciones',"orderable": false}
-			],			
-			rowReorder: {
-				selector: 'td:nth-child(2)'
-			},
-			responsive: true
-		});
+
 
 		$('#alta_pac').on("click",function(){
 

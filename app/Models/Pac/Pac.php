@@ -10,7 +10,7 @@ class Pac extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['fecha','deleted_at'];
+    protected $dates = ['fecha','created_at', 'updated_at', 'deleted_at'];
 
     protected $fillable = ['nombre', 'fecha', 'id_tipo_accion', 'ediciones', 'ficha_tecnica', 'id_provincia'];
 
@@ -35,7 +35,7 @@ class Pac extends Model
 
     public function tipoAccion()
     {
-        return $this->hasOne('App\Models\Pac\TipoAccion', 'id_accion', 'id_accion');
+        return $this->hasOne('App\Models\Pac\TipoAccion', 'id_accion', 'id_tipo_accion');
     }
 
     public function componentes()
@@ -56,5 +56,22 @@ class Pac extends Model
     public function destinatarios()
     {
         return $this->belongsToMany('App\Models\Pac\Destinatario', 'pac.pacs_destinatarios', 'id_pac', 'id_destinatario');
+    }
+
+    public function responsables()
+    {
+        return $this->belongsToMany('App\Models\Pac\Responsable', 'pac.pacs_responsables', 'id_pac', 'id_responsable');
+    }
+
+    public function provincia()
+    {
+        return $this->hasOne('App\Models\Sistema\Provincia', 'id_provincia', 'id_provincia');
+    }
+    public function scopeSegunProvincia($query)
+    {
+        $id_provincia = Auth::user()->id_provincia;
+        if ($id_provincia != 25) {
+            return $query->where('pacs.id_provincia', $id_provincia);
+        }
     }
 }

@@ -4,8 +4,10 @@ namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
 
-class tipoAccion extends Model
+class TipoAccion extends Model
 {
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
     /**
      * The table associated with the model.
      *

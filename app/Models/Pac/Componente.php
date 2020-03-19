@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Componente extends Model
 {
+
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
     /**
      * The table associated with the model.
      *
      * @var string
     */
-    protected $table = 'pac.componentes_cai_2020';
+    protected $table = 'pac.componentes_cai';
 
     /**
      * Primary key asociated with the table.

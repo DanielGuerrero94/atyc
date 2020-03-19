@@ -22,7 +22,7 @@ Route::get('test/pdf', 'ReportesController@getPdf');
 */
 
 Auth::routes();
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'DashboardController@index');
 
 Route::get('/', 'DashboardController@index');
 Route::get('/entrar', 'DashboardController@entrar');
@@ -182,6 +182,22 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('reportes/query', 'ReportesController@queryReporte');
     Route::get('reportes/query/test', 'ReportesController@queryTest');
     Route::get('reportes/{id_reporte}', 'ReportesController@reporte');
+
+    //PAC
+    Route::get('pac', 'PacController@get');
+    Route::get('pac/alta', 'PacController@create');
+    Route::get('pac/filtrar', 'PacController@getFiltrado'); //También muestra la tabla
+    Route::get('pac/excel', 'PacController@getExcel');
+    Route::get('pac/documentos', 'PacController@checkDocumentos');
+    Route::get('pac/typeahead', 'PacController@getTypeahead');
+    Route::get('pac/{id}/see', 'PacController@see');
+    Route::get('pac/{id}', 'PacController@edit');
+
+    Route::post('pac', 'PacController@store');
+
+    Route::put('pac/{id}', 'PacController@update');
+
+    Route::delete('pac/{id}', 'PacController@destroy');
 
     //Encuestas
     Route::get('encuestas/g_plannacer', 'Encuestas\EncuestasController@gPlannacer');
