@@ -121,7 +121,7 @@
 				</div>
 			</div>		
 			<div class="row">
-				<div class="form-group col-sm-4" id="toggle-fecha">
+				<div class="form-group col-sm-4" id="toggle-fecha">	
 					<p>Especificar fecha:  <i class="fa fa-toggle-off btn"></i></p>
 				</div>
 			</div>
@@ -146,9 +146,12 @@
 					</div>
 				</div>
 			</div>				
-			<div class="box-footer">	
-				<a href="#" class="btn btn-square pull-right filtro" id="filtrar">
-					<i class="fa fa-filter text-info fa-lg"> Filtrar</i>
+			<div class="box-footer">
+				<a href="#" class="btn btn-square pull-right filtroPac" id="filtrarPAC">
+					<i class="fa fa-filter text-info fa-lg"> Filtrar PAC</i>
+				</a>
+				<a href="#" class="btn btn-square pull-right filtroAcciones" id="filtrarAcciones">
+					<i class="fa fa-address-book fa-lg"> Filtrar Acciones</i>
 				</a>
 			</div>
 		</form>

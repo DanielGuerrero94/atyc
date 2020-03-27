@@ -37,7 +37,7 @@
       </a>
       <ul class="treeview-menu">
         <li>
-          <a href={{url("/pac")}}>
+          <a href={{url("/pacs")}}>
             <i class="fa fa-columns"></i>
             <span>Gestión de PAC</span>
           </a>

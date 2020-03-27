@@ -10,6 +10,7 @@ use App\Models\Pac\Pauta;
 use App\Models\Pac\Responsable;
 use App\Models\Pac\Tematica;
 use App\Models\Pac\TipoAccion;
+use App\Models\Curso\Curso;
 use App\Provincia;
 use App\Periodo;
 use Cache;
@@ -29,14 +30,18 @@ class PacController extends AbmController
      *
      * @var array
      **/
-    // private $rules = [
-    //     'nombre' => 'required|string',
-    //     'duracion' => 'required|numeric',
-    //     'fecha' => 'required',
-    //     'id_tematica' => 'required|numeric',
-    //     'id_accion' => 'required|numeric',
-    //     'id_provinci<a' => 'required|numeric'
-    // ];
+    private $rules = [
+        'nombre' => 'required|string',
+        'id_tipo_accion' => 'required|numeric',
+        'ediciones' => 'required|numeric',
+        'duracion' => 'required|numeric',
+        'id_provincia' => 'required|numeric',
+        'ids_tematicas' => 'required',
+        'ids_destinatarios' => 'required',
+        'ids_responsables' => 'required',
+        'ids_pautas' => 'required',
+        'ids_componentes' => 'required'
+    ];
 
     /**
      * Filter rules
@@ -88,9 +93,17 @@ class PacController extends AbmController
      */
     public function create()
     {
-        //
+        return view('pacs/alta', $this->getSelectOptions());
     }
 
+    public function crearCursos($data)
+    {
+        for($i=0; $i<$data->ediciones; $i++) {
+            $edicion = $i+1;
+            $data = array_merge($data, ['edicion' => $edicion]);
+            Curso::create($data);
+        }
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -99,7 +112,22 @@ class PacController extends AbmController
      */
     public function store(Request $request)
     {
-	return response()->json(['success' => false]);
+        $data = $request->all();
+        logger('Quiere crear PAC con: '.json_encode($data));
+        $v = Validator::make($data, $this->rules);
+
+        if ($v->fails()) {
+            return $v->errors();
+        }
+        //$data = array_merge($data, ['fecha' => '1999-12-31']);
+        $pac = Pac::create($data);
+        logger('Crea pac: '.$pac);
+
+        $estado = 1;
+        $data = array_merge($data, ['id_pac' => $pac->primarykey, 'id_estado' => $estado]);
+        crearCursos($data);
+        
+        return $pac;
     }
 
     /**
@@ -168,7 +196,30 @@ class PacController extends AbmController
      * @return array
      */
 
-public function filtrar(Request $request)
+    public function getTabla(Request $request)
+    {
+        $query = Pac::select(
+            'id_pac',
+            'nombre',
+            'id_tipo_accion',
+            'ediciones',
+            'id_provincia',
+            'ficha_tecnica'
+        )
+        ->with([
+            'tipoAccion',
+            'provincias',
+            'tematicas' 
+        ])
+        ->segunProvincia()
+        ->get();
+
+        logger($query);
+
+        return Datatables::of($query);
+    }
+
+    public function getFiltrado(Request $request)
     {
         $filtros = collect($r->get('filtros'))
         ->mapWithKeys(function ($item) {
@@ -185,9 +236,9 @@ public function filtrar(Request $request)
         )
         ->with([
             'tipoAccion',
-            'provincia'
+            'provincias',
+            'tematicas'
         ])
-        //->withCount('alumnos')
         ->segunProvincia();
 
         foreach ($filtros as $key => $value) {
@@ -206,11 +257,9 @@ public function filtrar(Request $request)
             }
         }
 
-        //logger()->warning(json_encode($query->first()));
-
-        return $this->toDatatable($request, $query);
         return Datatables::of($query);
     }
+
     public function getSelectOptions()
     {
         $pautas = Cache::remember('pautas', 5, function () {

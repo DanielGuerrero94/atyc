@@ -2,14 +2,12 @@
   <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
       <li id="tab-pac" class="active"><a href="#inicial" data-toggle="tab">Inicial</a></li>
-      <li id="tab-pauta"><a href="#pautas" data-toggle="tab">Pautas</a></li>
-      <li id="tab-destinatario"><a href="#destinatarios" data-toggle="tab">Destinatarios</a></li>      
-      <li id="tab-componenteCa"><a href="#componentesCa" data-toggle="tab">Componentes CA</a></li>
+      <li id="tab-alcance"><a href="#alcance" data-toggle="tab">Alcance</a></li>      
+      <li id="tab-ediciones"><a href="#ediciones" data-toggle="tab">Ediciones</a></li>
       <li class="navbar-right"><div class="btn btn-success store">Guardar</div></li>
     </ul>
     <div class="tab-content">
       <div class="tab-pane in active" id="inicial">
-        <form>
           {{ csrf_field() }}
           <div class="row">
             <div class="form-group col-xs-12 col-md-6">       
@@ -23,69 +21,156 @@
               </div>
             </div>
           </div>
-          
           <div class="row">
-            <div class="col-md-6">          
-              <label for="repeticiones" class="control-label col-md-4 col-xs-3">Repeticiones</label>
-              <div class="col-md-4 col-xs-3">
-                <input type="number" class="form-control" name="repeticiones" id="repeticiones" placeholder="Repeticiones"> 
+            <div class="form-group col-xs-12 col-md-6">          
+              <label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
+              <div class="col-md-8 col-xs-9">
+                <input type="number" class="form-control" name="duracion" id="horas" placeholder="Duración en horas"> 
               </div>
             </div>
-            <div class="col-md-6">
-              <label for="linea_estrategica" class="control-label col-md-4 col-xs-3">Tipologia de accion:</label>
+          </div>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="tipo_accion" class="control-label col-md-4 col-xs-3">Tipo de acción:</label>
               <div class="col-md-8 col-xs-9">
-                <select class="form-control" id="linea_estrategica" name="id_linea_estrategica">
-                  <option value="0">Seleccionar</option>
-                  @foreach ($lineas_estrategicas as $linea)
-                  <option data-id="{{$linea->id_linea_estrategica}}" value="{{$linea->id_linea_estrategica}}">Línea {{$linea->numero}}-{{$linea->nombre}}</option>
+                <select class="select-2 form-control" id="tipo_accion" name="id_accion">
+                  <option></option>
+                  @foreach ($tipoAcciones as $tipo_accion)
+                  <option data-id="{{$tipo_accion->id_accion}}" value="{{$tipo_accion->id_accion}}"> {{$tipo_accion->nombre}}</option>
                   @endforeach
                 </select>
               </div>
             </div>
           </div>
-                    
+          <br>    
           <div class="row">
-            <div class="col-md-6">
-            <ul>
-              <li>Trimestre de ejecucion:</li>
-                  <div class="form-check form-check-inline">
-                      <input type="checkbox" id="t1" name="t1">
-                      <label for="t1">1ro</label>
-                      <input type="checkbox" id="t2" name="t2">
-                      <label for="t2">2do</label>
-                      <input type="checkbox" id="t3" name="t3">
-                      <label for="t3">3ro</label>
-                      <input type="checkbox" id="t4" name="t4">
-                      <label for="t4">4to</label>
-                  </div>
-            </ul>
-            </div>         
-          </div>
-          
-          <div class="row">
-            <div class="form-group col-xs-12 col-md-6">          
-              <label for="observado" class="control-label col-md-4 col-xs-3">Observado</label>
+            <div class="form-group col-md-6">
+              <label for="tematica" class="control-label col-md-4 col-xs-3">Temática/s:</label>
               <div class="col-md-8 col-xs-9">
-                <input type="text" class="form-control" name="observado" id="observado" placeholder="Observado"> 
+                <select class="select-2 form-control" id="tematica" name="id_tematica" aria-hidden="true" multiple>
+                  @foreach ($tematicas as $tematica)
+                  <option data-id="{{$tematica->id_tematica}}" value="{{$tematica->id_tematica}}"> {{$tematica->nombre}}</option>
+                  @endforeach
+                </select>
               </div>
             </div>
-          </div>          
-        </form>  
+          </div>
+          <br>
+          <div class="row">
+            <div class="form-group col-xs-12 col-md-6">          
+              <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
+              <div class="col-md-8 col-xs-9">
+                @if(Auth::user()->id_provincia == 25)
+                <select class="select-2 form-control" id="provincia" name="id_provincia">
+                  <option></option>
+                  @foreach ($provincias as $provincia)                
+                  <option data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>           
+                  @endforeach
+                </select>
+                @else
+                <select class="form-control" id="provincia" name="id_provincia" disabled>
+                  <option data-id="{{Auth::user()->id_provincia}}">{{Auth::user()->name}}</option>  
+                </select>
+                @endif
+              </div>        
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="form-group col-xs-12 col-md-6">          
+              <label for="informe" class="control-label col-md-4 col-xs-3">Informe</label>
+              <div class="btn btn-box-tool" title="Subir informe">
+                <label style="cursor: pointer;color: #2F2D2D;">
+                  <input type="file" class="form-control" style="display: none;" name="informe" id="informe">
+                  <i class="fa fa-lg fa-cloud-upload"></i> Subir Informe
+                </label>
+              </div>
+            </div>
+          </div>
       </div>
-      <div class="tab-pane" id="pautas">  
-
-            @include('pautas.asignacion')  
-
+      <div class="tab-pane" id="alcance">
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="destinatario" class="control-label col-md-4 col-xs-3">Destinatario/s:</label>
+              <div class="col-md-8 col-xs-9">
+                <select class="select-2 form-control" id="destinatario" name="id_destinatario" aria-hidden="true" multiple>
+                  @foreach ($destinatarios as $destinatario)
+                  <option data-id="{{$destinatario->id_destinatario}}" value="{{$destinatario->id_destinatario}}"> {{$destinatario->nombre}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="responsable" class="control-label col-md-4 col-xs-3">Responsable/s:</label>
+              <div class="col-md-8 col-xs-9">
+                <select class="select-2 form-control" id="responsable" name="id_responsable" aria-hidden="true" multiple>
+                  @foreach ($responsables as $responsable)
+                  <option data-id="{{$responsable->id_responsable}}" value="{{$responsable->id_responsable}}"> {{$responsable->nombre}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="pauta" class="control-label col-md-4 col-xs-3">Pauta/s:</label>
+              <div class="col-md-8 col-xs-9">
+                <select class="select-2 form-control" id="pautaSelected" name="id_pauta" aria-hidden="true" multiple>
+                  @foreach ($pautas as $pauta)
+                  <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}"> {{$pauta->nombre}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="componentesCai" class="control-label col-md-4 col-xs-3">Componente/s CAI:</label>
+              <div class="col-md-8 col-xs-9">
+                <select class="select-2 form-control" id="componentesCai" name="id_componente" aria-hidden="true" multiple>
+                  @foreach ($componentes as $componente)
+                  <option data-id="{{$componente->id_componente}}" value="{{$componente->id_componente}}"> {{$componente->nombre}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
       </div>
-      <div class="tab-pane" id="destinatarios">
-
-          @include('destinatarios.asignacion')  
-
-      </div>            
-      <div class="tab-pane" id="componentesCa">
-   
-            @include('componentesCa.asignacion')
-
+      <div class="tab-pane" id="ediciones">
+          <div class="row">
+            <div class="form-group col-xs-8 col-md-4">          
+              <label for="ediciones" class="control-label col-md-4 col-xs-3">Ediciones</label>
+              <div class="col-md-6 col-xs-4">
+                <input type="number" class="form-control" name="ediciones" id="ediciones" placeholder="Cantidad de ediciones"> 
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
+            <div class="form-group col-xs-8 col-md-4">
+              <label for="fecha_inicio" class="control-label col-md-4 col-xs-4">Fecha Inicio:</label>
+              <div class="input-group date col-md-5 col-xs-3 ">
+                <div class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input type="text" name="fecha_inicio" id="fecha_inicio" class="form-control pull-right datepicker">
+              </div>
+            </div>
+            <div class="form-group col-xs-8 col-md-4">
+              <label for="fecha_final" class="control-label col-md-4 col-xs-4">Fecha Final:</label>
+              <div class="input-group date col-md-5 col-xs-3 ">
+                <div class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </div>
+                <input type="text" name="fecha_final" id="fecha_final" class="form-control pull-right datepicker">
+              </div>
+            </div>
+          </div>
       </div>
     </div> 
   </div>      
@@ -94,7 +179,21 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    $(".js-example-basic-single").select2();    
+
+//Tutorial de alta de PAC
+
+
+    $(".select-2").select2(
+      {
+      "width": "200%",
+      "placeholder": "Seleccionar"
+      });
+
+    $('.datepicker').datepicker({
+      format: 'dd/mm/yyyy',
+      language: 'es',
+      autoclose: true,
+    });
 
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
 
@@ -117,62 +216,126 @@
       }
     });
 
-    function getPautasSelected() {
-      return $('#form-alta #pautas-de-la-pac .fa-search').map(function(index, val) {
-        return $(val).data('id');
-      });
+    function getTematicasSelected() {
+      return $('#inicial #tematica option:selected').map(function(){
+          return this.value;
+          });
     }
 
     function getDestinatariosSelected() {
-      return $('#form-alta #destinatarios-de-la-pac .fa-minus').map(function(index, val) {
-        return $(val).data('id');
-      });
+      return $('#alcance #destinatario option:selected').map(function(){
+          return this.value;
+          });
     }
 
-    function getComponentesCaSelected() {
-      return $('#form-alta #componentesCa-de-la-pac .fa-minus').map(function(index, val) {
-        return $(val).data('id');
-      });
+    function getResponsablesSelected() {
+      return $('#alcance #responsable option:selected').map(function(){
+          return this.value;
+          });
+    }
+
+    function getPautasSelected() {
+      return $('#alcance #pautaSelected option:selected').map(function(){
+          return this.value;
+          });
+    }
+
+    function getComponentesSelected() {
+      return $('#alcance #componentesCai option:selected').map(function(){
+          return this.value;
+          });
     }
 
     function getSelected() {
 
-      var componentesCa = getComponentesCaSelected();
-      var pautas = getPautasSelected();
-      
-      var destinatarios = getDestinatariosSelected();
-      return [
-      { 
-        name: 'pautas',
-        value: pautas.toArray()
+      var id_tipo_accion = $('#inicial #tipo_accion option:selected').data('id');
+      var id_provincia = $('#inicial #provincia option:selected').data('id');
+      var ids_tematicas = getTematicasSelected();
+      var ids_destinatarios = getDestinatariosSelected();
+      var ids_responsables = getResponsablesSelected();
+      var ids_pautas = getPautasSelected();
+      var ids_componentes = getComponentesSelected();
+
+      var selected = [
+      {
+        name: 'id_tipo_accion',
+        value: id_tipo_accion
+      },
+      {
+        name: 'id_provincia',
+        value: id_provincia
+      },
+      {
+        name: 'ids_tematicas',
+        value: ids_tematicas.toArray()
       },
       { 
-        name: 'destinatarios',
-        value: destinatarios.toArray()
+        name: 'ids_destinatarios',
+        value: ids_destinatarios.toArray()
       },
       { 
-        name: 'componentesCa',
-        value: componentesCa.toArray()
+        name: 'ids_responsables',
+        value: ids_responsables.toArray()
+      },
+      {
+        name: 'ids_pautas',
+        value: ids_pautas.toArray()
+      },
+      {
+        name: 'ids_componentes',
+        value: ids_componentes.toArray()
       }];
+
+      console.log(selected);
+      return selected;
     }
 
-    function getInput() {         
-      return $.merge($('#form-alta').serializeArray(),getSelected());
-    }  
+    function getInput() {
+      var input = $.merge($('#form-alta').serializeArray(),getSelected());
+      console.log(input)
+      return input;
+    }
+  
+    jQuery.validator.addMethod("selecciono", function(value, element) {
+      console.log(element);
+      return $(element).find(':selected').length != 0 && $(element).find(':selected').val() != "";
+    }, "Debe seleccionar alguna opcion");  
 
     var validator = $('#alta-pac #form-alta').validate({
       rules : {
         nombre : {
           required: true
         },
-        planificar : {
+        duracion : {
           required: true,
           number: true
         },
+        ediciones: {
+          required: true,
+          number: true
+        },
+        id_accion: {
+          selecciono: true
+        },
+        id_tematica: {
+          selecciono: true
+        },
+        id_destinatario: {
+          selecciono: true
+        },
+        id_responsable: {
+          selecciono: true
+        },
+        id_pauta: {
+          selecciono: true
+        },
+        id_componente: {
+          selecciono: true
+        }
       },
       messages:{
         nombre : "Campo obligatorio",
-        planificar : "Campo obligatorio",
+        duracion : "Campo obligatorio"
       },
       highlight: function(element)
       {
@@ -182,6 +345,7 @@
       {
         $(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
       },
+
       submitHandler : function(form){
 
         $.ajax({
@@ -189,17 +353,20 @@
           url : 'pacs',
           data : getInput(),
           success : function(data){
-            console.log("Success.");
-            alert("Se crea el pac.");
+            console.log(data);
+            alert("Se crea la pac.");
             location.replace('pacs');
           },
           error : function(data){
-            console.log("Error.");
+            console.log(data);
             alert("No se pudo crear el pac.");
           }
         });
       }
     });
+    // $('.select-2').on('select2:select', function() {
+    //   validator.valid();
+    // });
 
     $('#alta-pac').on('click','.store',function() {  
       $('#alta-pac .nav-tabs').children().first().children().click();
@@ -212,12 +379,3 @@
 
   });
 </script>
-
-{{-- Script asignacion pautas --}}
-@include('pautas.asignacion-script')
-
-{{-- Script para asignacion de componentes --}}
-@include('componentesCa.asignacion-script')
-
-{{-- Script para asignacion de destinatarios --}}
-@include('destinatarios.asignacion-script')

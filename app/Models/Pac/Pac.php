@@ -10,9 +10,9 @@ class Pac extends Model
 {
     use SoftDeletes;
 
-    protected $dates = ['fecha','created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['fecha', 'created_at', 'updated_at', 'deleted_at'];
 
-    protected $fillable = ['nombre', 'fecha', 'id_tipo_accion', 'ediciones', 'ficha_tecnica', 'id_provincia'];
+    protected $fillable = ['nombre', 'fecha', 'id_tipo_accion', 'ediciones', 'duracion', 'id_provincia'];
 
     /**
      * The table associated with the model.
@@ -63,9 +63,9 @@ class Pac extends Model
         return $this->belongsToMany('App\Models\Pac\Responsable', 'pac.pacs_responsables', 'id_pac', 'id_responsable');
     }
 
-    public function provincia()
+    public function provincias()
     {
-        return $this->hasOne('App\Models\Sistema\Provincia', 'id_provincia', 'id_provincia');
+        return $this->hasOne('App\Provincia', 'id_provincia', 'id_provincia');
     }
     public function scopeSegunProvincia($query)
     {

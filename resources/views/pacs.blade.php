@@ -6,6 +6,8 @@
 		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
 			@include('pacs.filtros')
 		</div>
+	</div>
+	<div class="row">
 		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
 			@include('pacs.abm')
 		</div>
@@ -19,110 +21,68 @@
 
 @section('script')
 <script type="text/javascript">
-	
-	function getFiltros(){
-			filtros = $('#form-filtros :input')
-			.filter(function(i,e){return $(e).val() != "" || $(e).val() != "0"})
-			.serializeArray()
-			.map(function(obj) { 
-				var r = {};
-				r[obj.name] = obj.value;
-				return r;
-			});
 
-			filtros.push({capacitados: $("#form-filtros #capacitados").data("check")});
-			return filtros;
-		}
 
-	function createDatatable(){
-	
-	datatable = $('#abm-table').DataTable({
-			destroy: true,
-			responsive: true,
-			searching: false,
-			ajax : {
-				url: "{{url('pacs/filtrar')}}",
-				data: {
-					filtros: getFiltros()
-				}
-			},
-			columns: [
-			{ data: 'nombre'},
-			{ data: 'tipo_accion'},
-			{ data: 'duracion'},
-			{ data: 't3'},
-			{ data: 't4'},
-			{ data: 'observado'},
-			{ data: 'acciones',"orderable": false}
-			],			
-			rowReorder: {
-				selector: 'td:nth-child(2)'
-			},
-		});
-	// datatable = $('.table').DataTable({
-	// 		destroy: true,
-	// 		responsive: true,
-	// 		searching: false,
-	// 		ajax : {
-	// 				url: "{{url('/efectores/filtrar')}}",
-	// 				data: {
-	// 					filtros: getFiltros()
-	// 				}
-	// 			},
-	// 		columns: [
-	// 		{ name: 'id_provincia', data: 'provincia', title: 'Provincia'},
-	// 		{ data: 'siisa', title: 'Siisa'},
-	// 		{ data: 'cuie', title: 'Cuie'},
-	// 		{ data: 'nombre', title: 'Nombre', orderable: false},
-	// 		{ data: 'denominacion_legal', title: 'Denominación legal', orderable: false},
-	// 		{ name: 'id_departamento', data: 'departamento', title: 'Departamento', orderable: false},
-	// 		{ name: 'id_localidad', data: 'localidad', title: 'Localidad', orderable: false},
-	// 		{ data: 'codigo_postal', title: 'Codigo postal', orderable: false},
-	// 		{ data: 'ciudad', title: 'Ciudad', orderable: false},
-	// 		{ 
-	// 			data: 'acciones',
-	// 			render: function ( data, type, row, meta ) {
-	// 				return historialButton(row.cuie);
-	// 			},
-	// 			orderable: false
-	// 		}
-	// 		]
-	// });
-		
-		return datatable;
+	function participantesLabel(cantidad) {
+		return '<small class="label bg-blue" title="' + cantidad + ' Participantes"><i class="fa fa-users"> ' + cantidad + '</i></small>';
+    }
+
+    function seeButton(id_curso) {
+	    return '<a href="{{url("/cursos")}}/' + id_curso + '/see" data-id="' + id_curso + '" class="btn btn-circle ver" title="Ver"><i class="fa fa-search text-info fa-lg"></i></a>';
 	}
 
-	$(document).ready(function(){
+	function editButton(id_curso) {
+		return '<a href="{{url("/cursos")}}/' + id_curso + '" data-id="' + id_curso + '" class="btn btn-circle editar" title="Editar"><i class="fa fa-pencil text-info fa-lg"></i></a>';
+	}
 
+	function deleteButton(id_curso) {
+		return '<a href="#" data-id="' + id_curso + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
+	}
+
+	// function getFiltros(){
+	// 		filtros = $('#form-filtros :input')
+	// 		.filter(function(i,e){return $(e).val() != "" || $(e).val() != "0"})
+	// 		.serializeArray()
+	// 		.map(function(obj) { 
+	// 			var r = {};
+	// 			r[obj.name] = obj.value;
+	// 			return r;
+	// 		});
+
+	// 		return filtros;
+	// 	}
+
+	$(document).ready(function(){
+		
 		var datatable;
 
 		$('#abm').on('click','.filter',function () {
-			$('#filtros .box').show();
+			$('#filtros .box').toggle();
 		});
 
-
-
-		$('#alta_pac').on("click",function(){
-
-			$.ajax({
-				url: "{{url('pacs/alta')}}",
-				type: 'get',
-                beforeSend: function () {
-                        $("#alta-pac").html("Procesando, espere por favor...");
-                },				
-				success: function(data){
-					$('#alta-pac').html(data);
-					$('#alta-pac').show();
-					$('#abm').hide();
-				}
-			});
-		});
-
-		$("#alta-pac").on("click","#volver",function(){
-			console.log('Se vuelve sin crear la pac.');
-			$('#alta-pac').html("");
-			$('#abm').show();
-			$('#filtros').show();
+		datatable = $('#abm-table').DataTable({
+			destroy: true,
+			searching: false,
+			ajax : 'pacs/tabla',
+			columns: [
+			{ title: 'Nombre', data: 'nombre'},
+			{ title: 'Fecha', data: 'fecha'},
+			{ title: 'Edicion', data: 'edicion'},
+			{ title: 'Duracion', data: 'duracion'},			
+			{ title: 'Tematica', data: 'area_tematica.nombre', name: 'id_area_tematica'},
+			{ title: 'Tipologia', data: 'linea_estrategica.nombre', name: 'id_linea_estrategica'},
+			{ title: 'Jurisdiccion', data: 'provincia.nombre', name: 'id_provincia'},
+			{ 
+				data: 'acciones',
+				render: function ( data, type, row, meta ) {
+                    //return /*participantesLabel(row.alumnos_count) + */
+                    return seeButton(row.id_curso) + editButton(row.id_curso) + deleteButton(row.id_curso);
+					// return data;
+				},
+				orderable: false
+			}
+			],
+			responsive: true
 		});
 
 		$('#abm').on('click','.expand',function () {
@@ -137,7 +97,51 @@
 			datatable.draw();
 			$('.expand').show();	
 			$(this).hide();	
+		});	
+
+
+		$('#altas_pac').on("click",function(){
+
+			$.ajax({
+				url: "{{url('pacs/alta')}}",
+				method: 'get',
+				success: function(data){
+					$('#alta-pac').html(data);
+					$('#alta-pac').show();
+					$('#filtros').hide();
+					$('#abm').hide();
+				},
+				error: function(data){
+					console.log(data);
+					alert("No se pudo cargar la view de alta de PAC");
+				}
+			});
 		});
+
+		$("#alta-pac").on("click","#volver",function(){
+			console.log('Se vuelve sin crear el curso.');
+			$('#alta-accion').html("");
+			$('#abm').show();
+			$('#filtros').show();
+		});
+
+		$('#alta-pac').on('click','#modificar',function() {
+
+			var pac = $(this).data('id');
+
+			$.ajax({				
+				url : 'pacs/'+pac,
+				method : 'put',
+				data : $('form').serialize(),
+				success : function(data){
+					console.log("Success.");
+					location.reload();	
+				},
+				error : function(data){
+					console.log("Error.");
+				}
+			});
+		});	
 
 		$('#abm').on("click",".eliminar",function(){
 			var pac = $(this).data('id');
@@ -195,25 +199,6 @@
 				}
 			});
 		});
-
-		$('#alta-pac').on('click','#modificar',function() {
-
-			var pac = $(this).data('id');
-
-			$.ajax({				
-				url : 'pacs/'+pac,
-				method : 'put',
-				data : $('form').serialize(),
-				success : function(data){
-					console.log("Success.");
-					location.reload();	
-				},
-				error : function(data){
-					console.log("Error.");
-				}
-			});
-		});				
-
 	});
 
 </script> 

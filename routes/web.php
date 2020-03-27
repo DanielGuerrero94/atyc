@@ -184,20 +184,22 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('reportes/{id_reporte}', 'ReportesController@reporte');
 
     //PAC
-    Route::get('pac', 'PacController@get');
-    Route::get('pac/alta', 'PacController@create');
-    Route::get('pac/filtrar', 'PacController@getFiltrado'); //También muestra la tabla
-    Route::get('pac/excel', 'PacController@getExcel');
-    Route::get('pac/documentos', 'PacController@checkDocumentos');
-    Route::get('pac/typeahead', 'PacController@getTypeahead');
-    Route::get('pac/{id}/see', 'PacController@see');
-    Route::get('pac/{id}', 'PacController@edit');
+    Route::get('pacs', 'PacController@get');
+    Route::get('pacs/alta', 'PacController@create');
+    Route::get('pacs/tabla', 'PacController@getTabla');
+    // Route::get('pacs/filtrar', 'PacController@getFiltrado');
+    // Route::get('pacs/filtrarAcciones', 'PacController@getFiltradoAcciones');
+    // Route::get('pacs/excel', 'PacController@getExcel');
+    // Route::get('pacs/documentos', 'PacController@checkDocumentos');
+    // Route::get('pacs/typeahead', 'PacController@getTypeahead');
+    // Route::get('pacs/{id}/see', 'PacController@see');
+    // Route::get('pacs/{id}', 'PacController@edit');
 
-    Route::post('pac', 'PacController@store');
+    Route::post('pacs', 'PacController@store');
 
-    Route::put('pac/{id}', 'PacController@update');
+    // Route::put('pacs/{id}', 'PacController@update');
 
-    Route::delete('pac/{id}', 'PacController@destroy');
+    // Route::delete('pacs/{id}', 'PacController@destroy');
 
     //Encuestas
     Route::get('encuestas/g_plannacer', 'Encuestas\EncuestasController@gPlannacer');
