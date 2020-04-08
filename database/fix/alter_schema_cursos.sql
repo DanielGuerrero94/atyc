@@ -2,12 +2,14 @@
 
 drop table cursos.estados;
 
-create table cursos.estados {
-	id_estado integer PRIMARY KEY DEFAULT nextval('serial'),
-	descripcion varchar(50) NOT NULL
-}
+create sequence cursos.estados_id_estados;
 
-insert into cursos.estados values
+create table cursos.estados (
+	id_estado integer PRIMARY KEY DEFAULT nextval('cursos.estados_id_estados'),
+	descripcion varchar(50) NOT NULL
+);
+
+insert into cursos.estados (descripcion) values
 ('Planificado'),
 ('Diseñado'),
 ('En ejecución'),

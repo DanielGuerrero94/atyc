@@ -36,12 +36,14 @@
         </span>
       </a>
       <ul class="treeview-menu">
+        @if(Auth::user()->tieneRol('admin'))
         <li>
           <a href={{url("/pacs")}}>
             <i class="fa fa-columns"></i>
             <span>Gestión de PAC</span>
           </a>
         </li>
+        @endif
         <li>
           <a href={{url("/materiales/etapa/3")}}>
             <i class="fa fa-book"></i>

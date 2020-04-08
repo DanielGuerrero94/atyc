@@ -57,9 +57,13 @@ class User extends Authenticatable
     }
 
     public function tieneRol($role) {
-        return $this->whereHas('roles', function ($query) use ($role) {
+        $user = Auth::user();
+        return $this->whereHas('roles', function ($query) use ($role) 
+        {
             $query->where('name', $role);
-        })->count() > 0;
+        })
+        ->where('id_user', $user->id_user)
+        ->count() > 0;
     }
 
     public function darDeAlta() {

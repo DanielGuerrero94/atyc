@@ -139,7 +139,7 @@ class DashboardController extends Controller
         $query = Curso::whereRaw("nombre ~* 'sumarte'");
 
         if (is_numeric($anio = $request->get('anio'))) {
-            $query = $query->whereYear('fecha', $anio);
+            $query = $query->whereYear('fecha_ejec_final', $anio);
         }
 
         if (is_numeric($division = $request->get('division'))) {
@@ -220,19 +220,19 @@ class DashboardController extends Controller
 
     private function accionesPorAnioYMes(Request $request)
     {
-        $query = "(select extract(year from fecha) as anio,extract(month from fecha) as mes,
+        $query = "(select extract(year from fecha_ejec_final) as anio,extract(month from fecha_ejec_final) as mes,
         count(*) as cantidad from cursos.cursos
-        where fecha > '2013-01-01'";
+        where fecha_ejec_final > '2013-01-01'";
 
         if (is_numeric($division = $request->get('division'))) {
             $query .= " and id_provincia = {$division}";
         }
 
-        $query .= " group by extract(year from fecha),extract(month from fecha)
-        order by extract(year from fecha),extract(month from fecha))
+        $query .= " group by extract(year from fecha_ejec_final),extract(month from fecha_ejec_final)
+        order by extract(year from fecha_ejec_final),extract(month from fecha_ejec_final))
         union all
-        (select max(extract(year from fecha))".
-        ",generate_series((select extract(month from max(fecha))::numeric) + 1,12),0 from cursos.cursos)";
+        (select max(extract(year from fecha_ejec_final))".
+        ",generate_series((select extract(month from max(fecha_ejec_final))::numeric) + 1,12),0 from cursos.cursos)";
 
         $acciones = \DB::select($query);
 
@@ -321,12 +321,12 @@ class DashboardController extends Controller
 
     private function accionesInformadasEsteAnio()
     {
-        $acciones = \DB::select("(select id_provincia,extract(month from fecha) as mes,
+        $acciones = \DB::select("(select id_provincia,extract(month from fecha_ejec_final) as mes,
             count(*) as cantidad from cursos.cursos 
-            where extract(year from fecha) = extract(year from now())
+            where extract(year from fecha_ejec_final) = extract(year from now())
             and id_provincia <> 25
-            group by id_provincia,extract(month from fecha)
-            order by id_provincia,extract(month from fecha))
+            group by id_provincia,extract(month from fecha_ejec_final)
+            order by id_provincia,extract(month from fecha_ejec_final))
             union all
             (select distinct id_provincia,
                 generate_series(
@@ -334,7 +334,7 @@ class DashboardController extends Controller
                     where extract(year from c.fecha_ejec_final) = extract(year from now())
                     and c.id_provincia = ca.id_provincia)::numeric,12),0
                     from cursos.cursos ca
-                    where extract(year from fecha) = extract(year from now())
+                    where extract(year from fecha_ejec_final) = extract(year from now())
                     and id_provincia <> 25
                 )");
 
