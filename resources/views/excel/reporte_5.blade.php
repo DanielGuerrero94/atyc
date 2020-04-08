@@ -30,7 +30,7 @@ td {
 		<td>{{$resultado->provincia}}</td>
 		<td>{{$resultado->nombre}}</td>
 		<td>{{$resultado->edicion}}</td>
-		<td>{{$resultado->fecha}}</td>
+		<td>{{$resultado->fecha_ejec_final}}</td>
 		<td>{{$resultado->cantidad_alumnos}}</td>
 		<td>{{$resultado->tipologia}}</td>
 		<td>{{$resultado->tematica}}</td>

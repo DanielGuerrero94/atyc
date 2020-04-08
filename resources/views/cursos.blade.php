@@ -52,7 +52,7 @@
 			ajax : 'cursos/tabla',
 			columns: [
 			{ title: 'Nombre', data: 'nombre'},
-			{ title: 'Fecha', data: 'fecha_ejec_inicial'},
+			{ title: 'Fecha', data: 'fecha_ejec_final'},
 			{ title: 'Edicion', data: 'edicion'},
 			{ title: 'Duracion', data: 'duracion'},			
 			{ title: 'Tematica', data: 'area_tematica.nombre', name: 'id_area_tematica'},
@@ -163,7 +163,7 @@
 				},
 				columns: [
 				{ title: 'Nombre', data: 'nombre'},
-				{ title: 'Fecha', data: 'fecha_ejec_inicial'},
+				{ title: 'Fecha', data: 'fecha_ejec_final'},
 				{ title: 'Edicion', data: 'edicion'},
 				{ title: 'Duracion', data: 'duracion'},			
 				{ title: 'Tematica', data: 'area_tematica.nombre', name: 'id_area_tematica'},

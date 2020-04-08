@@ -55,7 +55,7 @@
 				{ data: 'localidad', title: 'Localidad'},
 				{ data: 'accion', title: 'Acción'},
 				{ data: 'tematica', title: 'Tematica'},
-				{ data: 'fecha', title: 'Fecha'},
+				{ data: 'fecha_ejec_final', title: 'Fecha'},
 				{ data: 'participantes', title: 'Paricipantes'}
 				]
 			});	

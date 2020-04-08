@@ -24,7 +24,7 @@ td {
 	@foreach($cursos as $curso)
 	<tr>
 		<td>{{$curso->nombre}}</td>
-		<td>{{$curso->fecha}}</td>
+		<td>{{$curso->fecha_ejec_final}}</td>
 		<td>{{$curso->edicion}}</td>
 		<td>{{$curso->duracion}}</td>
 		<td>{{$curso->areaTematica->nombre}}</td>

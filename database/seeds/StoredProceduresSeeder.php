@@ -38,7 +38,7 @@ class StoredProceduresSeeder extends Seeder
         INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
         INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
-        AND C.fecha 
+        AND C.fecha_ejec_final 
         BETWEEN desde
         AND hasta
         GROUP BY A.id_alumno,P.nombre
@@ -51,7 +51,7 @@ class StoredProceduresSeeder extends Seeder
         INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
         INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
-        AND C.fecha 
+        AND C.fecha_ejec_final 
         BETWEEN desde
         AND hasta
         AND A.id_provincia = var_provincia
@@ -81,7 +81,7 @@ class StoredProceduresSeeder extends Seeder
         INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
         WHERE (A.id_trabajo = 2 OR A.id_trabajo = 3)
-        AND C.fecha 
+        AND C.fecha_ejec_final 
         BETWEEN desde
         AND hasta
         GROUP BY A.id_alumno,P.nombre
@@ -95,7 +95,7 @@ class StoredProceduresSeeder extends Seeder
         INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
         WHERE (A.id_trabajo = 2 OR A.id_trabajo = 3)
-        AND C.fecha 
+        AND C.fecha_ejec_final 
         BETWEEN desde
         AND hasta
         AND A.id_provincia = var_provincia
@@ -124,7 +124,7 @@ class StoredProceduresSeeder extends Seeder
         INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
         INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
-        WHERE C.fecha 
+        WHERE C.fecha_ejec_final 
         BETWEEN desde
         AND hasta
         GROUP BY A.id_alumno,P.nombre) as sub
@@ -135,7 +135,7 @@ class StoredProceduresSeeder extends Seeder
         INNER JOIN cursos.cursos_alumnos CA ON A.id_alumno = CA.id_alumno
         INNER JOIN cursos.cursos C ON C.id_curso = CA.id_curso
         INNER JOIN sistema.provincias P on P.id_provincia = A.id_provincia
-        WHERE C.fecha 
+        WHERE C.fecha_ejec_final 
         BETWEEN desde
         AND hasta
         AND A.id_provincia = var_provincia
@@ -187,7 +187,7 @@ class StoredProceduresSeeder extends Seeder
         left join cursos.cursos_alumnos as ca on ca.id_curso = c.id_curso
         left join alumnos.alumnos as a on a.id_alumno = ca.id_alumno
         left join efectores.efectores as e on e.cuie = a.establecimiento1
-        where c.fecha between desde and hasta
+        where c.fecha_ejec_final between desde and hasta
         and e.integrante = 'S' and e.compromiso_gestion = 'S'
         group by p.id_provincia) as sub on sub.id_provincia = p.id_provincia
         order by p.id_provincia;
@@ -222,7 +222,7 @@ class StoredProceduresSeeder extends Seeder
         left join cursos.cursos_alumnos as ca on ca.id_curso = c.id_curso
         left join alumnos.alumnos as a on a.id_alumno = ca.id_alumno
         left join efectores.efectores as e on e.cuie = a.establecimiento1
-        where c.fecha between desde and hasta
+        where c.fecha_ejec_final between desde and hasta
         group by p.id_provincia) as sub on sub.id_provincia = p.id_provincia
         where p.id_provincia = var_provincia
         order by p.id_provincia;
@@ -239,28 +239,28 @@ class StoredProceduresSeeder extends Seeder
         IN var_provincia integer,
         IN desde date,
         IN hasta date)
-        RETURNS TABLE(provincia character varying, nombre character varying, edicion smallint, fecha date,
+        RETURNS TABLE(provincia character varying, nombre character varying, edicion smallint, fecha_ejec_final date,
         cantidad_alumnos bigint, tipologia text, tematica character varying, duracion double precision) AS
         \$BODY\$
         BEGIN IF var_provincia = 0 THEN
-        RETURN QUERY SELECT P.nombre as provincia,C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos,
+        RETURN QUERY SELECT P.nombre as provincia,C.nombre,C.edicion,C.fecha_ejec_final,count (*) as cantidad_alumnos,
         CONCAT(LE.numero,'-',LE.nombre) as tipologia,AT.nombre as tematica,C.duracion from cursos.cursos C 
         left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
         left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
         inner join sistema.provincias P ON P.id_provincia = C.id_provincia
         inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
         inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica
-        where C.fecha between desde and hasta
+        where C.fecha_ejec_final between desde and hasta
         group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre;
         ELSE RETURN QUERY
-        SELECT P.nombre as provincia,C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos,
+        SELECT P.nombre as provincia,C.nombre,C.edicion,C.fecha_ejec_final,count (*) as cantidad_alumnos,
         CONCAT(LE.numero,'-',LE.nombre) as tipologia,AT.nombre as tematica,C.duracion from cursos.cursos C 
         left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
         left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
         inner join sistema.provincias P ON P.id_provincia = C.id_provincia
         inner join cursos.areas_tematicas AT ON AT.id_area_tematica = C.id_area_tematica 
         inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica
-        where C.fecha between desde and hasta 
+        where C.fecha_ejec_final between desde and hasta 
         and c.id_provincia = var_provincia
         group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre;
         END IF;
@@ -278,11 +278,11 @@ class StoredProceduresSeeder extends Seeder
         IN var_hasta date)
         RETURNS TABLE(provincia character varying, cuie character, efector character varying,
         denominacion_legal character varying, departamento character varying, localidad character varying,
-        accion character varying, fecha date, participantes bigint) AS
+        accion character varying, fecha_ejec_final date, participantes bigint) AS
         \$BODY\$
         BEGIN IF var_provincia = 0 THEN
         RETURN QUERY select p.descripcion as provincia, e.cuie, e.nombre as efector, e.denominacion_legal ,
-        d.nombre_departamento as departamento, l.nombre_localidad as localidad, c.nombre as accion, c.fecha,
+        d.nombre_departamento as departamento, l.nombre_localidad as localidad, c.nombre as accion, c.fecha_ejec_final,
         count(*) as participantes 
         from efectores.efectores as e 
         inner join efectores.datos_geograficos as dg on dg.id_efector = e.id_efector 
@@ -292,12 +292,12 @@ class StoredProceduresSeeder extends Seeder
         inner join alumnos.alumnos as a on a.establecimiento1 = e.cuie 
         inner join cursos.cursos_alumnos as ca on ca.id_alumno = a.id_alumno 
         inner join cursos.cursos as c on c.id_curso = ca.id_curso 
-        where c.fecha between var_desde and var_hasta
+        where c.fecha_ejec_final between var_desde and var_hasta
         group by  p.descripcion, e.cuie, e.nombre, e.denominacion_legal, d.nombre_departamento, l.nombre_localidad,
-        c.nombre, c.fecha;
+        c.nombre, c.fecha_ejec_final;
         ELSE RETURN QUERY
         select p.descripcion as provincia, e.cuie, e.nombre as efector, e.denominacion_legal ,
-        d.nombre_departamento as departamento, l.nombre_localidad as localidad, c.nombre as accion, c.fecha,
+        d.nombre_departamento as departamento, l.nombre_localidad as localidad, c.nombre as accion, c.fecha_ejec_final,
         count(*) as participantes 
         from efectores.efectores as e 
         inner join efectores.datos_geograficos as dg on dg.id_efector = e.id_efector 
@@ -307,10 +307,10 @@ class StoredProceduresSeeder extends Seeder
         inner join alumnos.alumnos as a on a.establecimiento1 = e.cuie 
         inner join cursos.cursos_alumnos as ca on ca.id_alumno = a.id_alumno 
         inner join cursos.cursos as c on c.id_curso = ca.id_curso 
-        where c.fecha between var_desde and var_hasta
+        where c.fecha_ejec_final between var_desde and var_hasta
         and dg.id_provincia::integer = var_provincia
         group by  p.descripcion, e.cuie, e.nombre, e.denominacion_legal, d.nombre_departamento, l.nombre_localidad,
-        c.nombre, c.fecha;
+        c.nombre, c.fecha_ejec_final;
         END IF;
         END \$BODY\$
         LANGUAGE plpgsql VOLATILE

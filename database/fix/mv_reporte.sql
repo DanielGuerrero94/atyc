@@ -31,6 +31,6 @@ SELECT p.id_provincia,
              JOIN alumnos.alumnos a ON a.id_alumno = ca.id_alumno
              JOIN efectores.efectores e ON e.cuie = a.establecimiento1::bpchar
              CROSS JOIN sistema.periodos pe_1
-          WHERE c.fecha >= pe_1.desde AND c.fecha <= pe_1.hasta AND e.id_estado = 1 AND e.integrante = 'S'::bpchar
+          WHERE c.fecha_ejec_final >= pe_1.desde AND c.fecha_ejec_final <= pe_1.hasta AND e.id_estado = 1 AND e.integrante = 'S'::bpchar
           GROUP BY p_1.id_provincia, pe_1.desde, pe_1.hasta) sub ON sub.id_provincia = p.id_provincia AND sub.desde = pe.desde AND sub.hasta = pe.hasta
   ORDER BY p.id_provincia, pe.desde, pe.hasta;

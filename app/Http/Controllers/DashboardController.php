@@ -97,7 +97,7 @@ class DashboardController extends Controller
         logger($request->get("anio"));
         if (($anio = $request->get('anio')) != 0) {
             logger($anio);
-            $query = $query->where("c.fecha", ">", "{$anio}-01-01");
+            $query = $query->where("c.fecha_ejec_final", ">", "{$anio}-01-01");
         }
 
         return $query->first()
@@ -264,7 +264,7 @@ class DashboardController extends Controller
         where l.numero is not null";
 
         if (is_numeric($anio = $request->get('anio'))) {
-            $query .= " and extract(year from c.fecha) = {$anio}";
+            $query .= " and extract(year from c.fecha_ejec_final) = {$anio}";
         }
 
         if (is_numeric($division = $request->get('division'))) {
@@ -295,7 +295,7 @@ class DashboardController extends Controller
         where a.id_area_tematica is not null";
 
         if (is_numeric($anio = $request->get('anio'))) {
-            $query .= " and extract(year from c.fecha) = {$anio}";
+            $query .= " and extract(year from c.fecha_ejec_final) = {$anio}";
         }
 
         if (is_numeric($division = $request->get('division'))) {
@@ -330,8 +330,8 @@ class DashboardController extends Controller
             union all
             (select distinct id_provincia,
                 generate_series(
-                    (select extract(month from max(c.fecha)) + 1 from cursos.cursos c
-                    where extract(year from c.fecha) = extract(year from now())
+                    (select extract(month from max(c.fecha_ejec_final)) + 1 from cursos.cursos c
+                    where extract(year from c.fecha_ejec_final) = extract(year from now())
                     and c.id_provincia = ca.id_provincia)::numeric,12),0
                     from cursos.cursos ca
                     where extract(year from fecha) = extract(year from now())
@@ -355,7 +355,7 @@ class DashboardController extends Controller
         //Por ahora busca el historial de una semana por default
 
         if ($request->input('categoria', 'acciones') == 'acciones') {
-            $acciones = Curso::select('id_provincia', 'id_curso', 'nombre', 'created_at', 'fecha', 'edicion')
+            $acciones = Curso::select('id_provincia', 'id_curso', 'nombre', 'created_at', 'fecha_ejec_final', 'edicion')
             ->with('provincia')
             ->whereDate('created_at', '>', $antiguedad)
             ->orderBy('created_at', 'desc')
