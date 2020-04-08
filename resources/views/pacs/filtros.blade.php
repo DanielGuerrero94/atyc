@@ -18,9 +18,9 @@
 					</div>
 				</div>
 				<div class="form-group col-sm-4">          
-					<label class="control-label col-xs-5" for="id_tipo_accion">Tipo de acción:</label>
+					<label class="control-label col-xs-5" for="id_accion">Tipo de acción:</label>
 					<div class="col-xs-7">
-						<select class="form-control" id="id_tipo_accion" title="Tipo de Acción">
+						<select class="form-control" id="id_accion" title="Tipo de Acción">
 							<option data-id="">Todos los tipos</option>
 							@foreach ($tipoAcciones as $tipoAccion)
 							<option data-id="{{$tipoAccion->id_accion}}">{{$tipoAccion->nombre}}</option>

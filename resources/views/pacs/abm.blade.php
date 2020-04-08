@@ -12,18 +12,6 @@
 	</div>
 	<div class="box-body">
 		<table id="abm-table" class="table table-hover">
-			<!-- <thead>
-				<tr>
-					<th>Nombre</th>
-					<th>Tipo</th>
-					<th>Temática/s</th>
-					<th>Ediciones</th>
-					<th>Duración</th>
-					<th>Informe entregado</th>
-					<th>Jurisdicción</th>
-					<th>Estado</th>
-				</tr>
-			</thead> -->
 		</table>
 	</div>
 	<div class="box-footer">

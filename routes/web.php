@@ -187,19 +187,27 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('pacs', 'PacController@get');
     Route::get('pacs/alta', 'PacController@create');
     Route::get('pacs/tabla', 'PacController@getTabla');
-    // Route::get('pacs/filtrar', 'PacController@getFiltrado');
+    Route::get('pacs/{id_pac}/tablaEdiciones', 'PacController@getTablaEdiciones');
+    // Route::get('pacs/filtrarPac', 'PacController@getFiltradoPac');
     // Route::get('pacs/filtrarAcciones', 'PacController@getFiltradoAcciones');
     // Route::get('pacs/excel', 'PacController@getExcel');
     // Route::get('pacs/documentos', 'PacController@checkDocumentos');
     // Route::get('pacs/typeahead', 'PacController@getTypeahead');
-    // Route::get('pacs/{id}/see', 'PacController@see');
-    // Route::get('pacs/{id}', 'PacController@edit');
+    Route::get('pacs/{id}/see', 'PacController@see');
+    Route::get('pacs/{id}/edit', 'PacController@edit');
+    Route::get('pacs/{id}/excel', 'PacController@getCompletoExcel');
 
     Route::post('pacs', 'PacController@store');
 
     // Route::put('pacs/{id}', 'PacController@update');
 
-    // Route::delete('pacs/{id}', 'PacController@destroy');
+    Route::delete('pacs/{id_pac}', 'PacController@destroy');
+
+    //Pac->Fichas Tecnicas
+    Route::get('pacs/fichas_tecnicas/{id_ficha}/download', 'PacController@downloadFichaTecnica');
+    Route::get('pacs/{id_pac}/tablaFicha', 'PacController@getTablaFicha');
+    Route::post('pacs/{id_pac}', 'PacController@storeFichaTecnica');
+    Route::put('pacs/fichas_tecnicas/{id_ficha}', 'PacController@replaceFichaTecnica');
 
     //Encuestas
     Route::get('encuestas/g_plannacer', 'Encuestas\EncuestasController@gPlannacer');

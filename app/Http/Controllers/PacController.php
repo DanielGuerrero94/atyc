@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Pac\Pac;
 use App\Models\Pac\Componente;
 use App\Models\Pac\Destinatario;
@@ -10,7 +11,8 @@ use App\Models\Pac\Pauta;
 use App\Models\Pac\Responsable;
 use App\Models\Pac\Tematica;
 use App\Models\Pac\TipoAccion;
-use App\Models\Curso\Curso;
+use App\Models\Pac\FichaTecnica;
+use App\Models\Cursos\Curso;
 use App\Provincia;
 use App\Periodo;
 use Cache;
@@ -32,7 +34,7 @@ class PacController extends AbmController
      **/
     private $rules = [
         'nombre' => 'required|string',
-        'id_tipo_accion' => 'required|numeric',
+        'id_accion' => 'required|numeric',
         'ediciones' => 'required|numeric',
         'duracion' => 'required|numeric',
         'id_provincia' => 'required|numeric',
@@ -71,7 +73,7 @@ class PacController extends AbmController
     private $botones = [
         'editar' => 'fa fa-pencil-square-o',
         'eliminar' => 'fa fa-trash-o',
-        'buscar' => 'fa <',
+        'buscar' => 'fa fa-search',
         'agregar' => 'fa fa-plus-circle'
     ];
 
@@ -96,14 +98,56 @@ class PacController extends AbmController
         return view('pacs/alta', $this->getSelectOptions());
     }
 
-    public function crearCursos($data)
+    public function crearCursos($pac, $request)
     {
-        for($i=0; $i<$data->ediciones; $i++) {
-            $edicion = $i+1;
-            $data = array_merge($data, ['edicion' => $edicion]);
-            Curso::create($data);
+        for($i = 0; $i < $request->ediciones; $i++) {
+            $edicion = Curso::where([
+                ['nombre', '=', $request->nombre],
+                ['id_provincia', '=', $request->id_provincia],
+            ])
+            ->count() + 1;
+
+            $fecha_inicio_actual = 'fecha_inicio_'.($i+1);
+            $fecha_final_actual = "fecha_final_".($i+1);
+
+            $data = $request->all(); //only();
+            $estado = 1;
+            $data = array_merge($data, [
+                'id_pac' => $pac->id_pac,
+                'id_estado' => $estado,
+                'edicion' => $edicion,
+                'id_area_tematica' => $request->id_tematica,
+                'id_linea_estrategica' => $request->id_accion,
+                'fecha_plan_inicial' => $request->$fecha_inicio_actual,
+                'fecha_plan_final' => $request->$fecha_final_actual
+                ]);
+
+            $curso = Curso::create($data);
+            logger('Creo el curso: '.json_encode($curso));
+
+            $tematicas = explode(',', $request->get('ids_tematicas'));
+            $curso->areasTematicas()->attach($tematicas);
         }
     }
+
+    public function attachPivotTables($pac, $request)
+    {
+        $tematicas = explode(',', $request->get('ids_tematicas'));
+        $pac->tematicas()->attach($tematicas);
+
+        $destinatarios = explode(',', $request->get('ids_destinatarios'));
+        $pac->destinatarios()->attach($destinatarios);
+
+        $responsables = explode(',', $request->get('ids_responsables'));
+        $pac->responsables()->attach($responsables);
+
+        $pautas = explode(',', $request->get('ids_pautas'));
+        $pac->pautas()->attach($pautas);
+
+        $componentes = explode(',', $request->get('ids_componentes'));
+        $pac->componentes()->attach($componentes);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -119,13 +163,18 @@ class PacController extends AbmController
         if ($v->fails()) {
             return $v->errors();
         }
-        //$data = array_merge($data, ['fecha' => '1999-12-31']);
+
         $pac = Pac::create($data);
         logger('Crea pac: '.$pac);
 
-        $estado = 1;
-        $data = array_merge($data, ['id_pac' => $pac->primarykey, 'id_estado' => $estado]);
-        crearCursos($data);
+        $this->attachPivotTables($pac, $request);
+        $this->crearCursos($pac, $request);
+
+        $id_ficha_tecnica = $request->get('id_ficha_tecnica');
+        logger('id_ficha_tecnica: '.$id_ficha_tecnica);
+
+        if($id_ficha_tecnica)
+            $this->cambiarEstadoCursos($pac->id_pac, 2);
         
         return $pac;
     }
@@ -136,12 +185,20 @@ class PacController extends AbmController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id_pac)
     {
 	    try {
-	        $pac = Pac::with('destinatarios', 'pautas', 'responsables', 'componentes', 'tipoAccion', 'tematicas')
-		     ->where('id_pac', $id)->firstOrFail();
-		return response()->json(['success' => true, 'data' => $pac->toJson()]);
+	        $pac = Pac::with([
+                'cursos',
+                'destinatarios',
+                'pautas',
+                'responsables',
+                'componentes',
+                'tipoAccion',
+                'tematicas'])
+                ->where('id_pac', $id_pac)->firstOrFail();
+                
+		return ['pac' => $pac];
 	    } catch (ModelNotFoundException $e) {
 		return response()->json(['success' => false, 'error' => $e->getMessage()]);
 	    }
@@ -153,9 +210,9 @@ class PacController extends AbmController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id_pac)
     {
-
+        return view('pacs.modificacion', array_merge($this->show($id_pac), $this->getSelectOptions()));
     }
 
     /**
@@ -165,7 +222,7 @@ class PacController extends AbmController
      * @param  int                      $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id_pac)
     {
         //
     }
@@ -176,9 +233,10 @@ class PacController extends AbmController
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id_pac)
     {
-        //
+        $pac = Pac::findOrFail($id_pac)->delete();
+        return response()->json($pac);
     }
     /**
     * View para abm.
@@ -201,25 +259,24 @@ class PacController extends AbmController
         $query = Pac::select(
             'id_pac',
             'nombre',
-            'id_tipo_accion',
+            'id_accion',
             'ediciones',
+            'duracion',
             'id_provincia',
-            'ficha_tecnica'
+            'id_ficha_tecnica',
+            'created_at'
         )
         ->with([
             'tipoAccion',
             'provincias',
             'tematicas' 
         ])
-        ->segunProvincia()
-        ->get();
+        ->segunProvincia();
 
-        logger($query);
-
-        return Datatables::of($query);
+        return Datatables::of($query)->make(true);
     }
 
-    public function getFiltrado(Request $request)
+    public function getFiltradoPac(Request $request)
     {
         $filtros = collect($r->get('filtros'))
         ->mapWithKeys(function ($item) {
@@ -229,10 +286,12 @@ class PacController extends AbmController
         $query = Pac::select(
             'id_pac',
             'nombre',
-            'id_tipo_accion',
+            'id_accion',
             'edicion',
+            'duracion',
             'id_provincia',
-            'ficha_tecnica'
+            'id_ficha_tecnica'
+//            'created_at'
         )
         ->with([
             'tipoAccion',
@@ -266,7 +325,7 @@ class PacController extends AbmController
             return Pauta::all();
         });
 
-        $componentes = Cache::remember('componentes_cai', 5, function () {
+        $componentes = Cache::remember('componentes', 5, function () {
             return Componente::all();
         });
 
@@ -304,5 +363,107 @@ class PacController extends AbmController
             'provincias' => $provincias,
             'periodos' => $periodos
         ];
+    }
+
+    public function cambiarEstadoCursos($id_pac, $id_estado)
+    {
+        logger("Voy a actualizar los cursos del PAC: ".$id_pac ." al estado ".$id_estado);
+        $cursos = Curso::where('id_pac', '=', $id_pac)->get();
+        logger("Encontre estos cursos: " .$cursos);
+        foreach($cursos as $curso)
+        {
+            logger("Encontre el curso: ".$curso);
+            $curso->update(compact('id_estado'));
+            logger("Actualice el curso: ".$curso);
+        };
+    }
+
+    public function storeFichaTecnica(Request $request, $id_pac)
+    {
+        logger($id_pac);
+        $path = $request->file('csv')->store('fichas_tecnicas');
+        $path = explode('/', $path);
+        $path = $path[1];
+        $original = $request->file('csv')->getClientOriginalName();
+        
+        $ficha_tecnica = FichaTecnica::create(compact('original', 'path'));
+        $id_ficha_tecnica = $ficha_tecnica->id_ficha_tecnica;
+        logger("Cree la ficha tecnica: " .$ficha_tecnica);
+        
+        if($id_pac)
+        { 
+            $pac = Pac::findOrFail($id_pac);
+            logger("Encontre el pac: " .$pac);
+
+            $pac->update(compact('id_ficha_tecnica'));
+            logger("Actualizo el pac: ".$pac);
+
+            $this->cambiarEstadoCursos($id_pac, 2);
+        }
+
+        return $id_ficha_tecnica;
+    }
+
+    public function replaceFichaTecnica(Request $request, $id_ficha)
+    {
+        $path = $request->file('csv')->store('fichas_tecnicas');
+        $path = explode('/', $path);
+        $path = $path[1];
+        $original = $request->file('csv')->getClientOriginalName();
+
+        $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
+        $replaced = $ficha_tecnica->path;
+
+        logger("Encontre ficha tecnica: " .$ficha_tecnica);
+        $ficha_tecnica->update(compact('original', 'path'));
+        logger("Reemplace ficha tecnica: " .$ficha_tecnica);
+
+        Storage::delete($replaced);
+
+        return response('Replaced', 200);
+    }
+
+    public function downloadFichaTecnica($id_ficha)
+    {
+        $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
+        $path = storage_path("app/fichas_tecnicas/".$ficha_tecnica->path);
+        return response()->download($path, $ficha_tecnica->original);
+    }
+
+    public function see($id_pac)
+    {
+        return view('pacs.modificacion', array_merge($this->show($id_pac), $this->getSelectOptions(), ['disabled' => true]));
+    }
+
+    public function getCompletoExcel($id_pac)
+    {
+        $datos = ['pac' => Pac::findOrFail($id_pac)];
+        $path = "pac_".date("Y-m-d_H:i:s");
+        Excel::create($path, function ($excel) use ($datos) {
+            $excel->sheet('PAC', function ($sheet) use ($datos) {
+                $sheet->setHeight(1, 20);
+                $sheet->loadView('excel.pacCompleto', $datos);
+            });
+        })
+        ->store('xls');
+        return response()->download(storage_path("exports/{$path}.xls"))->deleteFileAfterSend(true);
+    }
+
+    public function getTablaFicha(Request $request, $id_pac)
+    {
+        $pac = Pac::with('fichaTecnica')
+        ->where('id_pac', $id_pac)
+        ->get();
+        
+        return Datatables::of($pac)->make(true);
+    }
+
+    public function getTablaEdiciones(Request $request, $id_pac)
+    {
+        $cursos = Curso::with('estado')
+            ->where('id_pac', $id_pac)
+            ->get();
+        
+        return Datatables::of($cursos)->make(true);
     }
 }
