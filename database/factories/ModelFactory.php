@@ -133,9 +133,9 @@ $factory->define(App\Models\Pac\Pac::class, function (Faker\Generator $faker) {
     return [
 	    'nombre' => $faker->name,
         'fecha' => $faker->date,
-        'id_tipo_accion' => rand(1, 15),
+        'id_accion' => rand(1, 15),
         'ediciones' => rand(1, 5),
-	    'ficha_tecnica' => '',
+	    'id_ficha_tecnica' => rand(1,50),
 	    'id_provincia' => rand(1, 25)
    ];
 });

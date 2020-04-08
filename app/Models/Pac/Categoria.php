@@ -4,7 +4,7 @@ namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Componente extends Model
+class Pauta extends Model
 {
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
@@ -14,14 +14,14 @@ class Componente extends Model
      *
      * @var string
     */
-    protected $table = 'pac.componentes_cai';
+    protected $table = 'pac.categorias_pautas';
 
     /**
      * Primary key asociated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id_componente';
+    protected $primaryKey = 'id_categoria';
 
     /**
      * Indicates if the model should be timestamped.

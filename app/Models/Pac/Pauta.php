@@ -28,6 +28,15 @@ class Pauta extends Model
      *
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = true;
+
+    public function categoria()
+    {
+        return $this->hasOne(
+            'App\Models\Pac\Categoria',
+            'id_categoria',
+            'id_categoria'
+        );
+    }
 
 }
