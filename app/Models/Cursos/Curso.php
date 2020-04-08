@@ -45,8 +45,8 @@ class Curso extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre','id_provincia',
-    'id_linea_estrategica','fecha','duracion','edicion','id_estado','id_area_tematica'];
+    protected $fillable = ['nombre','id_provincia', 'id_pac',
+    'id_linea_estrategica','fecha_plan_inicial','fecha_plan_final', 'duracion','edicion','id_estado','id_area_tematica'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -122,6 +122,15 @@ class Curso extends Model
         );
     }
 
+    public function estado()
+    {
+        return $this->hasOne(
+            'App\Models\Cursos\Estado',
+            'id_estado',
+            'id_estado'
+        );
+    }
+
     public function getByCuie($cuie)
     {
         return $this->query()
@@ -141,7 +150,7 @@ class Curso extends Model
             'alumnos.alumnos.establecimiento1',
             'cursos.cursos.id_curso',
             'cursos.cursos.nombre',
-            'cursos.cursos.fecha'
+            'cursos.cursos.fecha_ejec_inicial'
         )
         ->selectRaw('count(*) as alumnos')
         ->where('alumnos.alumnos.establecimiento1', $cuie)
@@ -149,9 +158,9 @@ class Curso extends Model
             'alumnos.alumnos.establecimiento1',
             'cursos.cursos.id_curso',
             'cursos.cursos.nombre',
-            'cursos.cursos.fecha'
+            'cursos.cursos.fecha_ejec_inicial'
         )
-        ->orderBy('cursos.cursos.fecha', 'desc')
+        ->orderBy('cursos.cursos.fecha_ejec_inicial', 'desc')
         ->get();
     }
 

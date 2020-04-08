@@ -52,7 +52,7 @@
 			ajax : 'cursos/tabla',
 			columns: [
 			{ title: 'Nombre', data: 'nombre'},
-			{ title: 'Fecha', data: 'fecha'},
+			{ title: 'Fecha', data: 'fecha_ejec_inicial'},
 			{ title: 'Edicion', data: 'edicion'},
 			{ title: 'Duracion', data: 'duracion'},			
 			{ title: 'Tematica', data: 'area_tematica.nombre', name: 'id_area_tematica'},
@@ -163,7 +163,7 @@
 				},
 				columns: [
 				{ title: 'Nombre', data: 'nombre'},
-				{ title: 'Fecha', data: 'fecha'},
+				{ title: 'Fecha', data: 'fecha_ejec_inicial'},
 				{ title: 'Edicion', data: 'edicion'},
 				{ title: 'Duracion', data: 'duracion'},			
 				{ title: 'Tematica', data: 'area_tematica.nombre', name: 'id_area_tematica'},
@@ -243,7 +243,7 @@
 				open: function () {
 					jQuery('<p/>', {
 						id: 'dialogABM',
-						text: '¿Esta seguro que quiere dar de baja al profesor?'
+						text: '¿Esta seguro que quiere dar de baja al curso?'
 					}).appendTo('#dialogABM');
 				},
 				buttons :

@@ -61,12 +61,12 @@
               <br>
               <div class="row">
                 <div class="form-group col-xs-12 col-md-6">            
-                  <label for="fecha" class="control-label col-md-4 col-xs-4">Fecha:</label>
+                  <label for="fecha_ejec_inicial" class="control-label col-md-4 col-xs-4">Fecha Ejecución:</label>
                   <div class="input-group date col-md-8 col-xs-6 ">
                     <div class="input-group-addon">
                       <i class="fa fa-calendar"></i>
                     </div>
-                    <input type="text" name="fecha" id="fecha" class="form-control pull-right datepicker" value="{{$curso->fecha}}">
+                    <input type="text" name="fecha" id="fecha_ejec_inicial" class="form-control pull-right datepicker" value="{{$curso->fecha_ejec_inicial}}">
                   </div>
                 </div>
               </div>
@@ -113,11 +113,11 @@
                     @if(Auth::user()->id_provincia == 25)
                     <select class="form-control" id="provincia" name="provincia">
                       @foreach ($provincias as $provincia)
-                      @if ($provincia->id_provincia === $curso->id_provincia)
-                      <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}" selected="selected">{{$provincia->nombre}}</option>
-                      @else
-                      <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>
-                      @endif                 
+                        @if ($provincia->id_provincia === $curso->id_provincia)
+                          <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}" selected="selected">{{$provincia->nombre}}</option>
+                        @else
+                          <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>
+                        @endif                 
                       @endforeach
                     </select>
                     @else
@@ -183,7 +183,7 @@
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
 
     $('.container-fluid #tabla-profesores').on('click','.agregar',function () {
-    	console.log("Se agrea al curso el alumno con id:");
+    	console.log("Se agrega al curso el alumno con id:");
     	var fila = $(this).parent().parent();
     	var id = $(this).data('id');
 

@@ -33,7 +33,6 @@ class CursosController extends AbmController
     private $rules = [
         'nombre' => 'required|string',
         'duracion' => 'required|numeric',
-        'fecha' => 'required',
         'id_area_tematica' => 'required|numeric',
         'id_linea_estrategica' => 'required|numeric',
         'id_provincia' => 'required|numeric'
@@ -234,7 +233,7 @@ class CursosController extends AbmController
         $query = Curso::select(
             'id_curso',
             'nombre',
-            'fecha',
+            'fecha_ejec_inicial',
             'edicion',
             'duracion',
             'id_area_tematica',
@@ -274,7 +273,7 @@ class CursosController extends AbmController
         $returns = Curso::whereHas('profesores', function ($query) use ($id_profesor) {
             $query->where('profesores.id_profesor', $id_profesor);
         })
-        ->select('id_curso', 'nombre', 'fecha', 'id_provincia')
+        ->select('id_curso', 'nombre', 'fecha_ejec_inicial', 'id_provincia')
         ->with('provincia');
 
         return Datatables::of($returns)
@@ -372,7 +371,7 @@ class CursosController extends AbmController
 
     private function queryCountAlumnos(Request $r, $id_provincia)
     {
-        $query = "SELECT C.nombre,C.edicion,C.fecha,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as 
+        $query = "SELECT C.nombre,C.edicion,C.fecha_ejec_inicial,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as 
         linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos.cursos C 
         left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
         left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
@@ -437,13 +436,13 @@ class CursosController extends AbmController
             if ($key == 'nombre') {
                 $query = $query->where('cursos.cursos.'.$key, 'ilike', "%{$value}%");
             } elseif ($key == 'desde') {
-                $query = $query->where('cursos.cursos.fecha', '>=', $value);
+                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '>=', $value);
             } elseif ($key == 'hasta') {
-                $query = $query->where('cursos.cursos.fecha', '<=', $value);
+                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '<=', $value);
             } elseif ($key == 'id_periodo') {
                 $periodo = Periodo::find($value);
-                $query = $query->where('cursos.cursos.fecha', '>=', $periodo->desde);
-                $query = $query->where('cursos.cursos.fecha', '<=', $periodo->hasta);
+                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '>=', $periodo->desde);
+                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '<=', $periodo->hasta);
             } else {
                 $query = $query->where('cursos.cursos.'.$key, $value);
             }
@@ -544,7 +543,7 @@ class CursosController extends AbmController
         $mapped = $data->map(function ($item, $key) {
             return [
                 $item->nombre,
-                $item->fecha,
+                $item->fecha_ejec_inicial,
                 $item->edicion,
                 $item->duracion,
                 $item->area_tematica,
