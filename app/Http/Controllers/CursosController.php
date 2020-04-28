@@ -211,7 +211,8 @@ class CursosController extends AbmController
      */
     public function destroy($id)
     {
-        return Curso::findOrFail($id)->delete();
+        $curso = Curso::findOrFail($id)->delete();
+        return response()->json($curso);
     }
 
     /**
