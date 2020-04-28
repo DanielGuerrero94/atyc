@@ -76,7 +76,7 @@
 							<div class="input-group-addon">
 								<i class="fa fa-calendar"></i>
 							</div>
-							<input type="text" name="fecha" class="form-control pull-right" id="datepicker" value="{{$curso->fecha_ejec_final}}">
+							<input type="text" name="fecha_ejec_final" class="form-control pull-right" id="datepicker" value="{{$curso->fecha_ejec_final}}">
 						</div>
 					</div>
 				</form>

@@ -197,8 +197,10 @@ class CursosController extends AbmController
             logger("Se deja el curso sin docentes");
             $curso->profesores()->detach();
         }
+
         
-        return $curso->update($request->all());
+        $curso->update($request->all());
+        return $curso;
     }
 
     /**

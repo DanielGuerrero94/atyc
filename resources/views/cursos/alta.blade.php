@@ -34,12 +34,12 @@
           <br>
           <div class="row">
             <div class="form-group col-xs-12 col-md-6">
-              <label for="fecha_ejec_inicial" class="control-label col-md-4 col-xs-4">Fecha Ejecución:</label>
+              <label for="fecha_ejec_final" class="control-label col-md-4 col-xs-4">Fecha Ejecución:</label>
               <div class="input-group date col-md-8 col-xs-6 ">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar"></i>
                 </div>
-                <input type="text" name="fecha" id="fecha_ejec_inicial" class="form-control pull-right datepicker">
+                <input type="text" name="fecha_ejec_final" id="fecha_ejec_final" class="form-control pull-right datepicker">
               </div>
             </div>
           </div>
@@ -243,7 +243,7 @@
           required: true,
           number: true
         },
-        fecha : {
+        fecha_ejec_final : {
           required: true
         },
         area_tematica: { selecciono : true},
@@ -253,7 +253,7 @@
       messages:{
         nombre : "Campo obligatorio",
         duracion : "Campo obligatorio",
-        fecha : "Campo obligatorio",
+        fecha_ejec_final : "Campo obligatorio",
       },
       highlight: function(element)
       {
