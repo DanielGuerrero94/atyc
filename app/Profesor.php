@@ -103,7 +103,7 @@ class Profesor extends Model
     public function getNombrePais()
     {
         if ($this->id_tipo_documento == 5 || $this->id_tipo_documento == 6) {
-            return Geo::findOrFail($this->id_pais)->nombre;
+            return Pais::findOrFail($this->id_pais)->nombre;
         }
     }
 }

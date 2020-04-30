@@ -235,6 +235,7 @@ class StoredProceduresSeeder extends Seeder
 
     public function reporte5()
     {
+        \DB::statement("DROP FUNCTION public.reporte_5(integer,date,date)");
         \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_5(
         IN var_provincia integer,
         IN desde date,
@@ -272,6 +273,7 @@ class StoredProceduresSeeder extends Seeder
 
     public function reporte6()
     {
+        \DB::statement("DROP FUNCTION public.reporte_6(integer,date,date)");
         \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_6(
         IN var_provincia integer,
         IN var_desde date,

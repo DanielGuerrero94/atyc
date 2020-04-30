@@ -42,13 +42,17 @@ class Logging
 
         $json = array(
             'ip' => $ip,
-            'userid' => $user->id,
-            'username' => $user->name,
             'method' => $method,
             'url' => $url,
             'query' => $request->all(),
             'duration' => $duration
         );
+
+        if($user)
+        {
+            $json['userid'] = $user->id;
+            $json['username'] = $user->name;
+        }
 
         logger(json_encode($json));
     }
