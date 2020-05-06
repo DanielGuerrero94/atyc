@@ -111,7 +111,7 @@ class ModelController extends Controller
             return response($error, 400);
         }
         
-        return $this->model->findOrFail($id)->update($request->all());
+        return response()->json($this->model->findOrFail($id)->update($request->all()));
     }
 
     /**
@@ -122,7 +122,8 @@ class ModelController extends Controller
      */
     public function destroy($id)
     {
-        return $this->model->findOrFail($id)->delete();
+        logger("Voy a dar de baja: ".$id);
+        return response()->json($this->model->findOrFail($id)->delete());
     }
 
     /**

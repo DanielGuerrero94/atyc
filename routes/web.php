@@ -257,8 +257,11 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::post('areasTematicas', 'AreasTematicasController@store');
 
         Route::put('areasTematicas/{id}', 'AreasTematicasController@update');
+        Route::put('areasTematicas/{id}/alta', 'AreasTematicasController@alta');
 
         Route::delete('areasTematicas/{id}', 'AreasTematicasController@destroy');
+        Route::delete('areasTematicas/{id}/hard', 'AreasTematicasController@hardDestroy');
+
 
         //Tipo de acciones
         Route::get('lineasEstrategicas', 'LineasEstrategicasController@getTodos');

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pauta extends Model
 {
-
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
@@ -32,11 +31,10 @@ class Pauta extends Model
 
     public function categoria()
     {
-        return $this->hasOne(
+        return $this->belongsTo(
             'App\Models\Pac\Categoria',
             'id_categoria',
             'id_categoria'
         );
     }
-
 }

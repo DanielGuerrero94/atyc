@@ -244,8 +244,12 @@ class CursosController extends AbmController
             'id_provincia'
         )
         ->with([
-            'areaTematica',
-            'lineaEstrategica',
+            'areaTematica' => function ($query) {
+                return $query->withTrashed();
+            },
+            'lineaEstrategica' => function ($query) {
+                return $query->withTrashed();
+            },
             'provincia'
         ])
         //->withCount('alumnos')

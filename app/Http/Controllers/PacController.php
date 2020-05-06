@@ -8,6 +8,7 @@ use App\Models\Pac\Pac;
 use App\Models\Pac\Componente;
 use App\Models\Pac\Destinatario;
 use App\Models\Pac\Pauta;
+use App\Models\Pac\Categoria;
 use App\Models\Pac\Responsable;
 use App\Models\Pac\Tematica;
 use App\Models\Pac\TipoAccion;
@@ -235,7 +236,30 @@ class PacController extends AbmController
      */
     public function destroy($id_pac)
     {
-        $pac = Pac::findOrFail($id_pac)->delete();
+        logger()->warning("Voy a Borrar:");
+
+        $pac = Pac::findOrFail($id_pac);
+        logger()->warning("PAC:\n".$pac);
+        $pac->delete();
+
+        if($pac->id_ficha_tecnica)
+        {
+            $ficha_tecnica = FichaTecnica::findOrFail($pac->id_ficha_tecnica);
+            logger()->warning("Ficha Tecnica:\n".$ficha_tecnica);
+            $ficha_tecnica->delete();
+        }
+
+        $cursos = Curso::where('id_pac', $id_pac)->get();
+        logger()->warning("Cursos:\n".$cursos);
+
+        foreach($cursos as $curso)
+        {
+            logger()->warning("Curso a borrar: ".$curso);
+            $curso->delete();
+        }
+        
+        logger("Borro todo");
+    
         return response()->json($pac);
     }
     /**
@@ -438,7 +462,7 @@ class PacController extends AbmController
     public function getCompletoExcel($id_pac)
     {
         $datos = ['pac' => Pac::findOrFail($id_pac)];
-        $path = "pac_".date("Y-m-d_H:i:s");
+        $path = "pac_".$datos['pac']->nombre.date("Y-m-d_H:i:s");
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('PAC', function ($sheet) use ($datos) {
                 $sheet->setHeight(1, 20);

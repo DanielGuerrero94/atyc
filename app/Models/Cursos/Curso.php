@@ -104,8 +104,8 @@ class Curso extends Model
             'App\Models\Cursos\AreaTematica',
             'cursos.cursos_areas_tematicas',
             'id_curso',
-            'id_area_tematica'
-        )->withTimestamps();
+            'id_area_tematica')
+            ->withTimestamps();
     }
 
     public function provincia()

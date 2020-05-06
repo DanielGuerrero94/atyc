@@ -30,7 +30,7 @@ class LineasEstrategicasController extends ModelController
      */
     public function index()
     {
-        return $this->model->all();
+        return $this->model->withTrashed()->get();
     }
 
     /**

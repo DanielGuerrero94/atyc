@@ -174,6 +174,15 @@
         $(this).valid();
       });
 
+      $('.select-2').on('select2:open', function (e) {
+        var container = $(this).select('select2-container');
+        var position = container.offset().top;
+        var availableHeight = $(window).height() - position - container.outerHeight();
+        var bottomPadding = 50; // Set as needed
+        $('ul.select2-results__options').css('max-height', (availableHeight - bottomPadding) + 'px');
+        $('.select2-container--default .select2-selection--multiple').css('height', '5em');
+      });
+
     $.typeahead({
       input: '.curso_typeahead',
       order: "desc",
@@ -244,10 +253,6 @@
         value: id_provincia
       },
       {
-        name: 'id_ficha_tecnica',
-        value: id_ficha_tecnica
-      },
-      {
         name: 'ids_tematicas',
         value: ids_tematicas.toArray()
       },
@@ -269,6 +274,16 @@
       }];
 
       console.log(selected);
+
+      if(id_ficha_tecnica)
+      {
+        selected.push({
+          name: 'id_ficha_tecnica',
+          value: id_ficha_tecnica
+        });
+      }
+
+      console.log(selected);
       return selected;
     }
 
@@ -284,7 +299,6 @@
     }, "Debe seleccionar alguna opcion");
 
     jQuery.validator.addMethod("completados", function(value, element) {
-
       return $('#form-alta #ediciones-tab input[type="text"]').
         toArray().
         every(
@@ -313,11 +327,6 @@
         id_provincia: {
           selecciono: true
         },
-        csv: {
-          required: false,
-          accept: "png|jpe?g|gif",
-          filesize: 1048576
-        },
         id_destinatario: {
           selecciono: true
         },
@@ -334,6 +343,10 @@
           required: true,
           number: true,
           completados: true
+        },
+        csv: {
+          required: false,
+          filesize:  2097152 //2MB (1MB = 1048576)
         }
       },
       errorPlacement: function (error, element) {
@@ -347,7 +360,7 @@
             error.insertAfter(element);
         }
       },
-      ignore: '.select2-input, .select2-focusser, .select2-search__field, :hidden',
+      ignore: '.select2-input, .select2-focusser, .select2-search__field, input[type="hidden"]',
       messages:{
         nombre : "Campo obligatorio",
         duracion : "Campo obligatorio"
@@ -443,6 +456,7 @@
 				success: function (data) {
           console.log("success");
           $('#upload-ficha_tecnica-sin-pac').val(data);
+          $('#upload-ficha_tecnica-sin-pac').valid();
 				},
 				error: function (data) {
 					alert("Error al subir el archivo.");

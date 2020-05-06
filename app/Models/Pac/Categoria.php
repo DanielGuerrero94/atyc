@@ -4,10 +4,9 @@ namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Pauta extends Model
+class Categoria extends Model
 {
-
-    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+        protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * The table associated with the model.

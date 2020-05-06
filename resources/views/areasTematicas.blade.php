@@ -44,9 +44,9 @@
 			scrollCollapse: true,
 			ajax : 'areasTematicasTabla',
 			columns: [
-			{ data: 'id_area_tematica'},
+			{ data: 'id_area_tematica', orderable: false},
 			{ data: 'nombre'},
-			{ data: 'acciones'}
+			{ data: 'acciones', orderable: false}
 			]
 		});
 
@@ -108,7 +108,7 @@
 			open: function () {
 				jQuery('<p/>', {
 					id: 'dialogABM',
-					text: '¿Esta seguro que quiere dar de baja al alumno?'
+					text: '¿Esta seguro que quiere dar de baja al area tematica?'
 				}).appendTo('#dialogABM');
 			},
 			buttons :
@@ -118,7 +118,7 @@
 					$("#dialogABM").html("");				
 
 					$.ajax ({
-						url: 'areasTematicas/'+area,
+						url: 'areasTematicas/'+area+'/hard',
 						method: 'delete',
 						data: data,
 						success: function(data){
@@ -158,6 +158,50 @@
 			}
 		});
 	});
+
+	$('#abm').on('click','.darBaja',function() {
+		
+		var area = $(this).data('id');
+		var data = '_token='+$('#abm input').first().val();
+		console.log(area);
+		console.log(data);
+		$.ajax ({
+			url: 'areasTematicas/'+area,
+			method: 'delete',
+			data: data,
+			success: function(data){
+				console.log("Se dio de baja el area tematica:");
+				location.reload();
+			},
+			error: function(data){
+				console.log("Error.");
+				console.log(data);
+			}
+		});
+	});
+
+
+	$('#abm').on('click','.darAlta',function() {
+		
+		var area = $(this).data('id');
+		var data = '_token='+$('#abm input').first().val();
+
+		$.ajax ({
+			url: 'areasTematicas/'+area+'/alta',
+			method: 'put',
+			data: data,
+			success: function(data){
+				console.log("Se dio de alta el area tematica:");
+				location.reload();
+			},
+			error: function(data){
+				console.log("Error.");
+				console.log(data);
+			}
+		});
+	});
+
+	
 });	
 </script>
 @endsection
