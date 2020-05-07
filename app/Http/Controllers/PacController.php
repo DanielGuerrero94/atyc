@@ -438,9 +438,7 @@ class PacController extends AbmController
         $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
         $replaced = $ficha_tecnica->path;
 
-        logger("Encontre ficha tecnica: " .$ficha_tecnica);
         $ficha_tecnica->update(compact('original', 'path'));
-        logger("Reemplace ficha tecnica: " .$ficha_tecnica);
 
         Storage::delete($replaced);
 

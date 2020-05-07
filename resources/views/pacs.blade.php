@@ -260,15 +260,18 @@
 		});
 
 		$(".container-fluid").on("change", "#update-ficha_tecnica input", function(event) {
-			form = $(this).parent().parent();
+			form = $("#update-ficha_tecnica");
 			data = new FormData(form[0]);
 			id_ficha = form.parent().find(".update-ficha_tecnica").data("id");			
+            for (var pair of data.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]); 
+            }
 			$.ajax({
 				url: "{{url('pacs/fichas_tecnicas')}}" + "/" + id_ficha,
-				type: 'put',
+				type: 'post',
 				data: data,
 				processData: false,
-				contentType: false,
+                contentType: false,
 				success: function (data) {
 					console.log("success");
 					location.reload();

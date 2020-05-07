@@ -207,7 +207,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('pacs/fichas_tecnicas/{id_ficha}/download', 'PacController@downloadFichaTecnica');
     Route::get('pacs/{id_pac}/tablaFicha', 'PacController@getTablaFicha');
     Route::post('pacs/{id_pac}', 'PacController@storeFichaTecnica');
-    Route::put('pacs/fichas_tecnicas/{id_ficha}', 'PacController@replaceFichaTecnica');
+    Route::post('pacs/fichas_tecnicas/{id_ficha}', 'PacController@replaceFichaTecnica');
 
     //Encuestas
     Route::get('encuestas/g_plannacer', 'Encuestas\EncuestasController@gPlannacer');
