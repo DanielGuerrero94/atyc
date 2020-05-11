@@ -1,5 +1,8 @@
 @extends('layouts.adminlte')
 @section('content')
+@if(isset($response))
+  <?php die($response) ?>
+@endif
 <div class="container-fluid">
   <div class="row">
   <div id="modificacion-accion" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -76,7 +79,7 @@
                   <div class="col-md-8 col-xs-9">
                     <select class="form-control" id="area_tematica" name="area_tematica">
                       <option>Seleccionar</option>
-                      @foreach ($areas_tematicas as $area)
+                      @foreach ($areas_tematicas_edit as $area)
                       @if ($area->id_area_tematica === $curso->id_area_tematica)
                       <option data-id="{{$area->id_area_tematica}}" selected="selected">{{$area->nombre}}</option>
                       @else
@@ -94,7 +97,7 @@
                   <div class="col-md-8 col-xs-9">
                     <select class="form-control" id="linea_estrategica" name="linea_estrategica">
                       <option>Seleccionar</option>
-                      @foreach ($lineas_estrategicas as $linea)
+                      @foreach ($lineas_estrategicas_edit as $linea)
                       @if ($linea->id_linea_estrategica === $curso->id_linea_estrategica)
                       <option data-id="{{$linea->id_linea_estrategica}}" selected="selected">{{$linea->numero}}-{{$linea->nombre}}</option>
                       @else
@@ -112,7 +115,7 @@
                   <div class="col-md-8 col-xs-9">
                     @if(Auth::user()->id_provincia == 25)
                     <select class="form-control" id="provincia" name="provincia">
-                      @foreach ($provincias as $provincia)
+                      @foreach ($provincias_edit as $provincia)
                         @if ($provincia->id_provincia === $curso->id_provincia)
                           <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}" selected="selected">{{$provincia->nombre}}</option>
                         @else
@@ -122,7 +125,7 @@
                     </select>
                     @else
                     <select class="form-control" id="provincia" name="provincia" disabled>
-                      @foreach ($provincias as $provincia)
+                      @foreach ($provincias_edit as $provincia)
                       @if ($provincia->id_provincia === $curso->id_provincia)
                       <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}" selected="selected">{{$provincia->nombre}}</option>
                       @endif   

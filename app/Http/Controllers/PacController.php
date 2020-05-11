@@ -515,11 +515,12 @@ class PacController extends AbmController
                 'tematicas' => function ($query){
                     return $query->withTrashed();
                 }])
+                ->segunProvincia()
                 ->where('id_pac', $id_pac)->firstOrFail();
 
 		    return ['pac' => $pac];
 	    } catch (ModelNotFoundException $e) {
-		    return response()->json(['success' => false, 'error' => $e->getMessage()]);
+		    return ['response' => response()->json(['success' => false, 'error' => $e->getMessage()])];
 	    }
     }
     public function getCompletoExcel($id_pac)

@@ -1,5 +1,8 @@
 @extends('layouts.adminlte')
 @section('content')
+@if(isset($response))
+  <?php die($response) ?>
+@endif
 <div class="container-fluid">
   <div class="row">
   <div id="modificacion-pac" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

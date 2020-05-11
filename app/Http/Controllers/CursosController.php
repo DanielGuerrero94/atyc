@@ -134,33 +134,59 @@ class CursosController extends AbmController
      */
     public function show($id)
     {
-        $curso = Curso::with([
-            'alumnos' => function ($query) {
-                return $query->select(
-                    'alumnos.id_alumno',
-                    'nombres',
-                    'apellidos',
-                    'id_tipo_documento',
-                    'nro_doc',
-                    'id_provincia'
-                );
-            },
-            'profesores' => function ($query) {
-                return $query->select(
-                    'sistema.profesores.id_profesor',
-                    'nombres',
-                    'apellidos',
-                    'id_tipo_documento',
-                    'nro_doc'
-                );
-            }
-        ])
-        ->where('id_curso', $id)
-        ->first();
-
-        return ['curso' => $curso];
+        return $this->getCursoWithTrashed($id);
     }
-
+    
+    public function getCursoWithTrashed($id)
+    {
+        try {
+            $curso = Curso::with([
+                'alumnos' => function ($query) {
+                    return $query->select(
+                        'alumnos.id_alumno',
+                        'nombres',
+                        'apellidos',
+                        'id_tipo_documento',
+                        'nro_doc',
+                        'id_provincia',
+                        'id_genero',
+                        'id_trabajo',
+                        'id_funcion',
+                        'email',
+                        'tel',
+                        'cel',
+                        'localidad',
+                        'establecimiento1',
+                        'establecimiento2',
+                        'organismo1',
+                        'organismo2'
+                    );
+                },
+                'profesores' => function ($query) {
+                    return $query->select(
+                        'sistema.profesores.id_profesor',
+                        'nombres',
+                        'apellidos',
+                        'id_tipo_documento',
+                        'nro_doc'
+                    );
+                },
+                'lineaEstrategica' => function ($query) {
+                    return $query->withTrashed();
+                },
+                'areaTematica' => function ($query) {
+                    return $query->withTrashed();
+                }
+            ])
+            ->segunProvincia()
+            ->where('id_curso', $id)
+            ->first();
+    
+            return ['curso' => $curso];
+        } catch (ModelNotFoundException $e) {
+		    return ['response' => response()->json(['success' => false, 'error' => $e->getMessage()])];
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -169,7 +195,7 @@ class CursosController extends AbmController
      */
     public function edit($id)
     {
-        return view('cursos.modificacion', array_merge($this->getSelectOptions(), $this->show($id)));
+        return view('cursos.modificacion', array_merge($this->getEditOptions(), $this->show($id)));
     }
 
     /**
@@ -426,6 +452,27 @@ class CursosController extends AbmController
         return compact('areas_tematicas', 'lineas_estrategicas', 'provincias', 'periodos');
     }
 
+    private function getEditOptions()
+    {
+        $areas_tematicas_edit = Cache::remember('areas_edit', 5, function () {
+            return AreaTematica::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
+        });
+
+        $lineas_estrategicas_edit = Cache::remember('lineas_edit', 5, function () {
+            return LineaEstrategica::orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
+        });
+
+        $provincias_edit = Cache::remember('provincias_edit', 5, function () {
+            return Provincia::orderBy('nombre')->get();
+        });
+
+        $periodos_edit = Cache::remember('periodos_edit', 5, function () {
+            return Periodo::all();
+        });
+
+        return compact('areas_tematicas_edit', 'lineas_estrategicas_edit', 'provincias_edit', 'periodos_edit');
+    }
+
     private function queryLogica(Request $r, $filtros, $orderBy)
     {
         //Filtros las que estan vacias si es que me las pasaron
@@ -599,7 +646,7 @@ class CursosController extends AbmController
      **/
     public function getCompletoExcel($id)
     {
-        $datos = ['curso' => Curso::findOrFail($id)];
+        $datos = $this->getCursoWithTrashed($id);
         $path = "accion_completa_".date("Y-m-d_H:i:s");
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('Accion', function ($sheet) use ($datos) {
@@ -619,6 +666,6 @@ class CursosController extends AbmController
      */
     public function see($id)
     {
-        return view('cursos/modificacion', array_merge($this->show($id), $this->getSelectOptions(), ['disabled' => true]));
+        return view('cursos/modificacion', array_merge($this->show($id), $this->getEditOptions(), ['disabled' => true]));
     }
 }
