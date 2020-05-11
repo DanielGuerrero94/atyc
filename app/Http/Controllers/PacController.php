@@ -354,11 +354,11 @@ class PacController extends AbmController
         });
 
         $tematicas = Cache::remember('tematicas', 5, function () {
-            return AreaTematica::orderBy('nombre')->all();
+            return AreaTematica::orderBy('nombre')->get();
         });
 
         $tipoAcciones = Cache::remember('tipo_accion', 5, function () {
-            return LineaEstrategica::orderBy('numero')->all();
+            return LineaEstrategica::orderBy('numero')->get();
         });
 
         $provincias = Cache::remember('provincias', 5, function () {
