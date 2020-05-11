@@ -354,11 +354,11 @@ class PacController extends AbmController
         });
 
         $tematicas = Cache::remember('tematicas', 5, function () {
-            return AreaTematica::all();
+            return AreaTematica::orderBy('nombre')->all();
         });
 
         $tipoAcciones = Cache::remember('tipo_accion', 5, function () {
-            return LineaEstrategica::all();
+            return LineaEstrategica::orderBy('numero')->all();
         });
 
         $provincias = Cache::remember('provincias', 5, function () {
@@ -400,11 +400,11 @@ class PacController extends AbmController
         });
 
         $tematicasEdit = Cache::remember('tematicasEdit', 5, function () {
-            return AreaTematica::withTrashed()->get();
+            return AreaTematica::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
         });
 
         $tipoAccionesEdit = Cache::remember('tipo_accionEdit', 5, function () {
-            return LineaEstrategica::withTrashed()->get();
+            return LineaEstrategica::orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
         });
 
         $provinciasEdit = Cache::remember('provinciasEdit', 5, function () {
