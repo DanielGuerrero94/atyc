@@ -180,7 +180,7 @@ class CursosController extends AbmController
             ])
             ->segunProvincia()
             ->where('id_curso', $id)
-            ->first();
+            ->firstOrFail();
     
             return ['curso' => $curso];
         } catch (ModelNotFoundException $e) {

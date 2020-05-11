@@ -1,7 +1,7 @@
 @extends('layouts.adminlte')
 @section('content')
 @if(isset($response))
-  <?php die($response) ?>
+  <?php die($response); ?>
 @endif
 <div class="container-fluid">
   <div class="row">
