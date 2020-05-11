@@ -3,9 +3,11 @@
 namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Componente extends Model
 {
+    use SoftDeletes;
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 

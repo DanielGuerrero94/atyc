@@ -10,10 +10,12 @@ use App\Models\Pac\Destinatario;
 use App\Models\Pac\Pauta;
 use App\Models\Pac\Categoria;
 use App\Models\Pac\Responsable;
-use App\Models\Pac\Tematica;
-use App\Models\Pac\TipoAccion;
+// use App\Models\Pac\Tematica;
+// use App\Models\Pac\TipoAccion;
 use App\Models\Pac\FichaTecnica;
 use App\Models\Cursos\Curso;
+use App\Models\Cursos\AreaTematica;
+use App\Models\Cursos\LineaEstrategica;
 use App\Provincia;
 use App\Periodo;
 use Cache;
@@ -188,21 +190,7 @@ class PacController extends AbmController
      */
     public function show($id_pac)
     {
-	    try {
-	        $pac = Pac::with([
-                'cursos',
-                'destinatarios',
-                'pautas',
-                'responsables',
-                'componentes',
-                'tipoAccion',
-                'tematicas'])
-                ->where('id_pac', $id_pac)->firstOrFail();
-                
-		return ['pac' => $pac];
-	    } catch (ModelNotFoundException $e) {
-		return response()->json(['success' => false, 'error' => $e->getMessage()]);
-	    }
+        return $this->getPacWithTrashed($id_pac);
     }
 
     /**
@@ -213,7 +201,7 @@ class PacController extends AbmController
      */
     public function edit($id_pac)
     {
-        return view('pacs.modificacion', array_merge($this->show($id_pac), $this->getSelectOptions()));
+        return view('pacs.modificacion', array_merge($this->show($id_pac), $this->getEditOptions()));
     }
 
     /**
@@ -291,12 +279,16 @@ class PacController extends AbmController
             'created_at'
         )
         ->with([
-            'tipoAccion',
+            'tipoAccion' => function ($query) {
+                return $query->withTrashed();
+            },
             'provincias',
-            'tematicas' 
+            'tematicas' => function ($query) {
+                return $query->withTrashed();
+            } 
         ])
         ->segunProvincia();
-
+        
         return Datatables::of($query)->make(true);
     }
 
@@ -362,11 +354,11 @@ class PacController extends AbmController
         });
 
         $tematicas = Cache::remember('tematicas', 5, function () {
-            return Tematica::all();
+            return AreaTematica::all();
         });
 
         $tipoAcciones = Cache::remember('tipo_accion', 5, function () {
-            return TipoAccion::all();
+            return LineaEstrategica::all();
         });
 
         $provincias = Cache::remember('provincias', 5, function () {
@@ -386,6 +378,47 @@ class PacController extends AbmController
             'tipoAcciones' => $tipoAcciones,
             'provincias' => $provincias,
             'periodos' => $periodos
+        ];
+    }
+
+    public function getEditOptions()
+    {
+        $pautasEdit = Cache::remember('pautasEdit', 5, function () {
+            return Pauta::withTrashed()->get();
+        });
+
+        $componentesEdit = Cache::remember('componentesEdit', 5, function () {
+            return Componente::withTrashed()->get();
+        });
+
+        $destinatariosEdit = Cache::remember('destinatariosEdit', 5, function () {
+            return Destinatario::withTrashed()->get();
+        });
+
+        $responsablesEdit = Cache::remember('responsablesEdit', 5, function () {
+            return Responsable::withTrashed()->get();
+        });
+
+        $tematicasEdit = Cache::remember('tematicasEdit', 5, function () {
+            return AreaTematica::withTrashed()->get();
+        });
+
+        $tipoAccionesEdit = Cache::remember('tipo_accionEdit', 5, function () {
+            return LineaEstrategica::withTrashed()->get();
+        });
+
+        $provinciasEdit = Cache::remember('provinciasEdit', 5, function () {
+            return Provincia::orderBy('nombre')->get();
+        });
+
+        return [
+            'pautasEdit' => $pautasEdit,
+            'componentesEdit' => $componentesEdit,
+            'destinatariosEdit' => $destinatariosEdit,
+            'responsablesEdit' => $responsablesEdit,
+            'tematicasEdit' => $tematicasEdit,
+            'tipoAccionesEdit' => $tipoAccionesEdit,
+            'provinciasEdit' => $provinciasEdit
         ];
     }
 
@@ -454,13 +487,45 @@ class PacController extends AbmController
 
     public function see($id_pac)
     {
-        return view('pacs.modificacion', array_merge($this->show($id_pac), $this->getSelectOptions(), ['disabled' => true]));
+        return view('pacs.modificacion', array_merge($this->show($id_pac), $this->getEditOptions(), ['disabled' => true]));
     }
 
+    public function getPacWithTrashed($id_pac)
+    {
+        try {
+            $pac = Pac::with([
+                'cursos' => function ($query) {
+                    return $query->withTrashed();
+                },
+                'destinatarios' => function ($query) {
+                    return $query->withTrashed();
+                },
+                'pautas' => function ($query) {
+                    return $query->withTrashed();
+                },
+                'responsables' => function ($query) {
+                    return $query->withTrashed();
+                },
+                'componentes' => function ($query) {
+                    return $query->withTrashed();
+                },
+                'tipoAccion' => function ($query) {
+                    return $query->withTrashed();
+                },
+                'tematicas' => function ($query){
+                    return $query->withTrashed();
+                }])
+                ->where('id_pac', $id_pac)->firstOrFail();
+
+		    return ['pac' => $pac];
+	    } catch (ModelNotFoundException $e) {
+		    return response()->json(['success' => false, 'error' => $e->getMessage()]);
+	    }
+    }
     public function getCompletoExcel($id_pac)
     {
-        $datos = ['pac' => Pac::findOrFail($id_pac)];
-        $path = "pac_".$datos['pac']->nombre.date("Y-m-d_H:i:s");
+        $datos = $this->getPacWithTrashed($id_pac);
+        $path = "pac_".$datos['pac']->nombre."_".$datos['pac']->provincias()->get()->first()->nombre."_".date("Y-m-d_H:i:s");
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('PAC', function ($sheet) use ($datos) {
                 $sheet->setHeight(1, 20);

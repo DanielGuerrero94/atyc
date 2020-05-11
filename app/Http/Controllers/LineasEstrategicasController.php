@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cursos\LineaEstrategica;
 use Datatables;
+use Carbon\Carbon;
 
 class LineasEstrategicasController extends ModelController
 {
@@ -30,7 +31,7 @@ class LineasEstrategicasController extends ModelController
      */
     public function index()
     {
-        return $this->model->withTrashed()->get();
+        return $this->model->orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
     }
 
     /**
@@ -75,14 +76,41 @@ class LineasEstrategicasController extends ModelController
         ->addColumn(
             'acciones',
             function ($ret) {
-                return '<button data-id="'.$ret->id_linea_estrategica.'" class="btn btn-info btn-xs editar" '.
-                'title="Editar"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>';
-                /*
-                '<button data-id="'.$ret->id_linea_estrategica.'" class="btn btn-danger btn-xs eliminar" '.
-                'title="Eliminar"><i class="fa fa-trash-o" aria-hidden="true"></i></button>'
-                */
+                $buttons = '<a data-id="'.$ret->id_linea_estrategica.'" class="btn btn-circle editar" '.
+                'title="Editar" style="margin-right: 1rem;"><i class="fa fa-pencil" aria-hidden="true" style="color: dodgerblue;"></i></a>';
+
+                if($ret->deleted_at)
+                    $buttons .= '<a data-id="'.$ret->id_linea_estrategica.'" class="btn btn-circle darAlta" '.
+                    'title="Dar de alta" style="margin-right: 1rem;"><i class="fa fa-plus" aria-hidden="true" style="color: forestgreen;"></i></a>';
+                else
+                    $buttons .= '<a data-id="'.$ret->id_linea_estrategica.'" class="btn btn-circle darBaja" '.
+                    'title="Dar de baja" style="margin-right: 1rem;"><i class="fa fa-minus" aria-hidden="true" style="color: firebrick;"></i></a>';
+
+                if($this->seCreoLaMismaSemana($ret))
+                    $buttons .= '<a data-id="'.$ret->id_linea_estrategica.'" class="btn btn-circle eliminar" '.
+                    'title="Eliminar" style="margin-right: 1rem;"><i class="fa fa-trash" aria-hidden="true" style="color: dimgray;"></i></a>';
+
+                return $buttons;
             }
         )
         ->make(true);
+    }
+
+    public function seCreoLaMismaSemana($ret)
+    {
+        $validTime = Carbon::now()->subDays(7);
+        return $validTime <= $ret->created_at;
+    }
+    
+    public function hardDestroy($id)
+    {
+        logger("Voy a destruir el registro del tipo de accion: ".$id);
+        return response()->json($this->model->withTrashed()->findOrFail($id)->forceDelete());
+    }
+
+    public function alta($id)
+    {
+        logger("Voy a dar de alta el tipo de accion ".$id);
+        return response()->json($this->model->withTrashed()->findOrFail($id)->restore());
     }
 }

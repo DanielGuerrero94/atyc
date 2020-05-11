@@ -25,14 +25,25 @@
 
 <script type="text/javascript">
 
+	function createdAtValidDate(created_at) {
+		var created_date = moment(created_at);
+		var current_date = moment();
+
+		diff = created_date.diff(current_date, 'days');
+
+		return diff <= 7; // se creo la misma semana
+	}
 
 	@if(Auth::user()->id_provincia === 25)
-	function tableButtons(data) {
+	function tableButtons(data, created_at) {
 		return seeButton(data) + editButton(data) + deleteButton(data);
 	}
 	@else
-	function tableButtons(data) {
-		return seeButton(data) + editButton(data);
+	function tableButtons(data, created_at) {
+		if(createdAtValidDate(created_at))
+			return seeButton(data) + editButton(data) + deleteButton(data);
+		else
+			return seeButton(data) + editButton(data);
 	}
 	@endif
 
@@ -92,7 +103,15 @@
 				},
 				orderable: false
 			},
-			{ title: 'Tipo de Accion', data: 'tipo_accion.nombre', name: 'id_accion'},
+			{ title: 'Tipo de Accion', data: 'tipo_accion', name: 'id_linea_estrategica',
+				render: function (data, type, row, meta) {
+					if(data)
+						return data.numero + " " + data.nombre;
+					else
+						return '-';
+				},
+				orderable: false
+			},
 			{ title: 'Jurisdiccion', data: 'provincias.nombre', name: 'id_provincia'},
 			{
 				title: 'Ficha Técnica', data: 'id_ficha_tecnica',
@@ -105,7 +124,7 @@
 			{ 
 				data: 'acciones',
 				render: function ( data, type, row, meta ) {
-                    return tableButtons(row.id_pac);
+                    return tableButtons(row.id_pac, row.created_at);
 				},
 				orderable: false
 			}
@@ -236,6 +255,9 @@
 		$(".container-fluid").on("change", "#upload-ficha_tecnica input", function(event) {
 			form = $(this).parent().parent();
 			data = new FormData(form[0]);
+			for (var pair of data.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]); 
+            }
 			id_pac = form.parent().find(".upload-ficha_tecnica").data("id");
 			$.ajax({
 				url: "{{url('pacs')}}" + "/" + id_pac,

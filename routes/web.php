@@ -272,8 +272,11 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::post('lineasEstrategicas', 'LineasEstrategicasController@store');
 
         Route::put('lineasEstrategicas/{id}', 'LineasEstrategicasController@update');
+        Route::put('lineasEstrategicas/{id}/alta', 'LineasEstrategicasController@alta');
 
         Route::delete('lineasEstrategicas/{id}', 'LineasEstrategicasController@destroy');
+        Route::delete('lineasEstrategicas/{id}/hard', 'LineasEstrategicasController@hardDestroy');
+
 
         //Gestores
         Route::get('gestores/tabla', 'GestoresController@getTabla');

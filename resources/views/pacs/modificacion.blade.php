@@ -56,11 +56,11 @@
                   <div class="col-md-8 col-xs-9">
                     <select class="select-2 form-control" id="tipo_accion" name="id_accion">
                       <option></option>
-                      @foreach ($tipoAcciones as $tipoAccion)
-                      @if ($tipoAccion->id_accion === $pac->id_accion)
-                      <option data-id="{{$tipoAccion->id_accion}}"  value="{{$tipoAccion->id_accion}}" selected="selected">{{$tipoAccion->nombre}}</option>
+                      @foreach ($tipoAccionesEdit as $tipoAccion)
+                      @if ($tipoAccion->id_linea_estrategica === $pac->id_accion)
+                      <option data-id="{{$tipoAccion->id_linea_estrategica}}"  value="{{$tipoAccion->id_linea_estrategica}}" selected="selected">{{$tipoAccion->numero ." " .$tipoAccion->nombre}}</option>
                       @else
-                      <option data-id="{{$tipoAccion->id_accion}}" value="{{$tipoAccion->id_accion}}">{{$tipoAccion->nombre}}</option>
+                      <option data-id="{{$tipoAccion->id_linea_estrategica}}" value="{{$tipoAccion->id_linea_estrategica}}">{{$tipoAccion->numero ." " .$tipoAccion->nombre}}</option>
                       @endif  
                       @endforeach
                     </select>
@@ -73,11 +73,11 @@
                   <label for="tematica" class="control-label col-md-4 col-xs-3">Temática/s:</label>
                   <div class="col-md-8 col-xs-9">
                     <select class="select-2 form-control" id="tematica" name="id_tematica" aria-hidden="true" multiple>
-                      @foreach ($tematicas as $tematica)
-                        @if (in_array ($tematica->id_tematica, $pac->tematicas()->get()->map(function ($_tematica) { return $_tematica->id_tematica; })->all() ))
-                        <option data-id="{{$tematica->id_tematica}}" selected="selected">{{$tematica->nombre}}</option>
+                      @foreach ($tematicasEdit as $tematica)
+                        @if (in_array ($tematica->id_area_tematica, $pac->tematicas()->withTrashed()->get()->map(function ($_tematica) { return $_tematica->id_area_tematica; })->all() ))
+                        <option data-id="{{$tematica->id_area_tematica}}" selected="selected">{{$tematica->nombre}}</option>
                         @else
-                        <option data-id="{{$tematica->id_tematica}}">{{$tematica->nombre}}</option>
+                        <option data-id="{{$tematica->id_area_tematica}}">{{$tematica->nombre}}</option>
                         @endif  
                       @endforeach
                     </select>          
@@ -92,7 +92,7 @@
                   @if(Auth::user()->id_provincia == 25)
                     <select class="select-2 form-control" id="provincia" name="id_provincia">
                     <option></option>
-                      @foreach ($provincias as $provincia)
+                      @foreach ($provinciasEdit as $provincia)
                         @if ($provincia->id_provincia === $pac->id_provincia)
                           <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}" selected="selected">{{$provincia->nombre}}</option>
                         @else
@@ -102,7 +102,7 @@
                     </select>
                     @else
                     <select class="select2 form-control" id="provincia" name="provincia" disabled>
-                      @foreach ($provincias as $provincia)
+                      @foreach ($provinciasEdit as $provincia)
                       @if ($provincia->id_provincia === $pac->id_provincia)
                       <option value="{{$provincia->id_provincia}}" data-id="{{$provincia->id_provincia}}" title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>
                       @endif   
@@ -126,7 +126,7 @@
                   <label for="destinatario" class="control-label col-md-4 col-xs-3">Destinatarios:</label>
                   <div class="col-md-8 col-xs-9">
                     <select class="select-2 form-control" id="destinatario" name="id_destinatario" aria-hidden="true" multiple>
-                      @foreach ($destinatarios as $destinatario)
+                      @foreach ($destinatariosEdit as $destinatario)
                         @if (in_array ($destinatario->id_destinatario, $pac->destinatarios()->get()->map(function ($_destinatario) { return $_destinatario->id_destinatario; })->all() ))
                         <option data-id="{{$destinatario->id_destinatario}}" selected="selected">{{$destinatario->nombre}}</option>
                         @else
@@ -143,7 +143,7 @@
                   <label for="responsable" class="control-label col-md-4 col-xs-3">Responsables de la Ejecución:</label>
                   <div class="col-md-8 col-xs-9">
                     <select class="select-2 form-control" id="responsable" name="id_responsable" aria-hidden="true" multiple>
-                      @foreach ($responsables as $responsable)
+                      @foreach ($responsablesEdit as $responsable)
                         @if (in_array ($responsable->id_responsable, $pac->responsables()->get()->map(function ($_responsable) { return $_responsable->id_responsable; })->all() ))
                         <option data-id="{{$responsable->id_responsable}}" selected="selected">{{$responsable->nombre}}</option>
                         @else
@@ -160,7 +160,7 @@
                   <label for="pauta" class="control-label col-md-4 col-xs-3">Pautas para PAC:</label>
                   <div class="col-md-8 col-xs-9">
                     <select class="select-2 form-control" id="pauta" name="id_pauta" aria-hidden="true" multiple>
-                      @foreach ($pautas as $pauta)
+                      @foreach ($pautasEdit as $pauta)
                         @if (in_array ($pauta->id_pauta, $pac->pautas()->get()->map(function ($_pauta) { return $_pauta->id_pauta; })->all() ))
                         <option data-id="{{$pauta->id_pauta}}" selected="selected">{{$pauta->nombre}}</option>
                         @else
@@ -177,7 +177,7 @@
                   <label for="componente" class="control-label col-md-4 col-xs-3">Componentes CAI:</label>
                   <div class="col-md-8 col-xs-9">
                     <select class="select-2 form-control" id="componente" name="id_componente" aria-hidden="true" multiple>
-                      @foreach ($componentes as $componente)
+                      @foreach ($componentesEdit as $componente)
                         @if (in_array ($componente->id_componente, $pac->componentes()->get()->map(function ($_componente) { return $_componente->id_componente; })->all() ))
                         <option data-id="{{$componente->id_componente}}" selected="selected">{{$componente->nombre}}</option>
                         @else
@@ -198,7 +198,7 @@
             </div> 
           </div>
           <div class="box-body">
-            <a href="{{url()->previous()}}">
+            <a href="{{url('pacs')}}">
               <div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i> Volver</div>
             </a>
             <div class="btn btn-primary pull-right" id="modificar" title="Modificar"><i class="fa fa-plus" aria-hidden="true"></i> Modificar</div>
@@ -267,6 +267,15 @@
       "placeholder": "   Seleccionar"
       }).change(function(){
         $(this).valid();
+        var container = $(this).select('select2-container');
+        var position = container.offset().top;
+        var availableHeight = $(window).height() - position - container.outerHeight();
+        var bottomPadding = 50; // Set as needed
+        $('ul.select2-results__options').css('max-height', (availableHeight - bottomPadding) + 'px');
+      });
+
+      $('.select-2').ready(function() {
+        $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
       });
 
     @if(isset($disabled)) 

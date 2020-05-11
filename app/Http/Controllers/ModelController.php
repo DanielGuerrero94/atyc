@@ -81,7 +81,7 @@ class ModelController extends Controller
      */
     public function show($id)
     {
-        return [$this->name => $this->model->findOrFail($id)];
+        return [$this->name => $this->model->withTrashed()->findOrFail($id)];
     }
 
     /**

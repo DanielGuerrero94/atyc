@@ -126,8 +126,10 @@
 							location.reload();
 						},
 						error: function (data) {
+							alert("Hay un curso usando ese area tematica. No se puede borrar el registro");
 							console.log('Hubo un error.');
 							console.log(data);
+							location.reload();
 						}
 					});
 

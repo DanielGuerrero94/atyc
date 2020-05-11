@@ -1,7 +1,7 @@
 {{csrf_field()}}
 <div class="box box-info">
 	<div class="box-header">
-		<h2 class="box-tittle">PACs
+		<h2 class="box-tittle">Planificación Anual de Capacitaciones
 			<div class="btn-group pull-right" role="group" aria-label="...">
 				<a href="#" class="btn btn-square excel" title="Excel"><i class="fa fa-file-excel-o text-success fa-lg"></i></a>
 				<a href="#" class="btn btn-square filter" title="Filtro"><i class="fa fa-sliders text-info fa-lg"></i></a>
@@ -15,6 +15,6 @@
 		</table>
 	</div>
 	<div class="box-footer">
-		<button class="btn btn-success pull-right" id="altas_pac"><i class="fa fa-plus" aria-hidden="true"></i>Alta PAC</button>
+		<button class="btn btn-success pull-right" id="altas_pac"><i class="fa fa-plus" aria-hidden="true"></i> Crear Planificación</button>
 	</div>
 </div>

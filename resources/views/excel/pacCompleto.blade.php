@@ -33,7 +33,7 @@ td {
 	<tr>
 		<td>{{$pac->created_at}}</td>
 		<td>{{$pac->provincias->nombre}}</td>
-		<td>{{$pac->tipoAccion->nombre}}</td>
+		<td>{{$pac->tipoAccion->numero ." ".$pac->tipoAccion->nombre}}</td>
 		<td>{{($pac->id_ficha_tecnica) ? 'Creada el ' .$pac->fichaTecnica->created_at : 'No'}}</td>
 		@if ($pac->id_ficha_tecnica)
 		<td>{{$pac->fichaTecnica->updated_at}}</td>

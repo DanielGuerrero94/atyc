@@ -83,18 +83,18 @@ CREATE VIEW cursos_joined_alumnos AS
 
 
 -- Cambios para cuando PAC apunte a cursos.lineas_estrategicas y a cursos.areas_areas_tematicas
--- ALTER TABLE pac.pacs_tematicas
--- DROP FOREIGN KEY fk_tematica;
+ALTER TABLE pac.pacs_tematicas
+DROP FOREIGN KEY fk_tematica;
 
--- ALTER TABLE pac.pacs_tematicas 
--- add constraint fk_tematica foreign key (id_tematica)
--- references cursos.areas_tematicas (id_area_tematica)
--- MATCH FULL;
+ALTER TABLE pac.pacs_tematicas 
+add constraint fk_tematica foreign key (id_tematica)
+references cursos.areas_tematicas (id_area_tematica)
+MATCH FULL;
 
--- ALTER TABLE pac.pacs
--- DROP FOREIGN KEY fk_tipo_accion;
+ALTER TABLE pac.pacs
+DROP FOREIGN KEY fk_tipo_accion;
 
--- ALTER TABLE pac.pacs 
--- add constraint fk_tipo_accion foreign key (id_accion)
--- references cursos.lineas_estrategicas (id_linea_estrategica)
--- MATCH FULL;
+ALTER TABLE pac.pacs 
+add constraint fk_tipo_accion foreign key (id_accion)
+references cursos.lineas_estrategicas (id_linea_estrategica)
+MATCH FULL;

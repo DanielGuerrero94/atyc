@@ -50,8 +50,8 @@ class Pac extends Model
     public function tipoAccion()
     {
         return $this->hasOne(
-            'App\Models\Pac\TipoAccion',
-            'id_accion',
+            'App\Models\Cursos\LineaEstrategica',
+            'id_linea_estrategica',
             'id_accion'
         );
     }
@@ -69,7 +69,7 @@ class Pac extends Model
     public function tematicas()
     {
         return $this->belongsToMany(
-            'App\Models\Pac\Tematica',
+            'App\Models\Cursos\AreaTematica',
             'pac.pacs_tematicas',
             'id_pac',
             'id_tematica')

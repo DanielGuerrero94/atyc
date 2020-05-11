@@ -4,7 +4,7 @@
 <div class="container">
 	<div id="abm">
 		{{csrf_field()}}
-		<div class="col-xs-8 col-xs-offset-2">
+		<div class="col-xs-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
 					<h2 class="box-tittle">Tipologias de accion</h2>
@@ -44,9 +44,9 @@
 			scrollCollapse: true,
 			ajax : 'lineasEstrategicasTabla',
 			columns: [
-			{ data: 'numero'},
+			{ data: 'numero', orderable: false},
 			{ data: 'nombre'},
-			{ data: 'acciones'}
+			{ data: 'acciones', orderable: false}
 			]
 		});
 
@@ -103,7 +103,7 @@
 				open: function () {
 					jQuery('<p/>', {
 						id: 'dialogABM',
-						text: '¿Esta seguro que quiere dar de baja al alumno?'
+						text: '¿Esta seguro que quiere dar de baja al tipo de accion?'
 					}).appendTo('#dialogABM');
 				},
 				buttons :
@@ -115,7 +115,7 @@
 						console.log(linea);
 
 						$.ajax ({
-							url: 'lineasEstrategicas/'+linea,
+							url: 'lineasEstrategicas/'+linea+'/hard',
 							method: 'delete',
 							data: data,
 							success: function(data){
@@ -123,8 +123,10 @@
 								location.reload();
 							},
 							error: function (data) {
+								alert("Hay un curso usando ese tipo de accion. No se puede borrar el registro");
 								console.log('Hubo un error.');
 								console.log(data);
+								location.reload();
 							}
 						});
 
@@ -210,6 +212,48 @@
 			if(validator.valid()){
 				$('#alta #form-alta').submit();	
 			}
+		});
+
+		$('#abm').on('click','.darBaja',function() {
+			
+			var linea = $(this).data('id');
+			var data = '_token='+$('#abm input').first().val();
+			console.log(linea);
+			console.log(data);
+			$.ajax ({
+				url: 'lineasEstrategicas/'+linea,
+				method: 'delete',
+				data: data,
+				success: function(data){
+					console.log("Se dio de baja la tipologia de accion");
+					location.reload();
+				},
+				error: function(data){
+					console.log("Error.");
+					console.log(data);
+				}
+			});
+		});
+
+
+		$('#abm').on('click','.darAlta',function() {
+			
+			var linea = $(this).data('id');
+			var data = '_token='+$('#abm input').first().val();
+
+			$.ajax ({
+				url: 'lineasEstrategicas/'+linea+'/alta',
+				method: 'put',
+				data: data,
+				success: function(data){
+					console.log("Se dio de alta la tipologia de accion");
+					location.reload();
+				},
+				error: function(data){
+					console.log("Error.");
+					console.log(data);
+				}
+			});
 		});
 	});
 </script>

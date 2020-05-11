@@ -102,8 +102,8 @@ class AreasTematicasController extends ModelController
     {
         $validTime = Carbon::now()->subDays(7);
         return $validTime <= $ret->created_at;
-
     }
+    
     public function hardDestroy($id)
     {
         logger("Voy a destruir el registro del area tematica: ".$id);

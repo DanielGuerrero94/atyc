@@ -36,7 +36,7 @@
                 <select class="select-2 form-control" id="tipo_accion" name="id_accion">
                   <option></option>
                   @foreach ($tipoAcciones as $tipo_accion)
-                  <option data-id="{{$tipo_accion->id_accion}}" value="{{$tipo_accion->id_accion}}"> {{$tipo_accion->nombre}}</option>
+                  <option data-id="{{$tipo_accion->id_linea_estrategica}}" value="{{$tipo_accion->id_linea_estrategica}}"> {{$tipo_accion->numero ." " .$tipo_accion->nombre}}</option>
                   @endforeach
                 </select>
               </div>
@@ -49,7 +49,7 @@
               <div class="col-md-8 col-xs-9">
                 <select class="select-2 form-control" id="tematica" name="id_tematica" aria-hidden="true" multiple>
                   @foreach ($tematicas as $tematica)
-                  <option data-id="{{$tematica->id_tematica}}" value="{{$tematica->id_tematica}}"> {{$tematica->nombre}}</option>
+                  <option data-id="{{$tematica->id_area_tematica}}" value="{{$tematica->id_area_tematica}}"> {{$tematica->nombre}}</option>
                   @endforeach
                 </select>
               </div>
@@ -151,9 +151,7 @@
       </div>
     </div>
     <div class="box-body">
-      <a href="{{url()->previous()}}">
-        <div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i> Volver</div>
-      </a>
+      <div class="btn btn-warning" id="volver" title="Volver"><i class="fa fa-undo" aria-hidden="true"></i> Volver</div>
     </div>
   </div>
 </form>
@@ -172,15 +170,15 @@
       "placeholder": "   Seleccionar"
       }).change(function(){
         $(this).valid();
-      });
-
-      $('.select-2').on('select2:open', function (e) {
         var container = $(this).select('select2-container');
         var position = container.offset().top;
         var availableHeight = $(window).height() - position - container.outerHeight();
         var bottomPadding = 50; // Set as needed
         $('ul.select2-results__options').css('max-height', (availableHeight - bottomPadding) + 'px');
-        $('.select2-container--default .select2-selection--multiple').css('height', '5em');
+      });
+
+      $('.select-2').ready(function() {
+        $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
       });
 
     $.typeahead({
