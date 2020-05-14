@@ -28,7 +28,7 @@ td {
 		<td>{{$curso->edicion}}</td>
 		<td>{{$curso->duracion}}</td>
 		<td>{{$curso->areaTematica->nombre}}</td>
-		<td>{{$curso->lineaEstrategica->nombre}}</td>
+		<td>{{$curso->lineaEstrategica->numero ." ".$curso->lineaEstrategica->nombre}}</td>
 		<td>{{$curso->provincia->nombre}}</td>
 	</tr>
 	@endforeach
