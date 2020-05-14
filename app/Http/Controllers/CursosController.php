@@ -475,6 +475,8 @@ class CursosController extends AbmController
 
     private function queryLogica(Request $r, $filtros, $orderBy)
     {
+        ini_set('max_execution_time', '300');
+        
         //Filtros las que estan vacias si es que me las pasaron
         $filtered = $filtros->filter(function ($value, $key) {
             return $value != "" && $value != "0";
@@ -482,7 +484,14 @@ class CursosController extends AbmController
 
         logger()->warning(json_encode($filtered));
 
-        $query = Curso::with('provincia', 'areaTematica', 'lineaEstrategica')
+        $query = Curso::with([
+            'provincia',
+            'areaTematica' => function ($query) {
+                return $query->withTrashed();
+            },
+            'lineaEstrategica' => function ($query) {
+                return $query->withTrashed();
+            }])
         //->withCount('alumnos')
         ->segunProvincia();
 
@@ -502,7 +511,7 @@ class CursosController extends AbmController
             }
         }
 
-        return $query;
+        return $query->orderBy('fecha_ejec_final','desc');
     }
 
     public function getFiltrado(Request $r)
