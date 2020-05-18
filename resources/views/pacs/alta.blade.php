@@ -240,6 +240,7 @@
       var ids_responsables = getResponsablesSelected();
       var ids_pautas = getPautasSelected();
       var ids_componentes = getComponentesSelected();
+      var anio = parseInt(moment.utc($('#ediciones-tab #fecha_inicio_1').val(),'DD/MM/YYYY').format('YYYY'));
 
       var selected = [
       {
@@ -265,6 +266,10 @@
       {
         name: 'ids_pautas',
         value: ids_pautas.toArray()
+      },
+      {
+        name: 'anio',
+        value: anio
       },
       {
         name: 'ids_componentes',
@@ -372,8 +377,9 @@
         $(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
       },
 
-      submitHandler : function(form){
 
+      submitHandler : function(form)
+      {
         $.ajax({
           method : 'post',
           url : 'pacs',
@@ -418,6 +424,7 @@
           $('#form-alta #ediciones-tab #'+currentEdicion).show(200);
         }
         edicionesAnteriores = ediciones;
+        
       } else if(ediciones >= 0)
       {
         for (i = 0; edicionesActuales < i; edicionesActuales++)

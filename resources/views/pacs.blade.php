@@ -3,17 +3,27 @@
 @section('content')
 <div class="container-fluid">
 	<div class="row">
-		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+		<div class="callout callout-info">
+			<h2>Planificación Anual de Capacitaciones</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div id="prefilter" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			@include('pacs.prefilter')
+		</div>
+	</div>
+	<div class="row">
+		<div id="filtros" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			@include('pacs.filtros')
 		</div>
 	</div>
 	<div class="row">
-		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1">
+		<div id="abm" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			@include('pacs.abm')
 		</div>
 	</div>
 	<div class="row">
-		<div id="alta-pac" class="col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1" style="display: none;">
+		<div id="alta-pac" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="display: none;">
 		</div>
 	</div>
 </div>
@@ -69,80 +79,215 @@
 		}
 	}
 
+	function getFiltrosJson() {
+
+		var anios = $('#anios').val();
+		var provincias = $('#provincias').val();
+		var nombre = $('#nombre').val();
+		var duracion = $('#duracion').val();
+		var ediciones = $('#edicion').val();
+		var tipos_accion = $('#acciones').val();
+		var tematicas = $('#tematicas').val();
+		var destinatarios = $('#destinatarios').val();
+		var responsables = $('#responsables').val();
+		var pautas = $('#pautas').val();
+		var componentes = $('#componentes').val();
+
+		// var provincia = $('#provincia option:selected').data('id');
+		// var linea_estrategica = $('#linea_estrategica option:selected').data('id');
+		// var area_tematica = $('#area_tematica option:selected').data('id');
+		// var periodo = $('#periodo option:selected').data('id');
+		// var desde = $('#desde').val();
+		// var hasta = $('#hasta').val();			
+
+		data = {
+			anio: anios,
+			id_provincia: provincias,
+			nombre: nombre,
+			duracion: duracion,
+			ediciones: ediciones,
+			// ficha_tecnica: estado
+			id_accion: tipos_accion
+			// id_tematica: tematicas,
+			// id_destinatario: destinatarios,
+			// id_responsable: responsables,
+			// id_pauta: pautas,
+			// id_componente: componentes
+			// id_periodo: periodo,
+			// desde: desde,
+			// hasta: hasta
+		};
+
+		console.log(data);
+		return data;
+	}
+
+	function inicializarSelect2()
+	{
+		$('.provincias').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todas las provincias"
+			},
+			width : "200%"
+		});
+
+		$('.anios').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todos los años"
+			},
+			width : "200%"
+		});
+
+		$('.estados_ficha').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todas las fichas"
+			},
+			width: "400"
+		});
+
+		$('.acciones').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todos los tipos de acción"
+			},
+			width: "400%"
+		});
+
+		$('.tematicas').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todas las tematicas"
+			},
+			width: "400%"
+		});
+
+		$('.destinatarios').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todos los destinatarios"
+			},
+			width: "400%"
+		});
+
+		$('.responsables').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todos los responsables"
+			},
+			width: "400%"
+		});
+
+		$('.pautas').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todas las pautas"
+			},
+			width: "400%"
+		});
+
+		$('.componentes').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todos los componentes"
+			},
+			width: "400%"
+		});
+
+		$('.select-2').ready(function() {
+        	$('.select2-container--default .select2-selection--multiple').css('height', 'auto');
+			$('#filtros .box').toggle();
+      	});
+	}
+
 	$(document).ready(function(){
+		
+		inicializarSelect2();
 		
 		formUpload = '<form id="upload-ficha_tecnica" name="upload-ficha_tecnica" style="display: none;">{{ csrf_field() }}<label><input type="file" name="csv" style="display: none;"></label></form>';
 
 		formUpdate = '<form id="update-ficha_tecnica" name="update-ficha_tecnica" style="display: none;">{{ csrf_field() }}<label><input type="file" name="csv" style="display: none;"></label></form>';
 		
+		$('#pac-refresh, #filtrar').click(function () {
+			$('#abm .box').show();
+
+			datatable = $('#abm-table').DataTable({
+				destroy: true,
+				searching: false,
+				ajax : {
+						url: 'pacs/tabla',
+						data: {
+							filtros: getFiltrosJson()
+						}
+				},
+				columns: [
+				{
+					title: 'Fecha', 
+					data: 'created_at',
+					defaultContent: '-',
+					render:function(data){
+						return moment(data).format('DD/MM/YYYY');
+					}
+				},
+				{ title: 'Nombre', data: 'nombre'},
+				{ title: 'Ediciones', data: 'ediciones'},
+				{ title: 'Duracion', data: 'duracion'},
+				{
+					title: 'Ficha Técnica', data: 'id_ficha_tecnica',
+					render: function ( data, type, row, meta ) {
+						return fichaTecnica(data, row.id_pac);
+					}
+				},
+				{ title: 'Tematica/s', data: 'tematicas', defaultContent: '-', name: 'id_tematica',
+					render: function ( data, type, row, meta)
+					{
+						if(Object.entries(data).length != 0)
+							return data.map(function(tematica) { return ' ' + tematica.nombre; });
+					},
+					orderable: false
+				},
+				{ title: 'Tipo de Accion', data: 'tipo_accion', name: 'id_linea_estrategica',
+					render: function (data, type, row, meta) {
+						if(data)
+							return data.numero + " " + data.nombre;
+						else
+							return '-';
+					},
+					orderable: false
+				},
+				{ title: 'Jurisdiccion', data: 'provincias.nombre', name: 'id_provincia'},
+	//			{ title: 'Estados' },
+				{ 
+					data: 'acciones',
+					render: function ( data, type, row, meta ) {
+						return tableButtons(row.id_pac, row.created_at);
+					},
+					orderable: false
+				}
+				],
+				responsive: true
+			});
+		});
+
 		$('#abm').on('click','.filter',function () {
 			$('#filtros .box').toggle();
 		});
 
-		datatable = $('#abm-table').DataTable({
-			destroy: true,
-			searching: false,
-			ajax : 'pacs/tabla',
-			columns: [
-			{
-				title: 'Fecha', 
-				data: 'created_at',
-				defaultContent: '-',
-				render:function(data){
-      				return moment(data).format('DD/MM/YYYY');
-				}
-			},
-			{ title: 'Nombre', data: 'nombre'},
-			{ title: 'Ediciones', data: 'ediciones'},
-			{ title: 'Duracion', data: 'duracion'},			
-			{ title: 'Tematica/s', data: 'tematicas', defaultContent: '-', name: 'id_tematica',
-				render: function ( data, type, row, meta)
-				{
-					if(Object.entries(data).length != 0)
-						return data.map(function(tematica) { return ' ' + tematica.nombre; });
-				},
-				orderable: false
-			},
-			{ title: 'Tipo de Accion', data: 'tipo_accion', name: 'id_linea_estrategica',
-				render: function (data, type, row, meta) {
-					if(data)
-						return data.numero + " " + data.nombre;
-					else
-						return '-';
-				},
-				orderable: false
-			},
-			{ title: 'Jurisdiccion', data: 'provincias.nombre', name: 'id_provincia'},
-			{
-				title: 'Ficha Técnica', data: 'id_ficha_tecnica',
-				render: function ( data, type, row, meta ) {
-					return fichaTecnica(data, row.id_pac);
-				},
-				orderable: false
-			},
-//			{ title: 'Estados' },
-			{ 
-				data: 'acciones',
-				render: function ( data, type, row, meta ) {
-                    return tableButtons(row.id_pac, row.created_at);
-				},
-				orderable: false
-			}
-			],
-			responsive: true
-		});
-
 		$('#abm').on('click','.expand',function () {
-			$('#abm').removeClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			$('#abm').removeClass("col-xs-10 col-sm-10 col-md-10 col-lg-10 col-lg-offset-1");
+			$('#abm').addClass("col-xs-12 col-sm-12 col-md-12 col-lg-12");
 			datatable.draw();
 			$('.compress').show();	
 			$(this).hide();
 		});
 
 		$('#abm').on('click','.compress',function () {
-			$('#abm').addClass("col-xs-12 col-sm-12 col-md-12 col-lg-10 col-lg-offset-1");
+			$('#abm').removeClass("col-xs-12 col-sm-12 col-md-12 col-lg-12");
+			$('#abm').addClass("col-xs-10 col-sm-10 col-md-10 col-lg-10 col-lg-offset-1");
 			datatable.draw();
-			$('.expand').show();	
+			$('.expand').show();
 			$(this).hide();	
 		});	
 
@@ -157,6 +302,7 @@
 					$('#alta-pac').show();
 					$('#filtros').hide();
 					$('#abm').hide();
+					$('#prefilter').hide();
 				},
 				error: function(data){
 					console.log(data);
@@ -168,6 +314,7 @@
 		$("#alta-pac").on("click","#volver",function(){
 			console.log('Se vuelve sin crear la PAC.');
 			$('#alta-pac').html("");
+			$('#prefilter').show();
 			$('#abm').show();
 			$('#filtros').show();
 		});
@@ -313,6 +460,31 @@
 		
 	});
 
+	$('.excel').on('click',function () {
+			var filtros = getFiltrosJson();
+			var order_by = $('#abm-table').DataTable().order();
+			console.log(filtros);
+			console.log(order_by);
+
+			$.ajax({
+				url: 'pacs/excel',
+				data: {
+					filtros: filtros,
+					order_by: order_by
+				},
+				beforeSend: function () {
+					alert('Se descargara pronto.');
+				},
+				success: function(data){
+					console.log(data);
+					window.location="descargar/excel/"+data;
+				},
+				error: function (data) {
+					alert('No se pudo crear el archivo.');
+					console.log(data);
+				}
+			});
+		});
 
 	// function fichaTecnica(id_pac) {
 	// 	if(id_pac->)

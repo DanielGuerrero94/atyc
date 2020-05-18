@@ -56,7 +56,14 @@
 			{ title: 'Edicion', data: 'edicion'},
 			{ title: 'Duracion', data: 'duracion'},			
 			{ title: 'Tematica', data: 'area_tematica.nombre', name: 'id_area_tematica'},
-			{ title: 'Tipologia', data: 'linea_estrategica.nombre', name: 'id_linea_estrategica'},
+			{ title: 'Tipologia', data: 'linea_estrategica', name: 'id_linea_estrategica',
+				render: function (data, type, row, meta) {
+					if(data)
+						return data.numero + " " + data.nombre;
+					else
+						return '-';
+				}
+			},
 			{ title: 'Jurisdiccion', data: 'provincia.nombre', name: 'id_provincia'},
 			{ 
 				data: 'acciones',

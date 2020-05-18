@@ -186,13 +186,9 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     //PAC
     Route::get('pacs', 'PacController@get');
     Route::get('pacs/alta', 'PacController@create');
-    Route::get('pacs/tabla', 'PacController@getTabla');
+    Route::get('pacs/tabla', 'PacController@getFiltrado');
     Route::get('pacs/{id_pac}/tablaEdiciones', 'PacController@getTablaEdiciones');
-    // Route::get('pacs/filtrarPac', 'PacController@getFiltradoPac');
-    // Route::get('pacs/filtrarAcciones', 'PacController@getFiltradoAcciones');
-    // Route::get('pacs/excel', 'PacController@getExcel');
-    // Route::get('pacs/documentos', 'PacController@checkDocumentos');
-    // Route::get('pacs/typeahead', 'PacController@getTypeahead');
+    Route::get('pacs/excel', 'PacController@getExcel');
     Route::get('pacs/{id}/see', 'PacController@see');
     Route::get('pacs/{id}/edit', 'PacController@edit');
     Route::get('pacs/{id}/excel', 'PacController@getCompletoExcel');

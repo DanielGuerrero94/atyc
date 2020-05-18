@@ -54,18 +54,12 @@ class PacController extends AbmController
      * @var array
      **/
     private $filters = [
-        'id_accion' => 'numeric',
         'nombre' => 'string',
         'duracion' => 'numeric',
-        'id_provincia' => 'numeric',
-        'id_tematica' => 'numeric',
-        'id_destinatarios' => 'numeric',
-        'id_responsable' => 'numeric',
-        'id_pautas' => 'numeric',
-        'id_componente' => 'numeric',
-        'id_periodo' => 'numeric',
-        'desde' => 'string',
-        'hasta' => 'string'
+        'ediciones' => 'numeric'
+        // 'id_periodo' => 'numeric',
+        // 'desde' => 'string',
+        // 'hasta' => 'string'
     ];
 
     /**
@@ -257,84 +251,135 @@ class PacController extends AbmController
     */
     public function get()
     {
-        return view('pacs', $this->getSelectOptions());
+        return view('pacs', $this->getEditOptions());
     }
 
-    /**
-     * Opciones para los selects del front end.
-     *
-     * @return array
-     */
-
-    public function getTabla(Request $request)
+    public function logFiltro($key, $value) {
+        if(is_array($value))
+            $value = implode(", ", $value);
+        logger()->info($key.": ".$value);
+    }
+    public function queryLogica($filtros, $orderBy)
     {
-        $query = Pac::select(
-            'id_pac',
-            'nombre',
-            'id_accion',
-            'ediciones',
-            'duracion',
-            'id_provincia',
-            'id_ficha_tecnica',
-            'created_at'
-        )
-        ->with([
+        $filtered = $filtros->filter(function ($value, $key) {
+            return $value != "" && $value != "0";
+        });
+
+        logger()->warning(json_encode($filtered));
+
+        $query = Pac::with([
             'tipoAccion' => function ($query) {
                 return $query->withTrashed();
             },
             'provincias',
             'tematicas' => function ($query) {
                 return $query->withTrashed();
-            } 
-        ])
-        ->segunProvincia();
-        
-        return Datatables::of($query)->make(true);
-    }
-
-    public function getFiltradoPac(Request $request)
-    {
-        $filtros = collect($r->get('filtros'))
-        ->mapWithKeys(function ($item) {
-            return $item;
-        });
-
-        $query = Pac::select(
-            'id_pac',
-            'nombre',
-            'id_accion',
-            'edicion',
-            'duracion',
-            'id_provincia',
-            'id_ficha_tecnica'
-//            'created_at'
-        )
-        ->with([
-            'tipoAccion',
-            'provincias',
-            'tematicas'
+            },
+            'cursos' => function ($query) {
+                return $query->withTrashed();
+            }
         ])
         ->segunProvincia();
 
-        foreach ($filtros as $key => $value) {
-            if ($key == 'nombre') {
-                $query = $query->where('pac.pacs'.$key, 'ilike', "%{$value}%");
-            // } elseif ($key == 'desde') {
-            //     $query = $query->where('pac.pacs.fecha', '>=', $value);
-            // } elseif ($key == 'hasta') {
-            //     $query = $query->where('cursos.cursos.fecha', '<=', $value);
-            // } elseif ($key == 'id_periodo') {
-            //     $periodo = Periodo::find($value);
-            //     $query = $query->where('cursos.cursos.fecha', '>=', $periodo->desde);
-            //     $query = $query->where('cursos.cursos.fecha', '<=', $periodo->hasta);
+        //$query = $this->queryLogica($r, $filtros, null);
+        foreach ($filtered as $key => $value) {
+            $this->logFiltro($key, $value);
+            if (is_array($value)) {
+                if ($key == 'anio' || $key == 'id_provincia' || $key == 'id_accion') {
+                    $query = $query->whereIn('pac.pacs.'.$key, $value);
+                } elseif ($key == 'id_tematica') {
+
+                } elseif ($key == 'id_destinatario') {
+
+                } elseif ($key == 'id_responsable') {
+
+                } elseif ($key == 'id_pauta') {
+                    
+                } elseif ($key == 'id_componente') {
+
+                }
+            } elseif ($key == 'nombre') {
+                $query = $query->where('pac.pacs.'.$key, 'ilike', "%{$value}%");
             } else {
                 $query = $query->where('pac.pacs.'.$key, $value);
             }
         }
 
-        return Datatables::of($query);
+            //join para anio que nunca logre que traiga pacs sin repetir
+                // $query = $query->join('cursos.cursos', function ($join) {
+                //     $join
+                //     ->on('cursos.cursos.id_pac', '=', 'pac.pacs.id_pac')
+                //     ->selectRaw("distinct cursos.id_pac, distinct pacs.created_at, distinct pacs.nombre=, distinct pacs.ediciones, distinct pacs.duracion, distinct id_accion, distinct pacs.id_provincia, distinct pacs.id_ficha_tecnica, distinct fecha_plan_inicial")
+                //     ->groupBy('cursos.id_pac');
+                // })
+                // ->whereRaw("cursos.cursos.id_pac = pac.pacs.id_pac")
+                // ->select('pacs.id_pac', 'pacs.created_at', 'pacs.nombre', 'pacs.ediciones', 'pacs.duracion', 'id_accion', 'pacs.id_provincia', 'pacs.id_ficha_tecnica','fecha_plan_inicial')
+                // ->whereRaw("to_date(to_char(cursos.fecha_plan_inicial,'YYYY'), 'YYYY') = to_date('{$value}','YYYY')")
+                // ->get();
+
+        logger()->warning(json_encode($query));
+
+        return $query;
+        // foreach ($filtros as $key => $value) {
+            // if ($key == 'nombre') {
+            //     $query = $query->where('pac.pacs'.$key, 'ilike', "%{$value}%");
+        //     // } elseif ($key == 'desde') {
+        //     //     $query = $query->where('pac.pacs.fecha', '>=', $value);
+        //     // } elseif ($key == 'hasta') {
+        //     //     $query = $query->where('cursos.cursos.fecha', '<=', $value);
+        //     // } elseif ($key == 'id_periodo') {
+        //     //     $periodo = Periodo::find($value);
+        //     //     $query = $query->where('cursos.cursos.fecha', '>=', $periodo->desde);
+        //     //     $query = $query->where('cursos.cursos.fecha', '<=', $periodo->hasta);
+        //     } else {
+        //         $query = $query->where('pac.pacs.'.$key, $value);
+        //     }
+        // }
+
+    }
+    /**
+     * Opciones para los selects del front end.
+     *
+     * @return array
+     */
+
+    public function getFiltrado(Request $r)
+    {
+        $filtros = collect($r->only('filtros'));
+        $filtros = collect($filtros->get('filtros'));
+
+        $v = Validator::make($filtros->all(), $this->filters);
+        if (!$v->fails()) {
+            $query = $this->queryLogica($filtros, null);
+
+            return Datatables::of($query)->make(true);
+        } else {
+            return json_encode($v->errors());
+        }
     }
 
+    public function getExcel(Request $r)
+    {
+        $filtros = collect($r->only('filtros'));
+        $filtros = collect($filtros->get('filtros'));
+
+        $order_by = collect($r->only('order_by'));
+
+        $data = $this->queryLogica($filtros, $order_by)->orderBy('id_provincia')->get();
+        // Habria que ver como usar el $order_by
+        $datos = ['pacs' => $data];
+        $path = "pacs_".date("Y-m-d_H:i:s");
+
+        Excel::create($path, function ($excel) use ($datos) {
+            $excel->sheet('PAC', function ($sheet) use ($datos) {
+                $sheet->setHeight(1, 20);
+                $sheet->loadView('excel.pacs', $datos);
+            });
+        })
+        ->store('xls');
+
+        return $path;
+    }
     public function getSelectOptions()
     {
         $pautas = Cache::remember('pautas', 5, function () {
@@ -384,19 +429,19 @@ class PacController extends AbmController
     public function getEditOptions()
     {
         $pautasEdit = Cache::remember('pautasEdit', 5, function () {
-            return Pauta::withTrashed()->get();
+            return Pauta::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
         });
 
         $componentesEdit = Cache::remember('componentesEdit', 5, function () {
-            return Componente::withTrashed()->get();
+            return Componente::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
         });
 
         $destinatariosEdit = Cache::remember('destinatariosEdit', 5, function () {
-            return Destinatario::withTrashed()->get();
+            return Destinatario::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
         });
 
         $responsablesEdit = Cache::remember('responsablesEdit', 5, function () {
-            return Responsable::withTrashed()->get();
+            return Responsable::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
         });
 
         $tematicasEdit = Cache::remember('tematicasEdit', 5, function () {
@@ -411,6 +456,10 @@ class PacController extends AbmController
             return Provincia::orderBy('nombre')->get();
         });
 
+        $periodos = Cache::remember('periodos', 5, function () {
+            return Periodo::all();
+        });
+
         return [
             'pautasEdit' => $pautasEdit,
             'componentesEdit' => $componentesEdit,
@@ -418,7 +467,8 @@ class PacController extends AbmController
             'responsablesEdit' => $responsablesEdit,
             'tematicasEdit' => $tematicasEdit,
             'tipoAccionesEdit' => $tipoAccionesEdit,
-            'provinciasEdit' => $provinciasEdit
+            'provinciasEdit' => $provinciasEdit,
+            'periodos' => $periodos
         ];
     }
 

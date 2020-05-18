@@ -7,6 +7,13 @@
 	background-color: #dee4e5;
 }
 
+.fechas {
+    font-size: 10px; 
+	font-weight: bold; 
+	text-align: center;
+	background-color: #00CED1;
+}
+
 td {
 	font-size: 9px;
 }
@@ -14,13 +21,10 @@ td {
 
 <table class="table">	
 	<tr>
-		<th class="table-header">Fecha de Planificación</th>
+		<th class="table-header">Año</th>
 		<th class="table-header">Jurisdicción</th>
 		<th class="table-header">Tipo de Acción</th>
 		<th class="table-header">Ficha Técnica</th>
-		@if ($pac->id_ficha_tecnica)
-		<th class="table-header">Ultima modificación</th>
-		@endif	
 		<th class="table-header">Nombre</th>
 		<th class="table-header">Duración</th>
 		<th class="table-header">Destinatarios</th>
@@ -28,16 +32,16 @@ td {
 		<th class="table-header">Cantidad de ediciones</th>
 		<th class="table-header">Responsable de la Ejecución</th>
 		<th class="table-header">Asociación componente del CA</th>
-		<th class="table-header">Tabla de Pautas para PAC</th>
+		<th class="table-header">Pautas para PAC</th>
+		<th class="fechas">#Edición - Estado: P:[Fecha Plan Inicial-Final] - E:[Fecha Ejecución Inicial-Final]</th>
+
 	</tr>
+    @foreach($pacs as $pac)
 	<tr>
-		<td>{{$pac->created_at}}</td>
+		<td>{{$pac->anio}}</td>
 		<td>{{$pac->provincias->nombre}}</td>
 		<td>{{$pac->tipoAccion->numero ." ".$pac->tipoAccion->nombre}}</td>
-		<td>{{($pac->id_ficha_tecnica) ? 'Creada el ' .$pac->fichaTecnica->created_at : 'No'}}</td>
-		@if ($pac->id_ficha_tecnica)
-		<td>{{$pac->fichaTecnica->updated_at}}</td>
-		@endif
+		<td>{{($pac->id_ficha_tecnica) ? 'Creada el ' .date('d/m/Y', strtotime($pac->fichaTecnica->created_at)) : 'No'}}</td>
 		<td>{{$pac->nombre}}</td>
 		<td>{{$pac->duracion}}</td>
 		@foreach($pac->destinatarios as $destinatario)
@@ -86,27 +90,15 @@ td {
 			{{", ".$pauta->nombre}}
 			@endif
 		@endforeach
+        <td>
+        @foreach($pac->cursos as $curso)
+        {{$curso->edicion." - ".$curso->estado->nombre.": ".
+        "P:[".date('d/m', strtotime($curso->fecha_plan_inicial))."-"
+        .date('d/m', strtotime($curso->fecha_plan_final))."] - ".
+        "E:[".($curso->fecha_ejec_inicial ? (date('d/m', strtotime($curso->fecha_ejec_inicial))."-") : " ").
+        ($curso->fecha_ejec_final ? (date('d/m', strtotime($curso->fecha_ejec_final))) : " ")."];  "}}
+        @endforeach
+        </td>
 	</tr>
-</table>
-<br>
-<p>Acciones</p>
-<table class="table">	
-	<tr>
-		<th class="table-header">Edición</th>
-		<th class="table-header">Estado de Acción</th>
-		<th class="table-header">Fecha Inicio Planificada</th>
-		<th class="table-header">Fecha Final Planificada</th>
-		<th class="table-header">Fecha Inicio Ejecutada</th>
-		<th class="table-header">Fecha Final Ejecutada</th>
-	</tr>
-	@foreach($pac->cursos as $curso)
-	<tr>
-		<td>{{$curso->edicion}}</td>
-		<td>{{$curso->estado->nombre}}</td>
-		<td>{{$curso->fecha_plan_inicial}}</td>
-		<td>{{$curso->fecha_plan_final}}</td>
-		<td>{{$curso->fecha_ejec_inicial}}</td>
-		<td>{{$curso->fecha_ejec_final}}</td>
-	</tr>
-	@endforeach
+    @endforeach
 </table>

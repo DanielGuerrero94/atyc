@@ -131,6 +131,15 @@ class Curso extends Model
         );
     }
 
+    public function pac()
+    {
+        return $this->belongsTo(
+            'App\Models\Pac\Pac',
+            'id_pac',
+            'id_pac'
+        );
+    }
+
     public function getByCuie($cuie)
     {
         return $this->query()

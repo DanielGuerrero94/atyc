@@ -5,6 +5,11 @@
 @endif
 <div class="container-fluid">
   <div class="row">
+		<div class="callout callout-info">
+			<h2>Planificación Anual de Capacitaciones</h2>
+		</div>
+	</div>
+  <div class="row">
   <div id="modificacion-pac" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <form id="form-modificacion">
       <div class="box">
