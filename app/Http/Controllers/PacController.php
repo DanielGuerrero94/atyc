@@ -267,46 +267,49 @@ class PacController extends AbmController
 
         logger()->warning(json_encode($filtered));
 
-        $query = Pac::with([
-            'tipoAccion' => function ($query) {
-                return $query->withTrashed();
-            },
-            'provincias',
-            'tematicas' => function ($query) {
-                return $query->withTrashed();
-            },
-            'cursos' => function ($query) {
-                return $query->withTrashed();
-            }
-        ])
-        ->segunProvincia();
+        $query = DB::table('pac.pac_joined');
+        $id_provincia = Auth::user()->id_provincia;
+        if ($id_provincia != 25) {
+            return $query->where('pac.pac_joined.id_provincia', $id_provincia);
+        }
 
         //$query = $this->queryLogica($r, $filtros, null);
         foreach ($filtered as $key => $value) {
             $this->logFiltro($key, $value);
             if (is_array($value)) {
-                if ($key == 'anio' || $key == 'id_provincia' || $key == 'id_accion') {
-                    $query = $query->whereIn('pac.pacs.'.$key, $value);
-                } elseif ($key == 'id_tematica') {
-
-                } elseif ($key == 'id_destinatario') {
-
-                } elseif ($key == 'id_responsable') {
-
-                } elseif ($key == 'id_pauta') {
-                    
-                } elseif ($key == 'id_componente') {
-
-                }
+                    $query = $query->whereIn('pac.pac_joined.'.$key, $value);
             } elseif ($key == 'nombre') {
-                $query = $query->where('pac.pacs.'.$key, 'ilike', "%{$value}%");
+                $query = $query->where('pac.pac_joined.'.$key, 'ilike', "%{$value}%");
             } else {
-                $query = $query->where('pac.pacs.'.$key, $value);
+                $query = $query->where('pac.pac_joined.'.$key, $value);
             }
         }
 
+        $ids = $query->select("id_pac")->distinct()->get()->toArray();
+
+        $ids = array_map(function ($value) {
+            return $value->id_pac;
+        }, $ids);
+
+        $pacs = Pac::with([
+            'tipoAccion' => function ($pacs) {
+                return $pacs->withTrashed();
+            },
+            'provincias',
+            'tematicas' => function ($pacs) {
+                return $pacs->withTrashed();
+            },
+            'cursos' => function ($pacs) {
+                return $pacs->withTrashed();
+            }
+        ])
+        ->whereIn('pac.pacs.id_pac', $ids)
+        ->segunProvincia();
+
+
+
             //join para anio que nunca logre que traiga pacs sin repetir
-                // $query = $query->join('cursos.cursos', function ($join) {
+                // $pacs = $query->join('cursos.cursos', function ($join) {
                 //     $join
                 //     ->on('cursos.cursos.id_pac', '=', 'pac.pacs.id_pac')
                 //     ->selectRaw("distinct cursos.id_pac, distinct pacs.created_at, distinct pacs.nombre=, distinct pacs.ediciones, distinct pacs.duracion, distinct id_accion, distinct pacs.id_provincia, distinct pacs.id_ficha_tecnica, distinct fecha_plan_inicial")
@@ -317,9 +320,9 @@ class PacController extends AbmController
                 // ->whereRaw("to_date(to_char(cursos.fecha_plan_inicial,'YYYY'), 'YYYY') = to_date('{$value}','YYYY')")
                 // ->get();
 
-        logger()->warning(json_encode($query));
+        logger()->warning(json_encode($pacs));
 
-        return $query;
+        return $pacs;
         // foreach ($filtros as $key => $value) {
             // if ($key == 'nombre') {
             //     $query = $query->where('pac.pacs'.$key, 'ilike', "%{$value}%");

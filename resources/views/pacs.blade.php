@@ -107,12 +107,12 @@
 			duracion: duracion,
 			ediciones: ediciones,
 			// ficha_tecnica: estado
-			id_accion: tipos_accion
-			// id_tematica: tematicas,
-			// id_destinatario: destinatarios,
-			// id_responsable: responsables,
-			// id_pauta: pautas,
-			// id_componente: componentes
+			id_accion: tipos_accion,
+			id_tematica: tematicas,
+			id_destinatario: destinatarios,
+			id_responsable: responsables,
+			id_pauta: pautas,
+			id_componente: componentes
 			// id_periodo: periodo,
 			// desde: desde,
 			// hasta: hasta
