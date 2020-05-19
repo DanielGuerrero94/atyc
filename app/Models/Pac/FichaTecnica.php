@@ -28,4 +28,13 @@ class FichaTecnica extends Model
 
     public $timestamps = true;
 
+    public function pac()
+    {
+        return $this->belongsTo(
+            'App\Models\Pac\Pac',
+            'id_ficha_tecnica',
+            'id_ficha_tecnica'
+        );
+    }
+
 }

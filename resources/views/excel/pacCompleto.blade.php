@@ -18,9 +18,6 @@ td {
 		<th class="table-header">Jurisdicción</th>
 		<th class="table-header">Tipo de Acción</th>
 		<th class="table-header">Ficha Técnica</th>
-		@if ($pac->id_ficha_tecnica)
-		<th class="table-header">Ultima modificación</th>
-		@endif	
 		<th class="table-header">Nombre</th>
 		<th class="table-header">Duración</th>
 		<th class="table-header">Destinatarios</th>
@@ -34,10 +31,9 @@ td {
 		<td>{{$pac->created_at}}</td>
 		<td>{{$pac->provincias->nombre}}</td>
 		<td>{{$pac->tipoAccion->numero ." ".$pac->tipoAccion->nombre}}</td>
-		<td>{{($pac->id_ficha_tecnica) ? 'Creada el ' .$pac->fichaTecnica->created_at : 'No'}}</td>
-		@if ($pac->id_ficha_tecnica)
-		<td>{{$pac->fichaTecnica->updated_at}}</td>
-		@endif
+		<td>{{($pac->id_ficha_tecnica) ? (($pac->fichaTecnica->aprobada) ? ("Aprobada (".
+		date('d/m/Y', strtotime($pac->fichaTecnica->updated_at)).")") : ("En diseño (".
+		date('d/m/Y', strtotime($pac->fichaTecnica->created_at)).")")) : 'No tiene'}}</td>
 		<td>{{$pac->nombre}}</td>
 		<td>{{$pac->duracion}}</td>
 		@foreach($pac->destinatarios as $destinatario)

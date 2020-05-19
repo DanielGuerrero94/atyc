@@ -41,7 +41,9 @@ td {
 		<td>{{$pac->anio}}</td>
 		<td>{{$pac->provincias->nombre}}</td>
 		<td>{{$pac->tipoAccion->numero ." ".$pac->tipoAccion->nombre}}</td>
-		<td>{{($pac->id_ficha_tecnica) ? 'Creada el ' .date('d/m/Y', strtotime($pac->fichaTecnica->created_at)) : 'No'}}</td>
+		<td>{{($pac->id_ficha_tecnica) ? (($pac->fichaTecnica->aprobada) ? ("Aprobada (".
+		date('d/m/Y', strtotime($pac->fichaTecnica->updated_at)).")") : ("En diseño (" .
+		date('d/m/Y', strtotime($pac->fichaTecnica->created_at))).")") : 'No tiene'}}</td>
 		<td>{{$pac->nombre}}</td>
 		<td>{{$pac->duracion}}</td>
 		@foreach($pac->destinatarios as $destinatario)

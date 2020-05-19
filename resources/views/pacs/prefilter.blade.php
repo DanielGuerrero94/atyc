@@ -9,7 +9,7 @@
                     <div class="form-group col-xs-12 col-sm-6">
                         <label for="provincia" class="control-label col-xs-4 col-sm-2">Provincia:</label>
                         <div class="col-xs-8 col-sm-6">
-                            <select class="select-2 form-control provincias" id="provincias" name="id_provincia" aria-hidden="true" multiple title="Provincia">
+                            <select class="select-2 form-control provincias" id="provincias" name="id_provincia" aria-hidden="true" multiple>
                                 @foreach ($provinciasEdit as $provincia)
                                 <option data-id="{{$provincia->id_provincia}}" value="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>									
                                 @endforeach
@@ -23,7 +23,7 @@
                     <div class="form-group col-xs-12 col-sm-6">
                         <label for="anio" class="control-label col-xs-4 col-sm-2">Año:</label>
                         <div class="col-xs-8 col-sm-6">
-                            <select class="select-2 form-control anios" id="anios" name="id_anio" aria-hidden="true" multiple title="Año">
+                            <select class="select-2 form-control anios" id="anios" name="id_anio" aria-hidden="true" multiple>
                                 @for($i = intval(date('Y')); $i > 2015 ; $i--)
                                 <option data-id="{{$i}}" value="{{$i}}">{{$i}}</option>
                                 @endfor

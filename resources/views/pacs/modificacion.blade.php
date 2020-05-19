@@ -230,6 +230,53 @@
 <script type="text/javascript" src="{{"https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"}}"></script>
 
 <script type="text/javascript">
+	function uploadFichaButton(id_pac) {
+		return '<a href="#abm" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir"><i class="fa fa-upload fa-lg" style="color: #228B22;"> </i> </a> ';
+	}
+
+	function updateFichaButton(id_ficha) {
+		return '<a href="#abm" data-id="'+ id_ficha + '" class="btn btn-circle update-ficha_tecnica" title="Reemplazar"><i class="fa fa-cloud-upload fa-lg text-primary"> </i> </a> ';
+	}
+
+	function downloadFichaButton(id_ficha) {
+		return '<a href="{{url("/pacs/ficha_tecnica")}}/' + id_ficha + '/download" data-id="'+ id_ficha + '" class="btn btn-circle download-ficha_tecnica" title="Descargar"><i class="fa fa-download fa-lg" style="color: #2F2D2D;"></i></a>';
+	}
+
+	function aprobarFichaButton(id_ficha) {
+		return '<a href="#abm" data-id="' + id_ficha + '" class="btn btn-circle aprobar-ficha_tecnica" title="Aprobar"><i class="fa fa-check fa-lg" style="color: #1E90FF;"></i></a>';
+	}
+	
+  function estadosFicha(ficha) {
+    if(jQuery.isEmptyObject(ficha)) {
+      return '<i class="fa fa-circle fa-lg" style="color: #B22222;" title="No tiene"> </i>';
+		} else if (!ficha.aprobada) {
+      return '<i class="fa fa-circle fa-lg" style="color: #FFD700;" title="En diseño"> </i>';
+    } else {
+      return '<i class="fa fa-circle fa-lg" style="color: #228B22;" title="Aprobada"> </i>';
+    }
+  }
+
+	@if(Auth::user()->id_provincia === 25)
+	function fichaTecnicaButtons(ficha, id_pac) {
+		if(jQuery.isEmptyObject(ficha)) {
+			return uploadFichaButton(id_pac);
+		} else if (!ficha.aprobada) {
+			return aprobarFichaButton(ficha.id_ficha_tecnica) + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
+		} else {
+			return updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
+		}
+	}
+	@else
+	function fichaTecnicaButtons(ficha, id_pac) {
+		if(jQuery.isEmptyObject(ficha)) {
+			return uploadFichaButton(id_pac);
+		} else if (!ficha.aprobada) {
+			return updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
+		} else {
+			return downloadFichaButton(ficha.id_ficha_tecnica);
+		}
+	}
+	@endif
 
   function fichaTecnica(id_ficha, id_pac)
   {
@@ -243,12 +290,12 @@
       
       return buttons;
     } else {
-      button = '';
+      buttons = '';
       @if(!isset($disabled))
-      button = '<a href="#" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir Ficha Técnica"><i class="fa fa-upload fa-lg" style="color: #228B22;"> </i> </a> ';
+      buttons = '<a href="#" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir Ficha Técnica"><i class="fa fa-upload fa-lg" style="color: #228B22;"> </i> </a> ';
       @endif
       
-      return button;
+      return buttons;
     }
   }
 
@@ -304,9 +351,16 @@
         { title: 'Creado', data: 'ficha_tecnica.created_at', defaultContent: '-', name: 'id_ficha_tecnica', orderable: false},
         { title: 'Última modificación', data: 'ficha_tecnica.updated_at', defaultContent: '-', name: 'id_ficha_tecnica', orderable: false},
         {
-          title: 'Acciones', data: 'id_ficha_tecnica',
+          title: 'Estado', data: 'ficha_tecnica', name: 'id_ficha_tecnica', 
           render: function ( data, type, row, meta ) {
-            return fichaTecnica(data, id_pac);
+            return estadosFicha(data, id_pac);
+          },
+          orderable: false
+        },
+        {
+          title: 'Acciones', data: 'ficha_tecnica', name: 'id_ficha_tecnica', 
+          render: function ( data, type, row, meta ) {
+            return fichaTecnicaButtons(data, id_pac);
           },
           orderable: false
         }

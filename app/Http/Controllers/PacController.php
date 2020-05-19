@@ -272,22 +272,37 @@ class PacController extends AbmController
 
         foreach ($filtered as $key => $value) {
             $this->logFiltro($key, $value);
-            if (is_array($value)) {
-                $query = $query->whereIn('pac.pac_joined.'.$key, $value);
-            } elseif ($key == 'nombre') {
-                $query = $query->where('pac.pac_joined.'.$key, 'ilike', "%{$value}%");
-            } else {
-                $query = $query->where('pac.pac_joined.'.$key, $value);
+
+            if($key == 'ficha_tecnica_aprobada')
+            {
+                $query = $query->where(function($q) use ($key, $value) {
+                    if (in_array("notiene", $value))
+                    {
+                        $q->orWhere('pac.pac_joined.id_ficha_tecnica', null);
+                        array_pop($value);
+                    }
+
+                    $q = $q->orWhereIn('pac.pac_joined.'.$key, $value);
+                });
             }
+            elseif ($key == 'nombre')
+                $query = $query->where('pac.pac_joined.'.$key, 'ilike', "%{$value}%");
+            elseif ($key == 'ediciones' || $key == 'duracion')
+                $query = $query->where('pac.pac_joined.'.$key, $value);
+            else
+                $query = $query->whereIn('pac.pac_joined.'.$key, $value);
         }
-
-        $ids = $query->select("id_pac")->distinct()->get()->toArray();
-
-        $ids = array_map(function ($value) {
-            return $value->id_pac;
-        }, $ids);
         
-        logger()->warning(json_encode($ids));
+
+        logger()->warning("query: ".json_encode($query->toSql()));
+
+        $ids = $query->select('id_pac')->distinct()->get()->toArray();
+
+        $ids = array_map(function ($val) {
+            return $val->id_pac;
+        }, $ids);
+         
+        logger()->warning("ids_pac: ".json_encode($ids));
         
         $pacs = Pac::with([
             'tipoAccion' => function ($pacs) {
@@ -308,7 +323,7 @@ class PacController extends AbmController
         ->whereIn('pac.pacs.id_pac', $ids)
         ->segunProvincia();
 
-        logger()->warning(json_encode($pacs->toSql()));
+        logger()->warning("pacs: ".json_encode($pacs->toSql()));
 
         return $pacs;
 

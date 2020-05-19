@@ -66,15 +66,15 @@
 	}
 
 	function deleteButton(id_pac) {
-			return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
+			return '<a href="#abm" data-id="' + id_pac + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
 	}
 
 	function uploadFichaButton(id_pac) {
-		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir"><i class="fa fa-upload fa-lg" style="color: #228B22;"> </i> </a> ';
+		return '<a href="#abm" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir"><i class="fa fa-upload fa-lg" style="color: #228B22;"> </i> </a> ';
 	}
 
 	function updateFichaButton(id_ficha) {
-		return '<a href="#" data-id="'+ id_ficha + '" class="btn btn-circle update-ficha_tecnica" title="Reemplazar"><i class="fa fa-cloud-upload fa-lg text-primary"> </i> </a> ';
+		return '<a href="#abm" data-id="'+ id_ficha + '" class="btn btn-circle update-ficha_tecnica" title="Reemplazar"><i class="fa fa-cloud-upload fa-lg text-primary"> </i> </a> ';
 	}
 
 	function downloadFichaButton(id_ficha) {
@@ -82,7 +82,7 @@
 	}
 
 	function aprobarFichaButton(id_ficha) {
-		return '<a href="#" data-id="' + id_ficha + '" class="btn btn-circle aprobar-ficha_tecnica" title="Aprobar"><i class="fa fa-thumbs-o-up fa-lg" style="color: #1E90FF;"></i></a>';
+		return '<a href="#abm" data-id="' + id_ficha + '" class="btn btn-circle aprobar-ficha_tecnica" title="Aprobar"><i class="fa fa-check fa-lg" style="color: #1E90FF;"></i></a>';
 	}
 	
 	@if(Auth::user()->id_provincia === 25)
@@ -90,7 +90,7 @@
 		if(jQuery.isEmptyObject(ficha)) {
 			return '<i class="fa fa-circle fa-lg" style="color: #B22222;" title="No tiene"> </i>' + uploadFichaButton(id_pac);
 		} else if (!ficha.aprobada) {
-			return '<i class="fa fa-circle fa-lg" style="color: #F3ED32;" title="En diseño"> </i>' + aprobarFichaButton(ficha.id_ficha_tecnica) + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
+			return '<i class="fa fa-circle fa-lg" style="color: #FFD700;" title="En diseño"> </i>' + aprobarFichaButton(ficha.id_ficha_tecnica) + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
 		} else {
 			return '<i class="fa fa-circle fa-lg" style="color: #228B22;" title="Aprobada"> </i>' + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
 		}
@@ -100,7 +100,7 @@
 		if(jQuery.isEmptyObject(ficha)) {
 			return '<i class="fa fa-circle fa-lg" style="color: #B22222;" title="No tiene"> </i>' + uploadFichaButton(id_pac);
 		} else if (!ficha.aprobada) {
-			return '<i class="fa fa-circle fa-lg" style="color: #F3ED32;" title="En diseño"> </i>' + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
+			return '<i class="fa fa-circle fa-lg" style="color: #FFD700;" title="En diseño"> </i>' + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
 		} else {
 			return '<i class="fa fa-circle fa-lg" style="color: #228B22;" title="Aprobada"> </i>' + downloadFichaButton(ficha.id_ficha_tecnica);
 		}
@@ -114,12 +114,14 @@
 		var nombre = $('#nombre').val();
 		var duracion = $('#duracion').val();
 		var ediciones = $('#edicion').val();
+		var estados_ficha = $('#estados_ficha').val();
 		var tipos_accion = $('#acciones').val();
 		var tematicas = $('#tematicas').val();
 		var destinatarios = $('#destinatarios').val();
 		var responsables = $('#responsables').val();
 		var pautas = $('#pautas').val();
 		var componentes = $('#componentes').val();
+		
 
 		// var provincia = $('#provincia option:selected').data('id');
 		// var linea_estrategica = $('#linea_estrategica option:selected').data('id');
@@ -134,7 +136,7 @@
 			nombre: nombre,
 			duracion: duracion,
 			ediciones: ediciones,
-			// ficha_tecnica: estado
+			ficha_tecnica_aprobada: estados_ficha,
 			id_accion: tipos_accion,
 			id_tematica: tematicas,
 			id_destinatario: destinatarios,

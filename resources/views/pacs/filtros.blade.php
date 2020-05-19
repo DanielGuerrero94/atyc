@@ -37,12 +37,12 @@
 			<br>
 			<div class="row">
 				<div class="form-group col-sm-4">          
-					<label class="control-label col-xs-5" for="id_estados_ficha">Ficha Tecnica:</label>
+					<label class="control-label col-xs-5" for="id_estados_ficha">Fichas Técnicas:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-						<select class="select-2 form-control estados_ficha" id="estados_ficha" name="id_estado_ficha" aria-hidden="true" multiple title="Estado de la ficha tecnica">
-							<option data-id="1">APROBADA &#10004</option>
-							<option data-id="2">EN DISEÑO &#x1F477</option>
-							<option data-id="3">NO TIENE &#10060</option>
+						<select class="select-2 form-control estados_ficha" id="estados_ficha" name="id_estado_ficha" aria-hidden="true" multiple>
+							<option data-id="2" value="true">APROBADA &#10004</option>
+							<option data-id="1" value="false">EN DISEÑO &#x1F477</option>
+							<option data-id="0" value="notiene">NO TIENE &#10060</option>
 						</select>          
 					</div>
 				</div>
