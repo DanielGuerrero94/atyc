@@ -13,20 +13,24 @@
 			<div class="row">
 				<div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">  		  		
 					<label for="nombre" class="control-label col-xs-5">Nombre:</label>
-					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-						<input class="form-control" id="nombre" name="nombre">
+					<div class="typeahead__container col-xs-7 col-sm-7 col-md-7 col-lg-7">
+						<div class="typeahead__field">             
+                  			<span class="typeahead__query">
+								<input class="curso_filtro_typeahead form-control" id="nombre" name="nombre" type="search" placeholder="Todos los nombres" autocomplete="off" style="font-size:1.4rem;">
+							</span>
+						</div>
 					</div>
 				</div>
 				<div class="form-group col-sm-4">
 					<label for="duracion" class="control-label col-xs-5">Duración:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-						<input class="form-control" id="duracion" name="duracion" type="number">
+						<input class="form-control" id="duracion" name="duracion" type="number" placeholder="Todas las duraciones">
 					</div>						
 				</div>
 				<div class="form-group col-sm-4">
 					<label for="ediciones" class="control-label col-xs-5">Ediciones:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-						<input class="form-control" id="edicion" name="edicion" type="number">
+						<input class="form-control" id="edicion" name="edicion" type="number" placeholder="Todas las ediciones">
 					</div>						
 				</div>
 			</div>

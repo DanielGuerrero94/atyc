@@ -46,16 +46,16 @@ CREATE OR REPLACE VIEW pac.pac_joined AS
     pc.id_componente
    FROM ((((((((pac.pacs p
      JOIN cursos.lineas_estrategicas le ON ((le.id_linea_estrategica = p.id_accion)))
-     JOIN pac.fichas_tecnicas ft ON ((ft.id_ficha_tecnica = p.id_ficha_tecnica)))
+     LEFT JOIN pac.fichas_tecnicas ft ON ((ft.id_ficha_tecnica = p.id_ficha_tecnica)))
      JOIN sistema.provincias pro ON ((pro.id_provincia = p.id_provincia)))
-     JOIN pac.pacs_tematicas pt USING (id_pac))
-     JOIN pac.pacs_pautas pp USING (id_pac))
-     JOIN pac.pacs_responsables pr USING (id_pac))
-     JOIN pac.pacs_destinatarios pd USING (id_pac))
-     JOIN pac.pacs_componentes pc USING (id_pac));
+     LEFT JOIN pac.pacs_tematicas pt USING (id_pac))
+     LEFT JOIN pac.pacs_pautas pp USING (id_pac))
+     LEFT JOIN pac.pacs_responsables pr USING (id_pac))
+     LEFT JOIN pac.pacs_destinatarios pd USING (id_pac))
+     LEFT JOIN pac.pacs_componentes pc USING (id_pac));
 
 
-ALTER TABLE public.pac_joined OWNER TO postgres;
+ALTER TABLE pac.pac_joined OWNER TO postgres;
 
 --
 -- PostgreSQL database dump complete

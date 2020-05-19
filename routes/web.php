@@ -204,6 +204,8 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('pacs/{id_pac}/tablaFicha', 'PacController@getTablaFicha');
     Route::post('pacs/{id_pac}', 'PacController@storeFichaTecnica');
     Route::post('pacs/fichas_tecnicas/{id_ficha}', 'PacController@replaceFichaTecnica');
+    Route::post('pacs/fichas_tecnicas/{id_ficha}/aprobar', 'PacController@aprobarFichaTecnica');
+
 
     //Encuestas
     Route::get('encuestas/g_plannacer', 'Encuestas\EncuestasController@gPlannacer');

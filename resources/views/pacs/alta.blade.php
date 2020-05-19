@@ -13,8 +13,8 @@
             <div class="form-group col-xs-12 col-md-6">       
               <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
               <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
-                <div class="typeahead__field ">             
-                  <span class="typeahead__query ">
+                <div class="typeahead__field">             
+                  <span class="typeahead__query">
                     <input class="curso_typeahead form-control" name="nombre"  type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
                   </span>
                 </div>

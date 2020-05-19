@@ -11,7 +11,7 @@ class FichaTecnica extends Model
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
-    protected $fillable = ['path', 'original'];
+    protected $fillable = ['path', 'original', 'aprobada'];
     /**
      * The table associated with the model.
      *

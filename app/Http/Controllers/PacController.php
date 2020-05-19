@@ -259,6 +259,7 @@ class PacController extends AbmController
             $value = implode(", ", $value);
         logger()->info($key.": ".$value);
     }
+
     public function queryLogica($filtros, $orderBy)
     {
         $filtered = $filtros->filter(function ($value, $key) {
@@ -268,16 +269,11 @@ class PacController extends AbmController
         logger()->warning(json_encode($filtered));
 
         $query = DB::table('pac.pac_joined');
-        $id_provincia = Auth::user()->id_provincia;
-        if ($id_provincia != 25) {
-            return $query->where('pac.pac_joined.id_provincia', $id_provincia);
-        }
 
-        //$query = $this->queryLogica($r, $filtros, null);
         foreach ($filtered as $key => $value) {
             $this->logFiltro($key, $value);
             if (is_array($value)) {
-                    $query = $query->whereIn('pac.pac_joined.'.$key, $value);
+                $query = $query->whereIn('pac.pac_joined.'.$key, $value);
             } elseif ($key == 'nombre') {
                 $query = $query->where('pac.pac_joined.'.$key, 'ilike', "%{$value}%");
             } else {
@@ -290,7 +286,9 @@ class PacController extends AbmController
         $ids = array_map(function ($value) {
             return $value->id_pac;
         }, $ids);
-
+        
+        logger()->warning(json_encode($ids));
+        
         $pacs = Pac::with([
             'tipoAccion' => function ($pacs) {
                 return $pacs->withTrashed();
@@ -301,31 +299,19 @@ class PacController extends AbmController
             },
             'cursos' => function ($pacs) {
                 return $pacs->withTrashed();
-            }
+            },
+            'fichaTecnica' => function ($query) {
+                return $query->withTrashed();
+            },
+            'responsables'
         ])
         ->whereIn('pac.pacs.id_pac', $ids)
         ->segunProvincia();
 
-
-
-            //join para anio que nunca logre que traiga pacs sin repetir
-                // $pacs = $query->join('cursos.cursos', function ($join) {
-                //     $join
-                //     ->on('cursos.cursos.id_pac', '=', 'pac.pacs.id_pac')
-                //     ->selectRaw("distinct cursos.id_pac, distinct pacs.created_at, distinct pacs.nombre=, distinct pacs.ediciones, distinct pacs.duracion, distinct id_accion, distinct pacs.id_provincia, distinct pacs.id_ficha_tecnica, distinct fecha_plan_inicial")
-                //     ->groupBy('cursos.id_pac');
-                // })
-                // ->whereRaw("cursos.cursos.id_pac = pac.pacs.id_pac")
-                // ->select('pacs.id_pac', 'pacs.created_at', 'pacs.nombre', 'pacs.ediciones', 'pacs.duracion', 'id_accion', 'pacs.id_provincia', 'pacs.id_ficha_tecnica','fecha_plan_inicial')
-                // ->whereRaw("to_date(to_char(cursos.fecha_plan_inicial,'YYYY'), 'YYYY') = to_date('{$value}','YYYY')")
-                // ->get();
-
-        logger()->warning(json_encode($pacs));
+        logger()->warning(json_encode($pacs->toSql()));
 
         return $pacs;
-        // foreach ($filtros as $key => $value) {
-            // if ($key == 'nombre') {
-            //     $query = $query->where('pac.pacs'.$key, 'ilike', "%{$value}%");
+
         //     // } elseif ($key == 'desde') {
         //     //     $query = $query->where('pac.pacs.fecha', '>=', $value);
         //     // } elseif ($key == 'hasta') {
@@ -334,10 +320,6 @@ class PacController extends AbmController
         //     //     $periodo = Periodo::find($value);
         //     //     $query = $query->where('cursos.cursos.fecha', '>=', $periodo->desde);
         //     //     $query = $query->where('cursos.cursos.fecha', '<=', $periodo->hasta);
-        //     } else {
-        //         $query = $query->where('pac.pacs.'.$key, $value);
-        //     }
-        // }
 
     }
     /**
@@ -495,8 +477,9 @@ class PacController extends AbmController
         $path = explode('/', $path);
         $path = $path[1];
         $original = $request->file('csv')->getClientOriginalName();
+        $aprobada = false;
         
-        $ficha_tecnica = FichaTecnica::create(compact('original', 'path'));
+        $ficha_tecnica = FichaTecnica::create(compact('original', 'path', 'aprobada'));
         $id_ficha_tecnica = $ficha_tecnica->id_ficha_tecnica;
         logger("Cree la ficha tecnica: " .$ficha_tecnica);
         
@@ -536,6 +519,15 @@ class PacController extends AbmController
         $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
         $path = storage_path("app/fichas_tecnicas/".$ficha_tecnica->path);
         return response()->download($path, $ficha_tecnica->original);
+    }
+
+    public function aprobarFichaTecnica($id_ficha)
+    {
+        $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
+        $ficha_tecnica->aprobada = true;
+        $ficha_tecnica->save();
+
+        return response('Aprobada');
     }
 
     public function see($id_pac)

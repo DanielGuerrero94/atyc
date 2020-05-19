@@ -69,15 +69,43 @@
 			return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
 	}
 
-	function fichaTecnica(id_ficha, id_pac) {
-		if(id_ficha)
-		{	
-			return '<a href="{{url("/pacs/ficha_tecnica")}}/' + id_ficha + '/download" data-id="'+ id_ficha + '" class="btn btn-circle download-ficha_tecnica" title="Descargar Ficha Tecnica"><i class="fa fa-download fa-lg" style="color: #2F2D2D;"></i></a> <a href="#" data-id="'+ id_ficha + '" class="btn btn-circle update-ficha_tecnica" title="Reemplazar Ficha Técnica"><i class="fa fa-cloud-upload fa-lg text-primary"> </i> </a> ';
-		} else
-		{
-			return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir Ficha Técnica"><i class="fa fa-upload fa-lg" style="color: #228B22;"> </i> </a> ';
+	function uploadFichaButton(id_pac) {
+		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir"><i class="fa fa-upload fa-lg" style="color: #228B22;"> </i> </a> ';
+	}
+
+	function updateFichaButton(id_ficha) {
+		return '<a href="#" data-id="'+ id_ficha + '" class="btn btn-circle update-ficha_tecnica" title="Reemplazar"><i class="fa fa-cloud-upload fa-lg text-primary"> </i> </a> ';
+	}
+
+	function downloadFichaButton(id_ficha) {
+		return '<a href="{{url("/pacs/ficha_tecnica")}}/' + id_ficha + '/download" data-id="'+ id_ficha + '" class="btn btn-circle download-ficha_tecnica" title="Descargar"><i class="fa fa-download fa-lg" style="color: #2F2D2D;"></i></a>';
+	}
+
+	function aprobarFichaButton(id_ficha) {
+		return '<a href="#" data-id="' + id_ficha + '" class="btn btn-circle aprobar-ficha_tecnica" title="Aprobar"><i class="fa fa-thumbs-o-up fa-lg" style="color: #1E90FF;"></i></a>';
+	}
+	
+	@if(Auth::user()->id_provincia === 25)
+	function fichaTecnicaButtons(ficha, id_pac) {
+		if(jQuery.isEmptyObject(ficha)) {
+			return '<i class="fa fa-circle fa-lg" style="color: #B22222;" title="No tiene"> </i>' + uploadFichaButton(id_pac);
+		} else if (!ficha.aprobada) {
+			return '<i class="fa fa-circle fa-lg" style="color: #F3ED32;" title="En diseño"> </i>' + aprobarFichaButton(ficha.id_ficha_tecnica) + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
+		} else {
+			return '<i class="fa fa-circle fa-lg" style="color: #228B22;" title="Aprobada"> </i>' + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
 		}
 	}
+	@else
+	function fichaTecnicaButtons(ficha, id_pac) {
+		if(jQuery.isEmptyObject(ficha)) {
+			return '<i class="fa fa-circle fa-lg" style="color: #B22222;" title="No tiene"> </i>' + uploadFichaButton(id_pac);
+		} else if (!ficha.aprobada) {
+			return '<i class="fa fa-circle fa-lg" style="color: #F3ED32;" title="En diseño"> </i>' + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
+		} else {
+			return '<i class="fa fa-circle fa-lg" style="color: #228B22;" title="Aprobada"> </i>' + downloadFichaButton(ficha.id_ficha_tecnica);
+		}
+	}
+	@endif
 
 	function getFiltrosJson() {
 
@@ -235,11 +263,14 @@
 				{ title: 'Ediciones', data: 'ediciones'},
 				{ title: 'Duracion', data: 'duracion'},
 				{
-					title: 'Ficha Técnica', data: 'id_ficha_tecnica',
+					title: 'Ficha Técnica',
+					data: 'ficha_tecnica',
+					name: 'id_ficha_tecnica',
 					render: function ( data, type, row, meta ) {
-						return fichaTecnica(data, row.id_pac);
+						return fichaTecnicaButtons(data, row.id_pac);
 					}
 				},
+				{ title: 'Jurisdiccion', data: 'provincias.nombre', name: 'id_provincia'},
 				{ title: 'Tematica/s', data: 'tematicas', defaultContent: '-', name: 'id_tematica',
 					render: function ( data, type, row, meta)
 					{
@@ -257,7 +288,14 @@
 					},
 					orderable: false
 				},
-				{ title: 'Jurisdiccion', data: 'provincias.nombre', name: 'id_provincia'},
+				{ title: "Responsables", data:"responsables", defaultContent: '-', name: 'id_responsable', 
+					render: function ( data, type, row, meta)
+					{
+						if(Object.entries(data).length != 0)
+							return data.map(function(responsable) { return ' ' + responsable.nombre; });
+					},
+					orderable: false
+				},
 	//			{ title: 'Estados' },
 				{ 
 					data: 'acciones',
@@ -273,6 +311,25 @@
 
 		$('#abm').on('click','.filter',function () {
 			$('#filtros .box').toggle();
+
+			$.typeahead({
+				input: '.curso_filtro_typeahead',
+				order: "desc",
+				source: {
+					info: {
+					ajax: {
+						type: "get",
+						url: "cursos/nombres",
+						path: "data.info"
+					}
+					}
+				},
+				callback: {
+					onInit: function (node) {
+					console.log('Typeahead Initiated on ' + node.selector);
+					}
+				}
+			});
 		});
 
 		$('#abm').on('click','.expand',function () {
@@ -457,10 +514,65 @@
 			let id = $(this).data("id");
 			location.href = "{{url('/pacs/fichas_tecnicas')}}" + "/" + id + "/download";
 		});
-		
-	});
 
-	$('.excel').on('click',function () {
+		$('#abm').on("click",".aprobar-ficha_tecnica",function(){
+			var id_ficha = $(this).data('id');
+			var data = '_token='+$('#abm input').first().val();
+			jQuery('<div/>', {
+				id: 'dialogABM',
+				text: ''
+			}).appendTo('.container-fluid');
+
+			$("#dialogABM").dialog({
+				title: "Verificacion",
+				show: {
+					effect: "fold"
+				},
+				hide: {
+					effect: "fade"
+				},
+				modal: true,
+				width : 360,
+				height : 220,
+				closeOnEscape: true,
+				resizable: false,
+				dialogClass: "alert",
+				open: function () {
+					jQuery('<p/>', {
+						id: 'dialogABM',
+						text: '¿Esta seguro de aprobar la ficha tecnica?'
+					}).appendTo('#dialogABM');
+				},
+				buttons :
+				{
+					"Aceptar" : function () {
+						$(this).dialog("destroy");
+						$("#dialogABM").html("");
+						$.ajax ({
+							url: 'pacs/fichas_tecnicas/' +id_ficha+'/aprobar',
+							method: 'post',
+							data: data,
+							success: function(data){
+								console.log('Se aprobo la ficha tecnica.');
+								location.reload();
+							},
+							error: function (data) {
+								console.log('Hubo un error.');
+								console.log(data);
+							}
+						});
+
+					},
+					"Cancelar" : function () {
+						$(this).dialog("destroy");
+						$("#dialogABM").html("");
+						location.reload("true");
+					}
+				}
+			});
+		});
+
+		$('.excel').on('click',function () {
 			var filtros = getFiltrosJson();
 			var order_by = $('#abm-table').DataTable().order();
 			console.log(filtros);
@@ -485,6 +597,10 @@
 				}
 			});
 		});
+		
+	});
+
+
 
 	// function fichaTecnica(id_pac) {
 	// 	if(id_pac->)
