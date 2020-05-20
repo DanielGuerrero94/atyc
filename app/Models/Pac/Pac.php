@@ -12,7 +12,7 @@ class Pac extends Model
 
     protected $dates = [ 'created_at', 'updated_at', 'deleted_at'];
 
-    protected $fillable = ['nombre', 'id_accion', 'ediciones', 'duracion', 'id_provincia', 'id_ficha_tecnica', 'anio'];
+    protected $fillable = ['nombre', 'id_accion', 'ediciones', 'duracion', 'id_provincia', 'id_ficha_tecnica', 'anio', 'ficha_obligatoria'];
 
     /**
      * The table associated with the model.

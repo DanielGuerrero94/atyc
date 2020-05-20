@@ -230,12 +230,13 @@
 <script type="text/javascript" src="{{"https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"}}"></script>
 
 <script type="text/javascript">
+
 	function uploadFichaButton(id_pac) {
-		return '<a href="#abm" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir"><i class="fa fa-upload fa-lg" style="color: #228B22;"> </i> </a> ';
+		return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir"><i class="fa fa-upload fa-lg" style="color: #FFD700;"> </i> </a> ';
 	}
 
 	function updateFichaButton(id_ficha) {
-		return '<a href="#abm" data-id="'+ id_ficha + '" class="btn btn-circle update-ficha_tecnica" title="Reemplazar"><i class="fa fa-cloud-upload fa-lg text-primary"> </i> </a> ';
+		return '<a href="#" data-id="'+ id_ficha + '" class="btn btn-circle update-ficha_tecnica" title="Reemplazar"><i class="fa fa-cloud-upload fa-lg" style="color: #FFD700;"> </i> </a> ';
 	}
 
 	function downloadFichaButton(id_ficha) {
@@ -243,60 +244,68 @@
 	}
 
 	function aprobarFichaButton(id_ficha) {
-		return '<a href="#abm" data-id="' + id_ficha + '" class="btn btn-circle aprobar-ficha_tecnica" title="Aprobar"><i class="fa fa-check fa-lg" style="color: #1E90FF;"></i></a>';
+		return '<a href="javascript:void(0)" data-id="' + id_ficha + '" class="btn btn-circle aprobar-ficha_tecnica" title="Aprobar"><i class="fa fa-check fa-lg" style="color: #228B22;"></i></a>';
 	}
-	
-  function estadosFicha(ficha) {
-    if(jQuery.isEmptyObject(ficha)) {
-      return '<i class="fa fa-circle fa-lg" style="color: #B22222;" title="No tiene"> </i>';
-		} else if (!ficha.aprobada) {
-      return '<i class="fa fa-circle fa-lg" style="color: #FFD700;" title="En diseño"> </i>';
-    } else {
-      return '<i class="fa fa-circle fa-lg" style="color: #228B22;" title="Aprobada"> </i>';
-    }
+
+	function desaprobarFichaButton(id_ficha) {
+		return '<a href="javascript:void(0)" data-id="' + id_ficha + '" class="btn btn-circle desaprobar-ficha_tecnica" title="Desaprobar"><i class="fa fa-close fa-lg" style="color: #FFD700;"></i></a>';
+	}
+
+  function obligarFichaButton(id_pac) {
+    return '<a href="javascript:void(0)" data-id="'+id_pac+'" class="btn btn-circle obligar-ficha_tecnica" title="Hacerla obligatoria"><i class="fa fa-exclamation-triangle fa-lg" style="color: #1E90FF;"></i></a>';
   }
 
-	@if(Auth::user()->id_provincia === 25)
-	function fichaTecnicaButtons(ficha, id_pac) {
-		if(jQuery.isEmptyObject(ficha)) {
-			return uploadFichaButton(id_pac);
-		} else if (!ficha.aprobada) {
-			return aprobarFichaButton(ficha.id_ficha_tecnica) + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
-		} else {
-			return updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
-		}
+  function desobligarFichaButton(id_pac) {
+    return '<a href="javascript:void(0)" data-id="'+id_pac+'" class="btn btn-circle desobligar-ficha_tecnica" title="Dejar de hacerla obligatoria"><i class="fa fa-question fa-lg" style="color: #D3D3D3;"></i></a>';
+  }
+	
+	function semaforo({color="#000000" , titulo=""}) {
+		return '<i class="fa fa-circle fa-lg" style="color: '+color+';" title="'+titulo+'"> </i>'
 	}
-	@else
-	function fichaTecnicaButtons(ficha, id_pac) {
-		if(jQuery.isEmptyObject(ficha)) {
-			return uploadFichaButton(id_pac);
-		} else if (!ficha.aprobada) {
-			return updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
-		} else {
-			return downloadFichaButton(ficha.id_ficha_tecnica);
-		}
-	}
-	@endif
 
-  function fichaTecnica(id_ficha, id_pac)
-  {
-    if(id_ficha) {	
-      buttons = '<a href="{{url("/pacs/ficha_tecnica")}}/' + id_ficha + '/download" data-id="'+ id_ficha + '" class="btn btn-circle download-ficha_tecnica" title="Descargar Ficha Tecnica"><i class="fa fa-download fa-lg" style="color: #2F2D2D;"></i></a>';
-      upload = '<a href="#" data-id="'+ id_ficha + '" class="btn btn-circle update-ficha_tecnica" title="Reemplazar Ficha Técnica"><i class="fa fa-cloud-upload fa-lg text-primary"> </i> </a> ';
-      
-      @if(!isset($disabled))
-      buttons += upload;
-      @endif
-      
-      return buttons;
-    } else {
-      buttons = '';
-      @if(!isset($disabled))
-      buttons = '<a href="#" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir Ficha Técnica"><i class="fa fa-upload fa-lg" style="color: #228B22;"> </i> </a> ';
-      @endif
-      
-      return buttons;
-    }
+	function estadosFicha(ficha, ficha_obligatoria) {
+		semaforos = '';
+
+		if(!ficha_obligatoria)
+			semaforos += semaforo({color: "#D3D3D3", titulo: "No obligatoria"});
+		else
+			semaforos += semaforo({color: "#1E90FF", titulo: "Obligatoria"});
+		
+    semaforos += '  ';
+		if(jQuery.isEmptyObject(ficha))
+			semaforos += semaforo({color: "#B22222", titulo: 'No tiene'});
+		else if (!ficha.aprobada)
+			semaforos += semaforo({color: "#FFD700", titulo: 'En diseño'});
+		else
+			semaforos += semaforo({color: "#228B22", titulo: 'Aprobada'});
+    
+		return semaforos;
+  }
+  
+  function  fichaTecnicaAccionesButtons (ficha, id_pac, ficha_obligatoria) {
+    buttons = '';
+    if (jQuery.isEmptyObject(ficha))
+      buttons += uploadFichaButton(id_pac);
+    else if(!ficha.aprobada)
+      buttons += downloadFichaButton(ficha.id_ficha_tecnica) + updateFichaButton(ficha.id_ficha_tecnica);
+    else
+      buttons += downloadFichaButton(ficha.id_ficha_tecnica);
+    
+    @if(Auth::user()->id_provincia === 25)
+      if(!jQuery.isEmptyObject(ficha)) {
+        if(ficha.aprobada)
+          buttons += updateFichaButton(ficha.id_ficha_tecnica) + desaprobarFichaButton(ficha.id_ficha_tecnica);
+        else
+          buttons += aprobarFichaButton(ficha.id_ficha_tecnica)
+      }
+
+      if(ficha_obligatoria)
+        buttons += desobligarFichaButton(id_pac);
+      else
+        buttons += obligarFichaButton(id_pac);
+    @endif
+
+    return buttons;
   }
 
   function accionesEdiciones(id_curso)
@@ -309,6 +318,62 @@
     return buttons
   }
 
+  function alertChangeState(object, {url= "", log="", messageText=""}) {
+      var id = object.data('id');
+			var data = '_token='+$('.container-fluid input').first().val();
+			jQuery('<div/>', {
+				id: 'dialogABM',
+				text: ''
+			}).appendTo('.container-fluid');
+
+			$("#dialogABM").dialog({
+				title: "Verificacion",
+				show: {
+					effect: "fold"
+				},
+				hide: {
+					effect: "fade"
+				},
+				modal: true,
+				width : 360,
+				height : 220,
+				closeOnEscape: true,
+				resizable: false,
+				dialogClass: "alert",
+				open: function () {
+					jQuery('<p/>', {
+						id: 'dialogABM',
+						text: messageText
+					}).appendTo('#dialogABM');
+				},
+				buttons :
+				{
+					"Aceptar" : function () {
+						$(this).dialog("destroy");
+						$("#dialogABM").html("");
+						$.ajax ({
+				      url: "{{url('pacs/fichas_tecnicas/')}}"+'/'+id+url,
+							method: 'post',
+							data: data,
+							success: function(data){
+								console.log(log);
+								location.reload();
+							},
+							error: function (data) {
+								console.log('Hubo un error.');
+								console.log(data);
+							}
+						});
+
+					},
+					"Cancelar" : function () {
+						$(this).dialog("destroy");
+						$("#dialogABM").html("");
+						location.reload("true");
+					}
+				}
+			});
+  }
   $(document).ready(function() {
 
 		formUpload = '<form id="upload-ficha_tecnica" name="upload-ficha_tecnica" style="display: none;">{{ csrf_field() }}<label><input type="file" name="csv" style="display: none;"></label></form>';
@@ -353,14 +418,14 @@
         {
           title: 'Estado', data: 'ficha_tecnica', name: 'id_ficha_tecnica', 
           render: function ( data, type, row, meta ) {
-            return estadosFicha(data, id_pac);
+            return estadosFicha(data, row.ficha_obligatoria);
           },
           orderable: false
         },
         {
           title: 'Acciones', data: 'ficha_tecnica', name: 'id_ficha_tecnica', 
           render: function ( data, type, row, meta ) {
-            return fichaTecnicaButtons(data, id_pac);
+            return fichaTecnicaAccionesButtons(data, row.id_pac, row.ficha_obligatoria);
           },
           orderable: false
         }
@@ -563,8 +628,7 @@
     //     alert('Hay campos que no cumplen con la validacion.');
     //   }
     // });
-
-    $(".container-fluid").on("click", ".upload-ficha_tecnica", function(event) {
+		$(".container-fluid").on("click", ".upload-ficha_tecnica", function(event) {
 			$(formUpload).appendTo($(this).parent());
 			$(this).parent().find("form input").click();
 		});
@@ -572,7 +636,10 @@
 		$(".container-fluid").on("change", "#upload-ficha_tecnica input", function(event) {
 			form = $(this).parent().parent();
 			data = new FormData(form[0]);
-			id_pac = form.parent().find(".upload-ficha_tecnica").data("id");			
+			for (var pair of data.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]); 
+            }
+			id_pac = form.parent().find(".upload-ficha_tecnica").data("id");
 			$.ajax({
 				url: "{{url('pacs')}}" + "/" + id_pac,
 				type: 'post',
@@ -599,12 +666,15 @@
 			form = $(this).parent().parent();
 			data = new FormData(form[0]);
 			id_ficha = form.parent().find(".update-ficha_tecnica").data("id");			
+      for (var pair of data.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+      }
 			$.ajax({
 				url: "{{url('pacs/fichas_tecnicas')}}" + "/" + id_ficha,
 				type: 'post',
 				data: data,
 				processData: false,
-				contentType: false,
+                contentType: false,
 				success: function (data) {
 					console.log("success");
 					location.reload();
@@ -621,6 +691,36 @@
 			let id = $(this).data("id");
 			location.href = "{{url('/pacs/fichas_tecnicas')}}" + "/" + id + "/download";
 		});
+
+		$('.container-fluid').on("click",".aprobar-ficha_tecnica", function() {
+			alertChangeState($(this), {
+        url: "/aprobar",
+        log:"Se aprobo la ficha tecnica",
+        messageText:"Está segura de aprobar la ficha técnica?"
+      });
+		});
+
+		$('.container-fluid').on("click",".desaprobar-ficha_tecnica", function() {
+			alertChangeState($(this), {
+        url: "/desaprobar",
+        log:"Se desaprobo la ficha tecnica",
+        messageText:"Está segura de desaprobar la ficha técnica?"});
+		});
+
+    $('.container-fluid').on("click",".obligar-ficha_tecnica", function() {
+			alertChangeState($(this), {
+        url: "/obligar",
+        log:"Se obligo la ficha tecnica",
+        messageText: "Está segura que la ficha técnica debe ser obligatoria?"});
+		});
+
+    $('.container-fluid').on("click",".desobligar-ficha_tecnica", function() {
+			alertChangeState($(this), {
+        url: "/desobligar",
+        log:"Se desobligo la ficha tecnica",
+        messageText: "Está segura que la ficha técnica debe dejar de ser obligatoria?"});
+		});
+
 
 	});
 </script>

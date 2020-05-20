@@ -68,44 +68,44 @@
 	function deleteButton(id_pac) {
 			return '<a href="#abm" data-id="' + id_pac + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
 	}
-
-	function uploadFichaButton(id_pac) {
-		return '<a href="#abm" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica" title="Subir"><i class="fa fa-upload fa-lg" style="color: #228B22;"> </i> </a> ';
-	}
-
-	function updateFichaButton(id_ficha) {
-		return '<a href="#abm" data-id="'+ id_ficha + '" class="btn btn-circle update-ficha_tecnica" title="Reemplazar"><i class="fa fa-cloud-upload fa-lg text-primary"> </i> </a> ';
-	}
-
-	function downloadFichaButton(id_ficha) {
-		return '<a href="{{url("/pacs/ficha_tecnica")}}/' + id_ficha + '/download" data-id="'+ id_ficha + '" class="btn btn-circle download-ficha_tecnica" title="Descargar"><i class="fa fa-download fa-lg" style="color: #2F2D2D;"></i></a>';
-	}
-
-	function aprobarFichaButton(id_ficha) {
-		return '<a href="#abm" data-id="' + id_ficha + '" class="btn btn-circle aprobar-ficha_tecnica" title="Aprobar"><i class="fa fa-check fa-lg" style="color: #1E90FF;"></i></a>';
-	}
 	
-	@if(Auth::user()->id_provincia === 25)
-	function fichaTecnicaButtons(ficha, id_pac) {
-		if(jQuery.isEmptyObject(ficha)) {
-			return '<i class="fa fa-circle fa-lg" style="color: #B22222;" title="No tiene"> </i>' + uploadFichaButton(id_pac);
-		} else if (!ficha.aprobada) {
-			return '<i class="fa fa-circle fa-lg" style="color: #FFD700;" title="En diseño"> </i>' + aprobarFichaButton(ficha.id_ficha_tecnica) + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
-		} else {
-			return '<i class="fa fa-circle fa-lg" style="color: #228B22;" title="Aprobada"> </i>' + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
-		}
+	function semaforo({color="#000000" , titulo=""}) {
+		return '<i class="fa fa-circle fa-lg" style="color: '+color+';" title="'+titulo+'"> </i>'
 	}
-	@else
-	function fichaTecnicaButtons(ficha, id_pac) {
-		if(jQuery.isEmptyObject(ficha)) {
-			return '<i class="fa fa-circle fa-lg" style="color: #B22222;" title="No tiene"> </i>' + uploadFichaButton(id_pac);
-		} else if (!ficha.aprobada) {
-			return '<i class="fa fa-circle fa-lg" style="color: #FFD700;" title="En diseño"> </i>' + updateFichaButton(ficha.id_ficha_tecnica) + downloadFichaButton(ficha.id_ficha_tecnica);
-		} else {
-			return '<i class="fa fa-circle fa-lg" style="color: #228B22;" title="Aprobada"> </i>' + downloadFichaButton(ficha.id_ficha_tecnica);
-		}
+
+	function estadosFicha(ficha, ficha_obligatoria) {
+		semaforos = '';
+		if(!ficha_obligatoria)
+			semaforos += semaforo({color: "#D3D3D3", titulo: "No obligatoria"});
+		else
+			semaforos += semaforo({color: "#1E90FF", titulo: "Obligatoria"});
+		
+		semaforos += '  ';
+
+		if(jQuery.isEmptyObject(ficha))
+			semaforos += semaforo({color: "#B22222", titulo: 'No tiene'});
+		else if (!ficha.aprobada)
+			semaforos += semaforo({color: "#FFD700", titulo: 'En diseño'});
+		else
+			semaforos += semaforo({color: "#228B22", titulo: 'Aprobada'});
+
+		return semaforos;
+  	}
+
+	function sacarObligatoriedadFichas(value) {
+		return (value !== "obligatoria" && value !== "no_obligatoria");
 	}
-	@endif
+
+	function sacarEstadosFichas(value) {
+		return (value == "obligatoria" || value == "no_obligatoria");
+	}
+
+	function convertirObligatoriedadABool(value) {
+		if (value == "obligatoria")
+			return true;
+		else
+			return false; 
+	}
 
 	function getFiltrosJson() {
 
@@ -114,21 +114,24 @@
 		var nombre = $('#nombre').val();
 		var duracion = $('#duracion').val();
 		var ediciones = $('#edicion').val();
+
 		var estados_ficha = $('#estados_ficha').val();
+		if(!jQuery.isEmptyObject(estados_ficha))
+			estados_ficha = estados_ficha.filter(sacarObligatoriedadFichas);
+		
+		var obligatorios = $('#estados_ficha').val();
+		if(!jQuery.isEmptyObject(obligatorios))
+			obligatorios = obligatorios.filter(sacarEstadosFichas).map(convertirObligatoriedadABool);
+
 		var tipos_accion = $('#acciones').val();
 		var tematicas = $('#tematicas').val();
 		var destinatarios = $('#destinatarios').val();
 		var responsables = $('#responsables').val();
 		var pautas = $('#pautas').val();
 		var componentes = $('#componentes').val();
-		
-
-		// var provincia = $('#provincia option:selected').data('id');
-		// var linea_estrategica = $('#linea_estrategica option:selected').data('id');
-		// var area_tematica = $('#area_tematica option:selected').data('id');
-		// var periodo = $('#periodo option:selected').data('id');
-		// var desde = $('#desde').val();
-		// var hasta = $('#hasta').val();			
+		var id_periodo = $('#periodo').val();
+		var desde = $('#desde').val();
+		var hasta = $('#hasta').val();
 
 		data = {
 			anio: anios,
@@ -137,15 +140,16 @@
 			duracion: duracion,
 			ediciones: ediciones,
 			ficha_tecnica_aprobada: estados_ficha,
+			ficha_obligatoria: obligatorios,
 			id_accion: tipos_accion,
 			id_tematica: tematicas,
 			id_destinatario: destinatarios,
 			id_responsable: responsables,
 			id_pauta: pautas,
-			id_componente: componentes
-			// id_periodo: periodo,
-			// desde: desde,
-			// hasta: hasta
+			id_componente: componentes,
+			periodo: id_periodo,
+			desde: desde,
+			hasta: hasta
 		};
 
 		console.log(data);
@@ -175,7 +179,7 @@
 				id: '0',
 				text: " Todas las fichas"
 			},
-			width: "400"
+			width: "400%"
 		});
 
 		$('.acciones').select2({
@@ -226,6 +230,11 @@
 			width: "400%"
 		});
 
+		$('.periodo').select2({
+			"placeholder": "Todos los periodos",
+			width: "400%"
+		});
+
 		$('.select-2').ready(function() {
         	$('.select2-container--default .select2-selection--multiple').css('height', 'auto');
 			$('#filtros .box').toggle();
@@ -269,7 +278,7 @@
 					data: 'ficha_tecnica',
 					name: 'id_ficha_tecnica',
 					render: function ( data, type, row, meta ) {
-						return fichaTecnicaButtons(data, row.id_pac);
+						return estadosFicha(data, row.ficha_obligatoria);
 					}
 				},
 				{ title: 'Jurisdiccion', data: 'provincias.nombre', name: 'id_provincia'},
@@ -372,10 +381,15 @@
 
 		$("#alta-pac").on("click","#volver",function(){
 			console.log('Se vuelve sin crear la PAC.');
-			$('#alta-pac').html("");
-			$('#prefilter').show();
-			$('#abm').show();
-			$('#filtros').show();
+			location.reload('pacs');
+			// $('#alta-pac').html("");
+			// $('#alta-pac').remove('#form-alta');
+			// $('#prefilter').show();
+			// $('#abm').show();
+			// $('#filtros').show();
+			// $('#filtros .box').toggle();
+			// inicializarSelect2();
+			// Agarraba bugsitos del select2 y el contador de ediciones input se rompia cada vez que clickeas volver
 		});
 
 		$('#alta-pac').on('click','#modificar',function() {
@@ -435,127 +449,6 @@
 							data: data,
 							success: function(data){
 								console.log('Se borro la pac.');
-								location.reload();
-							},
-							error: function (data) {
-								console.log('Hubo un error.');
-								console.log(data);
-							}
-						});
-
-					},
-					"Cancelar" : function () {
-						$(this).dialog("destroy");
-						$("#dialogABM").html("");
-						location.reload("true");
-					}
-				}
-			});
-		});
-
-		$(".container-fluid").on("click", ".upload-ficha_tecnica", function(event) {
-			$(formUpload).appendTo($(this).parent());
-			$(this).parent().find("form input").click();
-		});
-
-		$(".container-fluid").on("change", "#upload-ficha_tecnica input", function(event) {
-			form = $(this).parent().parent();
-			data = new FormData(form[0]);
-			for (var pair of data.entries()) {
-                console.log(pair[0]+ ', ' + pair[1]); 
-            }
-			id_pac = form.parent().find(".upload-ficha_tecnica").data("id");
-			$.ajax({
-				url: "{{url('pacs')}}" + "/" + id_pac,
-				type: 'post',
-				data: data,
-				processData: false,
-				contentType: false,
-				success: function (data) {
-					console.log("success");
-					location.reload();
-				},
-				error: function (data) {
-					alert("Error al subir el archivo.");
-					location.reload();
-				}
-			});
-		});
-
-		$(".container-fluid").on("click", ".update-ficha_tecnica", function(event) {
-			$(formUpdate).appendTo($(this).parent());
-			$(this).parent().find("form input").click();
-		});
-
-		$(".container-fluid").on("change", "#update-ficha_tecnica input", function(event) {
-			form = $("#update-ficha_tecnica");
-			data = new FormData(form[0]);
-			id_ficha = form.parent().find(".update-ficha_tecnica").data("id");			
-            for (var pair of data.entries()) {
-                console.log(pair[0]+ ', ' + pair[1]); 
-            }
-			$.ajax({
-				url: "{{url('pacs/fichas_tecnicas')}}" + "/" + id_ficha,
-				type: 'post',
-				data: data,
-				processData: false,
-                contentType: false,
-				success: function (data) {
-					console.log("success");
-					location.reload();
-				},
-				error: function (data) {
-					alert("Error al actualizar el archivo.");
-					location.reload();
-				}
-			});
-		});
-
-		$(".container-fluid").on("click", '.download-ficha_tecnica', function(event) {
-			event.preventDefault();
-			let id = $(this).data("id");
-			location.href = "{{url('/pacs/fichas_tecnicas')}}" + "/" + id + "/download";
-		});
-
-		$('#abm').on("click",".aprobar-ficha_tecnica",function(){
-			var id_ficha = $(this).data('id');
-			var data = '_token='+$('#abm input').first().val();
-			jQuery('<div/>', {
-				id: 'dialogABM',
-				text: ''
-			}).appendTo('.container-fluid');
-
-			$("#dialogABM").dialog({
-				title: "Verificacion",
-				show: {
-					effect: "fold"
-				},
-				hide: {
-					effect: "fade"
-				},
-				modal: true,
-				width : 360,
-				height : 220,
-				closeOnEscape: true,
-				resizable: false,
-				dialogClass: "alert",
-				open: function () {
-					jQuery('<p/>', {
-						id: 'dialogABM',
-						text: '¿Esta seguro de aprobar la ficha tecnica?'
-					}).appendTo('#dialogABM');
-				},
-				buttons :
-				{
-					"Aceptar" : function () {
-						$(this).dialog("destroy");
-						$("#dialogABM").html("");
-						$.ajax ({
-							url: 'pacs/fichas_tecnicas/' +id_ficha+'/aprobar',
-							method: 'post',
-							data: data,
-							success: function(data){
-								console.log('Se aprobo la ficha tecnica.');
 								location.reload();
 							},
 							error: function (data) {

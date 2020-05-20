@@ -20,7 +20,7 @@ SET row_security = off;
 -- Name: pac_joined; Type: VIEW; Schema: public; Owner: postgres
 --
 
-DROP VIEW pac.pac_joined;
+-- DROP VIEW pac.pac_joined;
 
 CREATE OR REPLACE VIEW pac.pac_joined AS
  SELECT p.id_pac,
@@ -34,6 +34,11 @@ CREATE OR REPLACE VIEW pac.pac_joined AS
     p.duracion,
     p.id_ficha_tecnica,
     p.anio,
+    p.ficha_obligatoria,
+    c.fecha_plan_inicial AS fp_desde,
+    c.fecha_plan_final AS fp_hasta,
+    c.fecha_ejec_inicial AS fe_desde,
+    c.fecha_ejec_final AS fe_hasta,
     le.numero AS linea_numero,
     le.nombre AS linea_nombre,
     ft.path AS ficha_tecnica_path,
@@ -47,9 +52,10 @@ CREATE OR REPLACE VIEW pac.pac_joined AS
     pr.id_responsable,
     pd.id_destinatario,
     pc.id_componente
-   FROM ((((((((pac.pacs p
+   FROM (((((((((pac.pacs p
      JOIN cursos.lineas_estrategicas le ON ((le.id_linea_estrategica = p.id_accion)))
      LEFT JOIN pac.fichas_tecnicas ft ON ((ft.id_ficha_tecnica = p.id_ficha_tecnica)))
+     LEFT JOIN cursos.cursos c USING (id_pac))
      JOIN sistema.provincias pro ON ((pro.id_provincia = p.id_provincia)))
      LEFT JOIN pac.pacs_tematicas pt USING (id_pac))
      LEFT JOIN pac.pacs_pautas pp USING (id_pac))

@@ -205,6 +205,9 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::post('pacs/{id_pac}', 'PacController@storeFichaTecnica');
     Route::post('pacs/fichas_tecnicas/{id_ficha}', 'PacController@replaceFichaTecnica');
     Route::post('pacs/fichas_tecnicas/{id_ficha}/aprobar', 'PacController@aprobarFichaTecnica');
+    Route::post('pacs/fichas_tecnicas/{id_ficha}/desaprobar', 'PacController@desaprobarFichaTecnica');
+    Route::post('pacs/fichas_tecnicas/{id_pac}/obligar', 'PacController@obligarFichaTecnica');
+    Route::post('pacs/fichas_tecnicas/{id_pac}/desobligar', 'PacController@desobligarFichaTecnica');
 
 
     //Encuestas

@@ -40,9 +40,11 @@
 					<label class="control-label col-xs-5" for="id_estados_ficha">Fichas Técnicas:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 						<select class="select-2 form-control estados_ficha" id="estados_ficha" name="id_estado_ficha" aria-hidden="true" multiple>
-							<option data-id="2" value="true">APROBADA &#10004</option>
-							<option data-id="1" value="false">EN DISEÑO &#x1F477</option>
-							<option data-id="0" value="notiene">NO TIENE &#10060</option>
+							<option data-id="4" value="true">APROBADA &#10004</option>
+							<option data-id="3" value="false">EN DISEÑO &#x1F477</option>
+							<option data-id="2" value="no_tiene">NO TIENE &#10060</option>
+							<option data-id="1" value="obligatoria">OBLIGATORIA</option>
+							<option data-id="0" value="no_obligatoria">NO OBLIGATORIA</option>
 						</select>          
 					</div>
 				</div>
@@ -125,10 +127,11 @@
 				<div class="form-group col-sm-4">
 					<label for="periodo" class="control-label col-xs-5">Período:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-						<select class="form-control" id="id_periodo">
-							<option data-id="0" title="Todos los períodos">Todos los períodos</option>
+						<select class="select2 form-control periodo" id="periodo" name="id_periodo" aria-hidden="true">
+							<option></option>
+							<option data-id="0" value="0">Todos los períodos</option>
 							@foreach ($periodos as $periodo)
-							<option data-id="{{$periodo->id_periodo}}" title="{{$periodo->nombre}}">{{$periodo->nombre}}</option>
+							<option data-id="{{$periodo->id_periodo}}" value="{{$periodo->id_periodo}}">{{$periodo->nombre}}</option>
 							@endforeach
 						</select>
 					</div>

@@ -160,7 +160,8 @@ class PacController extends AbmController
         if ($v->fails()) {
             return $v->errors();
         }
-
+        $data['ficha_obligatoria'] = true;
+        
         $pac = Pac::create($data);
         logger('Crea pac: '.$pac);
 
@@ -276,13 +277,49 @@ class PacController extends AbmController
             if($key == 'ficha_tecnica_aprobada')
             {
                 $query = $query->where(function($q) use ($key, $value) {
-                    if (in_array("notiene", $value))
+                    if (in_array("no_tiene", $value))
                     {
                         $q->orWhere('pac.pac_joined.id_ficha_tecnica', null);
-                        array_pop($value);
+                        $value = array_diff($value,["no_tiene"]);
                     }
 
                     $q = $q->orWhereIn('pac.pac_joined.'.$key, $value);
+                });
+            }
+            elseif ($key == 'desde')
+            {
+                $query = $query->where(function($q) use ($value) {
+                    $q->orWhere('pac.pac_joined.fp_desde', '>=', $value)
+                    ->orWhere('pac.pac_joined.fp_hasta', '>=', $value);
+                    //->orWhere('pac.pac_joined_fe_desde', '>=', $value)
+                    //->orWhere('pac.pac_joined_fe_hasta', '>=', $value);
+                });
+            }
+            elseif ($key == 'hasta')
+            {
+                $query = $query->where(function($q) use ($value) {
+                    $q->orWhere('pac.pac_joined.fp_desde', '<=', $value)
+                    ->orWhere('pac.pac_joined.fp_hasta', '<=', $value);
+                    //->orWhere('pac.pac_joined_fe_desde', '<=', $value)
+                    //->orWhere('pac.pac_joined_fe_hasta', '<=', $value);
+                });
+            }
+            elseif ($key == 'periodo')
+            {
+                $periodo = Periodo::find($value);
+
+                $query = $query->where(function($q) use ($periodo) {
+                    $q->orWhere('pac.pac_joined.fp_desde', '>=', $periodo->desde)
+                    ->orWhere('pac.pac_joined.fp_hasta', '>=', $periodo->desde);
+                    //->orWhere('pac.pac_joined.fe_desde', '>=', $periodo->desde)
+                    //->orWhere('pac.pac_joined.fe_hasta', '>=', $periodo->desde);
+                });
+
+                $query = $query->where(function($q) use ($periodo) {
+                    $q->orWhere('pac.pac_joined.fp_desde', '<=', $periodo->hasta)
+                    ->orWhere('pac.pac_joined.fp_hasta', '<=', $periodo->hasta);
+                    //->orWhere('pac.pac_joined_fe_desde', '<=', $periodo->hasta)
+                    //->orWhere('pac.pac_joined_fe_hasta', '<=', $periodo->hasta);
                 });
             }
             elseif ($key == 'nombre')
@@ -292,7 +329,6 @@ class PacController extends AbmController
             else
                 $query = $query->whereIn('pac.pac_joined.'.$key, $value);
         }
-        
 
         logger()->warning("query: ".json_encode($query->toSql()));
 
@@ -326,15 +362,6 @@ class PacController extends AbmController
         logger()->warning("pacs: ".json_encode($pacs->toSql()));
 
         return $pacs;
-
-        //     // } elseif ($key == 'desde') {
-        //     //     $query = $query->where('pac.pacs.fecha', '>=', $value);
-        //     // } elseif ($key == 'hasta') {
-        //     //     $query = $query->where('cursos.cursos.fecha', '<=', $value);
-        //     // } elseif ($key == 'id_periodo') {
-        //     //     $periodo = Periodo::find($value);
-        //     //     $query = $query->where('cursos.cursos.fecha', '>=', $periodo->desde);
-        //     //     $query = $query->where('cursos.cursos.fecha', '<=', $periodo->hasta);
 
     }
     /**
@@ -545,6 +572,33 @@ class PacController extends AbmController
         return response('Aprobada');
     }
 
+    public function desaprobarFichaTecnica($id_ficha)
+    {
+        $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
+        $ficha_tecnica->aprobada = false;
+        $ficha_tecnica->save();
+
+        return response('Desaprobada');
+    }
+
+    public function obligarFichaTecnica($id_pac)
+    {
+        $pac = Pac::findOrFail($id_pac);
+        $pac->ficha_obligatoria = true;
+        $pac->save();
+
+        return response('Obligado');
+    }
+
+    public function desobligarFichaTecnica($id_pac)
+    {
+        $pac = Pac::findOrFail($id_pac);
+        $pac->ficha_obligatoria = false;
+        $pac->save();
+
+        return response('Desobligado');
+    }
+
     public function see($id_pac)
     {
         return view('pacs.modificacion', array_merge($this->show($id_pac), $this->getEditOptions(), ['disabled' => true]));
@@ -583,6 +637,7 @@ class PacController extends AbmController
 		    return ['response' => response()->json(['success' => false, 'error' => $e->getMessage()])];
 	    }
     }
+
     public function getCompletoExcel($id_pac)
     {
         $datos = $this->getPacWithTrashed($id_pac);
