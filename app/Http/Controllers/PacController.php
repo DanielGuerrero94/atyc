@@ -25,6 +25,7 @@ use Log;
 use Validator;
 use Datatables;
 use Excel;
+use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -261,7 +262,7 @@ class PacController extends AbmController
         logger()->info($key.": ".$value);
     }
 
-    public function queryLogica($filtros, $orderBy)
+    public function queryLogicaIds($filtros, $orderBy)
     {
         $filtered = $filtros->filter(function ($value, $key) {
             return $value != "" && $value != "0";
@@ -339,7 +340,12 @@ class PacController extends AbmController
         }, $ids);
          
         logger()->warning("ids_pac: ".json_encode($ids));
-        
+
+        return $ids;
+    }
+
+    function getTabla($ids_pac)
+    {
         $pacs = Pac::with([
             'tipoAccion' => function ($pacs) {
                 return $pacs->withTrashed();
@@ -351,24 +357,118 @@ class PacController extends AbmController
             'cursos' => function ($pacs) {
                 return $pacs->withTrashed();
             },
-            'fichaTecnica' => function ($query) {
-                return $query->withTrashed();
+            'fichaTecnica' => function ($pacs) {
+                return $pacs->withTrashed();
             },
-            'responsables'
+            'responsables' => function ($pacs) {
+                return $pacs->withTrashed();
+            }
         ])
-        ->whereIn('pac.pacs.id_pac', $ids)
+        ->whereIn('pac.pacs.id_pac', $ids_pac)
         ->segunProvincia();
+
+        foreach ($pacs->get() as $pac)
+            $this->setDisplayDate($pac);
 
         logger()->warning("pacs: ".json_encode($pacs->toSql()));
 
         return $pacs;
-
     }
-    /**
-     * Opciones para los selects del front end.
-     *
-     * @return array
-     */
+
+    public function setDisplayDate(Pac $pac)
+    {
+        $cursos = $pac->cursos()->orderBy('fecha_plan_inicial')->get();
+
+        $todos_ejecutados = true;
+        $estados = array();
+
+        //logger()->warning("Pac: ".$pac->nombre);
+
+        foreach ($cursos as $curso) 
+        {
+            if(isset($curso->fecha_ejec_inicial))
+            {
+                if((!isset($fecha_ejec_anterior) || $curso->fecha_ejec_inicial <= $fecha_ejec_anterior))
+                    $fecha_ejec_anterior = $curso->fecha_ejec_inicial;
+            }
+            else
+            {
+                $todos_ejecutados = false;
+                
+                if($curso->fecha_plan_inicial >= Carbon::now()->format('yy-m-d') && (!isset($fecha_plan_posterior) || $curso->fecha_plan_inicial <= $fecha_plan_posterior))
+                    $fecha_plan_posterior = $curso->fecha_plan_inicial;
+                
+                elseif(!isset($fecha_plan_anterior) || $curso->fecha_plan_inicial <= $fecha_plan_anterior)
+                    $fecha_plan_anterior = $curso->fecha_plan_inicial;
+            }
+
+            // logger()->warning("Comparacion: ".$curso->fecha_plan_inicial." >= ".Carbon::now()->format('yy-m-d'));
+            // if(isset($fecha_plan_anterior))
+            //     logger()->warning("Fecha Plan Anterior: ".$fecha_plan_anterior);
+            // if(isset($fecha_plan_posterior))
+            //     logger()->warning("Fecha Plan Posterior: ".$fecha_plan_posterior);
+            // if(isset($fecha_ejec_anterior))
+            //     logger()->warning("Fecha Ejec Anterior: ".$fecha_ejec_anterior);
+        }
+        $display = $pac->created_at;
+        
+        if(isset($fecha_plan_posterior))
+            $display = $fecha_plan_posterior;
+        elseif($todos_ejecutados && isset($fecha_ejec_anterior))
+            $display = $fecha_ejec_anterior;
+        elseif(isset($fecha_plan_anterior))
+            $display = $fecha_plan_anterior;
+
+        $pac->display_date = $display;
+        $pac->save();
+        // logger()->warning("display_date :".$pac->display_date);
+    }
+
+    public function setColorEstado($id_estado)
+    {
+        if ($id_estado == 1)
+            $color = "progress-bar-warning";
+        else if ($id_estado == 2)
+            $color = "progress-bar-info";
+        else if ($id_estado == 3)
+            $color = "progress-bar-primary";
+        else if ($id_estado == 4)
+            $color = "progress-bar-success";
+        else if ($id_estado == 5)
+            $color = "progress-bar-secondary";
+        else
+            $color = "progress-bar-danger";
+        
+        return $color;
+    }
+
+    public function estadosPorCursos(Pac $pac)
+    {
+        $cursos = $pac->cursos()->get();
+        $estados = array();
+
+        foreach ($cursos as $curso)
+        {
+            if(!isset($estados[$curso->id_estado]))
+            {
+                $estados[$curso->id_estado]['cantidad'] = 1;
+                $estados[$curso->id_estado]['titulo'] = $curso->estado()->get()[0]->nombre;
+                $estados[$curso->id_estado]['color'] = $this->setColorEstado($curso->id_estado);
+                $estados[$curso->id_estado]['porcentaje'] = 100;
+            }
+            else {
+                $estados[$curso->id_estado]['cantidad']++;
+            }
+        }
+
+        foreach($estados as &$estado)
+            $estado['porcentaje'] = ($estado['cantidad'] / $cursos->count()) * 100;
+
+        // logger()->warning("Pac: ".$pac->nombre);
+        // logger()->warning("Estados: ".json_encode($estados));
+
+        return $estados;
+    }
 
     public function getFiltrado(Request $r)
     {
@@ -377,9 +477,15 @@ class PacController extends AbmController
 
         $v = Validator::make($filtros->all(), $this->filters);
         if (!$v->fails()) {
-            $query = $this->queryLogica($filtros, null);
+            $ids_pac = $this->queryLogicaIds($filtros, null);
+            $pacs = $this->getTabla($ids_pac);
 
-            return Datatables::of($query)->make(true);
+            return Datatables::of($pacs)
+            ->addColumn(
+                'estados_por_curso', function (Pac $pac) {
+                    return $this->estadosPorCursos($pac);
+            })
+            ->make(true);
         } else {
             return json_encode($v->errors());
         }
@@ -392,9 +498,12 @@ class PacController extends AbmController
 
         $order_by = collect($r->only('order_by'));
 
-        $data = $this->queryLogica($filtros, $order_by)->orderBy('id_provincia')->get();
+        $ids_pac = $this->queryLogicaIds($filtros, $order_by);
         // Habria que ver como usar el $order_by
-        $datos = ['pacs' => $data];
+
+        $pacs = $this->getTabla($ids_pac)->orderBy('id_provincia')->get();
+
+        $datos = ['pacs' => $pacs];
         $path = "pacs_".date("Y-m-d_H:i:s");
 
         Excel::create($path, function ($excel) use ($datos) {
@@ -407,6 +516,13 @@ class PacController extends AbmController
 
         return $path;
     }
+
+    /**
+     * Opciones para los selects del front end.
+     *
+     * @return array
+     */
+
     public function getSelectOptions()
     {
         $pautas = Cache::remember('pautas', 5, function () {

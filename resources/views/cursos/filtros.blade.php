@@ -127,6 +127,16 @@
 			var fecha = $('.fa-calendar').closest('.row');			
 
 			showCalendarInputs(periodo,fecha);
+
+			if(!($('#periodo').val() == "Todos los períodos"))
+			{
+				$('#periodo option').toArray().forEach(function(option) {
+					option.selected = false;
+				});
+			} else {
+				$('#desde').val(undefined);
+				$('#hasta').val(undefined);
+			}
 		});			
 	});
 </script>

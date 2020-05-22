@@ -43,8 +43,8 @@
 							<option data-id="4" value="true">APROBADA &#10004</option>
 							<option data-id="3" value="false">EN DISEÑO &#x1F477</option>
 							<option data-id="2" value="no_tiene">NO TIENE &#10060</option>
-							<option data-id="1" value="obligatoria">OBLIGATORIA</option>
-							<option data-id="0" value="no_obligatoria">NO OBLIGATORIA</option>
+							<option data-id="1" value="obligatoria">OBLIGATORIA &#x1F512</option>
+							<option data-id="0" value="optativa">OPTATIVA &#x1F513</option>
 						</select>          
 					</div>
 				</div>
@@ -162,7 +162,7 @@
 						<input type="text" name="hasta" id="hasta" class="form-control pull-right datepicker">
 					</div>
 				</div>
-			</div>				
+			</div>	
 			<div class="box-footer">
 				<a href="#abm" class="btn btn-square pull-right filtro" id="filtrar">
 					<i class="fa fa-filter text-info fa-lg">Filtrar</i>
@@ -183,9 +183,20 @@
 			switchIcon(icono,'fa-toggle-off','fa-toggle-on');
 
 			var periodo = $('#periodo').closest('.row');
-			var fecha = $('.fa-calendar').closest('.row');			
+			var fecha = $('.fa-calendar').closest('.row');
 
 			showCalendarInputs(periodo,fecha);
+			
+			if($('#periodo').val()) {
+				$('#periodo').val(undefined);
+				$('.periodo').select2({
+					"placeholder": "Todos los periodos",
+					width: "400%"
+				});
+			} else {
+				$('#desde').val(undefined);
+				$('#hasta').val(undefined);
+			}
 		});			
 	});
 </script>

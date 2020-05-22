@@ -122,7 +122,7 @@
               </div>
               <br>
               <div class="row">
-              <div class="col-xs-18 col-md-9" style="padding-left: 2em; padding-top: 2em;">
+              <div style="padding-left: 2em; padding-top: 2em;">
                 <table id="ficha_tecnica-table" class="table table-hover">
 		            </table>
               </div>
@@ -256,31 +256,34 @@
   }
 
   function desobligarFichaButton(id_pac) {
-    return '<a href="javascript:void(0)" data-id="'+id_pac+'" class="btn btn-circle desobligar-ficha_tecnica" title="Dejar de hacerla obligatoria"><i class="fa fa-question fa-lg" style="color: #D3D3D3;"></i></a>';
+    return '<a href="javascript:void(0)" data-id="'+id_pac+'" class="btn btn-circle desobligar-ficha_tecnica" title="Hacerla optativa"><i class="fa fa-exclamation-triangle fa-lg" style="color: #D3D3D3;"></i></a>';
   }
 	
-	function semaforo({color="#000000" , titulo=""}) {
-		return '<i class="fa fa-circle fa-lg" style="color: '+color+';" title="'+titulo+'"> </i>'
+	function iconoFontAwesome({icono="fa-bolt", color="#000000" , titulo=""}) {
+		return '<i class="fa '+icono+' fa-lg" style="color: '+color+';" title="'+titulo+'"> </i>';
+	}
+	function semaforo({color, titulo}) {
+		return iconoFontAwesome({icono: "fa-circle", color, titulo})
 	}
 
 	function estadosFicha(ficha, ficha_obligatoria) {
-		semaforos = '';
-
+		iconos = '';
 		if(!ficha_obligatoria)
-			semaforos += semaforo({color: "#D3D3D3", titulo: "No obligatoria"});
+			iconos += iconoFontAwesome({icono: "fa-exclamation-triangle", color: "#D3D3D3", titulo: "Optativa"});
 		else
-			semaforos += semaforo({color: "#1E90FF", titulo: "Obligatoria"});
+			iconos += iconoFontAwesome({icono: "fa-exclamation-triangle", color: "#1E90FF", titulo: "Obligatoria"});
 		
-    semaforos += '  ';
+		iconos += '  ';
+
 		if(jQuery.isEmptyObject(ficha))
-			semaforos += semaforo({color: "#B22222", titulo: 'No tiene'});
+			iconos += semaforo({color: "#B22222", titulo: 'No tiene'});
 		else if (!ficha.aprobada)
-			semaforos += semaforo({color: "#FFD700", titulo: 'En diseño'});
+			iconos += semaforo({color: "#FFD700", titulo: 'En diseño'});
 		else
-			semaforos += semaforo({color: "#228B22", titulo: 'Aprobada'});
-    
-		return semaforos;
-  }
+			iconos += semaforo({color: "#228B22", titulo: 'Aprobada'});
+
+		return iconos;
+  	}
   
   function  fichaTecnicaAccionesButtons (ficha, id_pac, ficha_obligatoria) {
     buttons = '';
@@ -450,13 +453,13 @@
       				  return moment(data).format('DD/MM/YYYY');
           }
         },
-        { title: 'Fecha final planificada', data: 'fecha_plan_final', defaultContent: '-',
+        { title: 'Fecha inicial ejecución', data: 'fecha_ejec_inicial', defaultContent: '-',
           render:function(data){
             if(data)
       				return moment(data).format('DD/MM/YYYY');
           }
         },
-        { title: 'Fecha inicial ejecución', data: 'fecha_ejec_inicial', defaultContent: '-',
+        { title: 'Fecha final planificada', data: 'fecha_plan_final', defaultContent: '-',
           render:function(data){
             if(data)
       				return moment(data).format('DD/MM/YYYY');
@@ -718,7 +721,7 @@
 			alertChangeState($(this), {
         url: "/desobligar",
         log:"Se desobligo la ficha tecnica",
-        messageText: "Está segura que la ficha técnica debe dejar de ser obligatoria?"});
+        messageText: "Está segura que la ficha técnica debe ser optativa?"});
 		});
 
 

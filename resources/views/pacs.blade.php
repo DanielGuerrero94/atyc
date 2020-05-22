@@ -69,35 +69,38 @@
 			return '<a href="#abm" data-id="' + id_pac + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
 	}
 	
-	function semaforo({color="#000000" , titulo=""}) {
-		return '<i class="fa fa-circle fa-lg" style="color: '+color+';" title="'+titulo+'"> </i>'
+	function iconoFontAwesome({icono="fa-bolt", color="#000000" , titulo=""}) {
+		return '<i class="fa '+icono+' fa-lg" style="color: '+color+';" title="'+titulo+'"> </i>';
+	}
+	function semaforo({color, titulo}) {
+		return iconoFontAwesome({icono: "fa-circle", color, titulo})
 	}
 
 	function estadosFicha(ficha, ficha_obligatoria) {
-		semaforos = '';
+		iconos = '';
 		if(!ficha_obligatoria)
-			semaforos += semaforo({color: "#D3D3D3", titulo: "No obligatoria"});
+			iconos += iconoFontAwesome({icono: "fa-exclamation-triangle", color: "#D3D3D3", titulo: "Optativa"});
 		else
-			semaforos += semaforo({color: "#1E90FF", titulo: "Obligatoria"});
+			iconos += iconoFontAwesome({icono: "fa-exclamation-triangle", color: "#1E90FF", titulo: "Obligatoria"});
 		
-		semaforos += '  ';
+		iconos += '  ';
 
 		if(jQuery.isEmptyObject(ficha))
-			semaforos += semaforo({color: "#B22222", titulo: 'No tiene'});
+			iconos += semaforo({color: "#B22222", titulo: 'No tiene'});
 		else if (!ficha.aprobada)
-			semaforos += semaforo({color: "#FFD700", titulo: 'En diseño'});
+			iconos += semaforo({color: "#FFD700", titulo: 'En diseño'});
 		else
-			semaforos += semaforo({color: "#228B22", titulo: 'Aprobada'});
+			iconos += semaforo({color: "#228B22", titulo: 'Aprobada'});
 
-		return semaforos;
+		return iconos;
   	}
 
 	function sacarObligatoriedadFichas(value) {
-		return (value !== "obligatoria" && value !== "no_obligatoria");
+		return (value !== "obligatoria" && value !== "optativa");
 	}
 
 	function sacarEstadosFichas(value) {
-		return (value == "obligatoria" || value == "no_obligatoria");
+		return (value == "obligatoria" || value == "optativa");
 	}
 
 	function convertirObligatoriedadABool(value) {
@@ -241,6 +244,31 @@
       	});
 	}
 
+	function renderProgressPorcentaje (anterior, keyValue) {
+		cantidad = keyValue[1]['cantidad'];
+		porcentaje = keyValue[1]['porcentaje'];
+		color = keyValue[1]['color'];
+		titulo = keyValue[1]['titulo'];
+
+		if(cantidad > 1 && titulo != "En ejecución")
+			titulo += 's';
+
+		return anterior +
+		'<div class="progress-bar '+color+'" role="progressbar" title="'+cantidad+' '+titulo+'" style="width: '+porcentaje+'%;">'+
+			''+cantidad+''+
+		'</div>';
+	}
+
+	function progressBar(estados) {
+		progress_bar = '<div class="progress" style="height: 2rem;">';
+
+		progress_bar += estados.reduce(renderProgressPorcentaje, '');
+
+		progress_bar += '</div>';
+
+		return progress_bar;
+	}
+
 	$(document).ready(function(){
 		
 		inicializarSelect2();
@@ -264,7 +292,7 @@
 				columns: [
 				{
 					title: 'Fecha', 
-					data: 'created_at',
+					data: 'display_date',
 					defaultContent: '-',
 					render:function(data){
 						return moment(data).format('DD/MM/YYYY');
@@ -272,6 +300,13 @@
 				},
 				{ title: 'Nombre', data: 'nombre'},
 				{ title: 'Ediciones', data: 'ediciones'},
+				{ title: 'Progreso', data: 'estados_por_curso', 
+					render: function(data, type, row, meta) {
+						return progressBar(Object.entries(data));
+					},
+					orderable: false,
+					width: '15%'
+				},
 				{ title: 'Duracion', data: 'duracion'},
 				{
 					title: 'Ficha Técnica',
@@ -307,7 +342,6 @@
 					},
 					orderable: false
 				},
-	//			{ title: 'Estados' },
 				{ 
 					data: 'acciones',
 					render: function ( data, type, row, meta ) {
