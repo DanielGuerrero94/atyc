@@ -7,15 +7,31 @@
 	background-color: #dee4e5;
 }
 
+.anio {
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	background-color: #800080;
+}
+
+.provincia {
+	font-size: 20px;
+	font-weight: bold;
+	background-color: #F79646;
+
 td {
 	font-size: 9px;
 }
 </style>
 
-<table class="table">	
+<table class="table">
 	<tr>
-		<th class="table-header">Fecha de Planificación</th>
-		<th class="table-header">Jurisdicción</th>
+		<th class="anio">{{"MATRIZ PAC - ".$pac->anio}}</th>
+		<th class="provincia">{{"Jurisdicción: ".$pac->provincias->nombre}}</th>
+	</tr>
+	<tr>
+		<th class="table-header">Fecha de Creacion</th>
+		<th class="table-header">Fecha Planificada</th>
 		<th class="table-header">Tipo de Acción</th>
 		<th class="table-header">Ficha Técnica</th>
 		<th class="table-header">Nombre</th>
@@ -29,7 +45,7 @@ td {
 	</tr>
 	<tr>
 		<td>{{$pac->created_at}}</td>
-		<td>{{$pac->provincias->nombre}}</td>
+		<td>{{$pac->display_date}}</td>
 		<td>{{$pac->tipoAccion->numero ." ".$pac->tipoAccion->nombre}}</td>
 		<td>{{(($pac->id_ficha_tecnica) ? (($pac->fichaTecnica->aprobada) ? ("Aprobada (".
 		date('d/m/Y', strtotime($pac->fichaTecnica->updated_at)).")") : ("En diseño (".
@@ -86,23 +102,25 @@ td {
 	</tr>
 </table>
 <br>
-<p>Acciones</p>
-<table class="table">	
+<table class="table">
+	<tr>
+		<th class="table-header">Acciones</th>
+	</tr>
 	<tr>
 		<th class="table-header">Edición</th>
 		<th class="table-header">Estado de Acción</th>
 		<th class="table-header">Fecha Inicio Planificada</th>
-		<th class="table-header">Fecha Final Planificada</th>
 		<th class="table-header">Fecha Inicio Ejecutada</th>
+		<th class="table-header">Fecha Final Planificada</th>
 		<th class="table-header">Fecha Final Ejecutada</th>
 	</tr>
-	@foreach($pac->cursos as $curso)
+	@foreach($pac->cursos->sortBy('edicion') as $curso)
 	<tr>
 		<td>{{$curso->edicion}}</td>
 		<td>{{$curso->estado->nombre}}</td>
 		<td>{{$curso->fecha_plan_inicial}}</td>
-		<td>{{$curso->fecha_plan_final}}</td>
 		<td>{{$curso->fecha_ejec_inicial}}</td>
+		<td>{{$curso->fecha_plan_final}}</td>
 		<td>{{$curso->fecha_ejec_final}}</td>
 	</tr>
 	@endforeach

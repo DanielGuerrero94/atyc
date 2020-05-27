@@ -15,7 +15,7 @@
               <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
                 <div class="typeahead__field">             
                   <span class="typeahead__query">
-                    <input class="curso_typeahead form-control" name="nombre"  type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off">
+                    <input class="curso_typeahead form-control" name="nombre"  type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" style="font-size:1.4rem;">
                   </span>
                 </div>
               </div>
@@ -349,7 +349,7 @@
         },
         csv: {
           required: false,
-          filesize:  2097152 //2MB (1MB = 1048576)
+          filesize:  16777216 //16MB (1MB = 1048576)
         }
       },
       errorPlacement: function (error, element) {
@@ -452,6 +452,9 @@
 			form = $(this).parent().parent();
 			data = new FormData(form[0]);
       id_pac = form.parent().find(".upload-ficha_tecnica-sin-pac").data("id");
+
+      filesize = $('#upload-ficha_tecnica-sin-pac').children()[1].control.files[0].size;
+
 			$.ajax({
 				url: "{{url('pacs')}}" + "/" + id_pac,
 				type: 'post',
@@ -462,10 +465,13 @@
           console.log("success");
           $('#upload-ficha_tecnica-sin-pac').val(data);
           $('#upload-ficha_tecnica-sin-pac').valid();
+          $('.upload-ficha_tecnica-sin-pac').parent().children().closest('span').replaceWith('<span><b>  Subida  </b></span>');
+          $('.upload-ficha_tecnica-sin-pac').parent().children().closest('a').replaceWith('<i class="fa fa-check fa-lg" title="Subida" style="color:green;"></i>')
 				},
 				error: function (data) {
-					alert("Error al subir el archivo.");
           console.log(data);
+					alert("Error al subir el archivo.");
+          // location.reload();
         }
 			});
 		});

@@ -298,16 +298,9 @@
 						return moment(data).format('DD/MM/YYYY');
 					}
 				},
-				{ title: 'Nombre', data: 'nombre'},
+				{ title: 'Nombre', data: 'nombre', width: '13%'},
 				{ title: 'Ediciones', data: 'ediciones'},
-				{ title: 'Progreso', data: 'estados_por_curso', 
-					render: function(data, type, row, meta) {
-						return progressBar(Object.entries(data));
-					},
-					orderable: false,
-					width: '15%'
-				},
-				{ title: 'Duracion', data: 'duracion'},
+				{ title: 'Duracion (hs)', data: 'duracion'},
 				{
 					title: 'Ficha Técnica',
 					data: 'ficha_tecnica',
@@ -342,12 +335,20 @@
 					},
 					orderable: false
 				},
+				{ title: 'Progreso', data: 'estados_por_curso', 
+					render: function(data, type, row, meta) {
+						return progressBar(Object.entries(data));
+					},
+					orderable: false,
+					width: '13%'
+				},
 				{ 
 					data: 'acciones',
 					render: function ( data, type, row, meta ) {
 						return tableButtons(row.id_pac, row.created_at);
 					},
-					orderable: false
+					orderable: false,
+					width: '10%'
 				}
 				],
 				responsive: true
@@ -416,14 +417,6 @@
 		$("#alta-pac").on("click","#volver",function(){
 			console.log('Se vuelve sin crear la PAC.');
 			location.reload('pacs');
-			// $('#alta-pac').html("");
-			// $('#alta-pac').remove('#form-alta');
-			// $('#prefilter').show();
-			// $('#abm').show();
-			// $('#filtros').show();
-			// $('#filtros .box').toggle();
-			// inicializarSelect2();
-			// Agarraba bugsitos del select2 y el contador de ediciones input se rompia cada vez que clickeas volver
 		});
 
 		$('#alta-pac').on('click','#modificar',function() {
@@ -550,5 +543,5 @@
 	// 		return filtros;
 	// 	}
 
-</script> 
+</script>
 @endsection

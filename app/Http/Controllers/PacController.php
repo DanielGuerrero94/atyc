@@ -175,6 +175,8 @@ class PacController extends AbmController
         if($id_ficha_tecnica)
             $this->cambiarEstadoCursos($pac->id_pac, 2);
         
+        $this->setDisplayDate($pac);
+
         return $pac;
     }
 
@@ -256,13 +258,14 @@ class PacController extends AbmController
         return view('pacs', $this->getEditOptions());
     }
 
-    public function logFiltro($key, $value) {
+    public function logFiltro($key, $value)
+    {
         if(is_array($value))
             $value = implode(", ", $value);
         logger()->info($key.": ".$value);
     }
 
-    public function queryLogicaIds($filtros, $orderBy)
+    public function queryLogicaIds($filtros)
     {
         $filtered = $filtros->filter(function ($value, $key) {
             return $value != "" && $value != "0";
@@ -344,7 +347,7 @@ class PacController extends AbmController
         return $ids;
     }
 
-    function getTabla($ids_pac)
+    function getTabla($ids_pac, $order_by)
     {
         $pacs = Pac::with([
             'tipoAccion' => function ($pacs) {
@@ -369,6 +372,16 @@ class PacController extends AbmController
 
         foreach ($pacs->get() as $pac)
             $this->setDisplayDate($pac);
+        
+        if(isset($order_by))
+        {
+            $ordenadores = ['display_date', 'nombre', 'ediciones', 'duracion', 'id_ficha_tecnica', 'id_provincia'];
+
+            logger()->info("order_by[0][1]: ".$order_by['order_by'][0][1]);
+            logger()->info("ordenador[order_by[0][0]]: ".$ordenadores[$order_by['order_by'][0][0]]); 
+
+            $pacs = $pacs->orderBy($ordenadores[$order_by['order_by'][0][0]], $order_by['order_by'][0][1]);
+        }
 
         logger()->warning("pacs: ".json_encode($pacs->toSql()));
 
@@ -426,20 +439,11 @@ class PacController extends AbmController
 
     public function setColorEstado($id_estado)
     {
-        if ($id_estado == 1)
-            $color = "progress-bar-warning";
-        else if ($id_estado == 2)
-            $color = "progress-bar-info";
-        else if ($id_estado == 3)
-            $color = "progress-bar-primary";
-        else if ($id_estado == 4)
-            $color = "progress-bar-success";
-        else if ($id_estado == 5)
-            $color = "progress-bar-secondary";
-        else
-            $color = "progress-bar-danger";
-        
-        return $color;
+        $color = "progress-bar";
+
+        $estados = ['warning', 'info', 'ejecutando', 'success', 'reprogramado', 'danger'];
+
+        return $color.'-'.$estados[$id_estado - 1];
     }
 
     public function estadosPorCursos(Pac $pac)
@@ -477,8 +481,8 @@ class PacController extends AbmController
 
         $v = Validator::make($filtros->all(), $this->filters);
         if (!$v->fails()) {
-            $ids_pac = $this->queryLogicaIds($filtros, null);
-            $pacs = $this->getTabla($ids_pac);
+            $ids_pac = $this->queryLogicaIds($filtros);
+            $pacs = $this->getTabla($ids_pac, null);
 
             return Datatables::of($pacs)
             ->addColumn(
@@ -491,6 +495,21 @@ class PacController extends AbmController
         }
     }
 
+    public function getAniosyProvinciasPac($pacs)
+    {
+        $anios = array();
+        $provincias = array();
+        foreach($pacs as $pac)
+        {
+            $anios[] = $pac->anio;
+            $provincias[] = $pac->provincias()->get()->first()->nombre;
+        }
+        $anios = implode("-", array_unique($anios));
+        $provincias = implode("-", array_unique($provincias));
+
+        return ['anios' => $anios, 'provincias' => $provincias];
+    }
+
     public function getExcel(Request $r)
     {
         $filtros = collect($r->only('filtros'));
@@ -498,13 +517,13 @@ class PacController extends AbmController
 
         $order_by = collect($r->only('order_by'));
 
-        $ids_pac = $this->queryLogicaIds($filtros, $order_by);
-        // Habria que ver como usar el $order_by
+        $ids_pac = $this->queryLogicaIds($filtros);
 
-        $pacs = $this->getTabla($ids_pac)->orderBy('id_provincia')->get();
+        $pacs = $this->getTabla($ids_pac, $order_by)->get();
+        $data_extra = $this->getAniosyProvinciasPac($pacs);
 
         $datos = ['pacs' => $pacs];
-        $path = "pacs_".date("Y-m-d_H:i:s");
+        $path = "pacs_".$data_extra['anios'].'_'.$data_extra['provincias'].'_'.date("Y-m-d_H:i:s");
 
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('PAC', function ($sheet) use ($datos) {
