@@ -9,7 +9,7 @@ ALTER TABLE pac.responsables ALTER COLUMN id_responsable SET DEFAULT nextval('pa
 
 -- Componentes 
 
-ALTER TABLE componentes_cai
+ALTER TABLE pac.componentes_cai
 RENAME TO componentes;
 
 create sequence if not exists pac.componentes_id_componente_seq start 12 owned by pac.componentes.id_componente;
