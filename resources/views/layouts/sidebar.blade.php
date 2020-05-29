@@ -36,7 +36,7 @@
         </span>
       </a>
       <ul class="treeview-menu">
-        @if(Auth::user()->tieneRol('admin'))
+      @if(Auth::user()->tieneRol('admin'))
         <li>
           <a href={{url("/pacs")}}>
             <i class="fa fa-columns"></i>
@@ -326,6 +326,41 @@
               <a href="{{url("/tipoDocentes")}}">
                 <i class="fa fa-circle-o"></i>
                 <span>Tipo de docentes</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-columns" aria-hidden="true"></i>
+            <span>Pac</span>
+            <span class="pull-right">
+              <i class="fa fa-angle-down"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="{{url("/destinatarios")}}">
+                <i class="fa fa-circle-o"></i>
+                <span>Destinatarios</span>
+              </a>
+            </li>
+            <li>
+              <a href="{{url("/responsables")}}">
+                <i class="fa fa-circle-o"></i>
+                <span>Responsables</span>
+              </a>
+            </li>
+            <li>
+              <a href="{{url("/pautas")}}">
+                <i class="fa fa-circle-o"></i>
+                <span>Pautas</span>
+              </a>
+            </li>
+            <li>
+              <a href="{{url("/componentes")}}">
+                <i class="fa fa-circle-o"></i>
+                <span>Componentes</span>
               </a>
             </li>
           </ul>

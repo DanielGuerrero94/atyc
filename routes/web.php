@@ -263,8 +263,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::delete('areasTematicas/{id}', 'AreasTematicasController@destroy');
         Route::delete('areasTematicas/{id}/hard', 'AreasTematicasController@hardDestroy');
 
-
-        //Tipo de acciones
+        //Tipos de accion
         Route::get('lineasEstrategicas', 'LineasEstrategicasController@getTodos');
         Route::get('lineasEstrategicasTabla', 'LineasEstrategicasController@getTabla');
         Route::get('lineasEstrategicas/alta', 'LineasEstrategicasController@create');
@@ -278,6 +277,63 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::delete('lineasEstrategicas/{id}', 'LineasEstrategicasController@destroy');
         Route::delete('lineasEstrategicas/{id}/hard', 'LineasEstrategicasController@hardDestroy');
 
+        //Destinatarios
+        Route::get('destinatarios', 'DestinatariosController@getTodos');
+        Route::get('destinatarios/alta', 'DestinatariosController@create');
+        Route::get('destinatariosTabla', 'DestinatariosController@getTabla');
+        Route::get('destinatarios/{id}', 'DestinatariosController@edit');
+
+        Route::post('destinatarios', 'DestinatariosController@store');
+
+        Route::put('destinatarios/{id}', 'DestinatariosController@update');
+        Route::put('destinatarios/{id}/alta', 'DestinatariosController@alta');
+
+        Route::delete('destinatarios/{id}', 'DestinatariosController@destroy');
+        Route::delete('destinatarios/{id}/hard', 'DestinatariosController@hardDestroy');
+
+        //Responsables
+        Route::get('responsables', 'ResponsablesController@getTodos');
+        Route::get('responsables/alta', 'ResponsablesController@create');
+        Route::get('responsablesTabla', 'ResponsablesController@getTabla');
+        Route::get('responsables/{id}', 'ResponsablesController@edit');
+
+        Route::post('responsables', 'ResponsablesController@store');
+
+        Route::put('responsables/{id}', 'ResponsablesController@update');
+        Route::put('responsables/{id}/alta', 'ResponsablesController@alta');
+
+        Route::delete('responsables/{id}', 'ResponsablesController@destroy');
+        Route::delete('responsables/{id}/hard', 'ResponsablesController@hardDestroy');
+
+        //Componentes
+        Route::get('componentes', 'ComponentesController@getTodos');
+        Route::get('componentes/alta', 'ComponentesController@create');
+        Route::get('componentesTabla', 'ComponentesController@getTabla');
+        Route::get('componentes/{id}', 'ComponentesController@edit');
+
+        Route::post('componentes', 'ComponentesController@store');
+
+        Route::put('componentes/{id}', 'ComponentesController@update');
+        Route::put('componentes/{id}/alta', 'ComponentesController@alta');
+
+        Route::delete('componentes/{id}', 'ComponentesController@destroy');
+        Route::delete('componentes/{id}/hard', 'ComponentesController@hardDestroy');
+
+        //Pautas
+        Route::get('pautas', 'PautasController@getTodos');
+        Route::get('pautas/alta', 'PautasController@create');
+        Route::get('pautasTabla', 'PautasController@getTabla');
+        Route::get('pautas/{id}', 'PautasController@edit');
+
+        Route::post('pautas', 'PautasController@store');
+
+        Route::put('pautas/{id}/obligar', 'PautasController@obligarFichaTecnica');
+        Route::put('pautas/{id}/desobligar', 'PautasController@desobligarFichaTecnica');
+        Route::put('pautas/{id}', 'PautasController@update');
+        Route::put('pautas/{id}/alta', 'PautasController@alta');
+
+        Route::delete('pautas/{id}', 'PautasController@destroy');
+        Route::delete('pautas/{id}/hard', 'PautasController@hardDestroy');
 
         //Gestores
         Route::get('gestores/tabla', 'GestoresController@getTabla');

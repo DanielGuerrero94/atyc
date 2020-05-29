@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Cursos\AreaTematica;
+use App\Models\Pac\Componente;
 use Datatables;
 
-class AreasTematicasController extends ModelController
+class ComponentesController extends ModelController
 {
     /**
      * Rules for the validator
@@ -14,12 +14,13 @@ class AreasTematicasController extends ModelController
      * @var array
      **/
     protected $rules = [
+        'numero' => 'required|numeric',
         'nombre' => 'required|string'
     ];
 
-    protected $name = 'area';
+    protected $name = 'componente';
 
-    public function __construct(AreaTematica $model)
+    public function __construct(Componente $model)
     {
         $this->model = $model;
     }
@@ -31,7 +32,7 @@ class AreasTematicasController extends ModelController
      */
     public function index()
     {
-        return $this->model->orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
+        return $this->model->orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
     }
 
     /**
@@ -41,7 +42,7 @@ class AreasTematicasController extends ModelController
      */
     public function create()
     {
-        return view('areasTematicas/alta');
+        return view('componentes/alta');
     }
 
     /**
@@ -53,7 +54,7 @@ class AreasTematicasController extends ModelController
      */
     public function edit($id)
     {
-        return view('areasTematicas/modificar', $this->show($id));
+        return view('componentes/modificar', $this->show($id));
     }
 
     /**
@@ -63,7 +64,7 @@ class AreasTematicasController extends ModelController
      */
     public function getTodos()
     {
-        return view('areasTematicas');
+        return view('componentes');
     }
     
     /**
@@ -77,18 +78,18 @@ class AreasTematicasController extends ModelController
         ->addColumn(
             'acciones',
             function ($ret) {
-                $buttons = '<a data-id="'.$ret->id_area_tematica.'" class="btn btn-circle editar" '.
+                $buttons = '<a data-id="'.$ret->id_componente.'" class="btn btn-circle editar" '.
                 'title="Editar" style="margin-right: 1rem;"><i class="fa fa-pencil" aria-hidden="true" style="color: dodgerblue;"></i></a>';
 
                 if($ret->deleted_at)
-                    $buttons .= '<a data-id="'.$ret->id_area_tematica.'" class="btn btn-circle darAlta" '.
+                    $buttons .= '<a data-id="'.$ret->id_componente.'" class="btn btn-circle darAlta" '.
                     'title="Dar de alta" style="margin-right: 1rem;"><i class="fa fa-plus" aria-hidden="true" style="color: forestgreen;"></i></a>';
                 else
-                    $buttons .= '<a data-id="'.$ret->id_area_tematica.'" class="btn btn-circle darBaja" '.
+                    $buttons .= '<a data-id="'.$ret->id_componente.'" class="btn btn-circle darBaja" '.
                     'title="Dar de baja" style="margin-right: 1rem;"><i class="fa fa-minus" aria-hidden="true" style="color: firebrick;"></i></a>';
                 
                 if($this->seCreoLaMismaSemana($ret))
-                    $buttons .= '<a data-id="'.$ret->id_area_tematica.'" class="btn btn-circle eliminar" '.
+                    $buttons .= '<a data-id="'.$ret->id_componente.'" class="btn btn-circle eliminar" '.
                 'title="Eliminar" style="margin-right: 1rem;"><i class="fa fa-trash" aria-hidden="true" style="color: dimgray;"></i></a>';
 
                 return $buttons;

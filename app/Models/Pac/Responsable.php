@@ -9,6 +9,13 @@ class Responsable extends Model
 {
     use SoftDeletes;
     
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['nombre'];
+
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
@@ -31,5 +38,15 @@ class Responsable extends Model
      * @var bool
      */
     public $timestamps = true;
+
+    public function pacs()
+    {
+        return $this->belongsToMany(
+            'App\Models\Pac\Pac',
+            'pac.pacs_responsables',
+            'id_responsable',
+            'id_pac')
+            ->withTimestamps();
+    }
 }
 

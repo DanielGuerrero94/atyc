@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cursos\LineaEstrategica;
 use Datatables;
-use Carbon\Carbon;
 
 class LineasEstrategicasController extends ModelController
 {
@@ -94,23 +93,5 @@ class LineasEstrategicasController extends ModelController
             }
         )
         ->make(true);
-    }
-
-    public function seCreoLaMismaSemana($ret)
-    {
-        $validTime = Carbon::now()->subDays(7);
-        return $validTime <= $ret->created_at;
-    }
-    
-    public function hardDestroy($id)
-    {
-        logger("Voy a destruir el registro del tipo de accion: ".$id);
-        return response()->json($this->model->withTrashed()->findOrFail($id)->forceDelete());
-    }
-
-    public function alta($id)
-    {
-        logger("Voy a dar de alta el tipo de accion ".$id);
-        return response()->json($this->model->withTrashed()->findOrFail($id)->restore());
     }
 }

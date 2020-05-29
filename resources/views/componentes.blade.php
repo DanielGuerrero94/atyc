@@ -7,7 +7,7 @@
 		<div class="col-xs-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
-					<h2 class="box-tittle">Areas Tematicas</h2>
+					<h2 class="box-tittle">Componentes CAI</h2>
 					<div class="box-tools pull-right">
 						<button type="button" class="btn btn-box-tool" data-widget="collapse">
 							<i class="fa fa-minus"></i>
@@ -19,6 +19,7 @@
 						<thead>
 							<tr>
 								<th>Fix</th>
+                                <th>Numero</th>
 								<th>Nombre</th>
 								<th>Acciones</th>
 							</tr>
@@ -26,7 +27,7 @@
 					</table>
 				</div>
 				<div class="box-footer">
-					<button class="btn btn-success pull-right" id="nueva_area_tematica"><i class="fa fa-plus" aria-hidden="true"></i>Nueva area tematica</button>
+					<button class="btn btn-success pull-right" id="nuevo_componente"><i class="fa fa-plus" aria-hidden="true"></i>Nuevo componente</button>
 				</div>
 			</div>
 		</div>
@@ -42,17 +43,18 @@
 
 		$('#table').DataTable({
 			scrollCollapse: true,
-			ajax : 'areasTematicasTabla',
+			ajax : 'componentesTabla',
 			columns: [
-			{ data: 'id_area_tematica', orderable: false},
+			{ data: 'id_componente', orderable: false},
+            { data: 'numero'},
 			{ data: 'nombre'},
 			{ data: 'acciones', orderable: false}
 			]
 		});
 
-		$('#abm').on('click','#nueva_area_tematica',function() {
+		$('#abm').on('click','#nuevo_componente',function() {
 			$.ajax ({
-				url: 'areasTematicas/alta',
+				url: 'componentes/alta',
 				method: 'get',
 				success: function(data){
 					$('#alta').html(data);
@@ -69,10 +71,10 @@
 
 	$('#abm').on('click','.editar',function() {
 		
-		var area = $(this).data('id');
+		var componente = $(this).data('id');
 
 		$.ajax ({
-			url: 'areasTematicas/'+area,
+			url: 'componentes/'+componente,
 			success: function(data){
 				$('#alta').html(data);
 				$('#alta').show();
@@ -82,7 +84,7 @@
 	});
 
 	$('#abm').on("click",".eliminar",function(){
-		var area = $(this).data('id');
+		var componente = $(this).data('id');
 		var data = '_token='+$('#abm input').first().val();
 		
 		jQuery('<div/>', {
@@ -107,7 +109,7 @@
 			open: function () {
 				jQuery('<p/>', {
 					id: 'dialogABM',
-					text: '¿Esta seguro que quiere dar de baja al area tematica?'
+					text: '¿Esta seguro que quiere dar de baja al componente?'
 				}).appendTo('#dialogABM');
 			},
 			buttons :
@@ -117,15 +119,15 @@
 					$("#dialogABM").html("");				
 
 					$.ajax ({
-						url: 'areasTematicas/'+area+'/hard',
+						url: 'componentes/'+componente+'/hard',
 						method: 'delete',
 						data: data,
 						success: function(data){
-							console.log('Se borro el area tematica.');
+							console.log('Se borro el componente: '+componente);
 							location.reload();
 						},
 						error: function (data) {
-							alert("Hay un curso usando ese area tematica. No se puede borrar el registro");
+							alert("Hay un curso usando ese componente. No se puede borrar el registro");
 							console.log('Hubo un error.');
 							console.log(data);
 							location.reload();
@@ -144,10 +146,10 @@
 
 	$('#alta').on('click','#modificar',function() {
 
-		var area = $(this).data('id');
+		var componente = $(this).data('id');
 
 		$.ajax({				
-			url : 'areasTematicas/'+area,
+			url : 'componentes/'+componente,
 			method : 'put',
 			data : $('form').serialize(),
 			success : function(data){
@@ -162,16 +164,16 @@
 
 	$('#abm').on('click','.darBaja',function() {
 		
-		var area = $(this).data('id');
+		var componente = $(this).data('id');
 		var data = '_token='+$('#abm input').first().val();
-		console.log(area);
+		console.log(componente);
 		console.log(data);
 		$.ajax ({
-			url: 'areasTematicas/'+area,
+			url: 'componentes/'+componente,
 			method: 'delete',
 			data: data,
 			success: function(data){
-				console.log("Se dio de baja el area tematica:");
+				console.log("Se dio de baja el componente: "+componente);
 				location.reload();
 			},
 			error: function(data){
@@ -184,15 +186,15 @@
 
 	$('#abm').on('click','.darAlta',function() {
 		
-		var area = $(this).data('id');
+		var componente = $(this).data('id');
 		var data = '_token='+$('#abm input').first().val();
 
 		$.ajax ({
-			url: 'areasTematicas/'+area+'/alta',
+			url: 'componentes/'+componente+'/alta',
 			method: 'put',
 			data: data,
 			success: function(data){
-				console.log("Se dio de alta el area tematica:");
+				console.log("Se dio de alta el componente: "+componente);
 				location.reload();
 			},
 			error: function(data){
