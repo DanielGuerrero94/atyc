@@ -15,18 +15,19 @@
 					</div>
 				</div>
 				<div class="box-body">
-				<div id="filtros">
-					<div class="row">
-						<div class="form-group col-xs-12 col-sm-6">
-							<label for="anio" class="control-label col-xs-4 col-sm-2">Año:</label>
-							<div class="col-xs-8 col-sm-6">
-								<select class="select-2 form-control anios" id="anios" name="id_anio" aria-hidden="true" multiple>
-									@for($i = intval(date('Y'))+1; $i > 2015 ; $i--)
-									<option data-id="{{$i}}" value="{{$i}}">{{$i}}</option>
-									@endfor
-								</select>
-							</div>
-						</div>						
+					<div id="filtros">
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-6">
+								<label for="anio" class="control-label col-xs-4 col-sm-2">Año:</label>
+								<div class="col-xs-8 col-sm-6">
+									<select class="select-2 form-control anios" id="anios" name="id_anio" aria-hidden="true" multiple>
+										@for($i = intval(date('Y'))+1; $i > 2015 ; $i--)
+										<option data-id="{{$i}}" value="{{$i}}">{{$i}}</option>
+										@endfor
+									</select>
+								</div>
+							</div>						
+						</div>
 					</div>
 					<div class="row" style="padding-left:2em; padding-bottom:2em;">
 					<a href="#table" class="btn btn-square filtro" id="pautas-refresh">
