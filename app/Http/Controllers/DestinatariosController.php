@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Cursos\AreaTematica;
+use App\Models\Pac\Destinatario;
 use Datatables;
 
-class AreasTematicasController extends ModelController
+class DestinatariosController extends ModelController
 {
     /**
      * Rules for the validator
@@ -17,9 +17,9 @@ class AreasTematicasController extends ModelController
         'nombre' => 'required|string'
     ];
 
-    protected $name = 'area';
+    protected $name = 'destinatario';
 
-    public function __construct(AreaTematica $model)
+    public function __construct(Destinatario $model)
     {
         $this->model = $model;
     }
@@ -41,7 +41,7 @@ class AreasTematicasController extends ModelController
      */
     public function create()
     {
-        return view('areasTematicas/alta');
+        return view('destinatarios/alta');
     }
 
     /**
@@ -53,7 +53,7 @@ class AreasTematicasController extends ModelController
      */
     public function edit($id)
     {
-        return view('areasTematicas/modificar', $this->show($id));
+        return view('destinatarios/modificar', $this->show($id));
     }
 
     /**
@@ -63,7 +63,7 @@ class AreasTematicasController extends ModelController
      */
     public function getTodos()
     {
-        return view('areasTematicas');
+        return view('destinatarios');
     }
     
     /**
@@ -77,18 +77,18 @@ class AreasTematicasController extends ModelController
         ->addColumn(
             'acciones',
             function ($ret) {
-                $buttons = '<a data-id="'.$ret->id_area_tematica.'" class="btn btn-circle editar" '.
+                $buttons = '<a data-id="'.$ret->id_destinatario.'" class="btn btn-circle editar" '.
                 'title="Editar" style="margin-right: 1rem;"><i class="fa fa-pencil" aria-hidden="true" style="color: dodgerblue;"></i></a>';
 
                 if($ret->deleted_at)
-                    $buttons .= '<a data-id="'.$ret->id_area_tematica.'" class="btn btn-circle darAlta" '.
+                    $buttons .= '<a data-id="'.$ret->id_destinatario.'" class="btn btn-circle darAlta" '.
                     'title="Dar de alta" style="margin-right: 1rem;"><i class="fa fa-plus" aria-hidden="true" style="color: forestgreen;"></i></a>';
                 else
-                    $buttons .= '<a data-id="'.$ret->id_area_tematica.'" class="btn btn-circle darBaja" '.
+                    $buttons .= '<a data-id="'.$ret->id_destinatario.'" class="btn btn-circle darBaja" '.
                     'title="Dar de baja" style="margin-right: 1rem;"><i class="fa fa-minus" aria-hidden="true" style="color: firebrick;"></i></a>';
                 
                 if($this->seCreoLaMismaSemana($ret))
-                    $buttons .= '<a data-id="'.$ret->id_area_tematica.'" class="btn btn-circle eliminar" '.
+                    $buttons .= '<a data-id="'.$ret->id_destinatario.'" class="btn btn-circle eliminar" '.
                 'title="Eliminar" style="margin-right: 1rem;"><i class="fa fa-trash" aria-hidden="true" style="color: dimgray;"></i></a>';
 
                 return $buttons;

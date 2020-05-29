@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Carbon\Carbon;
 
 class ModelController extends Controller
 {
@@ -111,7 +112,7 @@ class ModelController extends Controller
             return response($error, 400);
         }
         
-        return response()->json($this->model->findOrFail($id)->update($request->all()));
+        return response()->json($this->model->withTrashed()->findOrFail($id)->update($request->all()));
     }
 
     /**
@@ -124,6 +125,24 @@ class ModelController extends Controller
     {
         logger("Voy a dar de baja: ".$id);
         return response()->json($this->model->findOrFail($id)->delete());
+    }
+
+    public function seCreoLaMismaSemana($ret)
+    {
+        $validTime = Carbon::now()->subDays(7);
+        return $validTime <= $ret->created_at;
+    }
+    
+    public function hardDestroy($id)
+    {
+        logger("Voy a destruir el registro: ".$id);
+        return response()->json($this->model->withTrashed()->findOrFail($id)->forceDelete());
+    }
+
+    public function alta($id)
+    {
+        logger("Voy a dar de alta el id:".$id);
+        return response()->json($this->model->withTrashed()->findOrFail($id)->restore());
     }
 
     /**

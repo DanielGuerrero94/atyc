@@ -170,9 +170,9 @@
                     <select class="select-2 form-control" id="pauta" name="id_pauta" aria-hidden="true" multiple>
                       @foreach ($pautasEdit as $pauta)
                         @if (in_array ($pauta->id_pauta, $pac->pautas()->get()->map(function ($_pauta) { return $_pauta->id_pauta; })->all() ))
-                        <option data-id="{{$pauta->id_pauta}}" selected="selected">{{$pauta->nombre}}</option>
+                        <option data-id="{{$pauta->id_pauta}}" selected="selected">{{$pauta->numero." - ".$pauta->nombre}}</option>
                         @else
-                        <option data-id="{{$pauta->id_pauta}}">{{$pauta->nombre}}</option>
+                        <option data-id="{{$pauta->id_pauta}}">{{$pauta->numero." - ".$pauta->nombre}}</option>
                         @endif  
                       @endforeach
                     </select>          
@@ -187,9 +187,9 @@
                     <select class="select-2 form-control" id="componente" name="id_componente" aria-hidden="true" multiple>
                       @foreach ($componentesEdit as $componente)
                         @if (in_array ($componente->id_componente, $pac->componentes()->get()->map(function ($_componente) { return $_componente->id_componente; })->all() ))
-                        <option data-id="{{$componente->id_componente}}" selected="selected">{{$componente->nombre}}</option>
+                        <option data-id="{{$componente->id_componente}}" selected="selected">{{$componente->numero." - ".$componente->nombre}}</option>
                         @else
-                        <option data-id="{{$componente->id_componente}}">{{$componente->nombre}}</option>
+                        <option data-id="{{$componente->id_componente}}">{{$componente->numero." - ".$componente->nombre}}</option>
                         @endif  
                       @endforeach
                     </select>          

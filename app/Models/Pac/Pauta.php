@@ -8,6 +8,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Pauta extends Model
 {
     use SoftDeletes;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['numero', 'nombre', 'id_categoria', 'ficha_obligatoria', 'descripcion'];
     
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
@@ -40,4 +47,15 @@ class Pauta extends Model
             'id_categoria'
         );
     }
+
+    public function pacs()
+    {
+        return $this->belongsToMany(
+            'App\Models\Pac\Pac',
+            'pac.pacs_pautas',
+            'id_pauta',
+            'id_pac')
+            ->withTimestamps();
+    }
+
 }

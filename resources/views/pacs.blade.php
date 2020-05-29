@@ -72,6 +72,7 @@
 	function iconoFontAwesome({icono="fa-bolt", color="#000000" , titulo=""}) {
 		return '<i class="fa '+icono+' fa-lg" style="color: '+color+';" title="'+titulo+'"> </i>';
 	}
+	
 	function semaforo({color, titulo}) {
 		return iconoFontAwesome({icono: "fa-circle", color, titulo})
 	}

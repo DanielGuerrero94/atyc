@@ -104,7 +104,7 @@
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 						<select class="select-2 form-control pautas" id="pautas" name="id_pauta" aria-hidden="true" multiple>
 							@foreach ($pautasEdit as $pauta)
-							<option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}">{{$pauta->nombre}}</option>
+							<option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}">{{$pauta->numero." - ".$pauta->nombre}}</option>
 							@endforeach
 						</select>				
 					</div>
@@ -116,7 +116,7 @@
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 						<select class="select-2 form-control componentes" id="componentes" name="id_componente" aria-hidden="true" multiple>
 							@foreach ($componentesEdit as $componente)
-							<option data-id="{{$componente->id_componente}}" value="{{$componente->id_componente}}">{{$componente->nombre}}</option>
+							<option data-id="{{$componente->id_componente}}" value="{{$componente->id_componente}}">{{$componente->numero." - ".$componente->nombre}}</option>
 							@endforeach
 						</select>				
 					</div>

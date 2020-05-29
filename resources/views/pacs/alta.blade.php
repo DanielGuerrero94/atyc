@@ -119,7 +119,7 @@
               <div class="col-md-8 col-xs-9">
                 <select class="select-2 form-control" id="pautaSelected" name="id_pauta" aria-hidden="true" multiple>
                   @foreach ($pautas as $pauta)
-                  <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}"> {{$pauta->nombre}}</option>
+                  <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}"> {{$pauta->numero." - ".$pauta->nombre}}</option>
                   @endforeach
                 </select>
               </div>
@@ -128,11 +128,11 @@
           <br>
           <div class="row">
             <div class="form-group col-md-6">
-              <label for="componentesCai" class="control-label col-md-4 col-xs-3">Componentes CAI:</label>
+              <label for="componentes" class="control-label col-md-4 col-xs-3">Componentes CAI:</label>
               <div class="col-md-8 col-xs-9">
                 <select class="select-2 form-control" id="componentesCai" name="id_componente" aria-hidden="true" multiple>
                   @foreach ($componentes as $componente)
-                  <option data-id="{{$componente->id_componente}}" value="{{$componente->id_componente}}"> {{$componente->nombre}}</option>
+                  <option data-id="{{$componente->id_componente}}" value="{{$componente->id_componente}}"> {{$componente->numero." - ".$componente->nombre}}</option>
                   @endforeach
                 </select>
               </div>

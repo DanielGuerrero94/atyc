@@ -78,20 +78,20 @@ td {
 		@endforeach
 		@foreach($pac->componentes as $componente)
 			@if	($loop->first)
-			<td>{{$componente->nombre}}
+			<td>{{$componente->numero." - ".$componente->nombre}}
 			@elseif ($loop->last)
-			{{", ".$componente->nombre}}</td>
+			{{", ".$componente->numero." - ".$componente->nombre}}</td>
 			@else
-			{{", ".$componente->nombre}}
+			{{", ".$componente->numero." - ".$componente->nombre}}
 			@endif
 		@endforeach
 		@foreach($pac->pautas as $pauta)
 			@if	($loop->first)
-			<td>{{$pauta->nombre}}
+			<td>{{$pauta->numero." - ".$pauta->nombre}}
 			@elseif ($loop->last)
-			{{", ".$pauta->nombre}}</td>
+			{{", ".$pauta->numero." - ".$pauta->nombre}}</td>
 			@else
-			{{", ".$pauta->nombre}}
+			{{", ".$pauta->numero." - ".$pauta->nombre}}
 			@endif
 		@endforeach
         <td>

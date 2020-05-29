@@ -377,8 +377,8 @@ class PacController extends AbmController
         {
             $ordenadores = ['display_date', 'nombre', 'ediciones', 'duracion', 'id_ficha_tecnica', 'id_provincia'];
 
-            logger()->info("order_by[0][1]: ".$order_by['order_by'][0][1]);
-            logger()->info("ordenador[order_by[0][0]]: ".$ordenadores[$order_by['order_by'][0][0]]); 
+            // logger()->info("order_by[0][1]: ".$order_by['order_by'][0][1]);
+            // logger()->info("ordenador[order_by[0][0]]: ".$ordenadores[$order_by['order_by'][0][0]]); 
 
             $pacs = $pacs->orderBy($ordenadores[$order_by['order_by'][0][0]], $order_by['order_by'][0][1]);
         }
@@ -545,19 +545,19 @@ class PacController extends AbmController
     public function getSelectOptions()
     {
         $pautas = Cache::remember('pautas', 5, function () {
-            return Pauta::all();
+            return Pauta::orderBy('numero')->get();
         });
 
         $componentes = Cache::remember('componentes', 5, function () {
-            return Componente::all();
+            return Componente::orderBy('numero')->get();
         });
 
         $destinatarios = Cache::remember('destinatarios', 5, function () {
-            return Destinatario::all();
+            return Destinatario::orderBy('nombre')->get();
         });
 
         $responsables = Cache::remember('responsables', 5, function () {
-            return Responsable::all();
+            return Responsable::orderBy('nombre')->get();
         });
 
         $tematicas = Cache::remember('tematicas', 5, function () {
@@ -591,11 +591,11 @@ class PacController extends AbmController
     public function getEditOptions()
     {
         $pautasEdit = Cache::remember('pautasEdit', 5, function () {
-            return Pauta::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
+            return Pauta::orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
         });
 
         $componentesEdit = Cache::remember('componentesEdit', 5, function () {
-            return Componente::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
+            return Componente::orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
         });
 
         $destinatariosEdit = Cache::remember('destinatariosEdit', 5, function () {
