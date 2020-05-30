@@ -299,7 +299,7 @@
 						return moment(data).format('DD/MM/YYYY');
 					}
 				},
-				{ title: 'Nombre', data: 'nombre', width: '13%'},
+				{ title: 'Nombre', data: 'nombre', width: '10%'},
 				{ title: 'Ediciones', data: 'ediciones'},
 				{ title: 'Duracion (hs)', data: 'duracion'},
 				{
@@ -317,7 +317,7 @@
 						if(Object.entries(data).length != 0)
 							return data.map(function(tematica) { return ' ' + tematica.nombre; });
 					},
-					orderable: false
+					orderable: false, width: '20%'
 				},
 				{ title: 'Tipo de Accion', data: 'tipo_accion', name: 'id_linea_estrategica',
 					render: function (data, type, row, meta) {
@@ -341,7 +341,7 @@
 						return progressBar(Object.entries(data));
 					},
 					orderable: false,
-					width: '13%'
+					width: '20%'
 				},
 				{ 
 					data: 'acciones',
@@ -349,7 +349,7 @@
 						return tableButtons(row.id_pac, row.created_at);
 					},
 					orderable: false,
-					width: '10%'
+					width: '15%'
 				}
 				],
 				responsive: true

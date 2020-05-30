@@ -146,6 +146,22 @@ class PacController extends AbmController
         $pac->componentes()->attach($componentes);
     }
 
+    public function tienePautaConFichaObligatoria($ids_pautas)
+    {
+        $fichas_obligatorias = Pauta::select('ficha_obligatoria')
+        ->whereIn('id_pauta', $ids_pautas)
+        ->get()
+        ->toArray();
+        logger()->info("fichas_obligatorias: ".json_encode($fichas_obligatorias));
+
+        $fichas_obligatorias = array_map(function ($val) {
+            return $val['ficha_obligatoria'];
+        }, $fichas_obligatorias);
+        logger()->info("fichas_obligatorias: ".json_encode($fichas_obligatorias));
+
+        return in_array(true, $fichas_obligatorias);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -155,22 +171,25 @@ class PacController extends AbmController
     public function store(Request $request)
     {
         $data = $request->all();
-        logger('Quiere crear PAC con: '.json_encode($data));
+        logger()->info('Quiere crear PAC con: '.json_encode($data));
         $v = Validator::make($data, $this->rules);
 
-        if ($v->fails()) {
+        if ($v->fails())
             return $v->errors();
-        }
-        $data['ficha_obligatoria'] = true;
+        
+        $ids_pautas = explode(',' ,$data['ids_pautas']);
+        logger()->info("ids_pautas: ".json_encode($ids_pautas));
+
+        $data['ficha_obligatoria'] = $this->tienePautaConFichaObligatoria($ids_pautas);
         
         $pac = Pac::create($data);
-        logger('Crea pac: '.$pac);
+        logger()->info('Crea pac: '.$pac);
 
         $this->attachPivotTables($pac, $request);
         $this->crearCursos($pac, $request);
 
         $id_ficha_tecnica = $request->get('id_ficha_tecnica');
-        logger('id_ficha_tecnica: '.$id_ficha_tecnica);
+        logger()->info('id_ficha_tecnica: '.$id_ficha_tecnica);
 
         if($id_ficha_tecnica)
             $this->cambiarEstadoCursos($pac->id_pac, 2);
