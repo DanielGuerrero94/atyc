@@ -45,7 +45,7 @@ class Curso extends Model
      *
      * @var array
      */
-    protected $fillable = ['nombre','id_provincia', 'id_pac', 'fecha_ejec_final',
+    protected $fillable = ['nombre','id_provincia', 'id_pac', 'fecha_ejec_inicial', 'fecha_ejec_final',
     'id_linea_estrategica','fecha_plan_inicial','fecha_plan_final', 'duracion','edicion','id_estado','id_area_tematica'];
 
     /**

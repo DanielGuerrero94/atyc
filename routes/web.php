@@ -158,6 +158,10 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::post('cursos', 'CursosController@store');
 
     Route::put('cursos/{id}', 'CursosController@update');
+    Route::put('cursos/{id}/ejecutar', 'CursosController@ejecutar');
+    Route::put('cursos/{id}/reprogramar', 'CursosController@reprogramar');
+    Route::put('cursos/{id}/desactivar', 'CursosController@desactivar');
+
 
     Route::delete('cursos/{id}', 'CursosController@destroy');
 
@@ -195,7 +199,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
 
     Route::post('pacs', 'PacController@store');
 
-    // Route::put('pacs/{id}', 'PacController@update');
+    Route::put('pacs/{id}', 'PacController@update');
 
     Route::delete('pacs/{id_pac}', 'PacController@destroy');
 

@@ -223,7 +223,6 @@ class CursosController extends AbmController
             logger("Se deja el curso sin docentes");
             $curso->profesores()->detach();
         }
-
         
         $curso->update($request->all());
         return $curso;
@@ -676,5 +675,39 @@ class CursosController extends AbmController
     public function see($id)
     {
         return view('cursos/modificacion', array_merge($this->show($id), $this->getEditOptions(), ['disabled' => true]));
+    }
+
+    public function ejecutar(Request $request, $id)
+    {
+        if($request->has('error'))
+        {
+            logger()->warning('Ejecutar Curso '.$id.': No lleno las fechas de ejecucion');
+            return response('error');
+        }
+        $curso = $this->update($request, $id);
+        logger()->info("Ejecute el curso: ".json_encode($curso));
+
+        return response()->json($curso);
+    }
+
+    public function reprogramar(Request $request, $id)
+    {
+        if($request->has('error'))
+        {
+            logger()->warning('Reprogamar Curso '.$id.': No lleno las fechas de reprogramacion');
+            return response('error');
+        }
+        $curso = $this->update($request, $id);
+        logger()->info("Reprograme el curso: ".json_encode($curso));
+
+        return response()->json($curso);
+    }
+
+    public function desactivar(Request $request, $id)
+    {
+        $curso = $this->update($request, $id);
+        logger()->info("Desactive el curso: ".json_encode($curso));
+
+        return response()->json($curso);
     }
 }

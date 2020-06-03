@@ -10,8 +10,6 @@ use App\Models\Pac\Destinatario;
 use App\Models\Pac\Pauta;
 use App\Models\Pac\Categoria;
 use App\Models\Pac\Responsable;
-// use App\Models\Pac\Tematica;
-// use App\Models\Pac\TipoAccion;
 use App\Models\Pac\FichaTecnica;
 use App\Models\Cursos\Curso;
 use App\Models\Cursos\AreaTematica;
@@ -123,9 +121,14 @@ class PacController extends AbmController
             $curso = Curso::create($data);
             logger('Creo el curso: '.json_encode($curso));
 
+            if($pac->id_ficha_tecnica)
+                $this->cambiarEstadoCursos($pac->id_pac, 2);
+
             $tematicas = explode(',', $request->get('ids_tematicas'));
             $curso->areasTematicas()->attach($tematicas);
         }
+
+        return response("{$i} Cursos creados");
     }
 
     public function attachPivotTables($pac, $request)
@@ -221,6 +224,49 @@ class PacController extends AbmController
         return view('pacs.modificacion', array_merge($this->show($id_pac), $this->getEditOptions()));
     }
 
+    public function updateModel($id_pac, $new_values, $model_function, $pivot_table, $pivot_pkey, $pkey)
+    {
+        $current_values = array();
+        foreach($model_function->get() as $model)
+            $current_values[] = $model->$pkey;
+
+        $intersect = array_intersect($current_values, $new_values);
+
+        $deleted_values = array_diff($current_values, $intersect);
+        $added_values = array_diff($new_values, $intersect);
+
+        logger()->info("Model: ".$pivot_table);
+        logger()->info("Current Values: ".json_encode($current_values));
+        logger()->info("New Values: ".json_encode($new_values));
+        logger()->info("Intersect: ".json_encode($intersect));
+        logger()->info("Deleted Values: ".json_encode($deleted_values));
+        logger()->info("Added Values: ".json_encode($added_values));
+
+        foreach($deleted_values as $deleted)
+            DB::table($pivot_table)->where('id_pac', $id_pac)->where($pivot_pkey, $deleted)->delete();
+        foreach($added_values as $added)
+            DB::insert("insert into {$pivot_table} (id_pac, {$pivot_pkey}) values (?, ?)", [$id_pac, $added]);
+    }
+
+    public function updatePivotTables(Pac $pac, Request $request)
+    {
+        logger()->info("Update Pivot Tables de Pac");
+        $tematicas = explode(',', $request->get('ids_tematicas'));
+        $this->updateModel($pac->id_pac, $tematicas, $pac->tematicas(), 'pac.pacs_tematicas', 'id_tematica', 'id_area_tematica');
+
+        $destinatarios = explode(',', $request->get('ids_destinatarios'));
+        $this->updateModel($pac->id_pac, $destinatarios, $pac->destinatarios(), 'pac.pacs_destinatarios', 'id_destinatario', 'id_destinatario');
+
+        $responsables = explode(',', $request->get('ids_responsables'));
+        $this->updateModel($pac->id_pac, $responsables, $pac->responsables(), 'pac.pacs_responsables', 'id_responsable', 'id_responsable');
+
+        $pautas = explode(',', $request->get('ids_pautas'));
+        $this->updateModel($pac->id_pac, $pautas, $pac->pautas(), 'pac.pacs_pautas', 'id_pauta', 'id_pauta');
+
+        $componentes = explode(',', $request->get('ids_componentes'));
+        $this->updateModel($pac->id_pac, $componentes, $pac->componentes(), 'pac.pacs_componentes', 'id_componente', 'id_componente');
+    }
+    
     /**
      * Update the specified resource in storage.
      *
@@ -230,7 +276,17 @@ class PacController extends AbmController
      */
     public function update(Request $request, $id_pac)
     {
-        //
+        logger()->info("Quiere actualizar pac {$id_pac} con: ".json_encode($request->all()));
+        $pac = Pac::findOrFail($id_pac);
+        logger()->info("Encontro Pac: ".json_encode($pac));
+
+        if ($request->has('ediciones'))
+            $this->crearCursos($pac, $request);
+        
+        $pac->update($request->all());
+        $this->updatePivotTables($pac, $request);
+
+        return $pac;
     }
 
     /**
@@ -487,8 +543,8 @@ class PacController extends AbmController
         foreach($estados as &$estado)
             $estado['porcentaje'] = ($estado['cantidad'] / $cursos->count()) * 100;
 
-        // logger()->warning("Pac: ".$pac->nombre);
-        // logger()->warning("Estados: ".json_encode($estados));
+        logger()->warning("Pac: ".$pac->nombre);
+        logger()->warning("Estados: ".json_encode($estados));
 
         return $estados;
     }
