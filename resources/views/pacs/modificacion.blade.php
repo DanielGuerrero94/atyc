@@ -672,6 +672,9 @@
             autoclose: true,
           });
         },
+        close: function() {
+          removeDialog($(this), 'dialogEjecutar');
+        },
 
         buttons :
         {
@@ -693,12 +696,7 @@
                 console.log(data);
               }
             });
-            $(this).dialog("destroy");
-            $("#dialogEjecutar").html("");
-            $('.container-fluid #dialogEjecutar').html("");
-            $('.container-fluid #dialogEjecutar').remove();
-            $('[role=dialog]').html("");
-            $('[role=dialog]').remove();
+            removeDialog($(this), 'dialogEjecutar');
           },
 
           "Aceptar" : function () {
@@ -718,21 +716,11 @@
                 console.log(data);
               }
             });
-            $(this).dialog("destroy");
-            $("#dialogEjecutar").html("");
-            $('.container-fluid #dialogEjecutar').html("");
-            $('.container-fluid #dialogEjecutar').remove();
-            $('[role=dialog]').html("");
-            $('[role=dialog]').remove();
+            removeDialog($(this), 'dialogEjecutar');
           },
 
           "Cancelar" : function () {
-            $(this).dialog("destroy");
-            $("#dialogEjecutar").html("");
-            $('.container-fluid #dialogEjecutar').html("");
-            $('.container-fluid #dialogEjecutar').remove();
-            $('[role=dialog]').html("");
-            $('[role=dialog]').remove();
+            removeDialog($(this), 'dialogEjecutar');
           }
         }
       });
@@ -744,16 +732,7 @@
     if($('#fecha_ejec_final').val() === "" || $('#fecha_ejec_inicial').val() === "")
     {
       alert("Debe seleccionar ambas fechas para poder cargar la ejecución del curso");
-      return [
-        {
-          name: '_token',
-          value: $('.container-fluid input').first().val()
-        },
-        {
-          name: "error",
-          value: 0
-        }
-      ];
+      return noDateSelectedError();
     }
 
     var data =
@@ -841,6 +820,9 @@
             autoclose: true,
           });
         },
+        close: function() {
+          removeDialog($(this), 'dialogReprogramar');
+        },
 
         buttons :
         {
@@ -861,21 +843,11 @@
                 console.log(data);
               }
             });
-            $(this).dialog("destroy");
-            $("#dialogReprogramar").html("");
-            $('.container-fluid #dialogReprogramar').html("");
-            $('.container-fluid #dialogReprogramar').remove();
-            $('[role=dialog]').html("");
-            $('[role=dialog]').remove();
+            removeDialog($(this), 'dialogReprogramar');
           },
 
           "Cancelar" : function () {
-            $(this).dialog("destroy");
-            $("#dialogReprogramar").html("");
-            $('.container-fluid #dialogReprogramar').html("");
-            $('.container-fluid #dialogReprogramar').remove();
-            $('[role=dialog]').html("");
-            $('[role=dialog]').remove();
+            removeDialog($(this), 'dialogReprogramar');
           }
         }
       });
@@ -887,16 +859,7 @@
     if($('#fecha_reprograma_inicial').val() === "" || $('#fecha_reprograma_final').val() === "")
     {
       alert("Debe seleccionar ambas fechas para poder reprogramar el curso");
-      return [
-        {
-          name: '_token',
-          value: $('.container-fluid input').first().val()
-        },
-        {
-          name: "error",
-          value: 0
-        }
-      ];
+      return noDateSelectedError();
     }
 
     var data =
@@ -954,6 +917,9 @@
             text: "¿Está segura/o de desactivar el curso? Desactivarlo no le permitirá realizar el curso en el futuro"
           }).appendTo('#dialogDesactivar');
         },
+        close: function() {
+          removeDialog($(this), 'dialogDesactivar');
+        },
         buttons :
         {
           "Aceptar" : function () {
@@ -970,27 +936,18 @@
                 console.log(data);
               }
             });
-            $(this).dialog("destroy");
-            $("#dialogDesactivar").html("");
-            $('.container-fluid #dialogDesactivar').html("");
-            $('.container-fluid #dialogDesactivar').remove();
-            $('[role=dialog]').html("");
-            $('[role=dialog]').remove();
+            removeDialog($(this), 'dialogDesactivar');
           },
 
           "Cancelar" : function () {
-            $(this).dialog("destroy");
-            $("#dialogDesactivar").html("");
-            $('.container-fluid #dialogDesactivar').html("");
-            $('.container-fluid #dialogDesactivar').remove();
-            $('[role=dialog]').html("");
-            $('[role=dialog]').remove();
+            removeDialog($(this), 'dialogDesactivar');
           }
         }
       });
 		});
   }
 
+  //Selecciona los inputs de la desactivacion de un curso
   function getDataDesactivacionCurso() {
     var data = 
     [
@@ -1007,6 +964,32 @@
     console.log(data);
 
     return data;
+  }
+
+  // Abstracciones para el comportamiento de acciones
+  // Abstraccion para remover todo lo referido a un dialogo iniciado
+  function removeDialog(dialog, id) {
+    dialog.dialog("destroy");
+    $("#"+id).html("");
+    $('.container-fluid #'+id).html("");
+    $('.container-fluid #'+id).remove();
+    $('[role=dialog]').html("");
+    $('[role=dialog]').remove();
+  }
+
+  //Abstraccion para cuando no seleccionan una fecha
+  function noDateSelectedError() {
+    return 
+      [
+        {
+          name: '_token',
+          value: $('.container-fluid input').first().val()
+        },
+        {
+          name: "error",
+          value: 0
+        }
+      ];
   }
 
   //Inicializacion de Select2

@@ -119,7 +119,7 @@
               <div class="col-md-8 col-xs-9">
                 <select class="select-2 form-control" id="pautaSelected" name="id_pauta" aria-hidden="true" multiple>
                   @foreach ($pautas as $pauta)
-                  <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}"> {{$pauta->numero." - ".$pauta->nombre}}</option>
+                  <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}" title="{{$pauta->descripcion}}"> {{$pauta->numero." - ".$pauta->nombre}}</option>
                   @endforeach
                 </select>
               </div>

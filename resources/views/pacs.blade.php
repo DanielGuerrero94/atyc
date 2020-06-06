@@ -39,7 +39,7 @@
 		var created_date = moment(created_at);
 		var current_date = moment();
 
-		diff = created_date.diff(current_date, 'days');
+		diff = current_date.diff(created_date, 'days');
 
 		return diff <= 7; // se creo la misma semana
 	}
