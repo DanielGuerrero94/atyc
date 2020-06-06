@@ -161,7 +161,7 @@
 						<ul class="timeline">
 							@foreach ($cursos as $curso)
 							<li class="time-label">
-								<span class="bg-blue">{{ $curso->fecha_ejec_final }}</span>
+								<span class="bg-blue">{{ $curso->fecha_ejec_inicial }}</span>
 							</li>
 							<li>
 								<i class="fa fa-graduation-cap text-blue"></i>

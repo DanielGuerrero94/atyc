@@ -269,7 +269,7 @@ class ReportesController extends Controller
         ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
         ->join('cursos.cursos as c', 'c.id_curso', '=', 'c.id_curso')
         ->select('p.nombre as provincia', DB::raw('count(distinct e.cuie) as capacitados'))
-        ->whereBetween('c.fecha_ejec_final', [$desde,$hasta])
+        ->whereBetween('c.fecha_ejec_inicial', [$desde,$hasta])
         ->where('e.integrante', 'S')
         ->where('e.compromiso_gestion', 'S')
         ->groupBy('p.nombre');
@@ -292,10 +292,10 @@ class ReportesController extends Controller
         ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
         ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
         ->join('cursos.areas_tematicas as at', 'at.id_area_tematica', '=', 'c.id_area_tematica')
-        ->select('p.descripcion as provincia', 'e.cuie', 'e.nombre as efector', 'e.denominacion_legal', 'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad ', 'c.nombre as accion', 'at.nombre as tematica', 'c.fecha_ejec_final', DB::raw('count(*) as participantes'))
+        ->select('p.descripcion as provincia', 'e.cuie', 'e.nombre as efector', 'e.denominacion_legal', 'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad ', 'c.nombre as accion', 'at.nombre as tematica', 'c.fecha_ejec_inicial', DB::raw('count(*) as participantes'))
         ->where('e.integrante', 'S')
         ->where('e.compromiso_gestion', 'S')
-        ->whereBetween('c.fecha_ejec_final', [$desde,$hasta]);
+        ->whereBetween('c.fecha_ejec_inicial', [$desde,$hasta]);
 
         if ($id_provincia != 0) {
             $query = $query->whereRaw("dg.id_provincia::integer = {$id_provincia} ");
@@ -303,6 +303,6 @@ class ReportesController extends Controller
 
         logger()->info($query->toSql());
 
-        return $query->groupBy('p.descripcion', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'd.nombre_departamento', 'l.nombre_localidad', 'c.nombre', 'at.nombre', 'c.fecha_ejec_final');
+        return $query->groupBy('p.descripcion', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'd.nombre_departamento', 'l.nombre_localidad', 'c.nombre', 'at.nombre', 'c.fecha_ejec_inicial');
     }
 }

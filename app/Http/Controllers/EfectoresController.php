@@ -137,7 +137,7 @@ class EfectoresController extends Controller
         ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
         ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
         ->rightJoin('sistema.periodos as pe', function ($join) {
-            return $join->whereBetween('c.fecha_ejec_final', [DB::raw('to_date(pe.desde::text,\'YYYY-MM-DD\')'),
+            return $join->whereBetween('c.fecha_ejec_inicial', [DB::raw('to_date(pe.desde::text,\'YYYY-MM-DD\')'),
                 DB::raw('to_date(pe.hasta::text,\'YYYY-MM-DD\')')]);
         })
         //->crossJoin('sistema.periodos as pe')
@@ -150,11 +150,11 @@ class EfectoresController extends Controller
             'd.nombre_departamento as departamento',
             'l.nombre_localidad as localidad',
             'c.nombre as accion',
-            'c.fecha_ejec_final',
+            'c.fecha_ejec_inicial',
             DB::raw('count(*) as participantes')
         )
-        //->whereBetween(DB::raw('c.fecha_ejec_final between pe.desde and pe.hasta'))
-        //->where(DB::raw('c.fecha_ejec_final between pe.desde and pe.hasta'))
+        //->whereBetween(DB::raw('c.fecha_ejec_inicial between pe.desde and pe.hasta'))
+        //->where(DB::raw('c.fecha_ejec_inicial between pe.desde and pe.hasta'))
         //->where('dg.id_provincia',$provincia)
         ->groupBy(
             'pe.nombre',
@@ -165,7 +165,7 @@ class EfectoresController extends Controller
             'd.nombre_departamento',
             'l.nombre_localidad',
             'c.nombre',
-            'c.fecha_ejec_final'
+            'c.fecha_ejec_inicial'
         );
 
         /*return DB::table('efectores.efectores as e')
@@ -177,12 +177,12 @@ class EfectoresController extends Controller
         ->join('cursos.cursos_alumnos as ca', 'ca.id_alumno', '=', 'a.id_alumno')
         ->join('cursos.cursos as c', 'c.id_curso', '=', 'ca.id_curso')
         ->select('p.descripcion as provincia', 'e.cuie', 'e.nombre as efector', 'e.denominacion_legal',
-        'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad', 'c.nombre as accion', 'c.fecha_ejec_final',
+        'd.nombre_departamento as departamento', 'l.nombre_localidad as localidad', 'c.nombre as accion', 'c.fecha_ejec_inicial',
         DB::raw('count(*) as participantes'))
-        ->whereBetween('c.fecha_ejec_final',[$desde,$hasta])
+        ->whereBetween('c.fecha_ejec_inicial',[$desde,$hasta])
         ->where('dg.id_provincia',$provincia)
         ->groupBy('p.descripcion', 'e.cuie', 'e.nombre', 'e.denominacion_legal', 'd.nombre_departamento',
-        'l.nombre_localidad', 'c.nombre', 'c.fecha_ejec_final');*/
+        'l.nombre_localidad', 'c.nombre', 'c.fecha_ejec_inicial');*/
     }
 
     public function getTabla(Request $r)

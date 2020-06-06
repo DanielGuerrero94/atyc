@@ -37,7 +37,7 @@ td {
 		<td>{{$resultado->localidad}}</td>
 		<td>{{$resultado->accion}}</td>
 		<td>{{$resultado->tematica}}</td>
-		<td>{{$resultado->fecha_ejec_final}}</td>
+		<td>{{$resultado->fecha_ejec_inicial}}</td>
 		<td>{{$resultado->participantes}}</td>
 	</tr>
 	@endforeach

@@ -261,21 +261,27 @@ class CursosController extends AbmController
         $query = Curso::select(
             'id_curso',
             'nombre',
+            'fecha_ejec_inicial',
             'fecha_ejec_final',
+            'fecha_plan_inicial',
+            'fecha_plan_final',
             'edicion',
             'duracion',
             'id_area_tematica',
             'id_linea_estrategica',
-            'id_provincia'
+            'id_provincia',
+            'id_estado',
+            'created_at'
         )
         ->with([
+            'provincia',
+            'estado',
             'areaTematica' => function ($query) {
                 return $query->withTrashed();
             },
             'lineaEstrategica' => function ($query) {
                 return $query->withTrashed();
-            },
-            'provincia'
+            }
         ])
         //->withCount('alumnos')
         ->segunProvincia();
@@ -305,7 +311,7 @@ class CursosController extends AbmController
         $returns = Curso::whereHas('profesores', function ($query) use ($id_profesor) {
             $query->where('profesores.id_profesor', $id_profesor);
         })
-        ->select('id_curso', 'nombre', 'fecha_ejec_final', 'id_provincia')
+        ->select('id_curso', 'nombre', 'fecha_ejec_inicial', 'id_provincia')
         ->with('provincia');
 
         return Datatables::of($returns)
@@ -403,7 +409,7 @@ class CursosController extends AbmController
 
     private function queryCountAlumnos(Request $r, $id_provincia)
     {
-        $query = "SELECT C.nombre,C.edicion,C.fecha_ejec_final,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as 
+        $query = "SELECT C.nombre,C.edicion,C.fecha_ejec_inicial,count (*) as cantidad_alumnos, CONCAT(LE.numero,'-',LE.nombre) as 
         linea_estrategica,AT.nombre as area_tematica,P.nombre as provincia,C.duracion from cursos.cursos C 
         left join cursos.cursos_alumnos CA ON CA.id_curso = C.id_curso 
         left join alumnos.alumnos A ON CA.id_alumno = A.id_alumno
@@ -485,6 +491,7 @@ class CursosController extends AbmController
 
         $query = Curso::with([
             'provincia',
+            'estado',
             'areaTematica' => function ($query) {
                 return $query->withTrashed();
             },
@@ -498,19 +505,19 @@ class CursosController extends AbmController
             if ($key == 'nombre') {
                 $query = $query->where('cursos.cursos.'.$key, 'ilike', "%{$value}%");
             } elseif ($key == 'desde') {
-                $query = $query->where('cursos.cursos.fecha_ejec_final', '>=', $value);
+                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '>=', $value);
             } elseif ($key == 'hasta') {
-                $query = $query->where('cursos.cursos.fecha_ejec_final', '<=', $value);
+                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '<=', $value);
             } elseif ($key == 'id_periodo') {
                 $periodo = Periodo::find($value);
-                $query = $query->where('cursos.cursos.fecha_ejec_final', '>=', $periodo->desde);
-                $query = $query->where('cursos.cursos.fecha_ejec_final', '<=', $periodo->hasta);
+                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '>=', $periodo->desde);
+                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '<=', $periodo->hasta);
             } else {
                 $query = $query->where('cursos.cursos.'.$key, $value);
             }
         }
 
-        return $query->orderBy('fecha_ejec_final','desc');
+        return $query->orderBy('fecha_ejec_inicial','desc');
     }
 
     public function getFiltrado(Request $r)
@@ -605,7 +612,7 @@ class CursosController extends AbmController
         $mapped = $data->map(function ($item, $key) {
             return [
                 $item->nombre,
-                $item->fecha_ejec_final,
+                $item->fecha_ejec_inicial,
                 $item->edicion,
                 $item->duracion,
                 $item->area_tematica,

@@ -24,7 +24,7 @@ td {
 	</tr>
 	<tr>
 		<td>{{$curso->nombre}}</td>
-		<td>{{$curso->fecha_ejec_final}}</td>
+		<td>{{$curso->fecha_ejec_inicial}}</td>
 		<td>{{$curso->edicion}}</td>
 		<td>{{$curso->duracion}}</td>
 		<td>{{$curso->areaTematica->nombre}}</td>

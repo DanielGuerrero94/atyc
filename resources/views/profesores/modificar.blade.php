@@ -207,7 +207,7 @@
 			ajax : $('#cursos-table').data('url') + '/' + profesor,
 			columns: [
 			{ data: 'nombre', title: 'Nombre accion'},
-			{ data: 'fecha_ejec_final', title: 'Fecha'},
+			{ data: 'fecha_ejec_inicial', title: 'Fecha'},
 			{ data: 'provincia.nombre', title: 'Provincia organizadora'},				
 			{ data: 'acciones', title: 'Acciones'}
 			]

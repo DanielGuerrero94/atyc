@@ -24,7 +24,7 @@ class CursosTableSeeder extends Seeder
     public function insert()
     {
         \DB::statement("INSERT INTO cursos.cursos
-            (id_curso,nombre,id_provincia,id_area_tematica,id_linea_estrategica,fecha_ejec_final,duracion,edicion,created_at,
+            (id_curso,nombre,id_provincia,id_area_tematica,id_linea_estrategica,fecha_ejec_inicial,duracion,edicion,created_at,
             updated_at)
             (SELECT
             sub.id, 

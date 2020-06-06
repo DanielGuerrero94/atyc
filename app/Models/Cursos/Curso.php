@@ -159,7 +159,7 @@ class Curso extends Model
             'alumnos.alumnos.establecimiento1',
             'cursos.cursos.id_curso',
             'cursos.cursos.nombre',
-            'cursos.cursos.fecha_ejec_final'
+            'cursos.cursos.fecha_ejec_inicial'
         )
         ->selectRaw('count(*) as alumnos')
         ->where('alumnos.alumnos.establecimiento1', $cuie)
@@ -167,9 +167,9 @@ class Curso extends Model
             'alumnos.alumnos.establecimiento1',
             'cursos.cursos.id_curso',
             'cursos.cursos.nombre',
-            'cursos.cursos.fecha_ejec_final'
+            'cursos.cursos.fecha_ejec_inicial'
         )
-        ->orderBy('cursos.cursos.fecha_ejec_final', 'desc')
+        ->orderBy('cursos.cursos.fecha_ejec_inicial', 'desc')
         ->get();
     }
 

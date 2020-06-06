@@ -52,7 +52,7 @@
 				{ data: 'provincia', title: 'Jurisdicción'},
 				{ data: 'nombre', title: 'Nombre'},
 				{ data: 'edicion', title: 'Edición'},
-				{ data: 'fecha_ejec_final', title: 'Fecha'},
+				{ data: 'fecha_ejec_inicial', title: 'Fecha'},
 				{ data: 'cantidad_alumnos', title: 'Cantidad de participantes'},
 				{ data: 'tipologia', title: 'Tipología de acción'},
 				{ data: 'tematica', title: 'Area temática'},

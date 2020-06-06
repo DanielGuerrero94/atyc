@@ -97,7 +97,7 @@ class DashboardController extends Controller
         logger($request->get("anio"));
         if (($anio = $request->get('anio')) != 0) {
             logger($anio);
-            $query = $query->where("c.fecha_ejec_final", ">", "{$anio}-01-01");
+            $query = $query->where("c.fecha_ejec_inicial", ">", "{$anio}-01-01");
         }
 
         return $query->first()
@@ -139,7 +139,7 @@ class DashboardController extends Controller
         $query = Curso::whereRaw("nombre ~* 'sumarte'");
 
         if (is_numeric($anio = $request->get('anio'))) {
-            $query = $query->whereYear('fecha_ejec_final', $anio);
+            $query = $query->whereYear('fecha_ejec_inicial', $anio);
         }
 
         if (is_numeric($division = $request->get('division'))) {
@@ -220,19 +220,19 @@ class DashboardController extends Controller
 
     private function accionesPorAnioYMes(Request $request)
     {
-        $query = "(select extract(year from fecha_ejec_final) as anio,extract(month from fecha_ejec_final) as mes,
+        $query = "(select extract(year from fecha_ejec_inicial) as anio,extract(month from fecha_ejec_inicial) as mes,
         count(*) as cantidad from cursos.cursos
-        where fecha_ejec_final > '2013-01-01'";
+        where fecha_ejec_inicial > '2013-01-01'";
 
         if (is_numeric($division = $request->get('division'))) {
             $query .= " and id_provincia = {$division}";
         }
 
-        $query .= " group by extract(year from fecha_ejec_final),extract(month from fecha_ejec_final)
-        order by extract(year from fecha_ejec_final),extract(month from fecha_ejec_final))
+        $query .= " group by extract(year from fecha_ejec_inicial),extract(month from fecha_ejec_inicial)
+        order by extract(year from fecha_ejec_inicial),extract(month from fecha_ejec_inicial))
         union all
-        (select max(extract(year from fecha_ejec_final))".
-        ",generate_series((select extract(month from max(fecha_ejec_final))::numeric) + 1,12),0 from cursos.cursos)";
+        (select max(extract(year from fecha_ejec_inicial))".
+        ",generate_series((select extract(month from max(fecha_ejec_inicial))::numeric) + 1,12),0 from cursos.cursos)";
 
         $acciones = \DB::select($query);
 
@@ -264,7 +264,7 @@ class DashboardController extends Controller
         where l.numero is not null";
 
         if (is_numeric($anio = $request->get('anio'))) {
-            $query .= " and extract(year from c.fecha_ejec_final) = {$anio}";
+            $query .= " and extract(year from c.fecha_ejec_inicial) = {$anio}";
         }
 
         if (is_numeric($division = $request->get('division'))) {
@@ -295,7 +295,7 @@ class DashboardController extends Controller
         where a.id_area_tematica is not null";
 
         if (is_numeric($anio = $request->get('anio'))) {
-            $query .= " and extract(year from c.fecha_ejec_final) = {$anio}";
+            $query .= " and extract(year from c.fecha_ejec_inicial) = {$anio}";
         }
 
         if (is_numeric($division = $request->get('division'))) {
@@ -321,20 +321,20 @@ class DashboardController extends Controller
 
     private function accionesInformadasEsteAnio()
     {
-        $acciones = \DB::select("(select id_provincia,extract(month from fecha_ejec_final) as mes,
+        $acciones = \DB::select("(select id_provincia,extract(month from fecha_ejec_inicial) as mes,
             count(*) as cantidad from cursos.cursos 
-            where extract(year from fecha_ejec_final) = extract(year from now())
+            where extract(year from fecha_ejec_inicial) = extract(year from now())
             and id_provincia <> 25
-            group by id_provincia,extract(month from fecha_ejec_final)
-            order by id_provincia,extract(month from fecha_ejec_final))
+            group by id_provincia,extract(month from fecha_ejec_inicial)
+            order by id_provincia,extract(month from fecha_ejec_inicial))
             union all
             (select distinct id_provincia,
                 generate_series(
-                    (select extract(month from max(c.fecha_ejec_final)) + 1 from cursos.cursos c
-                    where extract(year from c.fecha_ejec_final) = extract(year from now())
+                    (select extract(month from max(c.fecha_ejec_inicial)) + 1 from cursos.cursos c
+                    where extract(year from c.fecha_ejec_inicial) = extract(year from now())
                     and c.id_provincia = ca.id_provincia)::numeric,12),0
                     from cursos.cursos ca
-                    where extract(year from fecha_ejec_final) = extract(year from now())
+                    where extract(year from fecha_ejec_inicial) = extract(year from now())
                     and id_provincia <> 25
                 )");
 
@@ -355,7 +355,7 @@ class DashboardController extends Controller
         //Por ahora busca el historial de una semana por default
 
         if ($request->input('categoria', 'acciones') == 'acciones') {
-            $acciones = Curso::select('id_provincia', 'id_curso', 'nombre', 'created_at', 'fecha_ejec_final', 'edicion')
+            $acciones = Curso::select('id_provincia', 'id_curso', 'nombre', 'created_at', 'fecha_ejec_inicial', 'edicion')
             ->with('provincia')
             ->whereDate('created_at', '>', $antiguedad)
             ->orderBy('created_at', 'desc')
