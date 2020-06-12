@@ -9,6 +9,12 @@ use Datatables;
 
 class GestoresController extends Controller
 {
+    protected $rules = [
+        'name' => 'required|string',
+        'email' => 'required|string',
+        'title' => 'required|string'
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -50,11 +56,10 @@ class GestoresController extends Controller
     {
         try {
             $gestor = User::findOrFail($id);
+            return ['gestor' => $gestor];
         } catch (ModelNotFoundException $e) {
-            $gestor = null;
+            return ['error' => $e->getMessage()];
         }
-        
-        return json_encode($gestor);
     }
 
     /**
@@ -65,7 +70,7 @@ class GestoresController extends Controller
      */
     public function edit($id)
     {
-        return view('profesores/modificar', $this->show($id));
+        return view('gestores/modificar', $this->show($id));
     }
 
     /**
@@ -77,7 +82,18 @@ class GestoresController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $error = $this->validate($request, $this->rules);
+
+        if ($error) {
+            return response($error, 400);
+        }
+
+        try {
+            $user = User::findOrFail($id);
+            return response()->json($user->update($request->all()));
+        } catch (ModelNotFoundException $e) {
+            return ['response' => response()->json(['success' => false, 'error' => $e->getMessage()])];
+        }
     }
 
     /**
@@ -86,25 +102,30 @@ class GestoresController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $r, $id)
     {
-        //
+        try {
+            $user = User::findOrFail($id);
+            return response()->json($user->delete());
+        } catch (ModelNotFoundException $e) {
+            return ['response' => response()->json(['success' => false, 'error' => $e->getMessage()])];
+        }
     }
 
     public function getTabla()
     {
-        $query = User::select('id', 'name', 'email', 'title');
+        $query = User::select('id_user', 'name', 'email', 'title');
         return Datatables::of($query)
         ->addColumn(
             'acciones',
             function ($ret) {
-                return '<button data-id="{$ret->id}" class="btn btn-info btn-xs editar" title="Editar">'.
-                '<i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>'.
-                '<button data-id="{$ret->id}" class="btn btn-danger btn-xs eliminar" title="Eliminar" '.
-                'data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Some content">'.
-                '<i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+                $buttons = '<a data-id="'.$ret->id_user.'" class="btn btn-circle editar" '.
+                'title="Editar" style="margin-right: 1rem;"><i class="fa fa-pencil" aria-hidden="true" style="color: dodgerblue;"></i></a>'.
+                '<a data-id="'.$ret->id_user.'" class="btn btn-circle eliminar" '.
+                'title="Eliminar" style="margin-right: 1rem;"><i class="fa fa-trash" aria-hidden="true" style="color: dimgray;"></i></a>';
+
+                return $buttons;
             }
-        )
-        ->make(true);
+        )->make(true);
     }
 }

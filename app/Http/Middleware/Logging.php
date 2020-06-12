@@ -54,6 +54,6 @@ class Logging
             $json['username'] = $user->name;
         }
 
-        logger(json_encode($json));
+        logger()->info(json_encode($json));
     }
 }

@@ -34,7 +34,6 @@ class Admin
      */
     public function handle($request, Closure $next)
     {
-
         if (!$this->auth->user()->tieneRol('admin')) {
             return redirect('/dashboard');
         }

@@ -16,14 +16,6 @@
 				</div>
 				<div class="box-body">
 					<table id="table" class="table table-hover">
-						<thead>
-							<tr>
-								<th>Fix</th>
-                                <th>Numero</th>
-								<th>Nombre</th>
-								<th>Acciones</th>
-							</tr>
-						</thead>
 					</table>
 				</div>
 				<div class="box-footer">
@@ -37,7 +29,38 @@
 @endsection
 
 @section('script')
+<!-- Moment.js -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+		
 <script type="text/javascript">
+
+	function createdAtValidDate(created_at) {	
+		var created_date = moment(created_at);
+		var current_date = moment();
+
+		diff = current_date.diff(created_date, 'days');
+
+		return diff <= 7; // se creo la misma semana
+	}
+
+	function acciones(deleted_at, created_at, id) {
+		$buttons = '<a data-id="'+id+'" class="btn btn-circle editar" '+
+		'title="Editar" style="margin-right: 1rem;"><i class="fa fa-pencil" aria-hidden="true" style="color: dodgerblue;"></i></a>';
+
+		if(deleted_at)
+			$buttons += '<a data-id="'+id+'" class="btn btn-circle darAlta" '+
+			'title="Dar de alta" style="margin-right: 1rem;"><i class="fa fa-plus" aria-hidden="true" style="color: forestgreen;"></i></a>';
+		else
+			$buttons += '<a data-id="'+id+'" class="btn btn-circle darBaja" '+
+			'title="Dar de baja" style="margin-right: 1rem;"><i class="fa fa-minus" aria-hidden="true" style="color: firebrick;"></i></a>';
+		
+		if(createdAtValidDate(created_at))
+			$buttons += '<a data-id="'+id+'" class="btn btn-circle eliminar" '+
+		'title="Eliminar" style="margin-right: 1rem;"><i class="fa fa-trash" aria-hidden="true" style="color: dimgray;"></i></a>';
+
+		return $buttons;
+	}
+
 	$(document).ready(function(){
 		$('[data-toggle="popover"]').popover(); 
 
@@ -45,11 +68,14 @@
 			scrollCollapse: true,
 			ajax : 'componentesTabla',
 			columns: [
-			{ data: 'id_componente', orderable: false},
-            { data: 'numero'},
-			{ data: 'nombre'},
-			{ data: 'acciones', orderable: false}
-			]
+			{ title: 'id', data: 'id_componente', orderable: false},
+            { title: 'Numero', data: 'numero'},
+			{ title: 'Nombre', data: 'nombre'},
+			{ title: 'Acciones', data: 'deleted_at',
+				render: function( data, type, row, meta ) {
+					return acciones(data, row.created_at, row.id_componente);
+				}
+			}]
 		});
 
 		$('#abm').on('click','#nuevo_componente',function() {
@@ -124,10 +150,11 @@
 						data: data,
 						success: function(data){
 							console.log('Se borro el componente: '+componente);
-							location.reload();
+							alert('Se borro el componente');
+							$('#table').DataTable().clear().draw();
 						},
 						error: function (data) {
-							alert("Hay un curso usando ese componente. No se puede borrar el registro");
+							alert("Hay un curso usando ese componente. No se puede borrar el registro");t
 							console.log('Hubo un error.');
 							console.log(data);
 							location.reload();
@@ -174,7 +201,8 @@
 			data: data,
 			success: function(data){
 				console.log("Se dio de baja el componente: "+componente);
-				location.reload();
+				alert("Se dio de baja el componente");
+                $('#table').DataTable().clear().draw();
 			},
 			error: function(data){
 				console.log("Error.");
@@ -195,7 +223,8 @@
 			data: data,
 			success: function(data){
 				console.log("Se dio de alta el componente: "+componente);
-				location.reload();
+				alert("Se dio de alta el componente");
+                $('#table').DataTable().clear().draw();
 			},
 			error: function(data){
 				console.log("Error.");
