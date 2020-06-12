@@ -291,11 +291,8 @@
 						}
 				},
 				columns: [
-				{
-					title: 'Fecha', 
-					data: 'display_date',
-					defaultContent: '-',
-					render:function(data){
+				{ title: 'Fecha', data: 'display_date', defaultContent: '-',
+					render: function(data) {
 						return moment(data).format('DD/MM/YYYY');
 					}
 				},

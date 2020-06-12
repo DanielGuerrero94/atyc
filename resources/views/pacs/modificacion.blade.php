@@ -705,10 +705,11 @@
               method: 'put',
               data: getDataEjecucionCurso(),
               success: function(data){
-                console.log(data);
                 if(data != "error") {
                   console.log("Se informó la ejecución del curso: "+id);
                   $('#ediciones-table').DataTable().clear().draw();
+                } else {
+                  console.log(data + ': falta de fecha');
                 }
               },
               error: function (data) {
@@ -748,6 +749,10 @@
       {
         name: 'fecha_ejec_final',
         value: $('#fecha_ejec_final').val()
+      },
+      {
+        name: 'fecha_display',
+        value: $('#fecha_ejec_inicial').val()
       },
       {
         name: 'id_estado',
@@ -832,10 +837,11 @@
               method: 'put',
               data: getDataReprogramacionCurso(),
               success: function(data){
-                console.log(data);
                 if(data != "error") {
                   console.log("Se reprogramó el curso: "+id);
                   $('#ediciones-table').DataTable().clear().draw();
+                } else {
+                  console.log(data + ': falta de fecha');
                 }
               },
               error: function (data) {
@@ -875,6 +881,10 @@
       {
         name: 'fecha_plan_final',
         value: $('#fecha_reprograma_final').val()
+      },
+      {
+        name: 'fecha_display',
+        value: $('#fecha_reprograma_inicial').val()
       },
       {
         name: 'id_estado',
@@ -979,17 +989,20 @@
 
   //Abstraccion para cuando no seleccionan una fecha
   function noDateSelectedError() {
-    return 
-      [
-        {
-          name: '_token',
-          value: $('.container-fluid input').first().val()
-        },
-        {
-          name: "error",
-          value: 0
-        }
-      ];
+    data =  
+    [
+      {
+        name: '_token',
+        value: $('.container-fluid input').first().val()
+      },
+      {
+        name: "error",
+        value: 0
+      }
+    ];
+
+    console.log(data);
+    return data;
   }
 
   //Inicializacion de Select2

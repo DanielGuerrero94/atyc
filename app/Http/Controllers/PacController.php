@@ -53,12 +53,22 @@ class PacController extends AbmController
      * @var array
      **/
     private $filters = [
+        'anios' => 'array',
+        'id_provincia' => 'array',
         'nombre' => 'string',
         'duracion' => 'numeric',
-        'ediciones' => 'numeric'
-        // 'id_periodo' => 'numeric',
-        // 'desde' => 'string',
-        // 'hasta' => 'string'
+        'ediciones' => 'numeric',
+        'ficha_tecnica_aprobada' => 'array',
+        'ficha_obligatoria' => 'array',
+        'id_accion' => 'array',
+        'id_tematica' => 'array',
+        'id_destinatario' => 'array',
+        'id_responsable' => 'array',
+        'id_pauta' => 'array',
+        'id_componente' => 'array',
+        'id_periodo' => 'numeric',
+        'desde' => 'string',
+        'hasta' => 'string'
     ];
 
     /**
@@ -115,8 +125,9 @@ class PacController extends AbmController
                 'id_area_tematica' => $request->id_tematica,
                 'id_linea_estrategica' => $request->id_accion,
                 'fecha_plan_inicial' => $request->$fecha_inicio_actual,
-                'fecha_plan_final' => $request->$fecha_final_actual
-                ]);
+                'fecha_plan_final' => $request->$fecha_final_actual,
+                'fecha_display' => $request->$fecha_inicio_actual
+            ]);
 
             $curso = Curso::create($data);
             logger('Creo el curso: '.json_encode($curso));
@@ -235,12 +246,12 @@ class PacController extends AbmController
         $deleted_values = array_diff($current_values, $intersect);
         $added_values = array_diff($new_values, $intersect);
 
-        logger()->info("Model: ".$pivot_table);
-        logger()->info("Current Values: ".json_encode($current_values));
-        logger()->info("New Values: ".json_encode($new_values));
-        logger()->info("Intersect: ".json_encode($intersect));
-        logger()->info("Deleted Values: ".json_encode($deleted_values));
-        logger()->info("Added Values: ".json_encode($added_values));
+        // logger()->info("Model: ".$pivot_table);
+        // logger()->info("Current Values: ".json_encode($current_values));
+        // logger()->info("New Values: ".json_encode($new_values));
+        // logger()->info("Intersect: ".json_encode($intersect));
+        // logger()->info("Deleted Values: ".json_encode($deleted_values));
+        // logger()->info("Added Values: ".json_encode($added_values));
 
         foreach($deleted_values as $deleted)
             DB::table($pivot_table)->where('id_pac', $id_pac)->where($pivot_pkey, $deleted)->delete();
@@ -297,25 +308,25 @@ class PacController extends AbmController
      */
     public function destroy($id_pac)
     {
-        logger()->warning("Voy a Borrar:");
+        logger()->info("Voy a Borrar:");
 
         $pac = Pac::findOrFail($id_pac);
-        logger()->warning("PAC:\n".$pac);
+        logger()->info("PAC:\n".$pac);
         $pac->delete();
 
         if($pac->id_ficha_tecnica)
         {
             $ficha_tecnica = FichaTecnica::findOrFail($pac->id_ficha_tecnica);
-            logger()->warning("Ficha Tecnica:\n".$ficha_tecnica);
+            logger()->info("Ficha Tecnica:\n".$ficha_tecnica);
             $ficha_tecnica->delete();
         }
 
         $cursos = Curso::where('id_pac', $id_pac)->get();
-        logger()->warning("Cursos:\n".$cursos);
+        logger()->info("Cursos:\n".$cursos);
 
         foreach($cursos as $curso)
         {
-            logger()->warning("Curso a borrar: ".$curso);
+            logger()->info("Curso a borrar: ".$curso);
             $curso->delete();
         }
         
@@ -340,13 +351,25 @@ class PacController extends AbmController
         logger()->info($key.": ".$value);
     }
 
+    public function queryFechasPac($query, $signo, $fecha)
+    {
+        $query->orWhere('pac.pac_joined.fp_desde', $signo, $fecha)
+        ->orWhere('pac.pac_joined.fp_hasta', $signo, $fecha)
+        ->orWhere(function($q) use ($signo, $fecha) {
+            $q->where('pac.pac_joined.fe_desde', '!=', null)
+            ->where('pac.pac_joined.fe_desde', $signo, $fecha)
+            ->where('pac.pac_joined.fe_hasta', '!=', null)
+            ->where('pac.pac_joined.fe_hasta', $signo, $fecha);
+        });
+    }
+
     public function queryLogicaIds($filtros)
     {
         $filtered = $filtros->filter(function ($value, $key) {
             return $value != "" && $value != "0";
         });
 
-        logger()->warning(json_encode($filtered));
+        logger()->info(json_encode($filtered));
 
         $query = DB::table('pac.pac_joined');
 
@@ -368,19 +391,12 @@ class PacController extends AbmController
             elseif ($key == 'desde')
             {
                 $query = $query->where(function($q) use ($value) {
-                    $q->orWhere('pac.pac_joined.fp_desde', '>=', $value)
-                    ->orWhere('pac.pac_joined.fp_hasta', '>=', $value);
-                    //->orWhere('pac.pac_joined_fe_desde', '>=', $value)
-                    //->orWhere('pac.pac_joined_fe_hasta', '>=', $value);
+                    $this->queryFechasPac($q, '>=', $value);
                 });
-            }
-            elseif ($key == 'hasta')
+            } elseif ($key == 'hasta')
             {
                 $query = $query->where(function($q) use ($value) {
-                    $q->orWhere('pac.pac_joined.fp_desde', '<=', $value)
-                    ->orWhere('pac.pac_joined.fp_hasta', '<=', $value);
-                    //->orWhere('pac.pac_joined_fe_desde', '<=', $value)
-                    //->orWhere('pac.pac_joined_fe_hasta', '<=', $value);
+                    $this->queryFechasPac($q, '<=', $value);
                 });
             }
             elseif ($key == 'periodo')
@@ -388,17 +404,11 @@ class PacController extends AbmController
                 $periodo = Periodo::find($value);
 
                 $query = $query->where(function($q) use ($periodo) {
-                    $q->orWhere('pac.pac_joined.fp_desde', '>=', $periodo->desde)
-                    ->orWhere('pac.pac_joined.fp_hasta', '>=', $periodo->desde);
-                    //->orWhere('pac.pac_joined.fe_desde', '>=', $periodo->desde)
-                    //->orWhere('pac.pac_joined.fe_hasta', '>=', $periodo->desde);
+                    $this->queryFechasPac($q, '>=', $periodo->desde);
                 });
 
                 $query = $query->where(function($q) use ($periodo) {
-                    $q->orWhere('pac.pac_joined.fp_desde', '<=', $periodo->hasta)
-                    ->orWhere('pac.pac_joined.fp_hasta', '<=', $periodo->hasta);
-                    //->orWhere('pac.pac_joined_fe_desde', '<=', $periodo->hasta)
-                    //->orWhere('pac.pac_joined_fe_hasta', '<=', $periodo->hasta);
+                    $this->queryFechasPac($q, '<=', $periodo->hasta);
                 });
             }
             elseif ($key == 'nombre')
@@ -409,7 +419,7 @@ class PacController extends AbmController
                 $query = $query->whereIn('pac.pac_joined.'.$key, $value);
         }
 
-        logger()->warning("query: ".json_encode($query->toSql()));
+        logger()->info("query: ".json_encode($query->toSql()));
 
         $ids = $query->select('id_pac')->distinct()->get()->toArray();
 
@@ -417,7 +427,7 @@ class PacController extends AbmController
             return $val->id_pac;
         }, $ids);
          
-        logger()->warning("ids_pac: ".json_encode($ids));
+        logger()->info("ids_pac: ".json_encode($ids));
 
         return $ids;
     }
@@ -444,9 +454,6 @@ class PacController extends AbmController
         ])
         ->whereIn('pac.pacs.id_pac', $ids_pac)
         ->segunProvincia();
-
-        foreach ($pacs->get() as $pac)
-            $this->setDisplayDate($pac);
         
         if(isset($order_by))
         {
@@ -458,7 +465,7 @@ class PacController extends AbmController
             $pacs = $pacs->orderBy($ordenadores[$order_by['order_by'][0][0]], $order_by['order_by'][0][1]);
         }
 
-        logger()->warning("pacs: ".json_encode($pacs->toSql()));
+        logger()->info("pacs: ".json_encode($pacs->toSql()));
 
         return $pacs;
     }
@@ -469,8 +476,6 @@ class PacController extends AbmController
 
         $todos_ejecutados = true;
         $estados = array();
-
-        //logger()->warning("Pac: ".$pac->nombre);
 
         foreach ($cursos as $curso) 
         {
@@ -490,13 +495,13 @@ class PacController extends AbmController
                     $fecha_plan_anterior = $curso->fecha_plan_inicial;
             }
 
-            // logger()->warning("Comparacion: ".$curso->fecha_plan_inicial." >= ".Carbon::now()->format('yy-m-d'));
+            // logger()->info("Comparacion: ".$curso->fecha_plan_inicial." >= ".Carbon::now()->format('yy-m-d'));
             // if(isset($fecha_plan_anterior))
-            //     logger()->warning("Fecha Plan Anterior: ".$fecha_plan_anterior);
+            //     logger()->info("Fecha Plan Anterior: ".$fecha_plan_anterior);
             // if(isset($fecha_plan_posterior))
-            //     logger()->warning("Fecha Plan Posterior: ".$fecha_plan_posterior);
+            //     logger()->info("Fecha Plan Posterior: ".$fecha_plan_posterior);
             // if(isset($fecha_ejec_anterior))
-            //     logger()->warning("Fecha Ejec Anterior: ".$fecha_ejec_anterior);
+            //     logger()->info("Fecha Ejec Anterior: ".$fecha_ejec_anterior);
         }
         $display = $pac->created_at;
         
@@ -509,30 +514,24 @@ class PacController extends AbmController
 
         $pac->display_date = $display;
         $pac->save();
-        // logger()->warning("display_date :".$pac->display_date);
+        logger()->info("display_date :".$pac->display_date);
+
+        return response()->json($pac);
     }
 
-    public function setColorEstado($id_estado)
-    {
-        $color = "progress-bar";
-
-        $estados = ['warning', 'info', 'ejecutando', 'success', 'reprogramado', 'danger'];
-
-        return $color.'-'.$estados[$id_estado - 1];
-    }
-
-    public function estadosPorCursos(Pac $pac)
+    public function estadosPorPac(Pac $pac)
     {
         $cursos = $pac->cursos()->get();
         $estados = array();
+        $colores = ['warning', 'info', 'ejecutando', 'success', 'reprogramado', 'danger'];
+        $titulos = ['Planificado', 'Diseñado', 'En ejecución', 'Finalizado', 'Reprogramado', 'Desactivado'];
 
-        foreach ($cursos as $curso)
-        {
+        foreach ($cursos as $curso) {
             if(!isset($estados[$curso->id_estado]))
             {
                 $estados[$curso->id_estado]['cantidad'] = 1;
-                $estados[$curso->id_estado]['titulo'] = $curso->estado()->get()[0]->nombre;
-                $estados[$curso->id_estado]['color'] = $this->setColorEstado($curso->id_estado);
+                $estados[$curso->id_estado]['titulo'] = $titulos[$curso->id_estado - 1];
+                $estados[$curso->id_estado]['color'] = 'progress-bar-'.$colores[$curso->id_estado - 1];
                 $estados[$curso->id_estado]['porcentaje'] = 100;
             }
             else {
@@ -543,11 +542,41 @@ class PacController extends AbmController
         foreach($estados as &$estado)
             $estado['porcentaje'] = ($estado['cantidad'] / $cursos->count()) * 100;
 
-        logger()->warning("Pac: ".$pac->nombre);
-        logger()->warning("Estados: ".json_encode($estados));
+        //logger()->info("Estados: ".json_encode($estados));
 
         return $estados;
     }
+    
+    // Funcion mas performante?
+    // @danielguerrero94
+    // testie y la 1ra dio 12,444 vs 12,76 (segundos) para 1 millon de registros
+    // la ventaja de la primera es que podria funcionar si se te van a mucha cantidad los estados
+    // agregandole una columna "color" a la tabla de la base de datos (y deberias sacar los array $colores y $titulos)
+    // Para eso en la segunda tenes que crear un array de x cantidad siempre.
+    // Aparte eso hace que tengas que recorrer el array de 6 entero siempre, en la primera recorres solo en los estados seteados.
+    // Lo que tiene la segunda es que no tiene ningun if y parece mas prolija incluso.
+    
+    // public function estadosPorPac($cursos)
+    // {
+    //     $cursos = $pac->cursos()->get();
+    //     $cantidad_cursos = $cursos->count();
+    //     $repeticiones_estados = array(0, 0, 0, 0, 0, 0);
+    //     $estados = array();
+    //     $colores = ['warning', 'info', 'ejecutando', 'success', 'reprogramado', 'danger'];
+    //     $titulos = ['Planificado', 'Diseñado', 'En ejecución', 'Reprogramado', 'Finalizado', 'Desactivado'];
+        
+    //     foreach ($cursos as $curso)
+    //         $repeticiones_estados[$curso->id_estado-1]++;
+
+    //     for($i = 0; $i < count($repeticiones_estados); $i++) {
+    //         $estados[$i]['cantidad'] = $repeticiones_estados[$i];
+    //         $estados[$i]['titulo'] = $titulos[$i];
+    //         $estados[$i]['color'] = 'progress-bar-'.$colores[$i];
+    //         $estados[$i]['porcentaje'] = ($repeticiones_estados[$i] / $cantidad_cursos) * 100;
+    //     }
+    //     logger()->info("Estados: ".json_encode($estados));
+    //     return $estados;
+    // }
 
     public function getFiltrado(Request $r)
     {
@@ -562,7 +591,7 @@ class PacController extends AbmController
             return Datatables::of($pacs)
             ->addColumn(
                 'estados_por_curso', function (Pac $pac) {
-                    return $this->estadosPorCursos($pac);
+                    return $this->estadosPorPac($pac);
             })
             ->make(true);
         } else {
@@ -648,7 +677,7 @@ class PacController extends AbmController
         });
 
         $periodos = Cache::remember('periodos', 5, function () {
-            return Periodo::all();
+            return Periodo::orderBy('hasta', 'desc')->orderBy('desde')->orderBy('id_periodo', 'desc')->get();
         });
 
         return [
@@ -694,7 +723,7 @@ class PacController extends AbmController
         });
 
         $periodos = Cache::remember('periodos', 5, function () {
-            return Periodo::all();
+            return Periodo::orderBy('hasta', 'desc')->orderBy('desde')->orderBy('id_periodo', 'desc')->get();
         });
 
         return [
