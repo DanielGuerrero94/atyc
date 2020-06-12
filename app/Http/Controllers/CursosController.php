@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Cursos\AreaTematica;
 use App\Models\Cursos\LineaEstrategica;
+use App\Models\Cursos\Estado;
 use App\Provincia;
 use App\Periodo;
 use App\Models\Cursos\Curso;
@@ -47,9 +48,10 @@ class CursosController extends AbmController
         'nombre' => 'string',
         'duracion' => 'numeric',
         'edicion' => 'numeric',
-        'id_provincia' => 'numeric',
-        'id_linea_estrategica' => 'numeric',
-        'id_area_tematica' => 'numeric',
+        'id_provincia' => 'array',
+        'id_linea_estrategica' => 'array',
+        'id_area_tematica' => 'array',
+        'id_estado' => 'array',
         'id_periodo' => 'numeric',
         'desde' => 'string',
         'hasta' => 'string'
@@ -205,7 +207,7 @@ class CursosController extends AbmController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $flag_update_pac = false)
     {
         logger("Quiere actualizar accion {$id} con: ".json_encode($request->all()));
         $curso = Curso::findOrFail($id);
@@ -223,9 +225,19 @@ class CursosController extends AbmController
             logger("Se deja el curso sin docentes");
             $curso->profesores()->detach();
         }
+
+        if($request->has('error'))
+        {
+            logger()->warning('Curso '.$id.': No lleno la fecha de ejecucion o reprogramacion. Lo tiene que volver a intentar');
+            return response('error');
+        }
         
         $curso->update($request->all());
-        return $curso;
+
+        if($flag_update_pac)
+            $this->updateDisplayDatePac($curso);
+        
+        return response()->json($curso);
     }
 
     /**
@@ -247,7 +259,7 @@ class CursosController extends AbmController
      */
     public function get()
     {
-        return view('cursos', $this->getSelectOptions());
+        return view('cursos', $this->getEditOptions());
     }
 
     /**
@@ -258,25 +270,10 @@ class CursosController extends AbmController
      */
     public function getTabla(Request $request)
     {
-        $query = Curso::select(
-            'id_curso',
-            'nombre',
-            'fecha_ejec_inicial',
-            'fecha_ejec_final',
-            'fecha_plan_inicial',
-            'fecha_plan_final',
-            'edicion',
-            'duracion',
-            'id_area_tematica',
-            'id_linea_estrategica',
-            'id_provincia',
-            'id_estado',
-            'created_at'
-        )
-        ->with([
+        $query = Curso::with([
             'provincia',
             'estado',
-            'areaTematica' => function ($query) {
+            'areasTematicas' => function ($query) {
                 return $query->withTrashed();
             },
             'lineaEstrategica' => function ($query) {
@@ -451,10 +448,14 @@ class CursosController extends AbmController
         });
 
         $periodos = Cache::remember('periodos', 5, function () {
-            return Periodo::all();
+            return Periodo::orderBy('hasta', 'desc')->orderBy('desde')->orderBy('id_periodo', 'desc')->get();
         });
 
-        return compact('areas_tematicas', 'lineas_estrategicas', 'provincias', 'periodos');
+        $estados = Cache::remember('estados', 5, function() {
+            return Estado::orderBy('id_estado')->get();
+        });
+
+        return compact('areas_tematicas', 'lineas_estrategicas', 'provincias', 'periodos', 'estados');
     }
 
     private function getEditOptions()
@@ -472,13 +473,36 @@ class CursosController extends AbmController
         });
 
         $periodos_edit = Cache::remember('periodos_edit', 5, function () {
-            return Periodo::all();
+            return Periodo::orderBy('hasta', 'desc')->orderBy('desde')->orderBy('id_periodo', 'desc')->get();
         });
 
-        return compact('areas_tematicas_edit', 'lineas_estrategicas_edit', 'provincias_edit', 'periodos_edit');
+        $estados_edit = Cache::remember('estados_edit', 5, function() {
+            return Estado::orderBy('id_estado')->get();
+        });
+
+        return compact('areas_tematicas_edit', 'lineas_estrategicas_edit', 'provincias_edit', 'periodos_edit', 'estados_edit');
     }
 
-    private function queryLogica(Request $r, $filtros, $orderBy)
+    public function logFiltro($key, $value)
+    {
+        if(is_array($value))
+            $value = implode(", ", $value);
+        logger()->info($key.": ".$value);
+    }
+
+    private function queryFechasCurso($query, $signo, $fecha)
+    {
+        $query->orWhere('cursos.cursos.fecha_ejec_inicial', $signo, $fecha)
+        ->orWhere('cursos.cursos.fecha_ejec_final', $signo, $fecha)
+        ->orWhere(function($q) use ($signo, $fecha) {
+            $q->where('cursos.cursos.fecha_plan_inicial', '!=', null)
+            ->where('cursos.cursos.fecha_plan_inicial', $signo, $fecha)
+            ->where('cursos.cursos.fecha_plan_final', '!=', null)
+            ->where('cursos.cursos.fecha_plan_final', $signo, $fecha);
+        });
+    }
+
+    private function queryLogica(Request $r, $filtros, $order_by)
     {
         ini_set('max_execution_time', '300');
         
@@ -492,6 +516,9 @@ class CursosController extends AbmController
         $query = Curso::with([
             'provincia',
             'estado',
+            'areasTematicas' => function ($query) {
+                return $query->withTrashed();
+            },
             'areaTematica' => function ($query) {
                 return $query->withTrashed();
             },
@@ -502,22 +529,44 @@ class CursosController extends AbmController
         ->segunProvincia();
 
         foreach ($filtered as $key => $value) {
+            $this->logFiltro($key, $value);
             if ($key == 'nombre') {
                 $query = $query->where('cursos.cursos.'.$key, 'ilike', "%{$value}%");
             } elseif ($key == 'desde') {
-                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '>=', $value);
+                $query = $query->where(function($q) use ($value) {
+                    $this->queryFechasCurso($q, '>=', $value);
+                }); 
             } elseif ($key == 'hasta') {
-                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '<=', $value);
+                $query = $query->where(function($q) use ($value) {
+                    $this->queryFechasCurso($q, '<=', $value);
+                });
             } elseif ($key == 'id_periodo') {
                 $periodo = Periodo::find($value);
-                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '>=', $periodo->desde);
-                $query = $query->where('cursos.cursos.fecha_ejec_inicial', '<=', $periodo->hasta);
-            } else {
+                $query = $query->where(function($q) use ($periodo) {
+                    $this->queryFechasCurso($q, '>=', $periodo->desde);
+                });
+
+                $query = $query->where(function($q) use ($periodo) {
+                    $this->queryFechasCurso($q, '<=', $periodo->hasta);
+                });
+            } elseif ($key == 'duracion' || $key == 'edicion') {
                 $query = $query->where('cursos.cursos.'.$key, $value);
+            } else {
+                $query = $query->whereIn('cursos.cursos.'.$key, $value);
             }
         }
 
-        return $query->orderBy('fecha_ejec_inicial','desc');
+        if(isset($order_by))
+        {
+            $ordenadores = ['fecha_display', 'nombre', 'id_estado', 'edicion', 'duracion', 'id_tematica', 'id_linea_estrategica', 'id_provincia'];
+
+            // logger()->info("order_by[0][1]: ".$order_by['order_by'][0][1]);
+            // logger()->info("ordenador[order_by[0][0]]: ".$ordenadores[$order_by['order_by'][0][0]]); 
+
+            $query = $query->orderBy($ordenadores[$order_by['order_by'][0][0]], $order_by['order_by'][0][1]);
+        }
+
+        return $query;
     }
 
     public function getFiltrado(Request $r)
@@ -577,7 +626,7 @@ class CursosController extends AbmController
 
         $order_by = collect($r->only('order_by'));
 
-        $data = $this->queryLogica($r, $filtros, $order_by)->get();
+        $data = $this->queryLogica($r, $filtros, $order_by)->get()->toArray();
         $datos = ['cursos' => $data];
         $path = "acciones_".date("Y-m-d_H:i:s");
 
@@ -684,37 +733,27 @@ class CursosController extends AbmController
         return view('cursos/modificacion', array_merge($this->show($id), $this->getEditOptions(), ['disabled' => true]));
     }
 
+    public function updateDisplayDatePac(Curso $curso)
+    {
+        $pac = $curso->pac()->first();
+        return app('App\Http\Controllers\PacController')->setDisplayDate($pac);
+    }
+
     public function ejecutar(Request $request, $id)
     {
-        if($request->has('error'))
-        {
-            logger()->warning('Ejecutar Curso '.$id.': No lleno las fechas de ejecucion');
-            return response('error');
-        }
-        $curso = $this->update($request, $id);
-        logger()->info("Ejecute el curso: ".json_encode($curso));
-
-        return response()->json($curso);
+        logger()->info("Ejecuto el curso: ".$id);
+        return $this->update($request, $id, $flag_update_pac = true);
     }
 
     public function reprogramar(Request $request, $id)
     {
-        if($request->has('error'))
-        {
-            logger()->warning('Reprogamar Curso '.$id.': No lleno las fechas de reprogramacion');
-            return response('error');
-        }
-        $curso = $this->update($request, $id);
-        logger()->info("Reprograme el curso: ".json_encode($curso));
-
-        return response()->json($curso);
+        logger()->info("Reprogramo el curso: ".$id);
+        return $this->update($request, $id, $flag_update_pac = true);
     }
 
     public function desactivar(Request $request, $id)
     {
-        $curso = $this->update($request, $id);
-        logger()->info("Desactive el curso: ".json_encode($curso));
-
-        return response()->json($curso);
+        logger()->info("Desactivo el curso: ".$id);
+        return $this->update($request, $id, $flag_update_pac = true);
     }
 }
