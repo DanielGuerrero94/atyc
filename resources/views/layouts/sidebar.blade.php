@@ -36,7 +36,7 @@
         </span>
       </a>
       <ul class="treeview-menu">
-      @if(Auth::user()->tieneRol('admin'))
+        @if(Auth::user()->id_provincia === 25)
         <li>
           <a href={{url("/pacs")}}>
             <i class="fa fa-columns"></i>
