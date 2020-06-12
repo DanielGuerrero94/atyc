@@ -213,6 +213,9 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::post('pacs/fichas_tecnicas/{id_pac}/obligar', 'PacController@obligarFichaTecnica');
     Route::post('pacs/fichas_tecnicas/{id_pac}/desobligar', 'PacController@desobligarFichaTecnica');
 
+    //Planificacion->Pautas (tienen que verlas todas las provincias, el resto de los metodos estan solo para admin)
+    Route::get('pautas', 'PautasController@getTodos');
+    Route::get('pautasTabla', 'PautasController@getTabla');
 
     //Encuestas
     Route::get('encuestas/g_plannacer', 'Encuestas\EncuestasController@gPlannacer');
@@ -324,9 +327,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::delete('componentes/{id}/hard', 'ComponentesController@hardDestroy');
 
         //Pautas
-        Route::get('pautas', 'PautasController@getTodos');
         Route::get('pautas/alta', 'PautasController@create');
-        Route::get('pautasTabla', 'PautasController@getTabla');
         Route::get('pautas/{id}', 'PautasController@edit');
 
         Route::post('pautas', 'PautasController@store');

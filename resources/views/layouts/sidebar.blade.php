@@ -45,6 +45,12 @@
         </li>
         @endif
         <li>
+          <a href="{{url("/pautas")}}">
+            <i class="fa fa-database"></i>
+            <span>Pautas para PAC</span>
+          </a>
+        </li>
+        <li>
           <a href={{url("/materiales/etapa/3")}}>
             <i class="fa fa-book"></i>
             <span>Documentación</span>
@@ -71,7 +77,7 @@
     </li>
     <li class="treeview" id="ejecucion">
       <a href="#">
-        <i class="fa fa-desktop" aria-hidden="true"></i>
+        <i class="fa fa-cog" aria-hidden="true"></i>
         <span>Ejecución</span>
         <span class="pull-right">
           <i class="fa fa-angle-down"></i>
@@ -185,6 +191,40 @@
       <ul class="treeview-menu">
         <li>
           <a href={{url("/materiales/etapa/7")}}>
+            <i class="fa fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="treeview" id="meso_estrategia">
+      <a href="#">
+        <i class="fa fa-align-center" aria-hidden="true"></i>
+        <span>Meso Estrategia</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/13")}}>
+            <i class="fa fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="treeview" id="monitoreo_plataforma">
+      <a href="#">
+        <i class="fa fa-desktop" aria-hidden="true"></i>
+        <span>Monitoreo de Plataforma</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/14")}}>
             <i class="fa fa-book"></i>
             <span>Documentación</span>
           </a>

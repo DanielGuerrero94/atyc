@@ -24,7 +24,7 @@
 <body class="hold-transition login-page">
   <div class="login-box panel panel-primary">
     <div class="login-logo">
-      <p><b>ATyC</b></p>
+      <p><b>sigeca</b></p>
     </div>
     <hr>
     <div class="login-box-body">

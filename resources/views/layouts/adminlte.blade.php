@@ -8,7 +8,7 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>Sistema Integral de gestión de ATyC</title>
+  <title>Sistema de Gestión de Capacitación (SIGECA)</title>
   
   <link href="{{asset("/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css")}}" rel="stylesheet">
 
@@ -156,9 +156,9 @@
       <header class="main-header">
         <!-- Branding Image -->
         <a class="logo" href="{{ url('/dashboard') }}">
-          <span class="logo-mini"><b>A</b>TyC</span>
-          <span class="logo-lg" style="font-size: 0.6em">Sistema Integral de gestión de <b>A</b>TyC</span>
-        </a>      
+          <span class="logo-mini"><b>SIGECA</b></span>
+          <span class="logo" style="font-size: 0.6em; margin-left: -2rem; padding-top: 0rem; line-height: 1.8rem;"><b>SIGECA</b> <br> <b>SI</b>STEMA DE <b>GE</b>STIÓN DE <b>CA</b>PACITACIÓN</span>
+        </a>
         <nav class="navbar navbar-static-top" role="navigation">
           @include('layouts.navbar')
         </nav> 

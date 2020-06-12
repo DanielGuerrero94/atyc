@@ -38,7 +38,6 @@
         <!-- Font awesome -->
         <script src="https://use.fontawesome.com/a143432032.js"></script>
 
-
     </head>
     <body>
         <div id="app">

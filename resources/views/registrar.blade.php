@@ -38,7 +38,7 @@
 
 <div class="register-box">
   <div class="register-logo">
-    <p><b>ATyC</b></p>
+    <p><b>SIGECA</b></p>
   </div>
 
   <div class="register-box-body">

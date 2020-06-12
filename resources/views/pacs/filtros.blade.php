@@ -25,13 +25,13 @@
 					<label for="duracion" class="control-label col-xs-5">Duración:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 						<input class="form-control" id="duracion" name="duracion" type="number" placeholder="Todas las duraciones">
-					</div>						
+					</div>
 				</div>
 				<div class="form-group col-sm-4">
 					<label for="ediciones" class="control-label col-xs-5">Ediciones:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 						<input class="form-control" id="edicion" name="edicion" type="number" placeholder="Todas las ediciones">
-					</div>						
+					</div>
 				</div>
 			</div>
 			<br>
@@ -129,7 +129,7 @@
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 						<select class="select2 form-control periodo" id="periodo" name="id_periodo" aria-hidden="true">
 							<option></option>
-							<option data-id="0" value="0">Todos los períodos</option>
+							<option data-id="0" value="0"></option>
 							@foreach ($periodos as $periodo)
 							<option data-id="{{$periodo->id_periodo}}" value="{{$periodo->id_periodo}}">{{$periodo->nombre}}</option>
 							@endforeach
