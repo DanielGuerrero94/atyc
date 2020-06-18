@@ -112,8 +112,11 @@ class CursosController extends AbmController
         ])
         ->count() + 1;
 
-        $data = array_merge($data, ['edicion' => $edicion]);
+        $data = array_merge($data, ['edicion' => $edicion, 'id_estado' => 4, 'fecha_display' => $data['fecha_ejec_inicial']]);
         $curso = Curso::create($data);
+
+        $areas_tematicas = explode(',', $request->get('id_area_tematica'));
+        $curso->areasTematicas()->attach($areas_tematicas);
 
         if ($request->has('alumnos')) {
             $alumnos = explode(',', $request->get('alumnos'));
