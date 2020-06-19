@@ -173,7 +173,8 @@ class CursosController extends AbmController
                         'nombres',
                         'apellidos',
                         'id_tipo_documento',
-                        'nro_doc'
+                        'nro_doc',
+                        'id_tipo_docente'
                     );
                 },
                 'lineaEstrategica' => function ($query) {
