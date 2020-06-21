@@ -10,6 +10,23 @@
         <span>Dashboard</span>
       </a>
     </li>
+    <li class="treeview" id="meso_estrategia">
+      <a href="#">
+        <i class="fa fa-align-center" aria-hidden="true"></i>
+        <span>Meso Estrategia</span>
+        <span class="pull-right">
+          <i class="fa fa-angle-down"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li>
+          <a href={{url("/materiales/etapa/13")}}>
+            <i class="fa fa-book"></i>
+            <span>Documentación</span>
+          </a>
+        </li>
+      </ul>
+    </li>
     <li class="treeview" id="diagnostico">
       <a href="#">
         <i class="fa fa-bar-chart" aria-hidden="true"></i>
@@ -191,23 +208,6 @@
       <ul class="treeview-menu">
         <li>
           <a href={{url("/materiales/etapa/7")}}>
-            <i class="fa fa-book"></i>
-            <span>Documentación</span>
-          </a>
-        </li>
-      </ul>
-    </li>
-    <li class="treeview" id="meso_estrategia">
-      <a href="#">
-        <i class="fa fa-align-center" aria-hidden="true"></i>
-        <span>Meso Estrategia</span>
-        <span class="pull-right">
-          <i class="fa fa-angle-down"></i>
-        </span>
-      </a>
-      <ul class="treeview-menu">
-        <li>
-          <a href={{url("/materiales/etapa/13")}}>
             <i class="fa fa-book"></i>
             <span>Documentación</span>
           </a>
