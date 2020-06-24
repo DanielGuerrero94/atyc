@@ -55,10 +55,12 @@ function getFiltrosReportes() {
 
 	if($('#toggle-fecha i').hasClass('fa-toggle-off')){
 		id_periodo = $('#filtros #periodo :selected').data('id');
-	}else{
-		desde = $('#filtros #desde').val();
-		hasta = $('#filtros #hasta').val();
-	}
+	} else if($('#filtros #hasta').val() == "" || $('#filtros #hasta').val() == "") {
+        id_periodo = 0;
+    } else {
+        desde = $('#filtros #desde').val();
+        hasta = $('#filtros #hasta').val();
+    }
 
 	return {
 		id_provincia: id_provincia,
