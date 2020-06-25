@@ -243,6 +243,10 @@
         	$('.select2-container--default .select2-selection--multiple').css('height', 'auto');
 			$('#filtros .box').toggle();
       	});
+
+		$('.select-2').on('select2:select', function () {
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#000000 !important');
+		});
 	}
 
 	function renderProgressPorcentaje (anterior, keyValue) {

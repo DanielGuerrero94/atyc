@@ -127,9 +127,8 @@
 				<div class="form-group col-sm-4">
 					<label for="periodo" class="control-label col-xs-5">Período:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-						<select class="select2 form-control periodo" id="periodo" name="id_periodo" aria-hidden="true">
+						<select class="select-2 form-control periodo" id="periodo" name="id_periodo" aria-hidden="true">
 							<option></option>
-							<option data-id="0" value="0"></option>
 							@foreach ($periodos as $periodo)
 							<option data-id="{{$periodo->id_periodo}}" value="{{$periodo->id_periodo}}">{{$periodo->nombre}}</option>
 							@endforeach

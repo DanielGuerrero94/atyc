@@ -57,7 +57,6 @@
 		var current_date = moment();
 
 		diff = current_date.diff(created_date, 'days');
-		console.log(diff);
 
 		return diff <= 7; // se creo la misma semana
 	}
@@ -117,9 +116,14 @@
 		});
 
 		$('.select-2').ready(function() {
+			console.log("a");
         	$('.select2-container--default .select2-selection--multiple').css('height', 'auto');
 			$('#filtros .box').toggle();
       	});
+
+		$('.select-2').on('select2:select', function () {
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#000000 !important');
+		});
 	}
 
 	$(document).ready(function(){
@@ -217,15 +221,13 @@
 				desde: desde,
 				hasta: hasta
 			};
-			console.log(data);
+
 			return data;
 		};
 
 		$('.excel').on('click',function () {
 			var filtros = getFiltrosJson();
 			var order_by = $('#abm-table').DataTable().order();
-			console.log(filtros);
-			console.log(order_by);
 
 			$.ajax({
 				url: 'cursos/excel',
@@ -275,7 +277,6 @@
 
 		$('#filtros').on('click','#filtrar',function () {
 			var filtrosJson = getFiltrosJson();
-			console.log(filtrosJson);
 
 			datatable = $('#abm-table').DataTable({
 				destroy: true,

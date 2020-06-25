@@ -32,7 +32,7 @@
                     </div>						
                 </div>
                 <div class="row" style="padding-left:2em;">
-				<a href="#abm" class="btn btn-square filtro" id="pac-refresh">
+				<a href="#abm" class="btn btn-square filtro" id="pac-refresh" title="Buscar">
 					<i class="fa fa-refresh text-info fa-lg"></i>
 				</a>
                 </div>

@@ -177,9 +177,13 @@
         $('ul.select2-results__options').css('max-height', (availableHeight - bottomPadding) + 'px');
       });
 
-      $('.select-2').ready(function() {
-        $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
-      });
+    $('.select-2').ready(function() {
+      $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
+    });
+      
+    $('.select-2').on('select2:select', function () {
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#000000 !important')
+		});
 
     $.typeahead({
       input: '.curso_typeahead',

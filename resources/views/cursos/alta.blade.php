@@ -142,8 +142,6 @@
       $('#tab-tutorial').remove();
     });
 
-    $(".js-example-basic-single").select2();    
-
     var botonQuitar = '<td><button class="btn btn-danger btn-xs quitar" title="Quitar"><i class="fa fa-minus-circle" aria-hidden="true"></i></button></td>';
 
     $('#alta-accion #tabla-profesores').on('click','.agregar',function () {
