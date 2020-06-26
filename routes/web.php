@@ -213,9 +213,22 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::post('pacs/fichas_tecnicas/{id_pac}/obligar', 'PacController@obligarFichaTecnica');
     Route::post('pacs/fichas_tecnicas/{id_pac}/desobligar', 'PacController@desobligarFichaTecnica');
 
-    //Planificacion->Pautas (tienen que verlas todas las provincias, el resto de los metodos estan solo para admin)
+    //Planificacion->Pautas
     Route::get('pautas', 'PautasController@getTodos');
     Route::get('pautasTabla', 'PautasController@getTabla');
+
+    Route::get('pautas/alta', 'PautasController@create');
+    Route::get('pautas/{id}', 'PautasController@edit');
+
+    Route::post('pautas', 'PautasController@store');
+
+    Route::put('pautas/{id}/obligar', 'PautasController@obligarFichaTecnica');
+    Route::put('pautas/{id}/desobligar', 'PautasController@desobligarFichaTecnica');
+    Route::put('pautas/{id}', 'PautasController@update');
+    Route::put('pautas/{id}/alta', 'PautasController@alta');
+
+    Route::delete('pautas/{id}', 'PautasController@destroy');
+    Route::delete('pautas/{id}/hard', 'PautasController@hardDestroy');
 
     //Encuestas
     Route::get('encuestas/g_plannacer', 'Encuestas\EncuestasController@gPlannacer');
@@ -326,19 +339,19 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::delete('componentes/{id}', 'ComponentesController@destroy');
         Route::delete('componentes/{id}/hard', 'ComponentesController@hardDestroy');
 
-        //Pautas
-        Route::get('pautas/alta', 'PautasController@create');
-        Route::get('pautas/{id}', 'PautasController@edit');
+        //Categorias de pautas
+        Route::get('categorias', 'CategoriasController@getTodos');
+        Route::get('categorias/alta', 'CategoriasController@create');
+        Route::get('categoriasTabla', 'CategoriasController@getTabla');
+        Route::get('categorias/{id}', 'CategoriasController@edit');
 
-        Route::post('pautas', 'PautasController@store');
+        Route::post('categorias', 'CategoriasController@store');
 
-        Route::put('pautas/{id}/obligar', 'PautasController@obligarFichaTecnica');
-        Route::put('pautas/{id}/desobligar', 'PautasController@desobligarFichaTecnica');
-        Route::put('pautas/{id}', 'PautasController@update');
-        Route::put('pautas/{id}/alta', 'PautasController@alta');
+        Route::put('categorias/{id}', 'CategoriasController@update');
+        Route::put('categorias/{id}/alta', 'CategoriasController@alta');
 
-        Route::delete('pautas/{id}', 'PautasController@destroy');
-        Route::delete('pautas/{id}/hard', 'PautasController@hardDestroy');
+        Route::delete('categorias/{id}', 'CategoriasController@destroy');
+        Route::delete('categorias/{id}/hard', 'CategoriasController@hardDestroy');
 
         //Gestores
         Route::get('gestores/tabla', 'GestoresController@getTabla');

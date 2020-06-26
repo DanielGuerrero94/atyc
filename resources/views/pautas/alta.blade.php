@@ -20,12 +20,22 @@
                     <div class="form-group col-sm-12">
 						<label for="categoria" class="control-label col-xs-4">Categoria:</label>
 						<div class="col-xs-8">
-							<select class="form-control" id="categoria" name="id_categoria">
-                                <option>Elegir categoria</option>
-							@foreach ($categorias as $categoria)
-								<option value="{{$categoria->id_categoria}}" data-id="{{$categoria->id_categoria}}" title="{{$categoria->nombre}}">{{$categoria->id_categoria." - ".$categoria->nombre}}</option>
-							@endforeach
-						</select>
+							@if(Auth::user()->id_provincia == 25)
+							<select class="select-2 form-control categoria" id="categoria" name="id_categoria" aria-hidden="true">
+                                <option></option>
+								@foreach ($categorias as $categoria)
+									<option value="{{$categoria->id_categoria}}" data-id="{{$categoria->id_categoria}}">{{$categoria->id_categoria." - ".$categoria->nombre}}</option>
+								@endforeach
+							</select>
+							@else
+							<select class="select-2 form-control categoria" id="categoria" name="id_categoria" aria-hidden="true">
+								@foreach ($categorias as $categoria)
+									@if($categoria->numero === 6)
+									<option value="{{$categoria->id_categoria}}" data-id="{{$categoria->id_categoria}}" selected="selected">{{$categoria->id_categoria." - ".$categoria->nombre}}</option>
+									@endif
+								@endforeach
+							</select>
+							@endif
 						</div>
 					</div>
                     <div class="form-group col-sm-12">
@@ -70,11 +80,23 @@
 
 	function getSelected() {
 		var anios = $('#anio').val();
+		var provincia = {{Auth::user()->id_provincia}};
+		var categoria = $('#categoria').val();
 
-		return [{
-			name: 'anios',
-			value: anios
-		}];
+		return [
+			{
+				name: 'anios',
+				value: anios
+			},
+			{
+				name: 'id_provincia',
+				value: provincia
+			},
+			{
+				name: 'id_categoria',
+				value: categoria
+			}
+		];
 	}
 	
 	function getForm() {
@@ -84,6 +106,35 @@
 		console.log(input);
 
 		return input;
+	}
+
+	function inicializarSelect2() {
+		$('.anio').select2({
+			"placeholder": {
+				id: '0',
+				text: " Seleccionar año/s"
+			},
+			"width" : '100%'
+		});
+
+		$('.categoria').select2({
+			"placeholder": "Seleccionar Categoria",
+			"width" : '100%'
+		});
+
+		$('.select-2').ready(function() {
+			$('.select2-container--default .select2-selection--multiple').css('height', 'auto');
+			$('.select2-container--default .select2-selection--single').css('height', 'auto');
+			$('.select2-container .select2-selection--single .select2-selection__rendered').css('white-space', 'normal');
+		});
+
+		$('.select-2').on('select2:select', function () {
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important')
+		});
+
+		@if(Auth::user()->id_provincia != 25)
+			$('.categoria').each(function (k,v) {$(v).attr('disabled', true);});
+		@endif
 	}
 
 	$(document).ready(function(){
@@ -100,13 +151,7 @@
 			}
 		});
 
-		$('.anio').select2({
-			"placeholder": {
-				id: '0',
-				text: " Seleccionar año/s"
-			},
-			"width" : '100%'
-		});
+		inicializarSelect2();
 
 		$('#alta #form-alta').validate({
 			rules : {
@@ -144,6 +189,7 @@
 					data : getForm(),
 					success : function(data){
 						console.log("Success.");
+						alert("Se crea la pauta");
 						location.reload();	
 					},
 					error : function(data){

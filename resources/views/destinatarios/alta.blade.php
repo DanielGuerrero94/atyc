@@ -50,6 +50,7 @@
 				data : $('form').serialize(),
 				success : function(data){
 					console.log("Success.");
+					alert("Se crea el destinatario");
 					location.reload();	
 				},
 				error : function(data){

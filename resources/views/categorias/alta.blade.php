@@ -1,6 +1,6 @@
 <div class="col-sm-6 col-sm-offset-3">
 	<div class="box box-success ">
-		<div class="box-header">Nuevo Componente</div>
+		<div class="box-header">Nueva Categoria</div>
 		<div class="box-body">
 			<form id="form-alta">
 				{{ csrf_field() }}
@@ -54,11 +54,11 @@
 
 			$.ajax({
 				method : 'post',
-				url : 'componentes',
+				url : 'categorias',
 				data : $('form').serialize(),
 				success : function(data){
 					console.log("Success.");
-					alert("Se creo al componente");
+                    alert("Se creo la categoria");
 					location.reload();	
 				},
 				error : function(data){

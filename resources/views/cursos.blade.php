@@ -73,7 +73,7 @@
 		return iconFA({icono: "fa-circle", color, titulo})
 	}
 
-	function iconFA({icono="fa-bolt", color="#000000" , titulo=""}) {
+	function iconFA({icono="fa-bolt", color="#444" , titulo=""}) {
 		return '<i class="fa '+icono+' fa-lg" style="color: '+color+';" title="'+titulo+'"> </i>';
 	}
 
@@ -122,7 +122,7 @@
       	});
 
 		$('.select-2').on('select2:select', function () {
-			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#000000 !important');
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 		});
 	}
 

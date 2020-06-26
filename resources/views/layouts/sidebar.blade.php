@@ -396,6 +396,11 @@
                 <i class="fa fa-circle-o"></i>
                 <span>Pautas</span>
               </a>
+            <li>
+              <a href="{{url("/categorias")}}">
+                <i class="fa fa-circle-o"></i>
+                <span>Categorias de Pautas</span>
+            </a>
             </li>
             <li>
               <a href="{{url("/componentes")}}">

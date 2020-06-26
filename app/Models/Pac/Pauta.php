@@ -14,7 +14,7 @@ class Pauta extends Model
      *
      * @var array
      */
-    protected $fillable = ['numero', 'nombre', 'id_categoria', 'ficha_obligatoria', 'descripcion'];
+    protected $fillable = ['numero', 'nombre', 'id_categoria', 'ficha_obligatoria', 'descripcion', 'id_provincia'];
     
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
@@ -56,6 +56,15 @@ class Pauta extends Model
             'id_pauta',
             'id_pac')
             ->withTimestamps();
+    }
+
+    public function provincia()
+    {
+        return $this->belongsTo(
+            'App\Provincia',
+            'id_provincia',
+            'id_provincia'
+        );
     }
 
 }

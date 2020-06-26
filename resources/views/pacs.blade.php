@@ -69,7 +69,7 @@
 			return '<a href="#abm" data-id="' + id_pac + '" class="btn btn-circle eliminar" title="Eliminar"><i class="fa fa-trash text-danger fa-lg"></i></a>';
 	}
 	
-	function iconoFontAwesome({icono="fa-bolt", color="#000000" , titulo=""}) {
+	function iconoFontAwesome({icono="fa-bolt", color="#444" , titulo=""}) {
 		return '<i class="fa '+icono+' fa-lg" style="color: '+color+';" title="'+titulo+'"> </i>';
 	}
 	
@@ -245,7 +245,7 @@
       	});
 
 		$('.select-2').on('select2:select', function () {
-			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#000000 !important');
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 		});
 	}
 

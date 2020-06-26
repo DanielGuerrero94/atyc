@@ -117,9 +117,11 @@
             <div class="form-group col-md-6">
               <label for="pauta" class="control-label col-md-4 col-xs-3">Pautas Para PAC:</label>
               <div class="col-md-8 col-xs-9">
-                <select class="select-2 form-control" id="pautaSelected" name="id_pauta" aria-hidden="true" multiple>
+                <select class="select-2 form-control" id="pauta" name="id_pauta" aria-hidden="true" multiple>
                   @foreach ($pautas as $pauta)
+                  @if($pauta->id_provincia == 25 || $pauta->id_provincia == Auth::user()->id_provincia)
                   <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}" title="{{$pauta->descripcion}}"> {{$pauta->numero." - ".$pauta->nombre}}</option>
+                  @endif
                   @endforeach
                 </select>
               </div>
@@ -182,7 +184,7 @@
     });
       
     $('.select-2').on('select2:select', function () {
-			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#000000 !important')
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important')
 		});
 
     $.typeahead({
@@ -223,7 +225,7 @@
     }
 
     function getPautasSelected() {
-      return $('#alcance #pautaSelected option:selected').map(function(){
+      return $('#alcance #pauta option:selected').map(function(){
           return this.value;
           });
     }

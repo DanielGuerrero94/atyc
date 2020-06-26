@@ -26,11 +26,25 @@
 										@endfor
 									</select>
 								</div>
-							</div>						
+							</div>			
 						</div>
+						@if(Auth::user()->id_provincia == 25)
+						<div class="row">
+							<div class="form-group col-xs-12 col-sm-6">
+								<label for="provincia" class="control-label col-xs-4 col-sm-2">Provincia:</label>
+								<div class="col-xs-8 col-sm-6">
+									<select class="select-2 form-control provincias" id="provincias" name="id_provincia" aria-hidden="true" multiple>
+										@foreach ($provincias as $provincia)
+										<option data-id="{{$provincia->id_provincia}}" value="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>									
+										@endforeach
+									</select>
+								</div>
+							</div>	
+						</div>
+						@endif
 					</div>
 					<div class="row" style="padding-left:2em; padding-bottom:2em;">
-					<a href="#table" class="btn btn-square filtro" id="pautas-refresh">
+					<a href="#table" class="btn btn-square filtro" id="pautas-refresh" title="Filtrar">
 						<i class="fa fa-refresh text-info fa-lg"></i>
 					</a>
 					</div>
@@ -38,9 +52,7 @@
 					</table>
 				</div>
 				<div class="box-footer">
-				@if(Auth::user()->tieneRol('admin'))
 					<button class="btn btn-success pull-right" id="nueva_pauta"><i class="fa fa-plus" aria-hidden="true"></i>Nueva pauta</button>
-				@endif
 				</div>
 			</div>
 		</div>
@@ -54,7 +66,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <script type="text/javascript">
 
-	function iconoFontAwesome({icono="fa-bolt", color="#000000" , titulo=""}) {
+	function iconoFontAwesome({icono="fa-bolt", color="#444" , titulo=""}) {
 		return '<i class="fa '+icono+' fa-lg" style="color: '+color+';" title="'+titulo+'"> </i>';
 	}
 
@@ -70,11 +82,16 @@
 
 	function getFiltrosJson() {
 		var anios = $('#anios').val();
+		var provincias = $('#provincias').val();
+		@if(Auth::user()->id_provincia != 25)
+			provincias = [{{Auth::user()->id_provincia}}, 25];
+		@endif
 		
 		data = {
-			anios: anios
+			anios: anios,
+			provincias: provincias
 		};
-
+		console.log(data);
 		return data;
 	}
 
@@ -87,22 +104,27 @@
 		return diff <= 7; // se creo la misma semana
 	}
 
-	function acciones(deleted_at, created_at, id) {
-		$buttons = '<a data-id="'+id+'" class="btn btn-circle editar" '+
-		'title="Editar" style="margin-right: 1rem;"><i class="fa fa-pencil" aria-hidden="true" style="color: dodgerblue;"></i></a>';
+	function acciones(deleted_at, created_at, id_pauta, id_provincia) {
+		curr_prov = {{Auth::user()->id_provincia}};
+		buttons = '';
 
-		if(deleted_at)
-			$buttons += '<a data-id="'+id+'" class="btn btn-circle darAlta" '+
-			'title="Dar de alta" style="margin-right: 1rem;"><i class="fa fa-plus" aria-hidden="true" style="color: forestgreen;"></i></a>';
-		else
-			$buttons += '<a data-id="'+id+'" class="btn btn-circle darBaja" '+
-			'title="Dar de baja" style="margin-right: 1rem;"><i class="fa fa-minus" aria-hidden="true" style="color: firebrick;"></i></a>';
-		
-		if(createdAtValidDate(created_at))
-			$buttons += '<a data-id="'+id+'" class="btn btn-circle eliminar" '+
-		'title="Eliminar" style="margin-right: 1rem;"><i class="fa fa-trash" aria-hidden="true" style="color: dimgray;"></i></a>';
+		if(id_provincia == curr_prov || curr_prov == 25) {
+			buttons += '<a data-id="'+id_pauta+'" class="btn btn-circle editar" '+
+			'title="Editar" style="margin-right: 1rem;"><i class="fa fa-pencil" aria-hidden="true" style="color: dodgerblue;"></i></a>';
 
-		return $buttons;
+			if(deleted_at)
+				buttons += '<a data-id="'+id_pauta+'" class="btn btn-circle darAlta" '+
+				'title="Dar de alta" style="margin-right: 1rem;"><i class="fa fa-plus" aria-hidden="true" style="color: forestgreen;"></i></a>';
+			else
+				buttons += '<a data-id="'+id_pauta+'" class="btn btn-circle darBaja" '+
+				'title="Dar de baja" style="margin-right: 1rem;"><i class="fa fa-minus" aria-hidden="true" style="color: firebrick;"></i></a>';
+
+			if(createdAtValidDate(created_at))
+				buttons += '<a data-id="'+id_pauta+'" class="btn btn-circle eliminar" '+
+			'title="Eliminar" style="margin-right: 1rem;"><i class="fa fa-trash" aria-hidden="true" style="color: dimgray;"></i></a>';
+		}
+
+		return buttons;
 	}
 
 	$(document).ready(function(){
@@ -113,6 +135,18 @@
 				text: " Todos los años"
 			},
 			width : "200%"
+		});
+
+		$('.provincias').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todas las provincias"
+			},
+			width : "200%"
+		});
+
+		$('.select-2').on('select2:select', function () {
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important')
 		});
 
 		$('[data-toggle="popover"]').popover(); 
@@ -138,22 +172,19 @@
 							return estadosFicha(data);
 					}
 				},
+				{ title: 'Jurisdicción', data: 'provincia.nombre', name: 'id_provincia' },
 				{ title: 'Años', data: 'anios', orderable: false,
 					render: function ( data, type, row, meta ) {
-						console.log(data[0]);
-
 						if(Object.entries(data[0]).length != 0)
 							return data[0].map(function(anio) { return ' ' + anio.anio; });
 					}
 				},
-				{ title: 'Descripción', data: 'descripcion' }
-				@if(Auth::user()->tieneRol('admin'))
-				, { title: 'Acciones', data: 'deleted_at',
+				{ title: 'Descripción', data: 'descripcion' },
+				{ title: 'Acciones', data: 'deleted_at',
 					render: function( data, type, row, meta ) {
-						return acciones(data, row.created_at, row.id_pauta);
+						return acciones(data, row.created_at, row.id_pauta, row.id_provincia);
 					}
 				}
-				@endif
 				]
 			});
 		});
@@ -183,7 +214,6 @@
 		$.ajax ({
 			url: 'pautas/'+pauta,
 			success: function(data){
-				console.log(data);
 				$('#alta').html(data);
 				$('#alta').show();
 				$('#abm').hide();

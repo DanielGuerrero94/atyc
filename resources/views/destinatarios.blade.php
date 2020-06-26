@@ -180,6 +180,7 @@
 			data : $('form').serialize(),
 			success : function(data){
 				console.log("Success.");
+				alert("Se modifica al destinatario");
 				location.reload();	
 			},
 			error : function(data){

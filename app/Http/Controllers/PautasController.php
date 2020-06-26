@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pac\Pauta;
 use App\Models\Pac\Categoria;
+use App\Provincia;
 use Datatables;
 
 class PautasController extends ModelController
@@ -38,6 +39,8 @@ class PautasController extends ModelController
     public function index()
     {
         return $this->model
+        ->with('provincia')
+        ->orderBy('id_provincia', 'desc')
         ->orderBy('numero')
         ->orderBy('deleted_at', 'desc')
         ->withTrashed();
@@ -61,11 +64,13 @@ class PautasController extends ModelController
 
     public function store(Request $request)
     {
-        logger(json_encode($request));
+        logger()->info("Request: ".json_encode($request));
         $pauta = ModelController::store($request);
 
+        logger()->info("Pauta: ".json_encode($pauta));
+
         $anios = explode(',', $request->get('anios'));
-        logger(json_encode($anios));
+        logger()->info("Anios: ".json_encode($anios));
 
         foreach($anios as $anio)
             DB::insert('insert into pac.pautas_anios (id_pauta, anio) values (?, ?)', [$pauta->id_pauta, $anio]);
@@ -144,7 +149,7 @@ class PautasController extends ModelController
      */
     public function getTodos()
     {
-        return view('pautas');
+        return view('pautas', ['provincias' => Provincia::orderBy('nombre')->get()]);
     }
     
     /**
@@ -155,29 +160,35 @@ class PautasController extends ModelController
     public function getTabla(Request $r)
     {
         $filtros = collect($r->only('filtros'));
-        $anios = $filtros['filtros']['anios'];
+        $filtros = collect($filtros->get('filtros'));
 
-        if(!empty($anios)) {
-            $ids = DB::table('pac.pautas_anios')
-            ->select('id_pauta')
-            ->whereIn('pac.pautas_anios.anio', $anios)
-            ->distinct()
-            ->get()
-            ->toArray();
+        $filtered = $filtros->filter(function ($value, $key) {
+            return $value != "" && $value != "0";
+        });
+        logger()->info(json_encode($filtered));
+        
+        $pautas = $this->index();
 
-            logger()->info(json_encode($ids));
-
-            $ids = array_map(function ($val) {
-                return $val->id_pauta;
-            }, $ids);
-
-            $filtered = $this->index()->whereIn('id_pauta', $ids)->get();
-        } else {
-            $filtered = $this->index()->get();
+        foreach($filtered as $key => $value)
+        {
+            if($key == 'anios') {
+                $ids = DB::table('pac.pautas_anios')
+                ->select('id_pauta')
+                ->whereIn('pac.pautas_anios.anio', $value)
+                ->distinct()
+                ->get()
+                ->toArray();
+    
+                $ids = array_map(function ($val) {
+                    return $val->id_pauta;
+                }, $ids);
+    
+                $pautas = $pautas->whereIn('id_pauta', $ids);
+            } elseif($key == 'provincias')
+                $pautas = $pautas->whereIn('pac.pautas.id_provincia', $value);
         }
 
-
-        return Datatables::of($filtered)
+        return Datatables::of($pautas->get())
         ->addColumn(
             'anios',
             function ($ret) {

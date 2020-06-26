@@ -7,7 +7,7 @@
 		<div class="col-xs-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
-					<h2 class="box-tittle">Componentes CAI</h2>
+					<h2 class="box-tittle">Categorias de Pautas</h2>
 					<div class="box-tools pull-right">
 						<button type="button" class="btn btn-box-tool" data-widget="collapse">
 							<i class="fa fa-minus"></i>
@@ -19,7 +19,7 @@
 					</table>
 				</div>
 				<div class="box-footer">
-					<button class="btn btn-success pull-right" id="nuevo_componente"><i class="fa fa-plus" aria-hidden="true"></i>Nuevo componente</button>
+					<button class="btn btn-success pull-right" id="nueva_categoria"><i class="fa fa-plus" aria-hidden="true"></i>Nueva Categoria</button>
 				</div>
 			</div>
 		</div>
@@ -66,21 +66,20 @@
 
 		$('#table').DataTable({
 			scrollCollapse: true,
-			ajax : 'componentesTabla',
+			ajax : 'categoriasTabla',
 			columns: [
-			{ title: 'id', data: 'id_componente', orderable: false},
             { title: 'Numero', data: 'numero'},
 			{ title: 'Nombre', data: 'nombre'},
 			{ title: 'Acciones', data: 'deleted_at',
 				render: function( data, type, row, meta ) {
-					return acciones(data, row.created_at, row.id_componente);
+					return acciones(data, row.created_at, row.id_categoria);
 				}
 			}]
 		});
 
-		$('#abm').on('click','#nuevo_componente',function() {
+		$('#abm').on('click','#nueva_categoria',function() {
 			$.ajax ({
-				url: 'componentes/alta',
+				url: 'categorias/alta',
 				method: 'get',
 				success: function(data){
 					$('#alta').html(data);
@@ -97,10 +96,10 @@
 
 	$('#abm').on('click','.editar',function() {
 		
-		var componente = $(this).data('id');
+		var categoria = $(this).data('id');
 
 		$.ajax ({
-			url: 'componentes/'+componente,
+			url: 'categorias/'+categoria,
 			success: function(data){
 				$('#alta').html(data);
 				$('#alta').show();
@@ -110,7 +109,7 @@
 	});
 
 	$('#abm').on("click",".eliminar",function(){
-		var componente = $(this).data('id');
+		var categoria = $(this).data('id');
 		var data = '_token='+$('#abm input').first().val();
 		
 		jQuery('<div/>', {
@@ -135,7 +134,7 @@
 			open: function () {
 				jQuery('<p/>', {
 					id: 'dialogABM',
-					text: '¿Esta seguro que quiere dar de baja al componente?'
+					text: '¿Esta seguro que quiere dar de baja la categoria?'
 				}).appendTo('#dialogABM');
 			},
 			buttons :
@@ -145,16 +144,16 @@
 					$("#dialogABM").html("");				
 
 					$.ajax ({
-						url: 'componentes/'+componente+'/hard',
+						url: 'categorias/'+categoria+'/hard',
 						method: 'delete',
 						data: data,
 						success: function(data){
-							console.log('Se borro el componente: '+componente);
-							alert('Se borro el componente');
+							console.log('Se borro la categoria: '+categoria);
+							alert('Se borro la categoria');
 							$('#table').DataTable().clear().draw();
 						},
 						error: function (data) {
-							alert("Hay un curso usando ese componente. No se puede borrar el registro");t
+							alert("Hay una pauta usando esa categoria. No se puede borrar el registro");t
 							console.log('Hubo un error.');
 							console.log(data);
 							location.reload();
@@ -173,15 +172,15 @@
 
 	$('#alta').on('click','#modificar',function() {
 
-		var componente = $(this).data('id');
+		var categoria = $(this).data('id');
 
 		$.ajax({				
-			url : 'componentes/'+componente,
+			url : 'categorias/'+categoria,
 			method : 'put',
 			data : $('form').serialize(),
 			success : function(data){
 				console.log("Success.");
-				alert("Se modifico al componente");
+                alert("Se modifico la categoria");
 				location.reload();	
 			},
 			error : function(data){
@@ -192,17 +191,17 @@
 
 	$('#abm').on('click','.darBaja',function() {
 		
-		var componente = $(this).data('id');
+		var categoria = $(this).data('id');
 		var data = '_token='+$('#abm input').first().val();
-		console.log(componente);
+		console.log(categoria);
 		console.log(data);
 		$.ajax ({
-			url: 'componentes/'+componente,
+			url: 'categorias/'+categoria,
 			method: 'delete',
 			data: data,
 			success: function(data){
-				console.log("Se dio de baja el componente: "+componente);
-				alert("Se dio de baja el componente");
+				console.log("Se dio de baja la categoria: "+categoria);
+				alert("Se dio de baja la categoria");
                 $('#table').DataTable().clear().draw();
 			},
 			error: function(data){
@@ -215,16 +214,16 @@
 
 	$('#abm').on('click','.darAlta',function() {
 		
-		var componente = $(this).data('id');
+		var categoria = $(this).data('id');
 		var data = '_token='+$('#abm input').first().val();
 
 		$.ajax ({
-			url: 'componentes/'+componente+'/alta',
+			url: 'categorias/'+categoria+'/alta',
 			method: 'put',
 			data: data,
 			success: function(data){
-				console.log("Se dio de alta el componente: "+componente);
-				alert("Se dio de alta el componente");
+				console.log("Se dio de alta la categoria: "+categoria);
+				alert("Se dio de alta la categoria");
                 $('#table').DataTable().clear().draw();
 			},
 			error: function(data){
