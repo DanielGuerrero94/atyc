@@ -20,7 +20,7 @@ SET row_security = off;
 -- Name: pac_joined; Type: VIEW; Schema: public; Owner: postgres
 --
 
--- DROP VIEW pac.pac_joined;
+DROP VIEW pac.pac_joined;
 
 CREATE OR REPLACE VIEW pac.pac_joined AS
  SELECT p.id_pac,
@@ -39,6 +39,7 @@ CREATE OR REPLACE VIEW pac.pac_joined AS
     c.fecha_plan_final AS fp_hasta,
     c.fecha_ejec_inicial AS fe_desde,
     c.fecha_ejec_final AS fe_hasta,
+    c.id_estado AS id_estado,
     le.numero AS linea_numero,
     le.nombre AS linea_nombre,
     ft.path AS ficha_tecnica_path,

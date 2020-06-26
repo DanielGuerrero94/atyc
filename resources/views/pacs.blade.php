@@ -129,6 +129,7 @@
 
 		var tipos_accion = $('#acciones').val();
 		var tematicas = $('#tematicas').val();
+		var estados = $('#estados').val();
 		var destinatarios = $('#destinatarios').val();
 		var responsables = $('#responsables').val();
 		var pautas = $('#pautas').val();
@@ -147,6 +148,7 @@
 			ficha_obligatoria: obligatorios,
 			id_accion: tipos_accion,
 			id_tematica: tematicas,
+			id_estado: estados,
 			id_destinatario: destinatarios,
 			id_responsable: responsables,
 			id_pauta: pautas,
@@ -198,6 +200,14 @@
 			"placeholder": {
 				id: '0',
 				text: " Todas las tematicas"
+			},
+			width: "400%"
+		});
+
+		$('.estados').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todos los estados"
 			},
 			width: "400%"
 		});

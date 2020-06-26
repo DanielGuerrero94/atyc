@@ -51,7 +51,7 @@
 			</div>
 			<div class="row">
 				<div class="form-group col-sm-4">
-					<label class="control-label col-xs-5" for="id_accion">Tipo de acción:</label>
+					<label class="control-label col-xs-5" for="id_accion">Tipos de acción:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 						<select class="select-2 form-control acciones" id="acciones" name="id_accion" aria-hidden="true" multiple>
 							@foreach ($tipoAccionesEdit as $tipoAccion)
@@ -63,11 +63,23 @@
 			</div>
 			<div class="row">
 				<div class="form-group col-sm-4">          
-					<label class="control-label col-xs-5" for="id_tematica">Tematicas:</label>
+					<label class="control-label col-xs-5" for="id_tematica">Temáticas:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 						<select class="select-2 form-control tematicas" id="tematicas" name="id_tematica" aria-hidden="true" multiple>
 							@foreach ($tematicasEdit as $tematica)
 							<option data-id="{{$tematica->id_area_tematica}}" value="{{$tematica->id_area_tematica}}">{{$tematica->nombre}}</option>
+							@endforeach
+						</select>          
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group col-sm-4">          
+					<label class="control-label col-xs-5" for="id_tematica">Estados de acciones:</label>
+					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+						<select class="select-2 form-control estados" id="estados" name="id_estado" aria-hidden="true" multiple>
+							@foreach ($estados as $estado)
+							<option data-id="{{$estado->id_estado}}" value="{{$estado->id_estado}}">{{$estado->nombre}}</option>
 							@endforeach
 						</select>          
 					</div>

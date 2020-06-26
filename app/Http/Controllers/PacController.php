@@ -14,6 +14,7 @@ use App\Models\Pac\FichaTecnica;
 use App\Models\Cursos\Curso;
 use App\Models\Cursos\AreaTematica;
 use App\Models\Cursos\LineaEstrategica;
+use App\Models\Cursos\Estado;
 use App\Provincia;
 use App\Periodo;
 use Cache;
@@ -726,6 +727,10 @@ class PacController extends AbmController
             return Periodo::orderBy('hasta', 'desc')->orderBy('desde')->orderBy('id_periodo', 'desc')->get();
         });
 
+        $estados = Cache::remember('estados', 5, function () {
+            return Estado::orderBy('id_estado')->get();
+        });
+
         return [
             'pautasEdit' => $pautasEdit,
             'componentesEdit' => $componentesEdit,
@@ -734,7 +739,8 @@ class PacController extends AbmController
             'tematicasEdit' => $tematicasEdit,
             'tipoAccionesEdit' => $tipoAccionesEdit,
             'provinciasEdit' => $provinciasEdit,
-            'periodos' => $periodos
+            'periodos' => $periodos,
+            'estados' => $estados
         ];
     }
 
