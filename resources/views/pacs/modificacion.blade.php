@@ -135,10 +135,10 @@
                   <div class="col-md-8 col-xs-9">
                     <select class="select-2 form-control" id="destinatario" name="id_destinatario" aria-hidden="true" multiple>
                       @foreach ($destinatariosEdit as $destinatario)
-                        @if (in_array ($destinatario->id_destinatario, $pac->destinatarios()->get()->map(function ($_destinatario) { return $_destinatario->id_destinatario; })->all() ))
-                        <option data-id="{{$destinatario->id_destinatario}}" value="{{$destinatario->id_destinatario}}" selected="selected">{{$destinatario->nombre}}</option>
+                        @if (in_array ($destinatario->id_funcion, $pac->destinatarios()->withTrashed()->get()->map(function ($_destinatario) { return $_destinatario->id_funcion; })->all() ))
+                        <option data-id="{{$destinatario->id_funcion}}" value="{{$destinatario->id_funcion}}" selected="selected">{{$destinatario->nombre}}</option>
                         @else
-                        <option data-id="{{$destinatario->id_destinatario}}" value="{{$destinatario->id_destinatario}}">{{$destinatario->nombre}}</option>
+                        <option data-id="{{$destinatario->id_funcion}}" value="{{$destinatario->id_funcion}}">{{$destinatario->nombre}}</option>
                         @endif  
                       @endforeach
                     </select>          
@@ -152,7 +152,7 @@
                   <div class="col-md-8 col-xs-9">
                     <select class="select-2 form-control" id="responsable" name="id_responsable" aria-hidden="true" multiple>
                       @foreach ($responsablesEdit as $responsable)
-                        @if (in_array ($responsable->id_responsable, $pac->responsables()->get()->map(function ($_responsable) { return $_responsable->id_responsable; })->all() ))
+                        @if (in_array ($responsable->id_responsable, $pac->responsables()->withTrashed()->get()->map(function ($_responsable) { return $_responsable->id_responsable; })->all() ))
                         <option data-id="{{$responsable->id_responsable}}" value="{{$responsable->id_responsable}}" selected="selected">{{$responsable->nombre}}</option>
                         @else
                         <option data-id="{{$responsable->id_responsable}}" value="{{$responsable->id_responsable}}">{{$responsable->nombre}}</option>
@@ -169,7 +169,7 @@
                   <div class="col-md-8 col-xs-9">
                     <select class="select-2 form-control" id="pauta" name="id_pauta" aria-hidden="true" multiple>
                       @foreach ($pautasEdit as $pauta)
-                        @if (in_array ($pauta->id_pauta, $pac->pautas()->get()->map(function ($_pauta) { return $_pauta->id_pauta; })->all() ))
+                        @if (in_array ($pauta->id_pauta, $pac->pautas()->withTrashed()->get()->map(function ($_pauta) { return $_pauta->id_pauta; })->all() ))
                         <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}" selected="selected">{{$pauta->numero." - ".$pauta->nombre}}</option>
                         @else
                         <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}">{{$pauta->numero." - ".$pauta->nombre}}</option>
@@ -186,7 +186,7 @@
                   <div class="col-md-8 col-xs-9">
                     <select class="select-2 form-control" id="componente" name="id_componente" aria-hidden="true" multiple>
                       @foreach ($componentesEdit as $componente)
-                        @if (in_array ($componente->id_componente, $pac->componentes()->get()->map(function ($_componente) { return $_componente->id_componente; })->all() ))
+                        @if (in_array ($componente->id_componente, $pac->componentes()->withTrashed()->get()->map(function ($_componente) { return $_componente->id_componente; })->all() ))
                         <option data-id="{{$componente->id_componente}}" value="{{$componente->id_componente}}" selected="selected">{{$componente->numero." - ".$componente->nombre}}</option>
                         @else
                         <option data-id="{{$componente->id_componente}}" value="{{$componente->id_componente}}">{{$componente->numero." - ".$componente->nombre}}</option>
@@ -1026,6 +1026,10 @@
 
     $('.select-2').on('select2:select', function () {
 			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important')
+		});
+
+    $('.select-2').on('select2:unselect', function () {
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 		});
   }
 

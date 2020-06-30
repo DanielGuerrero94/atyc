@@ -361,10 +361,6 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('periodos/table', 'PeriodosController@table');
         Route::resource('periodos', 'PeriodosController');
         
-        //Funciones/Roles del sumar
-        Route::get('funciones/table', 'FuncionesController@table');
-        Route::resource('funciones', 'FuncionesController');
-        
         //Tipo de docentes
         Route::get('tipoDocentes/table', 'TipoDocentesController@table');
         Route::resource('tipoDocentes', 'TipoDocentesController');

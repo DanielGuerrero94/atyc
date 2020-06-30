@@ -7,7 +7,7 @@
 		<div class="col-xs-12">
 			<div class="box box-info">
 				<div class="box-header with-border">
-					<h2 class="box-tittle">Destinatarios</h2>
+					<h2 class="box-tittle">Destinatarios/Roles</h2>
 					<div class="box-tools pull-right">
 						<button type="button" class="btn btn-box-tool" data-widget="collapse">
 							<i class="fa fa-minus"></i>
@@ -68,11 +68,11 @@
 			scrollCollapse: true,
 			ajax : 'destinatariosTabla',
 			columns: [
-			{ title: 'id', data: 'id_destinatario', orderable: false},
+			{ title: 'id', data: 'id_funcion'},
 			{ title: 'Nombre', data: 'nombre'},
 			{ title: 'Acciones', data: 'deleted_at',
 				render: function( data, type, row, meta ) {
-					return acciones(data, row.created_at, row.id_destinatario);
+					return acciones(data, row.created_at, row.id_funcion);
 				}
 			}]
 		});
@@ -134,7 +134,7 @@
 			open: function () {
 				jQuery('<p/>', {
 					id: 'dialogABM',
-					text: '¿Esta seguro que quiere dar de baja al destinatario?'
+					text: '¿Esta seguro que quiere dar de baja al destinatario/rol?'
 				}).appendTo('#dialogABM');
 			},
 			buttons :
@@ -148,12 +148,12 @@
 						method: 'delete',
 						data: data,
 						success: function(data){
-							console.log('Se borro el destinatario: '+destinatario);
-							alert('Se borro el destinatario');
+							console.log('Se borró el destinatario/rol: '+destinatario);
+							alert('Se borró el destinatario/rol');
 							$('#table').DataTable().clear().draw();
 						},
 						error: function (data) {
-							alert("Hay un curso usando ese destinatario. No se puede borrar el registro");
+							alert("Hay un curso usando ese destinatario/rol. No se puede borrar el registro");
 							console.log('Hubo un error.');
 							console.log(data);
 							location.reload();
@@ -180,7 +180,7 @@
 			data : $('form').serialize(),
 			success : function(data){
 				console.log("Success.");
-				alert("Se modifica al destinatario");
+				alert("Se modifica al destinatario/rol");
 				location.reload();	
 			},
 			error : function(data){
@@ -200,8 +200,8 @@
 			method: 'delete',
 			data: data,
 			success: function(data){
-				console.log("Se dio de baja el destinatario: "+destinatario);
-				alert("Se dio de baja el destinatario");
+				console.log("Se dio de baja el destinatario/rol: "+destinatario);
+				alert("Se dio de baja el destinatario/rol");
                 $('#table').DataTable().clear().draw();
 			},
 			error: function(data){
@@ -222,8 +222,8 @@
 			method: 'put',
 			data: data,
 			success: function(data){
-				console.log("Se dio de alta el destinatario: "+destinatario);
-				alert("Se dio de alta el destinatario");
+				console.log("Se dio de alta el destinatario/rol: "+destinatario);
+				alert("Se dio de alta el destinatario/rol");
                 $('#table').DataTable().clear().draw();
 			},
 			error: function(data){

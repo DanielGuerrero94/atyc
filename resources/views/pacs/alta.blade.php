@@ -93,7 +93,7 @@
               <div class="col-md-8 col-xs-9">
                 <select class="select-2 form-control" id="destinatario" name="id_destinatario" aria-hidden="true" multiple>
                   @foreach ($destinatarios as $destinatario)
-                  <option data-id="{{$destinatario->id_destinatario}}" value="{{$destinatario->id_destinatario}}"> {{$destinatario->nombre}}</option>
+                  <option data-id="{{$destinatario->id_funcion}}" value="{{$destinatario->id_funcion}}"> {{$destinatario->nombre}}</option>
                   @endforeach
                 </select>
               </div>
@@ -181,10 +181,15 @@
 
     $('.select-2').ready(function() {
       $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
     });
       
     $('.select-2').on('select2:select', function () {
-			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important')
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
+		});
+
+    $('.select-2').on('select2:unselect', function () {
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 		});
 
     $.typeahead({

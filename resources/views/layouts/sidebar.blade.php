@@ -345,12 +345,12 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li>
-              <a href="{{url("/funciones")}}" id="destinatarios">
+          <li>
+              <a href="{{url("/destinatarios")}}" id="destinatarios">
                 <i class="fa fa-circle-o"></i>
-                <span>Rol/Destinatario</span>
+                <span>Destinatarios/Roles</span>
               </a>
-            </li>            
+            </li>     
           </ul>
         </li>
         <li class="treeview">
@@ -379,12 +379,6 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li>
-              <a href="{{url("/destinatarios")}}">
-                <i class="fa fa-circle-o"></i>
-                <span>Destinatarios</span>
-              </a>
-            </li>
             <li>
               <a href="{{url("/responsables")}}">
                 <i class="fa fa-circle-o"></i>

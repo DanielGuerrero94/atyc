@@ -23,14 +23,14 @@ class Destinatario extends Model
      *
      * @var string
      */
-    protected $table = 'pac.destinatarios';
+    protected $table = 'alumnos.funciones';
 
     /**
      * Primary key asociated with the table.
      *
      * @var string
      */
-    protected $primaryKey = 'id_destinatario';
+    protected $primaryKey = 'id_funcion';
 
     /**
      * Indicates if the model should be timestamped.

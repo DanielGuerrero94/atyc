@@ -149,6 +149,10 @@
 			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important')
 		});
 
+		$('.select-2').on('select2:unselect', function () {
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
+		});
+		
 		$('[data-toggle="popover"]').popover(); 
 
 		$('#pautas-refresh').click(function () {

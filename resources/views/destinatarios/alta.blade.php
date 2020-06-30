@@ -1,6 +1,6 @@
 <div class="col-sm-6 col-sm-offset-3">
 	<div class="box box-success ">
-		<div class="box-header">Nuevo Destinatario</div>
+		<div class="box-header">Nuevo Destinatario/Rol</div>
 		<div class="box-body">
 			<form id="form-alta">
 				{{ csrf_field() }}

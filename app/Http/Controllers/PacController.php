@@ -267,7 +267,7 @@ class PacController extends AbmController
         $this->updateModel($pac->id_pac, $tematicas, $pac->tematicas(), 'pac.pacs_tematicas', 'id_tematica', 'id_area_tematica');
 
         $destinatarios = explode(',', $request->get('ids_destinatarios'));
-        $this->updateModel($pac->id_pac, $destinatarios, $pac->destinatarios(), 'pac.pacs_destinatarios', 'id_destinatario', 'id_destinatario');
+        $this->updateModel($pac->id_pac, $destinatarios, $pac->destinatarios(), 'pac.pacs_destinatarios', 'id_destinatario', 'id_funcion');
 
         $responsables = explode(',', $request->get('ids_responsables'));
         $this->updateModel($pac->id_pac, $responsables, $pac->responsables(), 'pac.pacs_responsables', 'id_responsable', 'id_responsable');

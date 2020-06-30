@@ -126,10 +126,15 @@
 			$('.select2-container--default .select2-selection--multiple').css('height', 'auto');
 			$('.select2-container--default .select2-selection--single').css('height', 'auto');
 			$('.select2-container .select2-selection--single .select2-selection__rendered').css('white-space', 'normal');
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 		});
 
 		$('.select-2').on('select2:select', function () {
-			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important')
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
+		});
+
+		$('.select-2').on('select2:unselect', function () {
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 		});
 
 		@if(Auth::user()->id_provincia != 25)

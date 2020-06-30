@@ -9,7 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Alumno;
-use App\Funcion;
+use App\Models\Pac\Destinatario;
 use App\Genero;
 use App\Http\Controllers\EfectoresController;
 use App\PDF as Pdf;
@@ -278,7 +278,7 @@ class AlumnosController extends ModelController
         });
 
         $funciones = Cache::remember('funciones', 5, function () {
-            return Funcion::orderBy('nombre')->get();
+            return Destinatario::orderBy('nombre')->get();
         });
 
         $organismos = Cache::remember('organismos', 5, function () {

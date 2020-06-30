@@ -95,7 +95,7 @@ class Alumno extends Model
      */
     public function funcion()
     {
-        return $this->hasOne('App\Funcion', 'id_funcion', 'id_funcion');
+        return $this->hasOne('App\Models\Pac\Destinatario', 'id_funcion', 'id_funcion');
     }
 
     /**

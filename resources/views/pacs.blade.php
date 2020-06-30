@@ -130,7 +130,7 @@
 		var tipos_accion = $('#acciones').val();
 		var tematicas = $('#tematicas').val();
 		var estados = $('#estados').val();
-		var destinatarios = $('#destinatarios').val();
+		var destinatarios = $('#form-filtros #destinatarios').val()
 		var responsables = $('#responsables').val();
 		var pautas = $('#pautas').val();
 		var componentes = $('#componentes').val();
@@ -252,9 +252,14 @@
 		$('.select-2').ready(function() {
         	$('.select2-container--default .select2-selection--multiple').css('height', 'auto');
 			$('#filtros .box').toggle();
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
       	});
 
 		$('.select-2').on('select2:select', function () {
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
+		});
+
+		$('.select-2').on('select2:unselect', function () {
 			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 		});
 	}

@@ -92,7 +92,7 @@
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
 						<select class="select-2 form-control destinatarios" id="destinatarios" name="id_destinatario" aria-hidden="true" multiple>
 							@foreach ($destinatariosEdit as $destinatario)
-							<option data-id="{{$destinatario->id_destinatario}}" value="{{$destinatario->id_destinatario}}">{{$destinatario->nombre}}</option>
+							<option data-id="{{$destinatario->id_funcion}}" value="{{$destinatario->id_funcion}}">{{$destinatario->nombre}}</option>
 							@endforeach
 						</select>          
 					</div>

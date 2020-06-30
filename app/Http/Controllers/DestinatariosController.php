@@ -31,7 +31,7 @@ class DestinatariosController extends ModelController
      */
     public function index()
     {
-        return $this->model->orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
+        return $this->model->orderBy('deleted_at', 'desc')->orderBy('id_funcion')->withTrashed()->get();
     }
 
     /**
