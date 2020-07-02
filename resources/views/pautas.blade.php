@@ -169,7 +169,12 @@
 					}
 				},
 				columns: [
-				{ title: 'Numero', data: 'numero'},
+				{ title: 'Creación', data: 'created_at', defaultContent: '-', 
+					render: function(data) {
+						return moment(data).format('DD/MM/YYYY');;
+					}
+				},
+				{ title: 'Número', data: 'numero'},
 				{ title: 'Nombre', data: 'nombre'},
 				{ title: 'Ficha Obligatoria', data: 'ficha_obligatoria', 
 					render: function ( data, type, row, meta ) {

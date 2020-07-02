@@ -41,8 +41,8 @@ class PautasController extends ModelController
         return $this->model
         ->with('provincia')
         ->orderBy('id_provincia', 'desc')
-        ->orderBy('numero')
         ->orderBy('deleted_at', 'desc')
+        ->orderBy('numero')
         ->withTrashed();
     }
 
