@@ -687,6 +687,7 @@
                 console.log(data);
                 if(data != "error") {
                   console.log("Se informó la ejecución del curso: "+id+" y va a editarlo ahora");
+                  alert("Se informó la ejecución del curso. Va a completar los alumnos y profesor ahora");
                   $('#ediciones-table').DataTable().clear().draw();
                   location.replace("{{url('cursos')}}" + '/' + id);
                 }
@@ -707,6 +708,7 @@
               success: function(data){
                 if(data != "error") {
                   console.log("Se informó la ejecución del curso: "+id);
+                  alert("Se informó la ejecución del curso");
                   $('#ediciones-table').DataTable().clear().draw();
                 } else {
                   console.log(data + ': falta de fecha');
@@ -839,6 +841,7 @@
               success: function(data){
                 if(data != "error") {
                   console.log("Se reprogramó el curso: "+id);
+							    alert("Se reprogramó el curso");
                   $('#ediciones-table').DataTable().clear().draw();
                 } else {
                   console.log(data + ': falta de fecha');
@@ -939,6 +942,7 @@
               data: getDataDesactivacionCurso(),
               success: function(data){
                 console.log(data);
+						    alert("Se desactivó el curso");
                 $('#ediciones-table').DataTable().clear().draw();
               },
               error: function (data) {

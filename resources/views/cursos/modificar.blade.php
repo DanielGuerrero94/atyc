@@ -151,7 +151,7 @@
 				info: {
 					ajax: {
 						type: "get",
-						url: "cursos/nombres",
+						url: {{url('cursos/nombres')}}",
 						path: "data.info"
 					}
 				}
@@ -189,7 +189,7 @@
    	console.log(data);
 
    	$.ajax({
-   		url: 'cursos/'+curso,
+   		url: "{{url('cursos')}}"+"/"+curso,
    		method: 'put',
    		data: data,
    		success: function(data){

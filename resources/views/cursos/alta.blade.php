@@ -170,7 +170,7 @@
         info: {
           ajax: {
             type: "get",
-            url: "cursos/nombres",
+            url: "{{url('cursos/nombres')}}",
             path: "data.info"
           }
         }
@@ -264,12 +264,12 @@
       submitHandler : function(form){
         $.ajax({
           method : 'post',
-          url : 'cursos',
+          url : "{{url('cursos')}}",
           data : getInput(),
           success : function(data){
             console.log("Success.");
             alert("Se crea el curso.");
-            location.replace('cursos');
+            location.replace("{{url('cursos')}}");
           },
           error : function(data){
             console.log("Error.");

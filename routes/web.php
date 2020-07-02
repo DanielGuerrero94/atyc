@@ -138,7 +138,8 @@ Route::group(['middleware' => ['logueado','logging']], function () {
 
     //Cursos
     Route::get('cursos', 'CursosController@get');
-    Route::get('cursos/tabla', 'CursosController@getTabla');
+    Route::get('cursos/planificados', 'CursosController@getPlanificados');
+    Route::get('cursos/ejecutados', 'CursosController@getEjecutados');
     Route::get('cursos/joined', 'CursosController@getJoined');
     Route::get('cursos/alta', 'CursosController@create');
     Route::get('cursos/nombres', 'CursosController@getNombres');

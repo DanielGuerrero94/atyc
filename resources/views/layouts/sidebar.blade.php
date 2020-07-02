@@ -68,6 +68,12 @@
           </a>
         </li>
         <li>
+          <a href="{{url("/cursos/planificados")}}">
+            <i class="fa fa-address-book"></i>
+            <span>Acciones Pĺanificadas</span>
+          </a>
+        </li>
+        <li>
           <a href={{url("/materiales/etapa/3")}}>
             <i class="fa fa-book"></i>
             <span>Documentación</span>
@@ -117,6 +123,12 @@
           <a href={{url("/cursos")}}>
             <i class="fa fa-address-book"></i>
             <span>Gestión de Acciones</span>
+          </a>
+        </li>
+        <li>
+          <a href={{url("/cursos/ejecutados")}}>
+            <i class="fa fa-check"></i>
+            <span>Acciones Ejecutadas</span>
           </a>
         </li>      
         <li>

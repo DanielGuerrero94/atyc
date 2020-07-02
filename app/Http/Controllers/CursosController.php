@@ -267,29 +267,23 @@ class CursosController extends AbmController
     }
 
     /**
-     * Devuelve la informacion para abm.
+     * View para abm con las planificadas prefiltradas.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function getTabla(Request $request)
+    public function getPlanificados()
     {
-        $query = Curso::with([
-            'provincia',
-            'estado',
-            'areasTematicas' => function ($query) {
-                return $query->withTrashed();
-            },
-            'lineaEstrategica' => function ($query) {
-                return $query->withTrashed();
-            }
-        ])
-        //->withCount('alumnos')
-        ->segunProvincia();
+        return view('cursos', array_merge($this->getEditOptions(), ['prefilters' => [1, 2, 5]]));
+    }
 
-        //logger()->warning(json_encode($query->first()));
-
-        return $this->toDatatable($request, $query);
+    /**
+     * View para abm con las planificadas prefiltradas.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getEjecutados()
+    {
+        return view('cursos', array_merge($this->getEditOptions(), ['prefilters' => [3, 4]]));
     }
 
     public function getAprobadosPorAlumno($alumno)
