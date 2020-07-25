@@ -120,12 +120,6 @@
           </a>
         </li>
         <li>
-          <a href={{url("/cursos")}}>
-            <i class="fa fa-address-book"></i>
-            <span>Gestión de Acciones</span>
-          </a>
-        </li>
-        <li>
           <a href={{url("/cursos/ejecutados")}}>
             <i class="fa fa-check"></i>
             <span>Acciones Ejecutadas</span>

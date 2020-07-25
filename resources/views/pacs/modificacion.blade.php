@@ -767,6 +767,20 @@
     return data;
   }
 
+  //Determina si se está ejecutando en este momento(3) o si ya finalizó(4)
+  function estadoEjecucion() {
+
+    var initial = moment($('#fecha_ejec_inicial').val(), 'DD/MM/YYYY').format("YYYY-MM-DD");
+    var final = moment($('#fecha_ejec_final').val(), 'DD/MM/YYYY').format("YYYY-MM-DD");
+
+    if(moment('YYYY-MM-DD').isBetween(initial, final, undefined, '[]'))
+      estado = 3;
+    else
+      estado = 4;
+
+    return estado;
+  }
+
   //Comportamiento para Reprogramar Curso
   function reprogramarCursoBehaviour() {
     $('.container-fluid').on("click",".reprogramar_curso", function() {
@@ -1079,6 +1093,17 @@
     return datatable;
   }
 
+  function fechaPlanificada(fecha, fecha_final, estado) 
+	{
+		fecha = moment(fecha).format('DD/MM/YYYY');
+		final = moment(fecha_final);
+
+		if(moment().isAfter(final) && estado != 3 && estado != 4 && estado != 6)
+			fecha = '<p title="Se pasó fecha de ejecución planificada sin informar" style="color:red;">'+fecha+'</p>';
+
+		return fecha;		
+  }
+  
   //Datatable Acciones
   function tableAcciones() {
 
@@ -1093,9 +1118,8 @@
         { title: '#', data: 'edicion'},
         { title: 'Estado', data: 'estado.nombre', defaultContent: '-', name: 'id_edicion'},
         { title: 'Fecha inicial planificada', data: 'fecha_plan_inicial', defaultContent: '-',
-          render:function(data){
-              if(data)
-      				  return moment(data).format('DD/MM/YYYY');
+          render: function(data, type, row, meta) {
+					  return fechaPlanificada(data, row.fecha_plan_final, row.id_estado);
           }
         },
         { title: 'Fecha inicial ejecución', data: 'fecha_ejec_inicial', defaultContent: '-',
@@ -1105,9 +1129,8 @@
           }
         },
         { title: 'Fecha final planificada', data: 'fecha_plan_final', defaultContent: '-',
-          render:function(data){
-            if(data)
-      				return moment(data).format('DD/MM/YYYY');
+          render: function(data, type, row, meta) {
+					  return fechaPlanificada(data, row.fecha_plan_final, row.id_estado);
           }
         },
         { title: 'Fecha final ejecución', data: 'fecha_ejec_final', defaultContent: '-',

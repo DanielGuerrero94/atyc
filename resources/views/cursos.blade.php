@@ -155,7 +155,7 @@
 			alert("Debe seleccionar ambas fechas para poder cargar la ejecución del curso");
 			return noDateSelectedError();
 		}
-
+		
 		var data =
 		[
 		{
@@ -176,13 +176,27 @@
 		},
 		{
 			name: 'id_estado',
-			value: 4
+			value: estadoEjecucion()
 		}
 		];
 
 		console.log(data);
 		
 		return data;
+	}
+
+	//Determina si se está ejecutando en este momento(3) o si ya finalizó(4)
+	function estadoEjecucion() {
+
+		var initial = moment($('#fecha_ejec_inicial').val(), 'DD/MM/YYYY').format("YYYY-MM-DD");
+		var final = moment($('#fecha_ejec_final').val(), 'DD/MM/YYYY').format("YYYY-MM-DD");
+
+		if(moment('YYYY-MM-DD').isBetween(initial, final, undefined, '[]'))
+			estado = 3;
+		else
+			estado = 4;
+
+		return estado;
 	}
 
 	//Comportamiento para Reprogramar Curso
@@ -584,6 +598,19 @@
 		return data;
 	}
 
+	function fechaPlanificada(fecha_inicial, fecha_final) 
+	{
+		inicial = moment(fecha_inicial).format('DD/MM/YYYY');
+		final = moment(fecha_final);
+
+		if(moment().isAfter(final))
+			fecha = '<p title="Se pasó fecha de ejecución planificada sin informar" style="color:red;">'+inicial+'</p>';
+		else
+			fecha = inicial;
+
+		return fecha;		
+	}
+
 	function createDatatable() {
 		var filtrosJson = getFiltrosJson();
 
@@ -599,8 +626,8 @@
 			columns: [
 			@if(isset($prefilters) && in_array(1, $prefilters))
 			{ title: 'Fecha Planificada', data: 'fecha_plan_inicial', defaultContent: '-',
-				render: function(data) {
-					return moment(data).format('DD/MM/YYYY');
+				render: function(data, type, row, meta) {
+					return fechaPlanificada(data, row.fecha_plan_final);
 				}
 			},
 			@else
