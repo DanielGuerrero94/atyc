@@ -20,9 +20,9 @@ td {
 	</tr>
 	@foreach($resultados as $resultado)
 		<tr>
-			<td>{{$resultado->periodo}}</td>
-			<td>{{$resultado->provincia}}</td>
-			<td>{{$resultado->cantidad_alumnos}}</td>
+			<td>{{$resultado['periodo']}}</td>
+			<td>{{$resultado['provincia']}}</td>
+			<td>{{$resultado['cantidad_alumnos']}}</td>
 		</tr>
 	@endforeach
 </table>

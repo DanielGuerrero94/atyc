@@ -70,7 +70,8 @@
 				url: 'excel',
 				data: {
 					id_reporte : ID_REPORTE,
-					filtros: getFiltrosReportes()
+                    filtros: getFiltrosReportes(),
+                    order_by: $('#reporte-table').DataTable().order()
 				},
 				success: function(data){
 					window.location="descargar/excel/"+data;

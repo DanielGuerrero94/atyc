@@ -22,11 +22,11 @@ td {
 	</tr>
 	@foreach($resultados as $resultado)
 		<tr>
-			<td>{{$resultado->periodo}}</td>
-			<td>{{$resultado->provincia}}</td>
-			<td>{{$resultado->capacitados}}</td>
-			<td>{{$resultado->total}}</td>
-			<td>{{$resultado->porcentaje}}%</td>
+			<td>{{$resultado['periodo']}}</td>
+			<td>{{$resultado['provincia']}}</td>
+			<td>{{$resultado['capacitados']}}</td>
+			<td>{{$resultado['total']}}</td>
+			<td>{{$resultado['porcentaje']}}%</td>
 		</tr>
 	@endforeach
 </table>

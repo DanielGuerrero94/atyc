@@ -26,15 +26,15 @@ td {
 	</tr>
 	@foreach($resultados as $resultado)
 	<tr>
-	<td>{{$resultado->periodo}}</td>
-		<td>{{$resultado->provincia}}</td>
-		<td>{{$resultado->nombre}}</td>
-		<td>{{$resultado->edicion}}</td>
-		<td>{{$resultado->fecha_ejec_inicial}}</td>
-		<td>{{$resultado->cantidad_alumnos}}</td>
-		<td>{{$resultado->tipologia}}</td>
-		<td>{{$resultado->tematica}}</td>
-		<td>{{$resultado->duracion}}</td>
+	    <td>{{$resultado['periodo']}}</td>
+		<td>{{$resultado['provincia']}}</td>
+		<td>{{$resultado['nombre']}}</td>
+		<td>{{$resultado['edicion']}}</td>
+		<td>{{$resultado['fecha_ejec_inicial']}}</td>
+		<td>{{$resultado['cantidad_alumnos']}}</td>
+		<td>{{$resultado['tipologia']}}</td>
+		<td>{{$resultado['tematica']}}</td>
+		<td>{{$resultado['duracion']}}</td>
 	</tr>
 	@endforeach
 </table>

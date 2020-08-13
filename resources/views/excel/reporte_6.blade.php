@@ -28,17 +28,17 @@ td {
 	</tr>
 	@foreach($resultados as $resultado)
 	<tr>
-		<td>{{$resultado->periodo}}</td>
-		<td>{{$resultado->provincia}}</td>
-		<td>{{$resultado->cuie}}</td>
-		<td>{{$resultado->efector}}</td>
-		<td>{{$resultado->denominacion_legal}}</td>
-		<td>{{$resultado->departamento}}</td>
-		<td>{{$resultado->localidad}}</td>
-		<td>{{$resultado->accion}}</td>
-		<td>{{$resultado->tematica}}</td>
-		<td>{{$resultado->fecha_ejec_inicial}}</td>
-		<td>{{$resultado->participantes}}</td>
+		<td>{{$resultado['periodo']}}</td>
+		<td>{{$resultado['provincia']}}</td>
+		<td>{{$resultado['cuie']}}</td>
+		<td>{{$resultado['efector']}}</td>
+		<td>{{$resultado['denominacion_legal']}}</td>
+		<td>{{$resultado['departamento']}}</td>
+		<td>{{$resultado['localidad']}}</td>
+		<td>{{$resultado['accion']}}</td>
+		<td>{{$resultado['tematica']}}</td>
+		<td>{{$resultado['fecha_ejec_inicial']}}</td>
+		<td>{{$resultado['participantes']}}</td>
 	</tr>
 	@endforeach
 </table>
