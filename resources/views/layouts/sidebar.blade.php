@@ -227,6 +227,14 @@
             <span>con Ficha Técnica en PAC</span>
           </a>
         </li>
+        <li>
+          <a href='{{url("/reportes/11")}}'>
+            <span class="label label-primary pull-left">9</span>
+            <span>Cantidad de Pautas PAC</span>
+            <br>
+            <span>por Categoría</span>
+          </a>
+        </li>
       </ul>
     </li>             
     <li class="treeview" id="tablero">

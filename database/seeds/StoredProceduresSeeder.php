@@ -344,6 +344,8 @@ class StoredProceduresSeeder extends Seeder
         or c.fecha_plan_final between var_desde and var_hasta
         or c.fecha_ejec_inicial between var_desde and var_hasta
         or c.fecha_ejec_final between var_desde and var_hasta)
+      and pa.deleted_at is null
+      and c.deleted_at is null
       group by p.nombre;
       ELSE RETURN QUERY
       select p.nombre as provincia, (case when count(*) > 0 then 'Sí'::text else 'No'::text end) as cumple
@@ -355,6 +357,8 @@ class StoredProceduresSeeder extends Seeder
         or c.fecha_ejec_inicial between var_desde and var_hasta
         or c.fecha_ejec_final between var_desde and var_hasta)
       and pa.id_provincia = var_provincia
+      and pa.deleted_at is null
+      and c.deleted_at is null
       group by p.nombre;
       END IF;
       END \$BODY\$
@@ -382,6 +386,8 @@ class StoredProceduresSeeder extends Seeder
         or c.fecha_plan_final between var_desde and var_hasta
         or c.fecha_ejec_inicial between var_desde and var_hasta
         or c.fecha_ejec_final between var_desde and var_hasta)
+        and pa.deleted_at is null
+        and c.deleted_at is null
         group by p.nombre;
         ELSE RETURN QUERY
         select p.nombre as provincia, count(*) as cantidad_planificadas
@@ -393,6 +399,8 @@ class StoredProceduresSeeder extends Seeder
         or c.fecha_ejec_inicial between var_desde and var_hasta
         or c.fecha_ejec_final between var_desde and var_hasta)
         and c.id_provincia = var_provincia
+        and pa.deleted_at is null
+        and c.deleted_at is null
         group by p.nombre;
         END IF;
         END \$BODY\$
@@ -420,6 +428,7 @@ class StoredProceduresSeeder extends Seeder
         or c.fecha_plan_final between var_desde and var_hasta
         or c.fecha_ejec_inicial between var_desde and var_hasta
         or c.fecha_ejec_final between var_desde and var_hasta)
+        and c.deleted_at is null
         group by p.nombre;
         ELSE RETURN QUERY
         select p.nombre as provincia, count(*) as cantidad_ejecutadas
@@ -431,6 +440,7 @@ class StoredProceduresSeeder extends Seeder
         or c.fecha_ejec_inicial between var_desde and var_hasta
         or c.fecha_ejec_final between var_desde and var_hasta)
         and c.id_provincia = var_provincia
+        and c.deleted_at is null
         group by p.nombre;
         END IF;
         END \$BODY\$
@@ -463,6 +473,8 @@ class StoredProceduresSeeder extends Seeder
             c.fecha_ejec_inicial between var_desde and var_hasta
             or c.fecha_ejec_final between var_desde and var_hasta
           end)
+        and pa.deleted_at is null
+        and c.deleted_at is null
         group by p.nombre;
         ELSE RETURN QUERY
         select p.nombre as provincia, count(*) as cantidad_diseniadas
@@ -479,6 +491,8 @@ class StoredProceduresSeeder extends Seeder
             or c.fecha_ejec_final between var_desde and var_hasta
           end)
         and c.id_provincia = var_provincia
+        and pa.deleted_at is null
+        and c.deleted_at is null
         group by p.nombre;
         END IF;
         END \$BODY\$
@@ -494,45 +508,48 @@ class StoredProceduresSeeder extends Seeder
         IN var_provincia integer,
         IN var_desde date,
         IN var_hasta date)
-        RETURNS TABLE (provincia character varying, categoria text, numero integer, cantidad_categoria bigint) AS
+        RETURNS TABLE (provincia character varying, numero_categoria text, cantidad_categoria bigint) AS
         \$BODY\$
         BEGIN IF var_provincia = 0 THEN
         RETURN QUERY
-        select pr.nombre as provincia, cat.nombre as categoria, cat.numero as numero, count(*) as cantidad_categoria
-        from pac.pacs as pa
-        inner join pac.pacs_pautas as pp on pp.id_pac = pa.id_pac
+        select pr.nombre as provincia, cat.numero || ' - ' || cat.nombre  as numero_categoria, count(*) as cantidad_categoria
+        from cursos.cursos as c
+        inner join pac.pacs as pa on c.id_pac = pa.id_pac
+        inner join pac.pacs_pautas as pp on pa.id_pac = pp.id_pac
         inner join pac.pautas as pau on pp.id_pauta = pau.id_pauta
         inner join sistema.provincias as pr on pa.id_provincia = pr.id_provincia
-        -- left join cursos.cursos as c on pa.id_pac = c.id_pac
         inner join pac.categorias_pautas as cat on pau.id_categoria = cat.id_categoria
-        -- where (
-        --   case when c.fecha_ejec_inicial is null then
-        --     c.fecha_plan_inicial between var_desde and var_hasta
-        --     or c.fecha_plan_final between var_desde and var_hasta
-        --   else
-        --     c.fecha_ejec_inicial between var_desde and var_hasta
-        --     or c.fecha_ejec_final between var_desde and var_hasta
-        --   end)
-        group by pr.nombre, cat.id_categoria, cat.nombre, cat.numero, pau.id_pauta;
+        where (
+          case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
+        and pa.deleted_at is null
+        and c.deleted_at is null
+        group by pr.nombre, cat.nombre, cat.numero;
         ELSE RETURN QUERY
-        select pr.nombre as provincia, cat.nombre as categoria, cat.numero as numero, count(*) as cantidad_categoria
-        from pac.pacs as pa
-        inner join pac.pacs_pautas as pp on pp.id_pac = pa.id_pac
+        select pr.nombre as provincia, cat.numero || ' - ' || cat.nombre as numero_categoria, count(*) as cantidad_categoria
+        from cursos.cursos as c
+        inner join pac.pacs as pa on c.id_pac = pa.id_pac
+        inner join pac.pacs_pautas as pp on pa.id_pac = pp.id_pac
         inner join pac.pautas as pau on pp.id_pauta = pau.id_pauta
         inner join sistema.provincias as pr on pa.id_provincia = pr.id_provincia
-        -- left join cursos.cursos as c on pa.id_pac = c.id_pac
         inner join pac.categorias_pautas as cat on pau.id_categoria = cat.id_categoria
-        where 
-        -- (
-          -- case when c.fecha_ejec_inicial is null then
-          --   c.fecha_plan_inicial between var_desde and var_hasta
-          --   or c.fecha_plan_final between var_desde and var_hasta
-          -- else
-          --   c.fecha_ejec_inicial between var_desde and var_hasta
-          --   or c.fecha_ejec_final between var_desde and var_hasta
-          -- end)
-        pa.id_provincia = var_provincia
-        group by pr.nombre, cat.id_categoria, cat.nombre, cat.numero, pau.id_pauta;
+        where (
+          case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
+        and pa.id_provincia = var_provincia
+        and pa.deleted_at is null
+        and c.deleted_at is null
+        group by pr.nombre, cat.nombre, cat.numero;
         END IF;
         END \$BODY\$
         LANGUAGE plpgsql VOLATILE

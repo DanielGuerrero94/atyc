@@ -194,11 +194,8 @@ class ReportesController extends Controller
 
         if(isset($order_by))
         {
-            logger("ORDER BY");
-            logger(json_encode($order_by));
             //Convierto el dato a array
             $data = json_decode(json_encode($data), true);
-            logger(json_encode($data));
             //Pido los nombres de las columnas del dato
             $ordenadores = array_keys($data[0]);
             //Pido solo la columna que voy a ordenar
@@ -207,7 +204,6 @@ class ReportesController extends Controller
             $sort = ($order_by[0][1] == "asc") ? SORT_ASC : SORT_DESC;
             //Ordeno
             array_multisort($columns, $sort, $data);
-            logger(json_encode($data));
         }
         
         $datos = ['resultados' => $data,'nombre' => $excel_reporte];
