@@ -70,7 +70,7 @@
         <li>
           <a href="{{url("/cursos/planificados")}}">
             <i class="fa fa-address-book"></i>
-            <span>Acciones Pĺanificadas</span>
+            <span>Acciones Planificadas</span>
           </a>
         </li>
         <li>
@@ -166,20 +166,14 @@
       </a>
       <ul class="treeview-menu" role="menu">
         <li>
-          <a href='{{url("/reportes/1")}}'>
-            <span class="label label-primary pull-left">1</span>
-            <span>ODP 4</span>
-          </a>
-        </li>
-        <li>
           <a href='{{url("/reportes/3")}}'>
-            <span class="label label-primary pull-left">2</span>
+            <span class="label label-primary pull-left">1</span>
             <span>Total staff institucional</span>
           </a>
         </li>
         <li>
           <a href='{{url("/reportes/4")}}'>
-            <span class="label label-primary pull-left">3</span>
+            <span class="label label-primary pull-left">2</span>
             <span>Porcentaje de efectores</span>
             <br>
             <span>capacitados con modalidad</span>
@@ -189,7 +183,7 @@
         </li>
         <li>
           <a href='{{url("/reportes/cursos")}}'>
-            <span class="label label-primary pull-left">4</span>
+            <span class="label label-primary pull-left">3</span>
             <span>Cantidad de participantes</span>
             <br>
             <span>por acción de capacitación</span>
@@ -197,8 +191,40 @@
         </li>
         <li>
           <a href='{{url("/reportes/6")}}'>
-            <span class="label label-primary pull-left">5</span>
+            <span class="label label-primary pull-left">4</span>
             <span>Efectores</span>
+          </a>
+        </li>
+        <li>
+          <a href='{{url("/reportes/7")}}'>
+            <span class="label label-primary pull-left">5</span>
+            <span>Provincias que presentan</span>
+            <br>
+            <span>PAC</span>
+          </a>
+        </li>
+        <li>
+          <a href='{{url("/reportes/8")}}'>
+            <span class="label label-primary pull-left">6</span>
+            <span>Cantidad de Acciones</span>
+            <br>
+            <span>Planificadas en PAC</span>
+          </a>
+        </li>
+        <li>
+          <a href='{{url("/reportes/9")}}'>
+            <span class="label label-primary pull-left">7</span>
+            <span>Cantidad de Acciones</span>
+            <br>
+            <span>Ejecutadas de PAC</span>
+          </a>
+        </li>
+        <li>
+          <a href='{{url("/reportes/10")}}'>
+            <span class="label label-primary pull-left">8</span>
+            <span>Cantidad de Acciones</span>
+            <br>
+            <span>con Ficha Técnica en PAC</span>
           </a>
         </li>
       </ul>

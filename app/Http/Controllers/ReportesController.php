@@ -56,7 +56,7 @@ class ReportesController extends Controller
         $provincia_usuario = Provincia::findOrFail(Auth::user()->id_provincia);
 
         $data = array_merge($this->getSelectOptions(), compact('reporte', 'provincia_usuario'));
-            
+        
         logger($reporte->view);
 
         return view('reportes.'.$reporte->view, $data);
@@ -156,10 +156,11 @@ class ReportesController extends Controller
     public function getExcelReporte(Request $r)
     {
         ini_set('memory_limit', '1024M');
-
         $reporte = Reporte::findOrFail($r->id_reporte);
         $query_default = $this->queryLogica($r);
         $nombre_reporte = $reporte->view;
+
+        $order_by = $r->order_by;
 
         $excel_reporte = "excel.reporte_".$r->id_reporte;
 
@@ -191,6 +192,20 @@ class ReportesController extends Controller
             $data = DB::select($query_default);
         }
 
+        if(isset($order_by))
+        {
+            //Convierto el dato a array
+            $data = json_decode(json_encode($data), true);
+            //Pido los nombres de las columnas del dato
+            $ordenadores = array_keys($data[0]);
+            //Pido solo la columna que voy a ordenar
+            $columns = array_column($data, $ordenadores[$order_by[0][0]]);
+            //Veo si vino ascendente o descendiente
+            $sort = ($order_by[0][1] == "asc") ? SORT_ASC : SORT_DESC;
+            //Ordeno
+            array_multisort($columns, $sort, $data);
+        }
+        
         $datos = ['resultados' => $data,'nombre' => $excel_reporte];
         $path = $nombre_reporte."_".date("Y-m-d_H:i:s");
 

@@ -17,6 +17,11 @@ class StoredProceduresSeeder extends Seeder
         $this->reporte4();
         $this->reporte5();
         $this->reporte6();
+        $this->reporte7();
+        $this->reporte8();
+        $this->reporte9();
+        $this->reporte10();
+        $this->reporte11();
     }
 
     /**
@@ -313,6 +318,221 @@ class StoredProceduresSeeder extends Seeder
         and dg.id_provincia::integer = var_provincia
         group by  p.descripcion, e.cuie, e.nombre, e.denominacion_legal, d.nombre_departamento, l.nombre_localidad,
         c.nombre, c.fecha_ejec_inicial;
+        END IF;
+        END \$BODY\$
+        LANGUAGE plpgsql VOLATILE
+        COST 100
+        ROWS 1000;");
+    }
+
+    public function reporte7()
+    {
+      \DB::statement("DROP FUNCTION IF EXISTS public.reporte_7(integer, date, date)");
+      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_7(
+      IN var_provincia integer,
+      IN var_desde date,
+      IN var_hasta date)
+      RETURNS TABLE(provincia character varying, cumple text) AS
+      \$BODY\$
+      BEGIN IF var_provincia = 0 THEN
+      RETURN QUERY
+      select p.nombre as provincia, case when count(*) > 0 then 'Sí'::text else 'No'::text end as cumple
+      from pac.pacs as pa
+      inner join sistema.provincias as p on p.id_provincia = pa.id_provincia
+      left join cursos.cursos as c on c.id_pac = pa.id_pac
+      where (c.fecha_plan_inicial between var_desde and var_hasta
+        or c.fecha_plan_final between var_desde and var_hasta
+        or c.fecha_ejec_inicial between var_desde and var_hasta
+        or c.fecha_ejec_final between var_desde and var_hasta)
+      group by p.nombre;
+      ELSE RETURN QUERY
+      select p.nombre as provincia, (case when count(*) > 0 then 'Sí'::text else 'No'::text end) as cumple
+      from pac.pacs as pa
+      inner join sistema.provincias as p on p.id_provincia = pa.id_provincia
+      left join cursos.cursos as c on c.id_pac = pa.id_pac
+      where (c.fecha_plan_inicial between var_desde and var_hasta
+        or c.fecha_plan_final between var_desde and var_hasta
+        or c.fecha_ejec_inicial between var_desde and var_hasta
+        or c.fecha_ejec_final between var_desde and var_hasta)
+      and pa.id_provincia = var_provincia
+      group by p.nombre;
+      END IF;
+      END \$BODY\$
+      LANGUAGE plpgsql VOLATILE
+      COST 100
+      ROWS 1000;");
+    }
+
+    public function reporte8()
+    {
+      \DB::statement("DROP FUNCTION IF EXISTS public.reporte_8(integer, date, date)");
+      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_8(
+        IN var_provincia integer,
+        IN var_desde date,
+        IN var_hasta date)
+        RETURNS TABLE (provincia character varying, cantidad_planificadas bigint) AS
+        \$BODY\$
+        BEGIN IF var_provincia = 0 THEN
+        RETURN QUERY
+        select p.nombre as provincia, count(*) as cantidad_planificadas
+        from cursos.cursos as c
+        inner join pac.pacs as pa on c.id_pac = pa.id_pac
+        inner join sistema.provincias as p on p.id_provincia = c.id_provincia
+        where (c.fecha_plan_inicial between var_desde and var_hasta
+        or c.fecha_plan_final between var_desde and var_hasta
+        or c.fecha_ejec_inicial between var_desde and var_hasta
+        or c.fecha_ejec_final between var_desde and var_hasta)
+        group by p.nombre;
+        ELSE RETURN QUERY
+        select p.nombre as provincia, count(*) as cantidad_planificadas
+        from cursos.cursos as c
+        inner join pac.pacs as pa on c.id_pac = pa.id_pac
+        inner join sistema.provincias as p on p.id_provincia = c.id_provincia
+        where (c.fecha_plan_inicial between var_desde and var_hasta
+        or c.fecha_plan_final between var_desde and var_hasta
+        or c.fecha_ejec_inicial between var_desde and var_hasta
+        or c.fecha_ejec_final between var_desde and var_hasta)
+        and c.id_provincia = var_provincia
+        group by p.nombre;
+        END IF;
+        END \$BODY\$
+        LANGUAGE plpgsql VOLATILE
+        COST 100
+        ROWS 1000;");
+    }
+
+    public function reporte9()
+    {
+      \DB::statement("DROP FUNCTION IF EXISTS public.reporte_9(integer, date, date)");
+      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_9(
+        IN var_provincia integer,
+        IN var_desde date,
+        IN var_hasta date)
+        RETURNS TABLE (provincia character varying, cantidad_ejecutadas bigint) AS
+        \$BODY\$
+        BEGIN IF var_provincia = 0 THEN
+        RETURN QUERY
+        select p.nombre as provincia, count(*) as cantidad_ejecutadas
+        from cursos.cursos as c
+        inner join sistema.provincias as p on p.id_provincia = c.id_provincia
+        where c.id_estado between 3 and 4
+        and (c.fecha_plan_inicial between var_desde and var_hasta
+        or c.fecha_plan_final between var_desde and var_hasta
+        or c.fecha_ejec_inicial between var_desde and var_hasta
+        or c.fecha_ejec_final between var_desde and var_hasta)
+        group by p.nombre;
+        ELSE RETURN QUERY
+        select p.nombre as provincia, count(*) as cantidad_ejecutadas
+        from cursos.cursos as c
+        inner join sistema.provincias as p on p.id_provincia = c.id_provincia
+        where c.id_estado between 3 and 4
+        and (c.fecha_plan_inicial between var_desde and var_hasta
+        or c.fecha_plan_final between var_desde and var_hasta
+        or c.fecha_ejec_inicial between var_desde and var_hasta
+        or c.fecha_ejec_final between var_desde and var_hasta)
+        and c.id_provincia = var_provincia
+        group by p.nombre;
+        END IF;
+        END \$BODY\$
+        LANGUAGE plpgsql VOLATILE
+        COST 100
+        ROWS 1000;");
+    }
+
+    public function reporte10()
+    {
+      \DB::statement("DROP FUNCTION IF EXISTS public.reporte_10(integer, date, date)");
+      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_10(
+        IN var_provincia integer,
+        IN var_desde date,
+        IN var_hasta date)
+        RETURNS TABLE (provincia character varying, cantidad_diseniadas bigint) AS
+        \$BODY\$
+        BEGIN IF var_provincia = 0 THEN
+        RETURN QUERY
+        select p.nombre as provincia, count(*) as cantidad_diseniadas
+        from cursos.cursos as c
+        left join pac.pacs as pa on c.id_pac = pa.id_pac
+        inner join sistema.provincias as p on p.id_provincia = c.id_provincia
+        where pa.id_ficha_tecnica is not null
+        and (
+          case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
+        group by p.nombre;
+        ELSE RETURN QUERY
+        select p.nombre as provincia, count(*) as cantidad_diseniadas
+        from cursos.cursos as c
+        left join pac.pacs as pa on c.id_pac = pa.id_pac
+        inner join sistema.provincias as p on p.id_provincia = c.id_provincia
+        where pa.id_ficha_tecnica is not null
+        and (
+          case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
+        and c.id_provincia = var_provincia
+        group by p.nombre;
+        END IF;
+        END \$BODY\$
+        LANGUAGE plpgsql VOLATILE
+        COST 100
+        ROWS 1000;");
+    }
+
+    public function reporte11()
+    {
+      \DB::statement("DROP FUNCTION IF EXISTS public.reporte_11(integer, date, date)");
+      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_11(
+        IN var_provincia integer,
+        IN var_desde date,
+        IN var_hasta date)
+        RETURNS TABLE (provincia character varying, categoria text, numero integer, cantidad_categoria bigint) AS
+        \$BODY\$
+        BEGIN IF var_provincia = 0 THEN
+        RETURN QUERY
+        select pr.nombre as provincia, cat.nombre as categoria, cat.numero as numero, count(*) as cantidad_categoria
+        from pac.pacs as pa
+        inner join pac.pacs_pautas as pp on pp.id_pac = pa.id_pac
+        inner join pac.pautas as pau on pp.id_pauta = pau.id_pauta
+        inner join sistema.provincias as pr on pa.id_provincia = pr.id_provincia
+        -- left join cursos.cursos as c on pa.id_pac = c.id_pac
+        inner join pac.categorias_pautas as cat on pau.id_categoria = cat.id_categoria
+        -- where (
+        --   case when c.fecha_ejec_inicial is null then
+        --     c.fecha_plan_inicial between var_desde and var_hasta
+        --     or c.fecha_plan_final between var_desde and var_hasta
+        --   else
+        --     c.fecha_ejec_inicial between var_desde and var_hasta
+        --     or c.fecha_ejec_final between var_desde and var_hasta
+        --   end)
+        group by pr.nombre, cat.id_categoria, cat.nombre, cat.numero, pau.id_pauta;
+        ELSE RETURN QUERY
+        select pr.nombre as provincia, cat.nombre as categoria, cat.numero as numero, count(*) as cantidad_categoria
+        from pac.pacs as pa
+        inner join pac.pacs_pautas as pp on pp.id_pac = pa.id_pac
+        inner join pac.pautas as pau on pp.id_pauta = pau.id_pauta
+        inner join sistema.provincias as pr on pa.id_provincia = pr.id_provincia
+        -- left join cursos.cursos as c on pa.id_pac = c.id_pac
+        inner join pac.categorias_pautas as cat on pau.id_categoria = cat.id_categoria
+        where 
+        -- (
+          -- case when c.fecha_ejec_inicial is null then
+          --   c.fecha_plan_inicial between var_desde and var_hasta
+          --   or c.fecha_plan_final between var_desde and var_hasta
+          -- else
+          --   c.fecha_ejec_inicial between var_desde and var_hasta
+          --   or c.fecha_ejec_final between var_desde and var_hasta
+          -- end)
+        pa.id_provincia = var_provincia
+        group by pr.nombre, cat.id_categoria, cat.nombre, cat.numero, pau.id_pauta;
         END IF;
         END \$BODY\$
         LANGUAGE plpgsql VOLATILE

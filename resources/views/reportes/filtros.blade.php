@@ -66,7 +66,7 @@
 			</div>
 			@endif
 		</div>
-		<div class="box-footer">	
+		<div class="box-footer">
 			<a href="#" class="btn btn-square pull-right filtro" id="filtrar">
 				<i class="fa fa-filter text-info fa-lg"> Filtrar</i>
 			</a>

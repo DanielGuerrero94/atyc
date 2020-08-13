@@ -514,8 +514,6 @@
 		$('.excel').on('click',function () {
 			var filtros = getFiltrosJson();
 			var order_by = $('#abm-table').DataTable().order();
-			console.log(filtros);
-			console.log(order_by);
 
 			$.ajax({
 				url: 'pacs/excel',
