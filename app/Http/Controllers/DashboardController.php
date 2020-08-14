@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cursos\Curso;
+use App\Models\Pac\FichaTecnica;
 use App\Alumno;
 use Carbon\Carbon;
 use DB;
@@ -79,7 +80,8 @@ class DashboardController extends Controller
             'capacitados' => $this->mvCapacitados($request),
             'planificadas' => $this->accionesPlanificadas($request),
             'ejecutadas' => $this->accionesEjecutadas($request),
-            'talleres' => $this->talleresSumarte($request)
+            'fichas_aprobadas' => $this->fichasAprobadas($request)
+            // 'talleres' => $this->talleresSumarte($request)
             // 'efectores' => $this->efectores($request)
         ];
     }
@@ -201,6 +203,26 @@ class DashboardController extends Controller
         return $query->count();
     }
 
+    public function fichasAprobadas(Request $request)
+    {
+        $anio = $request->get('anio');
+        $division = $request->get('division');
+
+        $query = FichaTecnica::where('aprobada', true);
+
+        if(is_numeric($anio)) {
+            $query = $query->join('pac.pacs', 'id_pac','=','pacs.id_pac')
+            ->where('pacs.anio', $anio);
+        }
+
+        if(is_numeric($division)) {
+            $query = $query->join('pac.pacs', 'id_pac','=','pacs.id_pac')
+            ->where('pacs.id_provincia', $division);
+        }
+
+        return $query->count();
+
+    }
     public function efectores(Request $request)
     {
         return DB::table('efectores.efectores as e')

@@ -70,10 +70,10 @@
         <span class="info-box-number">0</span>
       </div>
     </div>
-    <div class="info-box bg-teal" id="talleres-sumarte">
+    <div class="info-box bg-teal" id="fichas-aprobadas">
       <span class="info-box-icon"><i class="fa fa-scribd"></i></span>
       <div class="info-box-content">
-        <span class="info-box-text">Talleres sumarte</span>
+        <span class="info-box-text">Fichas Técnicas <br> Aprobadas</span>
         <span class="info-box-number">0</span>
       </div>      
     </div>
@@ -156,7 +156,8 @@
           console.log(data);
         $("p").remove();
         $("#efectores-capacitados").find(".info-box-number").html(data.capacitados);
-        $("#talleres-sumarte").find(".info-box-number").html(data.talleres);
+        // $("#talleres-sumarte").find(".info-box-number").html(data.talleres);
+        $("#fichas-aprobadas").find(".info-box-number").html(data.fichas_aprobadas);
         $("#progreso-pac").find("#planificadas1").html(data.planificadas);
         $("#progreso-pac").find("#planificadas2").html(data.planificadas);
         $("#progreso-pac").find("#ejecutadas").html(data.ejecutadas);
