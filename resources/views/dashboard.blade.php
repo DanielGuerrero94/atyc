@@ -53,14 +53,13 @@
       <div class="info-box-content">
         <span class="info-box-text">Cantidad de Acciones <br> de Capacitación Planificadas</span>
         <span class="info-box-number" id="planificadas1">0</span>
-        <div class="progress">
+        <div class="progress" style="height: 1.45rem;">
           <div class="progress-bar">
 
           </div>
         </div>
         <span class="progress-description">
-          Acciones Ejecutadas:
-          <span id='ejecutadas'>0</span> / <span id='planificadas2'>0</span> planificadas.
+          Ejecutadas <span id='ejecutadas'>0</span> / <span id='planificadas2'>0</span> Planificadas.
         </span>
       </div>
     </div>
@@ -154,13 +153,16 @@
       },
       dataType: 'json',
       success: function (data) {
-        console.log(data);
+          console.log(data);
+        $("p").remove();
         $("#efectores-capacitados").find(".info-box-number").html(data.capacitados);
         $("#talleres-sumarte").find(".info-box-number").html(data.talleres);
-        $("#progreso-pac").find(".info-box-number #planificadas1").html(data.planificadas);
-        $("#progreso-pac").find(".info-box-number #planificadas2").html(data.planificadas);
-        $("#progreso-pac").find(".info-box-number #ejecutadas").html(data.ejecutadas);
-        $("#progreso-pac").find(".progress-bar").css('width', (data.ejecutadas/data.planificadas) * 100);
+        $("#progreso-pac").find("#planificadas1").html(data.planificadas);
+        $("#progreso-pac").find("#planificadas2").html(data.planificadas);
+        $("#progreso-pac").find("#ejecutadas").html(data.ejecutadas);
+        let porcentaje = data.planificadas != 0 ? (data.ejecutadas/data.planificadas) * 100 : 0;
+        $("#progreso-pac").find(".progress-bar").css('width', ''+porcentaje+'%');
+        $("#progreso-pac").find(".progress-bar").append('<p style="color: black;">'+Math.round(porcentaje)+'% </p>');
         
       }
     };

@@ -156,21 +156,25 @@ class DashboardController extends Controller
         $anio = $request->get('anio');
         $division = $request->get('division');
 
-        $query = Curso::all();
+        logger("anio: ".$anio);
+        logger("division: ".$division);
+
+        $query = DB::table('cursos.cursos');
 
         if(is_numeric($anio)) {
-            $query = $query::where(function($q) use ($anio) {
-                $q->orWhereYear('fecha_plan_inicial', $anio)
-                ->orWhereYear('fecha_plan_final', $anio)
-                ->orWhereYear('fecha_ejec_inicial', $anio)
-                ->orWhereYear('fecha_ejec_final', $anio);
+            $query = $query->where(function($q) use ($anio) {
+                $q->orWhereBetween('fecha_plan_inicial', [$anio.'-01-01',$anio.'-12-31'])
+                ->orWhereBetween('fecha_plan_final', [$anio.'-01-01',$anio.'-12-31'])
+                ->orWhereBetween('fecha_ejec_inicial', [$anio.'-01-01',$anio.'-12-31'])
+                ->orWhereBetween('fecha_ejec_final', [$anio.'-01-01',$anio.'-12-31']);
             });
         }
 
-        if(is_numeric($divison)) {
+        if(is_numeric($division)) {
             $query = $query->where('id_provincia', $division);
         }
-
+        
+        logger(json_encode($query->count()));
         return $query->count();
     }
 
@@ -182,15 +186,15 @@ class DashboardController extends Controller
         $query = Curso::whereIn('id_estado', [3, 4]);
 
         if(is_numeric($anio)) {
-            $query = $query::where(function($q) use ($anio) {
-                $q->orWhereYear('fecha_plan_inicial', $anio)
-                ->orWhereYear('fecha_plan_final', $anio)
-                ->orWhereYear('fecha_ejec_inicial', $anio)
-                ->orWhereYear('fecha_ejec_final', $anio);
+            $query = $query->where(function($q) use ($anio) {
+                $q->orWhereBetween('fecha_plan_inicial', [$anio.'-01-01',$anio.'-12-31'])
+                ->orWhereBetween('fecha_plan_final', [$anio.'-01-01',$anio.'-12-31'])
+                ->orWhereBetween('fecha_ejec_inicial', [$anio.'-01-01',$anio.'-12-31'])
+                ->orWhereBetween('fecha_ejec_final', [$anio.'-01-01',$anio.'-12-31']);
             });
         }
 
-        if(is_numeric($divison)) {
+        if(is_numeric($division)) {
             $query = $query->where('id_provincia', $division);
         }
 
