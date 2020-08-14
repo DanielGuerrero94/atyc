@@ -158,9 +158,6 @@ class DashboardController extends Controller
         $anio = $request->get('anio');
         $division = $request->get('division');
 
-        logger("anio: ".$anio);
-        logger("division: ".$division);
-
         $query = DB::table('cursos.cursos');
 
         if(is_numeric($anio)) {
@@ -176,7 +173,6 @@ class DashboardController extends Controller
             $query = $query->where('id_provincia', $division);
         }
         
-        logger(json_encode($query->count()));
         return $query->count();
     }
 
@@ -208,21 +204,44 @@ class DashboardController extends Controller
         $anio = $request->get('anio');
         $division = $request->get('division');
 
-        $query = FichaTecnica::where('aprobada', true);
+        $query = DB::table('pac.fichas_tecnicas');
 
-        if(is_numeric($anio)) {
-            $query = $query->join('pac.pacs', 'id_pac','=','pacs.id_pac')
-            ->where('pacs.anio', $anio);
+        if(is_numeric($anio) && is_numeric($division)) {
+            $query = FichaTecnica::with(['pac' => function ($q) use ($anio, $division) {
+                return $q->withTrashed()
+                    ->where('pac.pacs.anio', $anio)
+                    ->where('pac.pacs.id_provincia', $division);
+            }])
+            ->whereHas('pac', function ($q) use ($anio, $division) {
+                $q->where('anio', $anio)
+                    ->where('id_provincia', $division);
+            })
+            ->where('aprobada', true);
+        } elseif(is_numeric($anio)) {
+            $query = FichaTecnica::with(['pac' => function ($q) use ($anio) {
+                return $q->withTrashed()
+                    ->where('pac.pacs.anio', $anio);
+            }])
+            ->whereHas('pac', function ($q) use ($anio) {
+                $q->where('anio', $anio);
+            })
+            ->where('aprobada', true);
+        } elseif(is_numeric($division)) {
+            $query = FichaTecnica::with(['pac' => function ($q) use ($division) {
+                return $q->withTrashed()
+                    ->where('pac.pacs.id_provincia', $division);
+            }])
+            ->whereHas('pac', function ($q) use ($division) {
+                $q->where('id_provincia', $division);
+            })
+            ->where('aprobada', true);
+        } else {       
+            $query = $query->where('aprobada', true);
         }
-
-        if(is_numeric($division)) {
-            $query = $query->join('pac.pacs', 'id_pac','=','pacs.id_pac')
-            ->where('pacs.id_provincia', $division);
-        }
-
+        
         return $query->count();
-
     }
+
     public function efectores(Request $request)
     {
         return DB::table('efectores.efectores as e')
