@@ -33,8 +33,9 @@ td {
 		<th class="table-header">Responsable de la Ejecución</th>
 		<th class="table-header">Asociación componente del CA</th>
 		<th class="table-header">Pautas para PAC</th>
-		<th class="fechas">#Edición - Estado: P:[Fecha Plan Inicial-Final] - E:[Fecha Ejecución Inicial-Final]</th>
-
+		@for($i = 1; ($i <= count($pacs->sortByDesc('ediciones')->first()->cursos)); $i++)
+		<th class="fechas">{{"Edición ". $i." - Estado - [Fecha Inicial-Final]"}}</th>
+		@endfor
 	</tr>
     @foreach($pacs as $pac)
 	<tr>
@@ -94,15 +95,16 @@ td {
 			{{", ".$pauta->numero." - ".$pauta->nombre}}
 			@endif
 		@endforeach
+		@foreach($pac->cursos as $curso)
         <td>
-        @foreach($pac->cursos as $curso)
-        {{$curso->edicion." - ".$curso->estado->nombre.": ".
-        "P:[".date('d/m', strtotime($curso->fecha_plan_inicial))."-"
-        .date('d/m', strtotime($curso->fecha_plan_final))."] - ".
-        "E:[".($curso->fecha_ejec_inicial ? (date('d/m', strtotime($curso->fecha_ejec_inicial))."-") : " ").
-        ($curso->fecha_ejec_final ? (date('d/m', strtotime($curso->fecha_ejec_final))) : " ")."];  "}}
-        @endforeach
+        {{$curso->edicion." - ".$curso->estado->nombre.". ".
+		((in_array($curso->estado->id_estado, [1,2,5,6])) ? 
+		("Fechas Planificadas:[".date('d/m', strtotime($curso->fecha_plan_inicial))." - ".
+        date('d/m', strtotime($curso->fecha_plan_final))."]") :
+		("Fechas Ejecución:[".($curso->fecha_ejec_inicial ? (date('d/m', strtotime($curso->fecha_ejec_inicial))." - ") : " ").
+        ($curso->fecha_ejec_final ? (date('d/m', strtotime($curso->fecha_ejec_final))) : " ")."]"))}}
         </td>
+		@endforeach
 	</tr>
     @endforeach
 </table>

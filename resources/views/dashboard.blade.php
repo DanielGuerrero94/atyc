@@ -51,15 +51,16 @@
     <div class="info-box bg-teal" id="progreso-pac">
       <span class="info-box-icon"><i class="fa fa-sitemap"></i></span>
       <div class="info-box-content">
-        <span class="info-box-text">Progreso PAC</span>
-        <span class="info-box-number">Proximamente</span>
+        <span class="info-box-text">Cantidad de Acciones <br> de Capacitación Planificadas</span>
+        <span class="info-box-number" id="planificadas1">0</span>
         <div class="progress">
-          <div class="progress-bar" style="width: 0%">
+          <div class="progress-bar">
 
           </div>
         </div>
         <span class="progress-description">
-          0/0 de acciones planificadas.
+          Acciones Ejecutadas:
+          <span id='ejecutadas'>0</span> / <span id='planificadas2'>0</span> planificadas.
         </span>
       </div>
     </div>
@@ -156,6 +157,11 @@
         console.log(data);
         $("#efectores-capacitados").find(".info-box-number").html(data.capacitados);
         $("#talleres-sumarte").find(".info-box-number").html(data.talleres);
+        $("#progreso-pac").find(".info-box-number #planificadas1").html(data.planificadas);
+        $("#progreso-pac").find(".info-box-number #planificadas2").html(data.planificadas);
+        $("#progreso-pac").find(".info-box-number #ejecutadas").html(data.ejecutadas);
+        $("#progreso-pac").find(".progress-bar").css('width', (data.ejecutadas/data.planificadas) * 100);
+        
       }
     };
   }

@@ -77,6 +77,8 @@ class DashboardController extends Controller
     {
         return [
             'capacitados' => $this->mvCapacitados($request),
+            'planificadas' => $this->accionesPlanificadas($request),
+            'ejecutadas' => $this->accionesEjecutadas($request),
             'talleres' => $this->talleresSumarte($request)
             // 'efectores' => $this->efectores($request)
         ];
@@ -143,6 +145,52 @@ class DashboardController extends Controller
         }
 
         if (is_numeric($division = $request->get('division'))) {
+            $query = $query->where('id_provincia', $division);
+        }
+
+        return $query->count();
+    }
+
+    public function accionesPlanificadas(Request $request)
+    {
+        $anio = $request->get('anio');
+        $division = $request->get('division');
+
+        $query = Curso::all();
+
+        if(is_numeric($anio)) {
+            $query = $query::where(function($q) use ($anio) {
+                $q->orWhereYear('fecha_plan_inicial', $anio)
+                ->orWhereYear('fecha_plan_final', $anio)
+                ->orWhereYear('fecha_ejec_inicial', $anio)
+                ->orWhereYear('fecha_ejec_final', $anio);
+            });
+        }
+
+        if(is_numeric($divison)) {
+            $query = $query->where('id_provincia', $division);
+        }
+
+        return $query->count();
+    }
+
+    public function accionesEjecutadas(Request $request)
+    {
+        $anio = $request->get('anio');
+        $division = $request->get('division');
+
+        $query = Curso::whereIn('id_estado', [3, 4]);
+
+        if(is_numeric($anio)) {
+            $query = $query::where(function($q) use ($anio) {
+                $q->orWhereYear('fecha_plan_inicial', $anio)
+                ->orWhereYear('fecha_plan_final', $anio)
+                ->orWhereYear('fecha_ejec_inicial', $anio)
+                ->orWhereYear('fecha_ejec_final', $anio);
+            });
+        }
+
+        if(is_numeric($divison)) {
             $query = $query->where('id_provincia', $division);
         }
 

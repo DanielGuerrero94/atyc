@@ -451,6 +451,9 @@ class PacController extends AbmController
             },
             'responsables' => function ($pacs) {
                 return $pacs->withTrashed();
+            },
+            'pautas' => function ($pacs) {
+                return $pacs->withTrashed();
             }
         ])
         ->whereIn('pac.pacs.id_pac', $ids_pac)
