@@ -22,6 +22,7 @@ class StoredProceduresSeeder extends Seeder
         $this->reporte9();
         $this->reporte10();
         $this->reporte11();
+        $this->reporte12();
     }
 
     /**
@@ -340,10 +341,14 @@ class StoredProceduresSeeder extends Seeder
       from pac.pacs as pa
       inner join sistema.provincias as p on p.id_provincia = pa.id_provincia
       left join cursos.cursos as c on c.id_pac = pa.id_pac
-      where (c.fecha_plan_inicial between var_desde and var_hasta
-        or c.fecha_plan_final between var_desde and var_hasta
-        or c.fecha_ejec_inicial between var_desde and var_hasta
-        or c.fecha_ejec_final between var_desde and var_hasta)
+      where (
+        case when c.fecha_ejec_inicial is null then
+          c.fecha_plan_inicial between var_desde and var_hasta
+          or c.fecha_plan_final between var_desde and var_hasta
+        else
+          c.fecha_ejec_inicial between var_desde and var_hasta
+          or c.fecha_ejec_final between var_desde and var_hasta
+        end)
       and pa.deleted_at is null
       and c.deleted_at is null
       group by p.nombre;
@@ -352,10 +357,14 @@ class StoredProceduresSeeder extends Seeder
       from pac.pacs as pa
       inner join sistema.provincias as p on p.id_provincia = pa.id_provincia
       left join cursos.cursos as c on c.id_pac = pa.id_pac
-      where (c.fecha_plan_inicial between var_desde and var_hasta
-        or c.fecha_plan_final between var_desde and var_hasta
-        or c.fecha_ejec_inicial between var_desde and var_hasta
-        or c.fecha_ejec_final between var_desde and var_hasta)
+      where (
+        case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
       and pa.id_provincia = var_provincia
       and pa.deleted_at is null
       and c.deleted_at is null
@@ -382,10 +391,14 @@ class StoredProceduresSeeder extends Seeder
         from cursos.cursos as c
         inner join pac.pacs as pa on c.id_pac = pa.id_pac
         inner join sistema.provincias as p on p.id_provincia = c.id_provincia
-        where (c.fecha_plan_inicial between var_desde and var_hasta
-        or c.fecha_plan_final between var_desde and var_hasta
-        or c.fecha_ejec_inicial between var_desde and var_hasta
-        or c.fecha_ejec_final between var_desde and var_hasta)
+        where (
+          case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
         and pa.deleted_at is null
         and c.deleted_at is null
         group by p.nombre;
@@ -394,10 +407,14 @@ class StoredProceduresSeeder extends Seeder
         from cursos.cursos as c
         inner join pac.pacs as pa on c.id_pac = pa.id_pac
         inner join sistema.provincias as p on p.id_provincia = c.id_provincia
-        where (c.fecha_plan_inicial between var_desde and var_hasta
-        or c.fecha_plan_final between var_desde and var_hasta
-        or c.fecha_ejec_inicial between var_desde and var_hasta
-        or c.fecha_ejec_final between var_desde and var_hasta)
+        where (
+          case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
         and c.id_provincia = var_provincia
         and pa.deleted_at is null
         and c.deleted_at is null
@@ -422,24 +439,36 @@ class StoredProceduresSeeder extends Seeder
         RETURN QUERY
         select p.nombre as provincia, count(*) as cantidad_ejecutadas
         from cursos.cursos as c
+        inner join pac.pacs as pa on c.id_pac = pa.id_pac
         inner join sistema.provincias as p on p.id_provincia = c.id_provincia
         where c.id_estado between 3 and 4
-        and (c.fecha_plan_inicial between var_desde and var_hasta
-        or c.fecha_plan_final between var_desde and var_hasta
-        or c.fecha_ejec_inicial between var_desde and var_hasta
-        or c.fecha_ejec_final between var_desde and var_hasta)
+        and (
+          case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
+        and pa.deleted_at is null
         and c.deleted_at is null
         group by p.nombre;
         ELSE RETURN QUERY
         select p.nombre as provincia, count(*) as cantidad_ejecutadas
         from cursos.cursos as c
+        inner join pac.pacs as pa on c.id_pac = pa.id_pac
         inner join sistema.provincias as p on p.id_provincia = c.id_provincia
         where c.id_estado between 3 and 4
-        and (c.fecha_plan_inicial between var_desde and var_hasta
-        or c.fecha_plan_final between var_desde and var_hasta
-        or c.fecha_ejec_inicial between var_desde and var_hasta
-        or c.fecha_ejec_final between var_desde and var_hasta)
+        and (
+          case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
         and c.id_provincia = var_provincia
+        and pa.deleted_at is null
         and c.deleted_at is null
         group by p.nombre;
         END IF;
@@ -556,4 +585,57 @@ class StoredProceduresSeeder extends Seeder
         COST 100
         ROWS 1000;");
     }
+
+    public function reporte12()
+    {
+      \DB::statement("DROP FUNCTION IF EXISTS public.reporte_12(integer, date, date)");
+      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_12(
+        IN var_provincia integer,
+        IN var_desde date,
+        IN var_hasta date)
+        RETURNS TABLE (provincia character varying, porcentaje numeric) AS
+        \$BODY\$
+        BEGIN IF var_provincia = 0 THEN
+        RETURN QUERY
+        select p.nombre as provincia,
+        case when count(*) = 0 then 0.00 else round((100.00 * sum(case when c.id_estado between 3 and 4 then 1 else 0 end) / count(*)), 2) end as porcentaje
+        from cursos.cursos as c
+        inner join pac.pacs as pa on c.id_pac = pa.id_pac
+        inner join sistema.provincias as p on p.id_provincia = c.id_provincia
+        where (
+          case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
+        and pa.deleted_at is null
+        and c.deleted_at is null
+        group by p.nombre;
+        ELSE RETURN QUERY
+        select p.nombre as provincia,
+        case when count(*) = 0 then 0.00 else round((100.00 * sum(case when c.id_estado between 3 and 4 then 1 else 0 end) / count(*)), 2) end as porcentaje
+        from cursos.cursos as c
+        inner join pac.pacs as pa on c.id_pac = pa.id_pac
+        inner join sistema.provincias as p on p.id_provincia = c.id_provincia
+        where (
+          case when c.fecha_ejec_inicial is null then
+            c.fecha_plan_inicial between var_desde and var_hasta
+            or c.fecha_plan_final between var_desde and var_hasta
+          else
+            c.fecha_ejec_inicial between var_desde and var_hasta
+            or c.fecha_ejec_final between var_desde and var_hasta
+          end)
+        and c.id_provincia = var_provincia
+        and pa.deleted_at is null
+        and c.deleted_at is null
+        group by p.nombre;
+        END IF;
+        END \$BODY\$
+        LANGUAGE plpgsql VOLATILE
+        COST 100
+        ROWS 1000;");
+    }
+
 }
