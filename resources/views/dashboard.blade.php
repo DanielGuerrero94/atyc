@@ -71,7 +71,7 @@
       </div>
     </div>
     <div class="info-box bg-teal" id="fichas-aprobadas">
-      <span class="info-box-icon"><i class="fa fa-scribd"></i></span>
+      <span class="info-box-icon"><i class="fa fa-check-square-o"></i></span>
       <div class="info-box-content">
         <span class="info-box-text">Fichas Técnicas <br> Aprobadas</span>
         <span class="info-box-number">0</span>

@@ -173,7 +173,7 @@ class DashboardController extends Controller
             $query = $query->where('id_provincia', $division);
         }
         
-        return $query->whereNotNull('id_pac')->count();
+        return $query->whereNotNull('id_pac')->whereNull('deleted_at')->count();
     }
 
     public function accionesEjecutadas(Request $request)
@@ -196,7 +196,7 @@ class DashboardController extends Controller
             $query = $query->where('id_provincia', $division);
         }
 
-        return $query->whereNotNull('id_pac')->count();
+        return $query->whereNotNull('id_pac')->whereNull('deleted_at')->count();
     }
 
     public function fichasAprobadas(Request $request)
