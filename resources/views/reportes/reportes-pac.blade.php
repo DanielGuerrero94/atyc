@@ -33,6 +33,7 @@
 		
 		$('#filtrar').on('click',function (event) {
 			event.preventDefault();
+			console.log("click");
 
 			$('#reporte').show();
 
@@ -42,15 +43,21 @@
 					url: 'query',
 					data: {
 						id_reporte : {{$reporte->id_reporte}},
-						filtros: getFiltrosReportes()
+						filtros: getFiltrosReportes(),
 					}
 				},
 				columns: [
 				{ data: 'periodo', title: 'Periodo'},
-                { data: 'provincia', title: 'Jurisdicción'},
+				{ data: 'provincia', title: 'Jurisdicción'},
+				{ data: 'cantidad_planificadas', title: 'Cantidad de Acciones Planificadas'},
+				{ data: 'cantidad_ejecutadas', title: 'Cantidad de Acciones Ejecutadas'},
 				{ data: 'porcentaje', title: 'Porcentaje de Acciones Ejecutadas sobre total Planificado',
-					render(data) {
-						return data + '%';
+					render: function(data) {
+						return '<div class="progress" style="height: 1.45rem;">'+
+									'<div class="progress-bar" style="width:'+data+'%; background-color:#00C0EF !important; background-image:-webkit-linear-gradient(top,#00C0EF 0,#00C0EF 100%)!important;">'+
+									'<p style="color:black;">'+data+'%</p>'+
+									'</div>'+
+								'</div>';
 					}
 				}
 				]

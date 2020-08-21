@@ -206,32 +206,12 @@
         <li>
           <a href='{{url("/reportes/8")}}'>
             <span class="label label-primary pull-left">6</span>
-            <span>Cantidad de Acciones</span>
-            <br>
-            <span>Planificadas en PAC</span>
-          </a>
-        </li>
-        <li>
-          <a href='{{url("/reportes/9")}}'>
-            <span class="label label-primary pull-left">7</span>
-            <span>Cantidad de Acciones</span>
-            <br>
-            <span>Ejecutadas de PAC</span>
-          </a>
-        </li>
-        <li>
-          <a href='{{url("/reportes/12")}}'>
-            <span class="label label-primary pull-left">8</span>
-            <span>Porcentaje de Acciones</span>
-            <br>
-            <span>Ejecutadas sobre total</span>
-            <br>
-            <span>Planificado en PAC</span>
+            <span>Reportes de PAC</span>
           </a>
         </li>
         <li>
           <a href='{{url("/reportes/10")}}'>
-            <span class="label label-primary pull-left">9</span>
+            <span class="label label-primary pull-left">7</span>
             <span>Cantidad de Acciones</span>
             <br>
             <span>con Ficha Técnica en PAC</span>
@@ -239,7 +219,7 @@
         </li>
         <li>
           <a href='{{url("/reportes/11")}}'>
-            <span class="label label-primary pull-left">10</span>
+            <span class="label label-primary pull-left">8</span>
             <span>Cantidad de Pautas PAC</span>
             <br>
             <span>por Categoría</span>

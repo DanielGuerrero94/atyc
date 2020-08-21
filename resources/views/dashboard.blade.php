@@ -58,7 +58,7 @@
 
           </div>
         </div>
-        <span class="progress-description">
+        <span class="progress-description" style="font-size: 1.25rem;">
           Ejecutadas <span id='ejecutadas'>0</span> / <span id='planificadas2'>0</span> Planificadas.
         </span>
       </div>
