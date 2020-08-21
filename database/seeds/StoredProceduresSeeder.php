@@ -428,8 +428,8 @@ class StoredProceduresSeeder extends Seeder
 
     public function reporte9()
     {
-      \DB::statement("DROP FUNCTION IF EXISTS public.reporte_10(integer, date, date)");
-      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_10(
+      \DB::statement("DROP FUNCTION IF EXISTS public.reporte_9(integer, date, date)");
+      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_9(
         IN var_provincia integer,
         IN var_desde date,
         IN var_hasta date)
@@ -480,8 +480,8 @@ class StoredProceduresSeeder extends Seeder
 
     public function reporte10()
     {
-      \DB::statement("DROP FUNCTION IF EXISTS public.reporte_11(integer, date, date)");
-      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_11(
+      \DB::statement("DROP FUNCTION IF EXISTS public.reporte_10(integer, date, date)");
+      \DB::statement("CREATE OR REPLACE FUNCTION public.reporte_10(
         IN var_provincia integer,
         IN var_desde date,
         IN var_hasta date)

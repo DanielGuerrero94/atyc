@@ -16,15 +16,13 @@ td {
 	<tr>
 		<th class="table-header">Periodo</th>
 		<th class="table-header">Jurisdicción</th>
-		<th class="table-header">Categoria</th>
-		<th class="table-header">Cantidad de Pautas Utilizadas (de la categoria)</th>
+		<th class="table-header">Cantidad de Acciones con Ficha Técnica</th>
 	</tr>
 	@foreach($resultados as $resultado)
 	<tr>
 		<td>{{$resultado['periodo']}}</td>
 		<td>{{$resultado['provincia']}}</td>
-		<td>{{$resultado['numero_categoria']}}</td>
-		<td>{{$resultado['cantidad_categoria']}}</td>
+		<td>{{$resultado['cantidad_diseniadas']}}</td>
 	</tr>
 	@endforeach
 </table>

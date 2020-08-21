@@ -210,7 +210,7 @@
           </a>
         </li>
         <li>
-          <a href='{{url("/reportes/10")}}'>
+          <a href='{{url("/reportes/9")}}'>
             <span class="label label-primary pull-left">7</span>
             <span>Cantidad de Acciones</span>
             <br>
@@ -218,7 +218,7 @@
           </a>
         </li>
         <li>
-          <a href='{{url("/reportes/11")}}'>
+          <a href='{{url("/reportes/10")}}'>
             <span class="label label-primary pull-left">8</span>
             <span>Cantidad de Pautas PAC</span>
             <br>
