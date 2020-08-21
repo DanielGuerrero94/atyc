@@ -49,8 +49,12 @@
 				{ data: 'periodo', title: 'Periodo'},
                 { data: 'provincia', title: 'Jurisdicción'},
 				{ data: 'porcentaje', title: 'Porcentaje de Acciones Ejecutadas sobre total Planificado',
-					render(data) {
-						return data + '%';
+					render: function(data) {
+						return '<div class="progress" style="height: 1.45rem;">'+
+									'<div class="progress-bar" style="width:'+data+'%; background-color:#00C0EF !important; background-image:-webkit-linear-gradient(top,#00C0EF 0,#00C0EF 100%)!important;">'+
+									'<p style="color:black;"><b>'+data+'</b>%</p>'+
+									'</div>'+
+								'</div>';
 					}
 				}
 				]
