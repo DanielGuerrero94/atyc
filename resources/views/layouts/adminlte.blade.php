@@ -8,8 +8,10 @@
   <!-- CSRF Token -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
 
-  <title>Sistema de Gestión de Capacitación (SIGECA)</title>
+  <title>SIGECA</title>
   
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
   <link href="{{asset("/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css")}}" rel="stylesheet">
 
 
