@@ -10,7 +10,7 @@
 
   <title>SIGECA</title>
   
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/x-icon" href="<?php echo env('IMG_HOST').'/favicon.ico'; ?>">
 
   <link href="{{asset("/bower_components/bootstrap-tour/build/css/bootstrap-tour.min.css")}}" rel="stylesheet">
 
