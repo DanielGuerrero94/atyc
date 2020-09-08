@@ -310,10 +310,24 @@
 						}
 				},
 				columns: [
-				{ title: 'Fecha', data: 'display_date', defaultContent: '-',
+				{ title: 'Fecha de Carga', data: 'created_at', defaultContent: '-',
 					render: function(data) {
 						return moment(data).format('DD/MM/YYYY');
 					}
+				},
+				{ title: 'Fecha Próxima Ejecución', data: 'display_date', defaultContent: '-',
+					render: function(data) {
+						return moment(data).format('DD/MM/YYYY');
+					}
+				},
+				{ title: 'Tipo de Accion', data: 'tipo_accion', name: 'id_linea_estrategica',
+					render: function (data, type, row, meta) {
+						if(data)
+							return data.numero + " " + data.nombre;
+						else
+							return '-';
+					},
+					orderable: false
 				},
 				{ title: 'Nombre', data: 'nombre', width: '10%'},
 				{ title: 'Ediciones', data: 'ediciones'},
@@ -326,7 +340,7 @@
 						return estadosFicha(data, row.ficha_obligatoria);
 					}
 				},
-				{ title: 'Jurisdiccion', data: 'provincias.nombre', name: 'id_provincia'},
+				{ title: 'Jurisdiccion - Dependencia Jerárquica', data: 'provincias.nombre', name: 'id_provincia'},
 				{ title: 'Tematica/s', data: 'tematicas', defaultContent: '-', name: 'id_tematica',
 					render: function ( data, type, row, meta)
 					{
@@ -334,15 +348,6 @@
 							return data.map(function(tematica) { return ' ' + tematica.nombre; });
 					},
 					orderable: false, width: '20%'
-				},
-				{ title: 'Tipo de Accion', data: 'tipo_accion', name: 'id_linea_estrategica',
-					render: function (data, type, row, meta) {
-						if(data)
-							return data.numero + " " + data.nombre;
-						else
-							return '-';
-					},
-					orderable: false
 				},
 				{ title: "Responsables", data:"responsables", defaultContent: '-', name: 'id_responsable', 
 					render: function ( data, type, row, meta)
