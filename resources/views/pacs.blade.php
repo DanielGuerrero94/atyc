@@ -320,12 +320,10 @@
 						return moment(data).format('DD/MM/YYYY');
 					}
 				},
-				{ title: 'Tipo de Accion', data: 'tipo_accion', name: 'id_linea_estrategica',
+				{ title: 'Tipo de Accion', data: 'tipo_accion', name: 'id_linea_estrategica', defaultContent: '-',
 					render: function (data, type, row, meta) {
 						if(data)
 							return data.numero + " " + data.nombre;
-						else
-							return '-';
 					},
 					orderable: false
 				},
@@ -341,19 +339,27 @@
 					}
 				},
 				{ title: 'Jurisdiccion - Dependencia Jerárquica', data: 'provincias.nombre', name: 'id_provincia'},
-				{ title: 'Tematica/s', data: 'tematicas', defaultContent: '-', name: 'id_tematica',
+				{ title: 'Tematica/s', defaultContent: '-', name: 'id_tematica',
 					render: function ( data, type, row, meta)
 					{
-						if(Object.entries(data).length != 0)
-							return data.map(function(tematica) { return ' ' + tematica.nombre; });
+						var tematicas = '';
+						for (var item in row.tematicas) {
+							var r = row.tematicas[item];
+							tematicas = tematicas + r.nombre + ', ';
+						}
+						return tematicas;
 					},
 					orderable: false, width: '20%'
 				},
-				{ title: "Responsables", data:"responsables", defaultContent: '-', name: 'id_responsable', 
+				{ title: "Responsables", defaultContent: '-', name: 'id_responsable', 
 					render: function ( data, type, row, meta)
 					{
-						if(Object.entries(data).length != 0)
-							return data.map(function(responsable) { return ' ' + responsable.nombre; });
+						var responsables = '';
+						for (var item in row.responsables) {
+							var r = row.responsables[item];
+							responsables = responsables + r.nombre + ', ';
+						}
+						return responsables;
 					},
 					orderable: false
 				},

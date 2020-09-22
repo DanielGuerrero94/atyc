@@ -411,20 +411,11 @@ class PacController extends AbmController
             },
             'provincias',
             'tematicas' => function ($pacs) {
-                return $pacs->withTrashed();
-            },
-            'cursos' => function ($pacs) {
-                return $pacs->withTrashed();
-            },
-            'fichaTecnica' => function ($pacs) {
-                return $pacs->withTrashed();
+                return $pacs->select('nombre')->withTrashed();
             },
             'responsables' => function ($pacs) {
-                return $pacs->withTrashed();
+                return $pacs->select('nombre')->withTrashed();
             },
-            'pautas' => function ($pacs) {
-                return $pacs->withTrashed();
-            }
         ])
         ->whereIn('pac.pacs.id_pac', $ids_pac)
         ->segunProvincia();
