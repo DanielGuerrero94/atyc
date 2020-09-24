@@ -95,8 +95,9 @@
               <br>
               <div class="row">
                 <div class="form-group col-xs-12 col-md-6">          
-                  <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
+                  <label for="provincia" class="control-label col-md-4 col-xs-3">Jurisdicción / <br> Dependencia Jerárquica:</label>
                   <div class="col-md-8 col-xs-9">
+                  <br>
                   @if(Auth::user()->id_provincia == 25)
                     <select class="select-2 form-control" id="provincia" name="id_provincia">
                     <option></option>

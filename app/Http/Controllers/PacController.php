@@ -416,6 +416,9 @@ class PacController extends AbmController
             'responsables' => function ($pacs) {
                 return $pacs->select('nombre')->withTrashed();
             },
+            'fichaTecnica' => function ($pacs) {	
+                return $pacs->withTrashed();	
+            },
         ])
         ->whereIn('pac.pacs.id_pac', $ids_pac)
         ->segunProvincia();

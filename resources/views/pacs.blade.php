@@ -548,26 +548,5 @@
 		
 	});
 
-
-
-	// function fichaTecnica(id_pac) {
-	// 	if(id_pac->)
-	// 	return '<a href="{{url("/pacs/fichas_tecnicas")}}/' + id_pac '" class =
-	// }
-
-		
-	// function getFiltros(){
-	// 		filtros = $('#form-filtros :input')
-	// 		.filter(function(i,e){return $(e).val() != "" || $(e).val() != "0"})
-	// 		.serializeArray()
-	// 		.map(function(obj) { 
-	// 			var r = {};
-	// 			r[obj.name] = obj.value;
-	// 			return r;
-	// 		});
-
-	// 		return filtros;
-	// 	}
-
 </script>
 @endsection
