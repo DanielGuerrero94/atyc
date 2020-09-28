@@ -53,14 +53,12 @@
         </span>
       </a>
       <ul class="treeview-menu">
-        @if(Auth::user()->id_provincia === 25)
         <li>
           <a href={{url("/pacs")}}>
             <i class="fa fa-columns"></i>
             <span>Gestión de PAC</span>
           </a>
         </li>
-        @endif
         <li>
           <a href="{{url("/pautas")}}">
             <i class="fa fa-database"></i>
