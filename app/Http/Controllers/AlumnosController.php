@@ -344,6 +344,7 @@ class AlumnosController extends ModelController
             $nombres = explode(' ', $typed);
 
             foreach ($nombres as $key => $value) {
+                $value = preg_replace("/\"|\'/", "''", $value);
                 $query = $query->orWhereRaw("nombres ~* '{$value}'")
                 ->orWhereRaw("apellidos ~* '{$value}'");
             }

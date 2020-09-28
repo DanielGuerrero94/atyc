@@ -58,8 +58,9 @@
           <br>
           <div class="row">
             <div class="form-group col-xs-12 col-md-6">          
-              <label for="provincia" class="control-label col-md-4 col-xs-3">Provincia:</label>
+              <label for="provincia" class="control-label col-md-4 col-xs-3">Jurisdicción / <br> Dependencia Jerárquica:</label>
               <div class="col-md-8 col-xs-9">
+              <br>
                 @if(Auth::user()->id_provincia == 25)
                 <select class="select-2 form-control" id="provincia" name="id_provincia">
                   <option></option>
@@ -308,6 +309,32 @@
       return input;
     }
   
+    function validateDates() {
+      let i = 1
+      let inicial = $('#form-alta #ediciones-tab #fecha_inicio_'+i).val();
+      let final = $('#form-alta #ediciones-tab #fecha_final_'+i).val();
+      flag = true;
+  
+      while(inicial != undefined && inicial !="" && final != undefined && final !="") {
+        initialMoment = moment.utc(inicial, 'DD/MM/YYYY');
+        finalMoment = moment.utc(final, 'DD/MM/YYYY');
+
+        correctDates = initialMoment.isBefore(finalMoment);
+        if(!correctDates) {
+          ($('#form-alta #ediciones-tab #'+i)).next("p").remove();
+          text = '<p style="color: #dd4b39; font-weight:bold; padding-left:2rem;"> La fecha inicial debe ser anterior a la fecha final </p>';
+          ($('#form-alta #ediciones-tab #'+i)).after(text);
+          flag = false;
+        } else {
+          ($('#form-alta #ediciones-tab #'+i)).next("p").remove();
+        }
+        i++;
+        inicial = $('#form-alta #ediciones-tab #fecha_inicio_'+i).val();
+        final = $('#form-alta #ediciones-tab #fecha_final_'+i).val();
+      }
+      return flag;
+    }
+
     jQuery.validator.addMethod("selecciono", function(value, element) {
       return $(element).find(':selected').length != 0 && $(element).find(':selected').val() != "";
     }, "Debe seleccionar alguna opcion");
@@ -377,7 +404,7 @@
       ignore: '.select2-input, .select2-focusser, .select2-search__field, input[type="hidden"]',
       messages:{
         nombre : "Campo obligatorio",
-        duracion : "Campo obligatorio"
+        duracion : "Campo obligatorio",
       },
       highlight: function(element)
       {
@@ -387,7 +414,6 @@
       {
         $(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
       },
-
 
       submitHandler : function(form)
       {
@@ -410,8 +436,8 @@
 
     $('#alta-pac').on('click','.store',function() {
       $('#alta-pac .nav-tabs').children().first().children().click();
-      if($('#alta-pac #form-alta').valid()){
-        $('#alta-pac #form-alta').submit(); 
+      if($('#alta-pac #form-alta').valid() && validateDates() ){
+          $('#alta-pac #form-alta').submit(); 
       }else{
         alert('Hay campos que no cumplen con la validacion.');
       }

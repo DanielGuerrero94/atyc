@@ -17,12 +17,17 @@ td {
 		<th class="table-header">Periodo</th>
 		<th class="table-header">Jurisdicción</th>
 		<th class="table-header">Cantidad de Acciones Planificadas en PAC</th>
+		<th class="table-header">Cantidad de Acciones Ejecutadas de PAC</th>
+		<th class="table-header">Porcentaje de Acciones Ejecutadas sobre total Planificado en PAC</th>
+
 	</tr>
 	@foreach($resultados as $resultado)
 	<tr>
 		<td>{{$resultado['periodo']}}</td>
 		<td>{{$resultado['provincia']}}</td>
 		<td>{{$resultado['cantidad_planificadas']}}</td>
+		<td>{{$resultado['cantidad_ejecutadas']}}</td>
+		<td>{{$resultado['porcentaje'].'%'}}</td>
 	</tr>
 	@endforeach
 </table>

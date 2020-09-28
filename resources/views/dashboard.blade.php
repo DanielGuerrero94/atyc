@@ -51,15 +51,15 @@
     <div class="info-box bg-teal" id="progreso-pac">
       <span class="info-box-icon"><i class="fa fa-sitemap"></i></span>
       <div class="info-box-content">
-        <span class="info-box-text">Cantidad de Acciones <br> de Capacitación Planificadas</span>
+        <span class="info-box-text">Acciones<br>Planificadas</span>
         <span class="info-box-number" id="planificadas1">0</span>
-        <div class="progress" style="height: 1.45rem;">
+        <div class="progress" style="height: 1.5rem;">
           <div class="progress-bar">
 
           </div>
         </div>
-        <span class="progress-description">
-          Ejecutadas <span id='ejecutadas'>0</span> / <span id='planificadas2'>0</span> Planificadas.
+        <span class="progress-description" style="white-space: normal;">
+          Ejecutadas <span id='ejecutadas'>0</span> de <span id='planificadas2'>0</span> Planificadas.
         </span>
       </div>
     </div>
