@@ -55,7 +55,7 @@
 					render: function(data) {
 						return '<div class="progress" style="height: 1.45rem;">'+
 									'<div class="progress-bar" style="width:'+data+'%; background-color:#00C0EF !important; background-image:-webkit-linear-gradient(top,#00C0EF 0,#00C0EF 100%)!important;">'+
-									'<p style="color:black;"><b>'+data+'</b>%</p>'+
+									'<p style="color:black; line-height: 1.4;"><b>'+data+'%</b></p>'+
 									'</div>'+
 								'</div>';
 					}
