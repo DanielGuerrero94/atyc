@@ -31,9 +31,16 @@ ON CONFLICT (nombre) DO NOTHING;
 UPDATE
     sistema.provincias
 SET
-    nombre = 'Area Fortalecimiento Dirección Nacional de Fortalecimiento de los Sistemas Provinciales'
+    nombre = 'Area Fortalecimiento DNFSP'
 WHERE
     id_provincia = 25;
+
+UPDATE
+    sistema.provincias
+SET
+    nombre = 'Ciudad Autónoma de Buenos Aires'
+WHERE
+    id_provincia = 1;
 
 UPDATE
     sistema.provincias
