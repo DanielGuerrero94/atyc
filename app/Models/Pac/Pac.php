@@ -12,7 +12,7 @@ class Pac extends Model
 
     protected $dates = [ 'created_at', 'updated_at', 'deleted_at'];
 
-    protected $fillable = ['nombre', 'id_accion', 'ediciones', 'duracion',
+    protected $fillable = ['nombre', 'id_estado', 'id_accion', 'ediciones', 'duracion',
     'id_provincia', 'id_ficha_tecnica', 'anio', 'ficha_obligatoria', 'display_date'];
 
     /**
@@ -132,6 +132,15 @@ class Pac extends Model
             'App\Models\Pac\FichaTecnica',
             'id_ficha_tecnica',
             'id_ficha_tecnica');
+    }
+
+    public function estado()
+    {
+        return $this->hasOne(
+            PacEstado::class,
+            'id_estado',
+            'id_estado'
+        );
     }
 
     public function scopeSegunProvincia($query)

@@ -36,6 +36,18 @@
 			</div>
 			<br>
 			<div class="row">
+				<div class="form-group col-sm-4">
+					<label class="control-label col-xs-5" for="id_accion">Estados de Planificación:</label>
+					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+						<select class="select-2 form-control estados_planificacion" id="estados_planificacion" name="id_estado" aria-hidden="true" multiple>
+							@foreach ($estadosPac as $estadoPac)
+							<option data-id="{{$estadoPac->id_estado}}" value="{{$estadoPac->id_estado}}">{{$estadoPac->nombre}}</option>
+							@endforeach
+						</select>          
+					</div>
+				</div>
+			</div>
+			<div class="row">
 				<div class="form-group col-sm-4">          
 					<label class="control-label col-xs-5" for="id_estados_ficha">Fichas Técnicas:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
@@ -77,9 +89,9 @@
 				<div class="form-group col-sm-4">          
 					<label class="control-label col-xs-5" for="id_tematica">Estados de acciones:</label>
 					<div class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-						<select class="select-2 form-control estados" id="estados" name="id_estado" aria-hidden="true" multiple>
-							@foreach ($estados as $estado)
-							<option data-id="{{$estado->id_estado}}" value="{{$estado->id_estado}}">{{$estado->nombre}}</option>
+						<select class="select-2 form-control estados_cursos" id="estados_cursos" name="id_estado" aria-hidden="true" multiple>
+							@foreach ($estadosCursos as $estadoCurso)
+							<option data-id="{{$estadoCurso->id_estado}}" value="{{$estadoCurso->id_estado}}">{{$estadoCurso->nombre}}</option>
 							@endforeach
 						</select>          
 					</div>

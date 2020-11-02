@@ -23,7 +23,8 @@ SET row_security = off;
 DROP VIEW pac.pac_joined;
 
 CREATE OR REPLACE VIEW pac.pac_joined AS
- SELECT p.id_pac,
+ SELECT
+    p.id_pac,
     p.nombre,
     p.id_accion,
     p.ediciones,
@@ -35,11 +36,12 @@ CREATE OR REPLACE VIEW pac.pac_joined AS
     p.id_ficha_tecnica,
     p.anio,
     p.ficha_obligatoria,
+    p.id_estado,
     c.fecha_plan_inicial AS fp_desde,
     c.fecha_plan_final AS fp_hasta,
     c.fecha_ejec_inicial AS fe_desde,
     c.fecha_ejec_final AS fe_hasta,
-    c.id_estado AS id_estado,
+    c.id_estado AS id_estado_curso,
     le.numero AS linea_numero,
     le.nombre AS linea_nombre,
     ft.path AS ficha_tecnica_path,

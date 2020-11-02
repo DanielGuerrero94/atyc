@@ -21,7 +21,9 @@ td {
 
 <table class="table">
 	<tr>
-		<th class="table-header">Fecha Planificada</th>
+		<th class="table-header">Fecha de Carga</th>
+		<th class="table-header">Fecha Próxima Ejecución</th>
+		<th class="table-header">Estado</th>
 		<th class="table-header">Jurisdicción</th>
 		<th class="table-header">Tipo de Acción</th>
 		<th class="table-header">Ficha Técnica</th>
@@ -39,7 +41,9 @@ td {
 	</tr>
     @foreach($pacs as $pac)
 	<tr>
-		<td>{{$pac->display_date}}</td>
+		<td>{{date('d/m/y', strtotime($pac->created_at))}}</td>
+		<td>{{date('d/m/y', strtotime($pac->display_date))}}</td>
+		<td>{{$pac->estado ? $pac->estado->nombre : 'No tiene estado'}}</td>
 		<td>{{$pac->provincias->nombre}}</td>
 		<td>{{$pac->tipoAccion->numero ." ".$pac->tipoAccion->nombre}}</td>
 		<td>{{(($pac->id_ficha_tecnica) ? (($pac->fichaTecnica->aprobada) ? ("Aprobada (".

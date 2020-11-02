@@ -11,6 +11,7 @@ use App\Models\Pac\Pauta;
 use App\Models\Pac\Categoria;
 use App\Models\Pac\Responsable;
 use App\Models\Pac\FichaTecnica;
+use App\Models\Pac\PacEstado;
 use App\Models\Cursos\Curso;
 use App\Models\Cursos\AreaTematica;
 use App\Models\Cursos\LineaEstrategica;
@@ -186,6 +187,7 @@ class PacController extends AbmController
     public function store(Request $request)
     {
         $data = $request->all();
+        $data = array_merge($data, ['id_estado' => PacEstado::ACCION_EN_REVISION]);
         logger()->info('Quiere crear PAC con: '.json_encode($data));
         $v = Validator::make($data, $this->rules);
 
@@ -419,16 +421,19 @@ class PacController extends AbmController
             'fichaTecnica' => function ($pacs) {	
                 return $pacs->withTrashed();	
             },
+            'estado' => function ($pacs) {
+                return $pacs->withTrashed();
+            }
         ])
         ->whereIn('pac.pacs.id_pac', $ids_pac)
         ->segunProvincia();
         
         if(isset($order_by))
         {
-            $ordenadores = ['display_date', 'nombre', 'ediciones', 'duracion', 'id_ficha_tecnica', 'id_provincia'];
+            $ordenadores = ['created_at', 'display_date', 'id_estado', 'nombre', 'nombre', 'ediciones', 'duracion', 'id_ficha_tecnica', 'id_provincia'];
 
-            // logger()->info("order_by[0][1]: ".$order_by['order_by'][0][1]);
-            // logger()->info("ordenador[order_by[0][0]]: ".$ordenadores[$order_by['order_by'][0][0]]); 
+            logger()->info("order_by[0][1]: ".$order_by['order_by'][0][1]);
+            logger()->info("ordenador[order_by[0][0]]: ".$ordenadores[$order_by['order_by'][0][0]]); 
 
             $pacs = $pacs->orderBy($ordenadores[$order_by['order_by'][0][0]], $order_by['order_by'][0][1]);
         }
@@ -574,7 +579,7 @@ class PacController extends AbmController
         foreach($pacs as $pac)
         {
             $anios[] = $pac->anio;
-            $provincias[] = $pac->provincias()->get()->first()->nombre;
+            $provincias[] = $pac->provincias()->get()->first()->abreviacion;
         }
         $anios = implode("-", array_unique($anios));
         $provincias = implode("-", array_unique($provincias));
@@ -694,8 +699,12 @@ class PacController extends AbmController
             return Periodo::orderBy('hasta', 'desc')->orderBy('desde')->orderBy('id_periodo', 'desc')->get();
         });
 
-        $estados = Cache::remember('estados', 5, function () {
+        $estadosCursos = Cache::remember('estados_cursos', 5, function () {
             return Estado::orderBy('id_estado')->get();
+        });
+
+        $estadosPac = Cache::remember('estados_pac', 5, function () {
+            return PacEstado::orderBy('id_estado')->get();
         });
 
         return [
@@ -707,7 +716,8 @@ class PacController extends AbmController
             'tipoAccionesEdit' => $tipoAccionesEdit,
             'provinciasEdit' => $provinciasEdit,
             'periodos' => $periodos,
-            'estados' => $estados
+            'estadosCursos' => $estadosCursos,
+            'estadosPac' => $estadosPac,
         ];
     }
 
@@ -839,6 +849,9 @@ class PacController extends AbmController
                     return $query->withTrashed();
                 },
                 'tematicas' => function ($query){
+                    return $query->withTrashed();
+                },
+                'estado' => function ($query) {
                     return $query->withTrashed();
                 }])
                 ->segunProvincia()

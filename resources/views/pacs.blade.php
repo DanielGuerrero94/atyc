@@ -119,6 +119,7 @@
 		var duracion = $('#duracion').val();
 		var ediciones = $('#edicion').val();
 
+		var estados_planificacion = $('#estados_planificacion').val();
 		var estados_ficha = $('#estados_ficha').val();
 		if(!jQuery.isEmptyObject(estados_ficha))
 			estados_ficha = estados_ficha.filter(sacarObligatoriedadFichas);
@@ -129,7 +130,7 @@
 
 		var tipos_accion = $('#acciones').val();
 		var tematicas = $('#tematicas').val();
-		var estados = $('#estados').val();
+		var estados_cursos = $('#estados_cursos').val();
 		var destinatarios = $('#form-filtros #destinatarios').val()
 		var responsables = $('#responsables').val();
 		var pautas = $('#pautas').val();
@@ -144,11 +145,12 @@
 			nombre: nombre,
 			duracion: duracion,
 			ediciones: ediciones,
+			id_estado: estados_planificacion,
 			ficha_tecnica_aprobada: estados_ficha,
 			ficha_obligatoria: obligatorios,
 			id_accion: tipos_accion,
 			id_tematica: tematicas,
-			id_estado: estados,
+			id_estado_curso: estados_cursos,
 			id_destinatario: destinatarios,
 			id_responsable: responsables,
 			id_pauta: pautas,
@@ -180,6 +182,14 @@
 			width : "200%"
 		});
 
+		$('.estados_planificacion').select2({
+			"placeholder": {
+				id: '0',
+				text: " Todos los estados"
+			},
+			width: "400%"
+		});
+
 		$('.estados_ficha').select2({
 			"placeholder": {
 				id: '0',
@@ -204,7 +214,7 @@
 			width: "400%"
 		});
 
-		$('.estados').select2({
+		$('.estados_cursos').select2({
 			"placeholder": {
 				id: '0',
 				text: " Todos los estados"
@@ -320,6 +330,24 @@
 						return moment(data).format('DD/MM/YYYY');
 					}
 				},
+				{ title: 'Estado', data: 'estado', name:'id_estado', defaultContent: '-',
+					render: function(data) {
+						if (data == null) {
+							return '<i class="fa fa-question text-secondary fa-lg" title="No tiene estado"></i>';
+						}
+
+						switch(data.id_estado) {
+							case 1:
+								return '<i class="fa fa-minus-square text-warning fa-lg" title="'+data.nombre+'"></i>';
+							case 2:
+								return '<i class="fa fa-check-square text-success fa-lg" title="'+data.nombre+'"></i>';
+							case 3:
+								return '<i class="fa fa-window-close text-danger fa-lg" title="'+data.nombre+'"></i>';
+							default:
+								return '<i class="fa fa-question text-secondary fa-lg" title="Estado desconocido"></i>';
+						}
+					}
+				},
 				{ title: 'Tipo de Accion', data: 'tipo_accion', name: 'id_linea_estrategica', defaultContent: '-',
 					render: function (data, type, row, meta) {
 						if(data)
@@ -343,11 +371,11 @@
 					render: function ( data, type, row, meta)
 					{
 						var tematicas = '';
-						for (var item in row.tematicas) {
-							var r = row.tematicas[item];
+						for (var i in row.tematicas) {
+							var r = row.tematicas[i];
 							tematicas = tematicas + r.nombre + ', ';
 						}
-						return tematicas;
+						return tematicas.slice(0, tematicas.length-2);
 					},
 					orderable: false, width: '20%'
 				},
@@ -355,11 +383,11 @@
 					render: function ( data, type, row, meta)
 					{
 						var responsables = '';
-						for (var item in row.responsables) {
-							var r = row.responsables[item];
+						for (var i in row.responsables) {
+							var r = row.responsables[i];
 							responsables = responsables + r.nombre + ', ';
 						}
-						return responsables;
+						return responsables.slice(0, responsables.length-2);
 					},
 					orderable: false
 				},

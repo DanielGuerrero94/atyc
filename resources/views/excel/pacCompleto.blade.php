@@ -30,8 +30,9 @@ td {
 		<th class="provincia">{{"Jurisdicción: ".$pac->provincias->nombre}}</th>
 	</tr>
 	<tr>
-		<th class="table-header">Fecha de Creacion</th>
-		<th class="table-header">Fecha Planificada</th>
+		<th class="table-header">Fecha de Carga</th>
+		<th class="table-header">Próxima Fecha Ejecución</th>
+		<th class="table-header">Estado</th>
 		<th class="table-header">Tipo de Acción</th>
 		<th class="table-header">Ficha Técnica</th>
 		<th class="table-header">Nombre</th>
@@ -44,8 +45,9 @@ td {
 		<th class="table-header">Tabla de Pautas para PAC</th>
 	</tr>
 	<tr>
-		<td>{{$pac->created_at}}</td>
-		<td>{{$pac->display_date}}</td>
+		<td>{{date('d/m/y', strtotime($pac->created_at))}}</td>
+		<td>{{date('d/m/y', strtotime($pac->display_date))}}</td>
+		<td>{{$pac->estado ? $pac->estado->nombre : 'No tiene estado'}}</td>
 		<td>{{$pac->tipoAccion->numero ." ".$pac->tipoAccion->nombre}}</td>
 		<td>{{(($pac->id_ficha_tecnica) ? (($pac->fichaTecnica->aprobada) ? ("Aprobada (".
 		date('d/m/Y', strtotime($pac->fichaTecnica->updated_at)).")") : ("En diseño (".
