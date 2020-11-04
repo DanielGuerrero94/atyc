@@ -488,8 +488,10 @@
 		return ejecutarCursoButton(id_curso) + reprogramarCursoButton(id_curso) + desactivarCursoButton(id_curso);
 	}
 
-	function acciones(estado, id_curso, created_at) {
+	function acciones(estado, id_curso, created_at, pac) {
 		buttons = seeButton(id_curso) + editButton(id_curso);
+
+		console.log(pac);
 
 		@if(Auth::user()->id_provincia === 25)
 			buttons += deleteButton(id_curso);
@@ -499,8 +501,14 @@
 		@endif
 
 		@if(isset($prefilters) && in_array(1, $prefilters))
-			if (estado != "Finalizado" && estado != "Desactivado")
+
+		if (pac.id_estado == 2 && estado != "Finalizado" && estado != "Desactivado") {
+			if (estado != "Planificado") {
 				buttons += cambiarEstadoCursoButtons(id_curso);
+			} else if (!pac.ficha_obligatoria) {
+				buttons += cambiarEstadoCursoButtons(id_curso);
+			}
+		}
 		@endif
 
 		return buttons;
@@ -659,9 +667,7 @@
 			{ title: 'Jurisdiccion', data: 'provincia.nombre', name: 'id_provincia'},
 			{ data: 'estado.nombre', name: 'id_estado', width: '20%',
 				render: function ( data, type, row, meta ) {
-					//return /*participantesLabel(row.alumnos_count) + */
-					return acciones(data, row.id_curso, row.created_at);
-					// return data;
+					return acciones(data, row.id_curso, row.created_at, row.pac);
 				},
 				orderable: false
 			}

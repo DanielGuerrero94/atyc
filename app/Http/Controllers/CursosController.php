@@ -522,8 +522,11 @@ class CursosController extends AbmController
             },
             'lineaEstrategica' => function ($query) {
                 return $query->withTrashed();
-            }])
-        //->withCount('alumnos')
+            },
+            'pac' => function ($query) {
+                return $query->withTrashed();
+            }
+        ])
         ->segunProvincia();
 
         foreach ($filtered as $key => $value) {

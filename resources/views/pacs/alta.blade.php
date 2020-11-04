@@ -319,7 +319,7 @@
         initialMoment = moment.utc(inicial, 'DD/MM/YYYY');
         finalMoment = moment.utc(final, 'DD/MM/YYYY');
 
-        correctDates = initialMoment.isBefore(finalMoment);
+        correctDates = initialMoment.isSameOrBefore(finalMoment);
         if(!correctDates) {
           ($('#form-alta #ediciones-tab #'+i)).next("p").remove();
           text = '<p style="color: #dd4b39; font-weight:bold; padding-left:2rem;"> La fecha inicial debe ser anterior a la fecha final </p>';

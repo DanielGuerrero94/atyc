@@ -142,6 +142,8 @@
                   <table id="ficha_tecnica-table" class="table table-hover">
                   </table>
                 </div>
+                <div class="row" id="ficha-obligatoria" data-ficha-obligatoria-id="{{$pac->ficha_obligatoria}}">
+                </div>
               </div>
             </div>
             <div class="tab-pane" id="alcance">
@@ -561,8 +563,16 @@
     @if(!isset($disabled))
       buttons += editarCursoButton(id_curso);
       
-      if (estado != "Finalizado" && estado != "Desactivado")
-        buttons += cambiarEstadoCursoButtons(id_curso);
+      let estadoPac = $('#estados-tab #estados-row').data("estados-id");
+      let fichaObligatoria = $('#estados-tab #ficha-obligatoria').data("ficha-obligatoria-id");
+
+      if (estadoPac.id_estado == 2 && estado != "Finalizado" && estado != "Desactivado") {
+        if (estado != "Planificado") {
+          buttons += cambiarEstadoCursoButtons(id_curso);
+        } else if (!fichaObligatoria) {
+          buttons += cambiarEstadoCursoButtons(id_curso);
+        }
+      }
 
     @endif
 
@@ -1173,14 +1183,15 @@
     let cambiosEstado = $('#estados-tab #cambios-estados').data("cambios-estado-id");
 
     rowEstado = $('#estados-tab #estados-row').children();
-    rowEstado.append(renderEstado(estado));
+    rowEstado.append(renderEstado(estado) + '<br><br>');
 
     nextRowCambiosEstado = $('#estados-tab #cambios-estados').next();
-    nextRowCambiosEstado.before(renderCambiosEstado(cambiosEstado));
-
-    @if(Auth::user()->isAdmin())
+    
+    @if(!isset($disabled) && Auth::user()->isAdmin())
       nextRowCambiosEstado.before(estadoButtons(estado));
     @endif
+
+    nextRowCambiosEstado.before(renderCambiosEstado(cambiosEstado));
   }
 
   function renderCambiosEstado(cambiosEstado) {
@@ -1315,14 +1326,12 @@
       default:
         return null;
     }
-    let end = '<br>';
-    return start + middle + end;
+    return start + middle;
   }
 
   //Comportamiento de los cambios de estado
   function estadosAccionBehaviour() {
     aprobarAccionBehaviour();
-    console.log("aprobar");
     rechazarAccionBehaviour();
   }
 
@@ -1376,6 +1385,7 @@
               success: function(data){
                 console.log("Se aprobó la acción: "+id);
                 alert("Se aprobó la acción");
+                location.reload();
               },
               error: function (data) {
                 console.log('Hubo un error.');
@@ -1442,6 +1452,7 @@
               success: function(data){
                 console.log("Se rechazó la acción: "+id);
                 alert("Se rechazó la acción");
+                location.reload();
               },
               error: function (data) {
                 console.log('Hubo un error.');
@@ -1500,6 +1511,34 @@
     	}
     });
   }
+
+
+  //Validaciones de las fechas de ediciones nuevas
+  function validateDates() {
+      let i = 1
+      let inicial = $('#form-modificacion #ediciones-tab #fecha_inicio_'+i).val();
+      let final = $('#form-modificacion #ediciones-tab #fecha_final_'+i).val();
+      flag = true;
+  
+      while(inicial != undefined && inicial !="" && final != undefined && final !="") {
+        initialMoment = moment.utc(inicial, 'DD/MM/YYYY');
+        finalMoment = moment.utc(final, 'DD/MM/YYYY');
+
+        correctDates = initialMoment.isSameOrBefore(finalMoment);
+        if(!correctDates) {
+          ($('#form-modificacion #ediciones-tab #'+i)).next("p").remove();
+          text = '<p style="color: #dd4b39; font-weight:bold; padding-left:2rem;"> La fecha inicial debe ser anterior a la fecha final </p>';
+          ($('#form-modificacion #ediciones-tab #'+i)).after(text);
+          flag = false;
+        } else {
+          ($('#form-modificacion #ediciones-tab #'+i)).next("p").remove();
+        }
+        i++;
+        inicial = $('#form-modificacion #ediciones-tab #fecha_inicio_'+i).val();
+        final = $('#form-modificacion #ediciones-tab #fecha_final_'+i).val();
+      }
+      return flag;
+    }
 
   //Validaciones de los valores nuevos
   function newValidationMethods() {
@@ -1604,7 +1643,7 @@
     $('.container-fluid').on('click','#modificar',function() {  
       $('.container-fluid #form-modificacion .nav-tabs').children().first().children().click();
 
-      if($('#modificacion-pac #form-modificacion').valid()){
+      if($('#modificacion-pac #form-modificacion').valid() && validateDates()){
         $('.container-fluid #form-modificacion').submit(); 
       }else{
         alert('Hay campos que no cumplen con la validacion.');
