@@ -128,12 +128,20 @@
             </div>
             <div class="tab-pane" id="estados-tab">
               <div class="row" id="estados-row" data-estados-id="{{$pac->estado}}">
-                <div class="col-xs-18 col-md-9">
-                  <span class="col-md-2 col-xs-2"><b>Estado Acción: </b></span>
+                <div style="padding-left: 1.8em; padding-top: 1.8em;">
+                  <table id="estado-table" class="table table-hover">
+                  </table>
                 </div>
               </div>
-              <div class="row" id="cambios-estados" data-cambios-estado-id="{{$pac->cambiosEstado()->with(['estadoAnterior','estadoNuevo'])->orderBy('created_at', 'desc')->get()}}">
+              <br>
+              <div class="row" id="cambios-estados">
+                <div style="padding-left: 1.8em; padding-top: 1.8em;">
+                  <table id="cambios-estados-table" class="table table-hover">
+                  </table>
+                </div>  
               </div>
+              <br>
+              <br>
               <div class="row">
                 <div class="col-xs-12 col-md-6">
                   <span class="col-md-4 col-xs-3"><b>Ficha Técnica</b></span>
@@ -222,9 +230,11 @@
 		              </table>
               </div>
               <br>
+              @if(!isset($disabled))
               <div class="row" style="padding-left: 1.5em;">
                 <div class="btn btn-info agregar_ediciones" id="agregar_ediciones" title="Agregar Ediciones"> <i class="fa fa-plus" aria-hidden="true"></i> Agregar Ediciones</div>
               </div>
+              @endif
             </div>
           </div>
           <div class="box-body">
@@ -1076,6 +1086,92 @@
 	  @endif
   }
 
+  //Datatable Estado de la Pac
+  function tableEstado() {
+    var id_pac = $('.tab-content #general').data('id');
+
+    let datatable = $('#estado-table').DataTable({
+      destroy: true,
+      responsive: true,
+      searching: false,
+      paginate: false,
+      info: false,
+      ajax: "{{url('/pacs')}}" + "/" + id_pac + "/tablaEstado",
+      columns: [
+        { title: 'Estado', data: 'estado', defaultContent: 'No tiene estado', name: 'id_estado',
+          render: function(data) {
+            return renderEstado(data);
+          },
+          orderable: false
+        },
+        { title: 'Acciones', data: 'estado', defaultContent: '-', name: 'id_estado',
+          render: function(data) {
+            return estadoButtons(data);
+          },
+          orderable: false
+        }
+      ]
+    });
+
+    if (datatable) {
+      let title =
+      `<div class="row">
+        <span class="col-md-5 col-xs-4"><b>Estado de Acción</b></span>
+      </div>`;
+
+      $('#estado-table').parent().parent().before(title);
+    }
+  }
+
+  //Datatable Estados de la Pac
+  function tableCambiosEstados() {
+    var id_pac = $('.tab-content #general').data('id');
+
+    let datatable = $('#cambios-estados-table').DataTable({
+      destroy: true,
+      responsive: true,
+      searching: false,
+      paginate: false,
+      info: false,
+      order: [ 2 , 'desc'],
+      ajax: "{{url('/pacs')}}" + "/" + id_pac + "/tablaCambiosEstados",
+      columns: [
+        { title: 'Estado Anterior', data: 'estado_anterior', defaultContent: 'No tiene estado anterior', name: 'id_estado_anterior',
+          render: function(data) {
+            return renderEstado(data);
+          },
+          orderable: false, width: '15%'
+        },
+        { title: 'Estado Nuevo', data: 'estado_nuevo', defaultContent: 'No tiene estado nuevo', name: 'id_estado_nuevo',
+          render: function(data) {
+            return renderEstado(data);
+          },
+          orderable: false, width: '15%'
+        },
+        { title: 'Fecha', data: 'created_at', defaultContent: '-',
+          render: function(data) {
+            if (data) {
+      				return moment(data).format('DD/MM/YYYY');
+            }
+          },
+          orderable: false, width: '15%'
+        },
+        { title: 'Mensaje', data: 'mensaje', defaultContent: '-', orderable: false, width: '50%' }
+      ]
+    });
+
+    if (datatable) {
+      let title =
+      `<div class="row">
+        <span class="col-md-5 col-xs-4"><b>Historial de Estados de Acción</b></span>
+      </div>`;
+
+      $('#cambios-estados-table').parent().parent().before(title);
+    }
+
+    return datatable;
+  }
+
   //Datatable Ficha Tecnica
   function tableFichaTecnica() {
     var id_pac = $('.tab-content #general').data('id');
@@ -1177,100 +1273,21 @@
     });
   }
 
-  //Arma la vista del estado de la pac y las acciones disponibles
-  function estadosAccionRender() {
-    let estado = $('#estados-tab #estados-row').data("estados-id");
-    let cambiosEstado = $('#estados-tab #cambios-estados').data("cambios-estado-id");
-
-    rowEstado = $('#estados-tab #estados-row').children();
-    rowEstado.append(renderEstado(estado) + '<br><br>');
-
-    nextRowCambiosEstado = $('#estados-tab #cambios-estados').next();
-    
-    @if(!isset($disabled) && Auth::user()->isAdmin())
-      nextRowCambiosEstado.before(estadoButtons(estado));
-    @endif
-
-    nextRowCambiosEstado.before(renderCambiosEstado(cambiosEstado));
-  }
-
-  function renderCambiosEstado(cambiosEstado) {
-    if (cambiosEstado == null) {
-      return null;
-    }
-
-    let start =
-    `<br>
-    <div class="row" style="padding-left:1.5rem; line-height:3rem;">
-      <span class="col-md-5 col-xs-4"><b>Historial de Estados de Acción</b></span>`;
-
-    let middle = '';
-    for (var i in cambiosEstado) {
-      middle += 
-      `<div class="row" style="padding-left:1.5rem;">
-        <div class="col-xs-18 col-md-9">
-          <span class="col-md-1 col-xs-1"><b>Cambio:</b></span>
-          ${renderEstado(cambiosEstado[i]['estado_anterior'])}
-          <span class="col-md-1 col-xs-1" style="width: 4%; margin-top:0.8rem; margin-left:-4.2rem;">${iconFA({icon: 'fa-arrow-right'})}</span>
-          ${renderEstado(cambiosEstado[i]['estado_nuevo'])}
-        </div>
-      </div>
-      <div class="row" style="padding-left:1.5rem;">
-        <div class="col-xs-18 col-md-9">
-          <span class="col-md-1 col-xs-1"><b>Fecha: </b></span>
-          <span class="col-md-2 col-xs-2">${moment(cambiosEstado[i]['created_at']).format('DD/MM/YYYY')}</span>
-        </div>
-      </div>`;
-      
-      if(cambiosEstado[i]['mensaje']) {
-        middle +=
-        `<div class="row" style="padding-left:1.5rem;">
-          <div class="col-xs-18 col-md-9">
-            <span class="col-md-4 col-xs-3"><b>Mensaje:</b></span>
-          </div>
-        </div>
-        <div class="row" style="padding-left:1.5rem;">
-          <div class="col-xs-18 col-md-9">
-            <span class="col-xs-18 col-md-9">${cambiosEstado[i]['mensaje']}</span>
-          </div>
-        </div>
-        <br>`;
-      } else {
-        middle += '<br>';
-      }
-    }
-
-    let end =
-    `</div>`;
-
-    return start + middle + end;
-  }
-
   function renderEstado(estado) {
-    text = '<span class="col-md-3 col-xs-3">';
     if (estado == null) {
-			text += 'No tiene estado  ' + iconFA({icon:'fa-question', color:'#6C757D', titulo:'No tiene estado'}) + '</span>';
-      return text;
+			return 'No tiene estado  ' + iconFA({icon:'fa-question', color:'#6C757D', titulo:'No tiene estado'});
 		}
 
-    text += estado.nombre + '  ';
 		switch(estado['id_estado']) {
 			case 1:
-			  text += iconFA({icon:'fa-minus-square', color:'#FFC107', titulo: estado.nombre});
-        break;
+			  return estado.nombre + ' ' + iconFA({icon:'fa-minus-square', color:'#FFC107', titulo: estado.nombre});
 			case 2:
-			  text += iconFA({icon:'fa-check-square', color:'#28A745', titulo: estado.nombre});
-        break;
+        return estado.nombre + ' ' + iconFA({icon:'fa-check-square', color:'#28A745', titulo: estado.nombre});
 			case 3:
-        text += iconFA({icon:'fa-window-close', color:'#DC3545', titulo: estado.nombre});
-        break;
+        return estado.nombre + ' ' + iconFA({icon:'fa-window-close', color:'#DC3545', titulo: estado.nombre});
 			default:
-        text += '- Estado desconocido  ' + iconFA({icon:'fa-question', color:'#6C757D', titulo: estado.nombre + ' - Estado desconocido'});
+        return 'Estado desconocido  ' + iconFA({icon:'fa-question', color:'#6C757D', titulo: estado.nombre + ' - Estado desconocido'});
 		}
-
-    text += '</span>';
-
-    return text;
   }
 
   function aprobarAccionButton() {
@@ -1286,51 +1303,26 @@
       return null;
     }
 
-    let start =
-    `<div class="row" id="buttons-estados">
-      <div class="col-xs-18 col-md-9">
-        <span class="col-md-2 col-xs-2"><b>Cambiar Estado: </b></span>
-      </div>
-    </div>
-    <br>`;
-    
-    let middle = '';
-    switch (estado['id_estado']) {
-      case 1:
-		    middle +=
-        `<div class="row" style="padding-left: 1.5em;">
-          <div class="col-xs-4 col-md-2">
-          ${aprobarAccionButton()}
-          </div>
-          <div class="col-xs-4 col-md-2">
-          ${rechazarAccionButton()}
-          </div>
-        </div>`;
-        break;
-      case 2:
-        middle +=
-        `<div class="row" style="padding-left: 1.5em;">
-          <div class="col-xs-4 col-md-2">
-          ${rechazarAccionButton()}
-          </div>
-        </div>`;
-        break;
-      case 3:
-        middle +=
-        `<div class="row" style="padding-left: 1.5em;">
-          <div class="col-xs-4 col-md-2">
-          ${aprobarAccionButton()}
-          </div>
-        </div>`;
-        break;
-      default:
-        return null;
-    }
-    return start + middle;
+    @if(Auth::user()->isAdmin())
+      start = '<span class="col-md-3 col-xs-3">';
+      end = '</span>';
+      switch (estado['id_estado']) {
+        case 1:
+          return start + aprobarAccionButton() + end + start + rechazarAccionButton() + end;
+        case 2:
+          return start + rechazarAccionButton() + end;
+        case 3:
+          return start + aprobarAccionButton() + end;
+        default:
+          return null;
+      }
+    @endif
+
+    return null;
   }
 
   //Comportamiento de los cambios de estado
-  function estadosAccionBehaviour() {
+  function estadosBehaviour() {
     aprobarAccionBehaviour();
     rechazarAccionBehaviour();
   }
@@ -1385,10 +1377,11 @@
               success: function(data){
                 console.log("Se aprobó la acción: "+id);
                 alert("Se aprobó la acción");
-                location.reload();
+                $('#estado-table').DataTable().clear().draw();
+                $('#cambios-estados-table').DataTable().clear().draw();
               },
               error: function (data) {
-                console.log('Hubo un error.');
+                alert("Hubo un error");
                 console.log(data);
               }
             });
@@ -1452,10 +1445,11 @@
               success: function(data){
                 console.log("Se rechazó la acción: "+id);
                 alert("Se rechazó la acción");
-                location.reload();
+                $('#estado-table').DataTable().clear().draw();
+                $('#cambios-estados-table').DataTable().clear().draw();
               },
               error: function (data) {
-                console.log('Hubo un error.');
+                alert("Hubo un error");
                 console.log(data);
               }
             });
@@ -1713,15 +1707,15 @@
     inicializarTypeahead();
     disableSeeButtons();
 
+    tableEstado();
+    tableCambiosEstados();
     tableFichaTecnica();
     tableAcciones();
     adjustDatatablesView();
 
+    estadosBehaviour();
     fichaTecnicaBehaviour();
     accionesBehaviour();
     modificacionesBehaviour();
-
-    estadosAccionRender();
-    estadosAccionBehaviour();
 	});
 </script>

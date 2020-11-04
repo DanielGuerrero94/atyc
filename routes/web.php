@@ -201,6 +201,8 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::post('pacs', 'PacController@store');
 
     Route::put('pacs/{id}', 'PacController@update');
+    Route::get('pacs/{id_pac}/tablaEstado', 'PacController@getTablaEstado');
+    Route::get('pacs/{id_pac}/tablaCambiosEstados', 'PacController@getTablaCambiosEstados');
     Route::put('pacs/{id}/aprobar', 'PacController@aprobarAccion');
     Route::put('pacs/{id}/rechazar', 'PacController@rechazarAccion');
 

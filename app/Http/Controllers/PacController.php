@@ -971,4 +971,25 @@ class PacController extends AbmController
         
         return Datatables::of($cursos)->make(true);
     }
+
+    public function getTablaEstado(Request $request, $id_pac)
+    {
+        $pac = Pac::with('estado')
+            ->where('id_pac', $id_pac);
+        
+        return Datatables::of($pac)->make(true);
+    }
+
+    public function getTablaCambiosEstados(Request $request, $id_pac)
+    {
+        $pac = Pac::with('cambiosEstado')
+            ->where('id_pac', $id_pac)
+            ->firstOrFail()
+            ->cambiosEstado()
+            ->with(['estadoAnterior','estadoNuevo'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return Datatables::of($pac)->make(true);
+    }
 }
