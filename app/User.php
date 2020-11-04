@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->id_provincia == 25;
     }
 
+    public function isAdmin()
+    {
+        return $this->roles->contains('id_role', 2);
+    }
+
     public function tieneRol($role) {
         $user = Auth::user();
         return $this->whereHas('roles', function ($query) use ($role) 

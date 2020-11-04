@@ -1,7 +1,7 @@
 @extends('layouts.adminlte')
 @section('content')
-@if(isset($response))
-  <?php die($response) ?>
+@if(isset($error))
+  <?php dd($error) ?>
 @endif
 <div class="container-fluid">
   <div class="row">
@@ -17,6 +17,9 @@
           <ul class="nav nav-tabs">
             <li id="tab-pac" class="active">
               <a href="#general" data-toggle="tab">General</a>
+            </li>
+            <li id="tab-estados">
+              <a href="#estados-tab" data-toggle="tab">Estados</a>
             </li>
             <li id="tab-alcance">
               <a href="#alcance" data-toggle="tab">Alcance</a>
@@ -122,11 +125,23 @@
                 </div>
               </div>
               <br>
-              <div class="row">
-              <div style="padding-left: 2em; padding-top: 2em;">
-                <table id="ficha_tecnica-table" class="table table-hover">
-		            </table>
+            </div>
+            <div class="tab-pane" id="estados-tab">
+              <div class="row" id="estados-row" data-estados-id="{{$pac->estado}}">
+                <div class="col-xs-18 col-md-9">
+                  <span class="col-md-2 col-xs-2"><b>Estado Acción: </b></span>
+                </div>
               </div>
+              <div class="row" id="cambios-estados" data-cambios-estado-id="{{$pac->cambiosEstado()->with(['estadoAnterior','estadoNuevo'])->orderBy('created_at', 'desc')->get()}}">
+              </div>
+              <div class="row">
+                <div class="col-xs-12 col-md-6">
+                  <span class="col-md-4 col-xs-3"><b>Ficha Técnica</b></span>
+                </div>
+                <div style="padding-left: 1.8em; padding-top: 1.8em;">
+                  <table id="ficha_tecnica-table" class="table table-hover">
+                  </table>
+                </div>
               </div>
             </div>
             <div class="tab-pane" id="alcance">
@@ -294,7 +309,7 @@
               $('#ficha_tecnica-table').DataTable().clear().draw();
             },
             error: function (data) {
-              console.log('Hubo un error.');
+              alert("Hubo un error al cargar la ficha técnica")
               console.log(data);
             }
           });
@@ -418,9 +433,6 @@
 		$(".container-fluid").on("change", "#upload-ficha_tecnica input", function(event) {
 			form = $(this).parent().parent();
 			data = new FormData(form[0]);
-			for (var pair of data.entries()) {
-                console.log(pair[0]+ ', ' + pair[1]); 
-            }
 			id_pac = form.parent().find(".upload-ficha_tecnica").data("id");
 			$.ajax({
 				url: "{{url('pacs')}}" + "/" + id_pac,
@@ -450,9 +462,6 @@
 			form = $(this).parent().parent();
 			data = new FormData(form[0]);
 			id_ficha = form.parent().find(".update-ficha_tecnica").data("id");			
-      for (var pair of data.entries()) {
-        console.log(pair[0]+ ', ' + pair[1]); 
-      }
 			$.ajax({
 				url: "{{url('pacs/fichas_tecnicas')}}" + "/" + id_ficha,
 				type: 'post',
@@ -763,8 +772,6 @@
       }
     ];
 
-    console.log(data);
-    
     return data;
   }
 
@@ -910,8 +917,6 @@
       }
     ];
 
-    console.log(data);
-    
     return data;
   }
 
@@ -1069,6 +1074,8 @@
       destroy: true,
       responsive: true,
       searching: false,
+      paginate: false,
+      info: false,
       ajax: "{{url('/pacs')}}" + "/" + id_pac + "/tablaFicha",
       columns: [
         { title: 'Archivo', data: 'ficha_tecnica.original', defaultContent: '<b>No subió Ficha Técnica</b>', name: 'id_ficha_tecnica'},
@@ -1159,6 +1166,318 @@
         $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
     });
   }
+
+  //Arma la vista del estado de la pac y las acciones disponibles
+  function estadosAccionRender() {
+    let estado = $('#estados-tab #estados-row').data("estados-id");
+    let cambiosEstado = $('#estados-tab #cambios-estados').data("cambios-estado-id");
+
+    rowEstado = $('#estados-tab #estados-row').children();
+    rowEstado.append(renderEstado(estado));
+
+    nextRowCambiosEstado = $('#estados-tab #cambios-estados').next();
+    nextRowCambiosEstado.before(renderCambiosEstado(cambiosEstado));
+
+    @if(Auth::user()->isAdmin())
+      nextRowCambiosEstado.before(estadoButtons(estado));
+    @endif
+  }
+
+  function renderCambiosEstado(cambiosEstado) {
+    if (cambiosEstado == null) {
+      return null;
+    }
+
+    let start =
+    `<br>
+    <div class="row" style="padding-left:1.5rem; line-height:3rem;">
+      <span class="col-md-5 col-xs-4"><b>Historial de Estados de Acción</b></span>`;
+
+    let middle = '';
+    for (var i in cambiosEstado) {
+      middle += 
+      `<div class="row" style="padding-left:1.5rem;">
+        <div class="col-xs-18 col-md-9">
+          <span class="col-md-1 col-xs-1"><b>Cambio:</b></span>
+          ${renderEstado(cambiosEstado[i]['estado_anterior'])}
+          <span class="col-md-1 col-xs-1" style="width: 4%; margin-top:0.8rem; margin-left:-4.2rem;">${iconFA({icon: 'fa-arrow-right'})}</span>
+          ${renderEstado(cambiosEstado[i]['estado_nuevo'])}
+        </div>
+      </div>
+      <div class="row" style="padding-left:1.5rem;">
+        <div class="col-xs-18 col-md-9">
+          <span class="col-md-1 col-xs-1"><b>Fecha: </b></span>
+          <span class="col-md-2 col-xs-2">${moment(cambiosEstado[i]['created_at']).format('DD/MM/YYYY')}</span>
+        </div>
+      </div>`;
+      
+      if(cambiosEstado[i]['mensaje']) {
+        middle +=
+        `<div class="row" style="padding-left:1.5rem;">
+          <div class="col-xs-18 col-md-9">
+            <span class="col-md-4 col-xs-3"><b>Mensaje:</b></span>
+          </div>
+        </div>
+        <div class="row" style="padding-left:1.5rem;">
+          <div class="col-xs-18 col-md-9">
+            <span class="col-xs-18 col-md-9">${cambiosEstado[i]['mensaje']}</span>
+          </div>
+        </div>
+        <br>`;
+      } else {
+        middle += '<br>';
+      }
+    }
+
+    let end =
+    `</div>`;
+
+    return start + middle + end;
+  }
+
+  function renderEstado(estado) {
+    text = '<span class="col-md-3 col-xs-3">';
+    if (estado == null) {
+			text += 'No tiene estado  ' + iconFA({icon:'fa-question', color:'#6C757D', titulo:'No tiene estado'}) + '</span>';
+      return text;
+		}
+
+    text += estado.nombre + '  ';
+		switch(estado['id_estado']) {
+			case 1:
+			  text += iconFA({icon:'fa-minus-square', color:'#FFC107', titulo: estado.nombre});
+        break;
+			case 2:
+			  text += iconFA({icon:'fa-check-square', color:'#28A745', titulo: estado.nombre});
+        break;
+			case 3:
+        text += iconFA({icon:'fa-window-close', color:'#DC3545', titulo: estado.nombre});
+        break;
+			default:
+        text += '- Estado desconocido  ' + iconFA({icon:'fa-question', color:'#6C757D', titulo: estado.nombre + ' - Estado desconocido'});
+		}
+
+    text += '</span>';
+
+    return text;
+  }
+
+  function aprobarAccionButton() {
+   return '<a href="javascript:void(0)" data-id="{{$pac->id_pac}}" class="btn btn-success aprobar-pac">' + iconFA({ icon: "fa-check", color: "white", titulo: "Aprobar Acción" }) + 'Aprobar Acción </a>';
+  }
+
+  function rechazarAccionButton() {
+    return '<a href="javascript:void(0)" data-id="{{$pac->id_pac}}" class="btn btn-danger rechazar-pac">' + iconFA({ icon: "fa-close", color: "white", titulo: "Rechazar Acción" }) + 'Rechazar Acción </a>';
+  }
+  
+  function estadoButtons(estado) {
+    if (estado == null) {
+      return null;
+    }
+
+    let start =
+    `<div class="row" id="buttons-estados">
+      <div class="col-xs-18 col-md-9">
+        <span class="col-md-2 col-xs-2"><b>Cambiar Estado: </b></span>
+      </div>
+    </div>
+    <br>`;
+    
+    let middle = '';
+    switch (estado['id_estado']) {
+      case 1:
+		    middle +=
+        `<div class="row" style="padding-left: 1.5em;">
+          <div class="col-xs-4 col-md-2">
+          ${aprobarAccionButton()}
+          </div>
+          <div class="col-xs-4 col-md-2">
+          ${rechazarAccionButton()}
+          </div>
+        </div>`;
+        break;
+      case 2:
+        middle +=
+        `<div class="row" style="padding-left: 1.5em;">
+          <div class="col-xs-4 col-md-2">
+          ${rechazarAccionButton()}
+          </div>
+        </div>`;
+        break;
+      case 3:
+        middle +=
+        `<div class="row" style="padding-left: 1.5em;">
+          <div class="col-xs-4 col-md-2">
+          ${aprobarAccionButton()}
+          </div>
+        </div>`;
+        break;
+      default:
+        return null;
+    }
+    let end = '<br>';
+    return start + middle + end;
+  }
+
+  //Comportamiento de los cambios de estado
+  function estadosAccionBehaviour() {
+    aprobarAccionBehaviour();
+    console.log("aprobar");
+    rechazarAccionBehaviour();
+  }
+
+  //Comportamiento de aprobación de una acción
+  function aprobarAccionBehaviour() {
+    $('.container-fluid').on("click",".aprobar-pac", function() {
+      var id = $(this).data('id');
+      
+      jQuery('<div/>', {
+        id: 'dialogAprobar',
+        text: ''
+      }).appendTo('.container-fluid');
+
+      $("#dialogAprobar").dialog({
+        title: "Aprobar una Acción",
+        show: {
+          effect: "fold"
+        },
+        hide: {
+          effect: "fade"
+        },
+        modal: true,
+        width : 400,
+        height : 300,
+        closeOnEscape: true,
+        resizable: false,
+        dialogClass: "alert",
+        open: function () {
+          jQuery('<p/>', {
+            id: 'dialogAprobar',
+            text: "Mensaje adicional a la aprobación de la Acción"
+          }).appendTo('#dialogAprobar');
+
+          jQuery('<textarea/>', {
+            name: "mensaje",
+            id: "mensaje",
+            placeholder: "Mensaje optativo."
+          }).appendTo('#dialogAprobar');
+        },
+        close: function() {
+          removeDialog($(this), 'dialogAprobar');
+        },
+
+        buttons :
+        {
+          "Aceptar" : function () {
+            $.ajax ({
+              url: "{{url('pacs')}}"+'/'+id+'/aprobar',
+              method: 'put',
+              data: getDataCambioEstadoAccion(),
+              success: function(data){
+                console.log("Se aprobó la acción: "+id);
+                alert("Se aprobó la acción");
+              },
+              error: function (data) {
+                console.log('Hubo un error.');
+                console.log(data);
+              }
+            });
+            removeDialog($(this), 'dialogAprobar');
+          },
+
+          "Cancelar" : function () {
+            removeDialog($(this), 'dialogAprobar');
+          }
+        }
+      });
+		});
+  }
+
+  function rechazarAccionBehaviour() {
+    $('.container-fluid').on("click",".rechazar-pac", function() {
+      var id = $(this).data('id');
+      
+      jQuery('<div/>', {
+        id: 'dialogRechazar',
+        text: ''
+      }).appendTo('.container-fluid');
+
+      $("#dialogRechazar").dialog({
+        title: "Aprobar una Acción",
+        show: {
+          effect: "fold"
+        },
+        hide: {
+          effect: "fade"
+        },
+        modal: true,
+        width : 400,
+        height : 300,
+        closeOnEscape: true,
+        resizable: false,
+        dialogClass: "alert",
+        open: function () {
+          jQuery('<p/>', {
+            id: 'dialogRechazar',
+            text: "Mensaje adicional al rechazo de la Acción"
+          }).appendTo('#dialogRechazar');
+
+          jQuery('<textarea/>', {
+            name: "mensaje",
+            id: "mensaje",
+            placeholder: "Mensaje optativo."
+          }).appendTo('#dialogRechazar');
+        },
+        close: function() {
+          removeDialog($(this), 'dialogRechazar');
+        },
+
+        buttons :
+        {
+          "Aceptar" : function () {
+            $.ajax ({
+              url: "{{url('pacs')}}"+'/'+id+'/rechazar',
+              method: 'put',
+              data: getDataCambioEstadoAccion(),
+              success: function(data){
+                console.log("Se rechazó la acción: "+id);
+                alert("Se rechazó la acción");
+              },
+              error: function (data) {
+                console.log('Hubo un error.');
+                console.log(data);
+              }
+            });
+            removeDialog($(this), 'dialogRechazar');
+          },
+
+          "Cancelar" : function () {
+            removeDialog($(this), 'dialogRechazar');
+          }
+        }
+      });
+		});
+  }
+
+  //Selecciona los inputs de un cambio de Estado de una Acción
+  function getDataCambioEstadoAccion() {
+    var data =
+    [
+      {
+        name: '_token',
+        value: $('.container-fluid input').first().val()
+      },
+      {
+        name: 'mensaje',
+        value: $('#mensaje').val()
+      },
+    ];
+
+    console.log(data);
+
+    return data;
+  }
+
 
   //Inicializa el TypeAhead del nombre del Pac
   function inicializarTypeahead() {
@@ -1269,12 +1588,10 @@
           url : "{{url('pacs')}}" + '/' + "{{$pac->id_pac}}",
           data : getInput(),
           success : function(data){
-            console.log(data);
             alert("Se actualiza la pac.");
             location.reload();
           },
           error : function(data){
-            console.log(data);
             alert("No se pudo modificar la pac.");
           }
         });
@@ -1343,14 +1660,11 @@
       value: ids_componentes
     }];
 
-    console.log(selected);
-
     return selected;
   }
 
   function getInput() {
     var input = $.merge($('#form-modificacion').serializeArray(),getSelected());
-    console.log(input);
 
     return input;
   }
@@ -1363,9 +1677,12 @@
     tableFichaTecnica();
     tableAcciones();
     adjustDatatablesView();
-    
+
     fichaTecnicaBehaviour();
     accionesBehaviour();
     modificacionesBehaviour();
+
+    estadosAccionRender();
+    estadosAccionBehaviour();
 	});
 </script>

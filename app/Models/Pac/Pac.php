@@ -143,6 +143,15 @@ class Pac extends Model
         );
     }
 
+    public function cambiosEstado()
+    {
+        return $this->hasMany(
+            PacCambioEstado::class,
+            'id_pac',
+            'id_pac'
+        );
+    }
+
     public function scopeSegunProvincia($query)
     {
         $id_provincia = Auth::user()->id_provincia;

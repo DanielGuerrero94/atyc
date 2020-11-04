@@ -12,6 +12,7 @@ use App\Models\Pac\Categoria;
 use App\Models\Pac\Responsable;
 use App\Models\Pac\FichaTecnica;
 use App\Models\Pac\PacEstado;
+use App\Models\Pac\PacCambioEstado;
 use App\Models\Cursos\Curso;
 use App\Models\Cursos\AreaTematica;
 use App\Models\Cursos\LineaEstrategica;
@@ -25,6 +26,7 @@ use Log;
 use Validator;
 use Datatables;
 use Excel;
+use Exception;
 use Carbon\Carbon;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -787,38 +789,108 @@ class PacController extends AbmController
 
     public function aprobarFichaTecnica($id_ficha)
     {
-        $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
-        $ficha_tecnica->aprobada = true;
-        $ficha_tecnica->save();
-
-        return response('Aprobada');
+        try {
+            $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
+            $ficha_tecnica->aprobada = true;
+            $ficha_tecnica->save();
+            
+            return response('Ficha Técnica Aprobada', 200);
+        } catch (Exception $e) {
+            return response("No se pudo hacer aprobar la fichá técnica por {$e->getMessage()}", 409);
+        }
     }
 
     public function desaprobarFichaTecnica($id_ficha)
     {
-        $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
-        $ficha_tecnica->aprobada = false;
-        $ficha_tecnica->save();
-
-        return response('Desaprobada');
+        try {
+            $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
+            $ficha_tecnica->aprobada = false;
+            $ficha_tecnica->save();
+            
+            return response('Ficha Técnica Desaprobada', 200);
+        } catch (Exception $e) {
+            return response("No se pudo hacer desaprobar la fichá técnica por {$e->getMessage()}", 409);
+        }
     }
 
     public function obligarFichaTecnica($id_pac)
     {
-        $pac = Pac::findOrFail($id_pac);
-        $pac->ficha_obligatoria = true;
-        $pac->save();
-
-        return response('Obligado');
+        try {
+            $pac = Pac::findOrFail($id_pac);
+            $pac->ficha_obligatoria = true;
+            $pac->save();
+    
+            return response('Ficha Técnica Obligatoria', 200);
+        } catch (Exception $e) {
+            return response("No se pudo hacer obligatoria la fichá técnica por {$e->getMessage()}", 409);
+        }
     }
 
     public function desobligarFichaTecnica($id_pac)
     {
-        $pac = Pac::findOrFail($id_pac);
-        $pac->ficha_obligatoria = false;
-        $pac->save();
+        try {
+            $pac = Pac::findOrFail($id_pac);
+            $pac->ficha_obligatoria = false;
+            $pac->save();
+            
+            return response('Ficha Técnica Optativa', 200);
+        } catch (Exception $e) {
+            return response("No se pudo hacer optativa la ficha técnica por {$e->getMessage()}", 409);
+        }
+    }
 
-        return response('Desobligado');
+    public function aprobarAccion(Request $request, $id_pac)
+    {
+        logger(json_encode($request));
+
+        $attributes = $request->all();
+        DB::beginTransaction();
+
+        try {
+            $pac = Pac::findOrFail($id_pac);
+
+            $pac->cambiosEstado()->create([
+                'mensaje'            => $attributes['mensaje'],
+                'id_estado_anterior' => $pac->id_estado,
+                'id_estado_nuevo'    => PacEstado::ACCION_APROBADA,
+            ]);
+
+            $pac->id_estado = PacEstado::ACCION_APROBADA;
+            $pac->save();
+            DB::commit();
+
+            return response("Acción aprobada", 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response("No se pudo aprobar la acción por {$e->getMessage()}", 409);
+        }
+    }
+
+    public function rechazarAccion(Request $request, $id_pac)
+    {
+        logger(json_encode($request));
+
+        $attributes = $request->all();
+        DB::beginTransaction();
+
+        try {
+            $pac = Pac::findOrFail($id_pac);
+
+            $pac->cambiosEstado()->create([
+                'mensaje'            => $attributes['mensaje'],
+                'id_estado_anterior' => $pac->id_estado,
+                'id_estado_nuevo'    => PacEstado::ACCION_RECHAZADA,
+            ]);
+    
+            $pac->id_estado = PacEstado::ACCION_RECHAZADA;
+            $pac->save();
+            DB::commit();
+
+            return response("Acción rechazar", 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response("No se pudo rechazar la acción por {$e->getMessage()}", 409);
+        }
     }
 
     public function see($id_pac)
@@ -853,13 +925,18 @@ class PacController extends AbmController
                 },
                 'estado' => function ($query) {
                     return $query->withTrashed();
-                }])
+                },
+                'fichaTecnica' => function ($query) {
+                    return $query->withTrashed();
+                },
+                'cambiosEstado'
+                ])
                 ->segunProvincia()
                 ->where('id_pac', $id_pac)->firstOrFail();
 
 		    return ['pac' => $pac];
 	    } catch (ModelNotFoundException $e) {
-		    return ['response' => response()->json(['success' => false, 'error' => $e->getMessage()])];
+		    return ['error' => "No se encontró a la Acción solicitada en la base de datos"];
 	    }
     }
 

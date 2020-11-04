@@ -299,6 +299,32 @@
 		return progress_bar;
 	}
 
+	function estadosPac(estado) {
+		if (estado == null) {
+			return iconoFontAwesome({icono: 'fa-question', color: '#6C757D', titulo: 'No tiene estado'});
+		}
+
+		switch(estado.id_estado) {
+			case 1:
+				return iconoFontAwesome({icono: 'fa-minus-square', color: '#FFC107', titulo: estado.nombre});
+			case 2:
+				return iconoFontAwesome({icono: 'fa-check-square', color: '#28A745', titulo: estado.nombre});
+			case 3:
+				return iconoFontAwesome({icono: 'fa-window-close', color: '#DC3545', titulo: estado.nombre});
+			default:
+				return iconoFontAwesome({icono: 'fa-question', color: '#6C757D', titulo: estado.nombre + ' - Estado desconocido'});
+		}
+	}
+
+	function concatenateMany(data) {
+		var concatenated = '';
+		for (var i in data) {
+			var r = data[i];
+			concatenated = concatenated + r.nombre + ', ';
+		}
+		return concatenated.slice(0, concatenated.length-2);
+	}
+
 	$(document).ready(function(){
 		
 		inicializarSelect2();
@@ -332,20 +358,7 @@
 				},
 				{ title: 'Estado', data: 'estado', name:'id_estado', defaultContent: '-',
 					render: function(data) {
-						if (data == null) {
-							return '<i class="fa fa-question text-secondary fa-lg" title="No tiene estado"></i>';
-						}
-
-						switch(data.id_estado) {
-							case 1:
-								return '<i class="fa fa-minus-square text-warning fa-lg" title="'+data.nombre+'"></i>';
-							case 2:
-								return '<i class="fa fa-check-square text-success fa-lg" title="'+data.nombre+'"></i>';
-							case 3:
-								return '<i class="fa fa-window-close text-danger fa-lg" title="'+data.nombre+'"></i>';
-							default:
-								return '<i class="fa fa-question text-secondary fa-lg" title="Estado desconocido"></i>';
-						}
+						return estadosPac(data);
 					}
 				},
 				{ title: 'Tipo de Accion', data: 'tipo_accion', name: 'id_linea_estrategica', defaultContent: '-',
@@ -370,24 +383,14 @@
 				{ title: 'Tematica/s', defaultContent: '-', name: 'id_tematica',
 					render: function ( data, type, row, meta)
 					{
-						var tematicas = '';
-						for (var i in row.tematicas) {
-							var r = row.tematicas[i];
-							tematicas = tematicas + r.nombre + ', ';
-						}
-						return tematicas.slice(0, tematicas.length-2);
+						return concatenateMany(row.tematicas);
 					},
 					orderable: false, width: '20%'
 				},
 				{ title: "Responsables", defaultContent: '-', name: 'id_responsable', 
 					render: function ( data, type, row, meta)
 					{
-						var responsables = '';
-						for (var i in row.responsables) {
-							var r = row.responsables[i];
-							responsables = responsables + r.nombre + ', ';
-						}
-						return responsables.slice(0, responsables.length-2);
+						return concatenateMany(row.responsables);
 					},
 					orderable: false
 				},
