@@ -31,6 +31,7 @@ class PacCambioEstado extends Model
         'id_pac',
         'id_estado_anterior',
         'id_estado_nuevo',
+        'id_user',
     ];
 
     /**
@@ -67,6 +68,15 @@ class PacCambioEstado extends Model
             PacEstado::class,
             'id_estado',
             'id_estado_anterior'
+        );
+    }
+
+    public function user()
+    {
+        return $this->hasOne(
+            'App\User',
+            'id_user',
+            'id_user'
         );
     }
 }

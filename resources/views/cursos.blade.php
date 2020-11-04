@@ -502,7 +502,7 @@
 
 		@if(isset($prefilters) && in_array(1, $prefilters))
 
-		if (pac.id_estado == 2 && estado != "Finalizado" && estado != "Desactivado") {
+		if (pac.id_estado == 3 && estado != "Finalizado" && estado != "Desactivado") {
 			if (estado != "Planificado") {
 				buttons += cambiarEstadoCursoButtons(id_curso);
 			} else if (!pac.ficha_obligatoria) {

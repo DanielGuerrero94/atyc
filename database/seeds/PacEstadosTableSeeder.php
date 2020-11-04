@@ -13,6 +13,12 @@ class PacEstadosTableSeeder extends Seeder
     public function run()
     {
         PacEstado::updateOrCreate([
+            'id_estado' => PacEstado::ACCION_NUEVA
+        ], [
+            'nombre'    => 'Acción Nueva',
+        ]);
+
+        PacEstado::updateOrCreate([
             'id_estado' => PacEstado::ACCION_EN_REVISION
         ], [
             'nombre'    => 'Acción en Revisión',

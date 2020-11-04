@@ -306,10 +306,12 @@
 
 		switch(estado.id_estado) {
 			case 1:
-				return iconoFontAwesome({icono: 'fa-minus-square', color: '#FFC107', titulo: estado.nombre});
+				return iconoFontAwesome({icono: 'fa-plus', color: '#007BFF', titulo: estado.nombre});
 			case 2:
-				return iconoFontAwesome({icono: 'fa-check-square', color: '#28A745', titulo: estado.nombre});
+				return iconoFontAwesome({icono: 'fa-minus-square', color: '#FFC107', titulo: estado.nombre});
 			case 3:
+				return iconoFontAwesome({icono: 'fa-check-square', color: '#28A745', titulo: estado.nombre});
+			case 4:
 				return iconoFontAwesome({icono: 'fa-window-close', color: '#DC3545', titulo: estado.nombre});
 			default:
 				return iconoFontAwesome({icono: 'fa-question', color: '#6C757D', titulo: estado.nombre + ' - Estado desconocido'});

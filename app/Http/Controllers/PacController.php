@@ -189,7 +189,7 @@ class PacController extends AbmController
     public function store(Request $request)
     {
         $data = $request->all();
-        $data = array_merge($data, ['id_estado' => PacEstado::ACCION_EN_REVISION]);
+        $data = array_merge($data, ['id_estado' => PacEstado::ACCION_NUEVA]);
         logger()->info('Quiere crear PAC con: '.json_encode($data));
         $v = Validator::make($data, $this->rules);
 
@@ -214,6 +214,7 @@ class PacController extends AbmController
             $this->cambiarEstadoCursos($pac->id_pac, 2);
         
         $this->setDisplayDate($pac);
+        $this->cambiarEstadoPac($pac->id_pac, PacEstado::ACCION_EN_REVISION);
 
         return $pac;
     }
@@ -847,16 +848,7 @@ class PacController extends AbmController
         DB::beginTransaction();
 
         try {
-            $pac = Pac::findOrFail($id_pac);
-
-            $pac->cambiosEstado()->create([
-                'mensaje'            => $attributes['mensaje'],
-                'id_estado_anterior' => $pac->id_estado,
-                'id_estado_nuevo'    => PacEstado::ACCION_APROBADA,
-            ]);
-
-            $pac->id_estado = PacEstado::ACCION_APROBADA;
-            $pac->save();
+            $this->cambiarEstadoPac($id_pac, PacEstado::ACCION_APROBADA, $attributes['mensaje']);
             DB::commit();
 
             return response("Acción aprobada", 200);
@@ -868,29 +860,36 @@ class PacController extends AbmController
 
     public function rechazarAccion(Request $request, $id_pac)
     {
-        logger(json_encode($request));
-
         $attributes = $request->all();
         DB::beginTransaction();
 
         try {
-            $pac = Pac::findOrFail($id_pac);
-
-            $pac->cambiosEstado()->create([
-                'mensaje'            => $attributes['mensaje'],
-                'id_estado_anterior' => $pac->id_estado,
-                'id_estado_nuevo'    => PacEstado::ACCION_RECHAZADA,
-            ]);
-    
-            $pac->id_estado = PacEstado::ACCION_RECHAZADA;
-            $pac->save();
+            $this->cambiarEstadoPac($id_pac, PacEstado::ACCION_RECHAZADA, $attributes['mensaje']);
             DB::commit();
 
-            return response("Acción rechazar", 200);
+            return response("Acción rechazada", 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response("No se pudo rechazar la acción por {$e->getMessage()}", 409);
         }
+    }
+
+    public function cambiarEstadoPac($id_pac, $estadoNuevo, $mensaje = null) {
+        $pac = Pac::findOrFail($id_pac);
+
+        if($mensaje == '') {
+            $mensaje = null;
+        }
+
+        $pac->cambiosEstado()->create([
+            'mensaje'            => $mensaje,
+            'id_estado_anterior' => $pac->id_estado,
+            'id_estado_nuevo'    => $estadoNuevo,
+            'id_user'            => Auth::user()->id_user
+        ]);
+
+        $pac->id_estado = $estadoNuevo;
+        $pac->save();
     }
 
     public function see($id_pac)
@@ -986,7 +985,7 @@ class PacController extends AbmController
             ->where('id_pac', $id_pac)
             ->firstOrFail()
             ->cambiosEstado()
-            ->with(['estadoAnterior','estadoNuevo'])
+            ->with(['estadoAnterior','estadoNuevo', 'user'])
             ->orderBy('created_at', 'desc')
             ->get();
         

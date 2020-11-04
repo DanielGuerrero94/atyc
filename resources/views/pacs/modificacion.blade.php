@@ -576,7 +576,7 @@
       let estadoPac = $('#estados-tab #estados-row').data("estados-id");
       let fichaObligatoria = $('#estados-tab #ficha-obligatoria').data("ficha-obligatoria-id");
 
-      if (estadoPac.id_estado == 2 && estado != "Finalizado" && estado != "Desactivado") {
+      if (estadoPac.id_estado == 3 && estado != "Finalizado" && estado != "Desactivado") {
         if (estado != "Planificado") {
           buttons += cambiarEstadoCursoButtons(id_curso);
         } else if (!fichaObligatoria) {
@@ -1156,7 +1156,15 @@
           },
           orderable: false, width: '15%'
         },
-        { title: 'Mensaje', data: 'mensaje', defaultContent: '-', orderable: false, width: '50%' }
+        { title: 'Usuario', data: 'user', defaultContent: '-', name: 'id_user',
+          render: function(data) {
+            if (data) {
+      				return data.name;
+            }
+          },
+          orderable: false, width: '15%'
+        },
+        { title: 'Mensaje', data: 'mensaje', defaultContent: '-', orderable: false, width: '40%' }
       ]
     });
 
@@ -1279,11 +1287,13 @@
 		}
 
 		switch(estado['id_estado']) {
-			case 1:
-			  return estado.nombre + ' ' + iconFA({icon:'fa-minus-square', color:'#FFC107', titulo: estado.nombre});
+      case 1:
+        return estado.nombre + ' ' + iconFA({icon:'fa-plus-square', color: '#007BFF', titulo: estado.nombre});
 			case 2:
-        return estado.nombre + ' ' + iconFA({icon:'fa-check-square', color:'#28A745', titulo: estado.nombre});
+			  return estado.nombre + ' ' + iconFA({icon:'fa-minus-square', color:'#FFC107', titulo: estado.nombre});
 			case 3:
+        return estado.nombre + ' ' + iconFA({icon:'fa-check-square', color:'#28A745', titulo: estado.nombre});
+			case 4:
         return estado.nombre + ' ' + iconFA({icon:'fa-window-close', color:'#DC3545', titulo: estado.nombre});
 			default:
         return 'Estado desconocido  ' + iconFA({icon:'fa-question', color:'#6C757D', titulo: estado.nombre + ' - Estado desconocido'});
@@ -1310,8 +1320,10 @@
         case 1:
           return start + aprobarAccionButton() + end + start + rechazarAccionButton() + end;
         case 2:
-          return start + rechazarAccionButton() + end;
+          return start + aprobarAccionButton() + end + start + rechazarAccionButton() + end;
         case 3:
+          return start + rechazarAccionButton() + end;
+        case 4:
           return start + aprobarAccionButton() + end;
         default:
           return null;

@@ -9,9 +9,10 @@ class PacEstado extends Model
 {
     use SoftDeletes;
 
-    const ACCION_EN_REVISION = 1;
-    const ACCION_APROBADA = 2;
-    const ACCION_RECHAZADA = 3;
+    const ACCION_NUEVA = 1;
+    const ACCION_EN_REVISION = 2;
+    const ACCION_APROBADA = 3;
+    const ACCION_RECHAZADA = 4;
 
     /**
      * The table associated with the model.
