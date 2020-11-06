@@ -9,7 +9,7 @@ use Auth;
 
 class Curso extends Model
 {
-    
+
     use SoftDeletes;
 
     /**

@@ -572,6 +572,7 @@
 
     @if(!isset($disabled))
       buttons += editarCursoButton(id_curso);
+    @endif
       
       let estadoPac = $('#estados-tab #estados-row').data("estados-id");
       let fichaObligatoria = $('#estados-tab #ficha-obligatoria').data("ficha-obligatoria-id");
@@ -583,8 +584,6 @@
           buttons += cambiarEstadoCursoButtons(id_curso);
         }
       }
-
-    @endif
 
     return buttons
   }
@@ -1391,6 +1390,7 @@
                 alert("Se aprobó la acción");
                 $('#estado-table').DataTable().clear().draw();
                 $('#cambios-estados-table').DataTable().clear().draw();
+                $('#ediciones-table').DataTable().clear().draw();
               },
               error: function (data) {
                 alert("Hubo un error");
@@ -1459,6 +1459,7 @@
                 alert("Se rechazó la acción");
                 $('#estado-table').DataTable().clear().draw();
                 $('#cambios-estados-table').DataTable().clear().draw();
+                $('#ediciones-table').DataTable().clear().draw();
               },
               error: function (data) {
                 alert("Hubo un error");
