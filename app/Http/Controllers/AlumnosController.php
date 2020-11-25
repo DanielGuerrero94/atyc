@@ -482,6 +482,7 @@ class AlumnosController extends ModelController
         $order_by = $r->order_by;
 
         $data = $this->queryLogica($r, $filtros, $order_by)->get();
+        logger()->debug("ALUMNO: ".json_encode($data->first()));
         //$query = $this->queryLogica($r, $filtros, $order_by);
 
         $path = "participantes_".date("Y-m-d_H:i:s");

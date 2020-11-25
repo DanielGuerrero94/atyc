@@ -1,7 +1,5 @@
 <?php
 
-Route::resource('calidad', 'CalidadController');
-
 /*
 |--------------------------------------------------------------------------
 | Test Routes
