@@ -562,10 +562,6 @@
     return '<a href="javascript:void(0)" data-id="'+id_curso+'" class="btn btn-circle desactivar_curso">' + iconFA({ icon: "fa-ban", color: "#B22222", titulo: "Desactivar" }) + '</a>';
   }
 
-  function cambiarEstadoCursoButtons(id_curso) {
-      return ejecutarCursoButton(id_curso) + reprogramarCursoButton(id_curso) + desactivarCursoButton(id_curso);
-  }
-
   //Acciones de Curso
   function accionesEdiciones(estado, id_curso) {
     buttons = verCursoButton(id_curso);
@@ -576,13 +572,15 @@
       
       let estadoPac = $('#estados-tab #estados-row').data("estados-id");
       let fichaObligatoria = $('#estados-tab #ficha-obligatoria').data("ficha-obligatoria-id");
-
-      if (estadoPac.id_estado == 3 && estado != "Finalizado" && estado != "Desactivado") {
-        if (estado != "Planificado") {
-          buttons += cambiarEstadoCursoButtons(id_curso);
-        } else if (!fichaObligatoria) {
-          buttons += cambiarEstadoCursoButtons(id_curso);
+      if (estado != "Finalizado" && estado != "Desactivado") {
+        if (estadoPac.id_estado == 3) {
+          if (estado != "Planificado") {
+            buttons += ejecutarCursoButton(id_curso);
+          } else if (!fichaObligatoria) {
+            buttons += ejecutarCursoButton(id_curso);
+          }
         }
+        buttons += reprogramarCursoButton(id_curso) + desactivarCursoButton(id_curso);
       }
 
     return buttons
