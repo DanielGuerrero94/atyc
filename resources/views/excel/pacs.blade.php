@@ -103,10 +103,10 @@ td {
         <td>
         {{$curso->edicion." - ".$curso->estado->nombre.". ".
 		((in_array($curso->estado->id_estado, [1,2,5,6])) ? 
-		("Fechas Planificadas:[".date('d/m', strtotime($curso->fecha_plan_inicial))." - ".
-        date('d/m', strtotime($curso->fecha_plan_final))."]") :
-		("Fechas Ejecución:[".($curso->fecha_ejec_inicial ? (date('d/m', strtotime($curso->fecha_ejec_inicial))." - ") : " ").
-        ($curso->fecha_ejec_final ? (date('d/m', strtotime($curso->fecha_ejec_final))) : " ")."]"))}}
+		("Fechas Planificadas:[".date('d/m/Y', strtotime($curso->fecha_plan_inicial))." - ".
+        date('d/m/Y', strtotime($curso->fecha_plan_final))."]") :
+		("Fechas Ejecución:[".($curso->fecha_ejec_inicial ? (date('d/m/Y', strtotime($curso->fecha_ejec_inicial))." - ") : " ").
+        ($curso->fecha_ejec_final ? (date('d/m/Y', strtotime($curso->fecha_ejec_final))) : " ")."]"))}}
         </td>
 		@endforeach
 	</tr>
