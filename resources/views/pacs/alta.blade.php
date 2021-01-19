@@ -362,9 +362,9 @@
         id_accion: {
           selecciono: true
         },
-        id_tematica: {
-          selecciono: true
-        },
+        // id_tematica: {
+        //   selecciono: true
+        // },
         id_provincia: {
           selecciono: true
         },
@@ -374,12 +374,12 @@
         id_responsable: {
           selecciono: true
         },
-        id_pauta: {
-          selecciono: true
-        },
-        id_componente: {
-          selecciono: true
-        },
+        // id_pauta: {
+        //   selecciono: true
+        // },
+        // id_componente: {
+        //   selecciono: true
+        // },
         ediciones: {
           required: true,
           number: true,

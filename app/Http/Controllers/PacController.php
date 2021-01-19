@@ -44,11 +44,11 @@ class PacController extends AbmController
         'ediciones' => 'required|numeric',
         'duracion' => 'required|numeric',
         'id_provincia' => 'required|numeric',
-        'ids_tematicas' => 'required',
+        // 'ids_tematicas' => 'required',
         'ids_destinatarios' => 'required',
         'ids_responsables' => 'required',
-        'ids_pautas' => 'required',
-        'ids_componentes' => 'required'
+        // 'ids_pautas' => 'required',
+        // 'ids_componentes' => 'required'
     ];
 
     /**
@@ -139,8 +139,10 @@ class PacController extends AbmController
             if($pac->id_ficha_tecnica)
                 $this->cambiarEstadoCursos($pac->id_pac, 2);
 
-            $tematicas = explode(',', $request->get('ids_tematicas'));
-            $curso->areasTematicas()->attach($tematicas);
+            if(!empty($request->get('ids_tematicas'))) {
+                $tematicas = explode(',', $request->get('ids_tematicas'));
+                $curso->areasTematicas()->attach($tematicas);
+            }
         }
 
         return response("{$i} Cursos creados");
@@ -148,20 +150,30 @@ class PacController extends AbmController
 
     public function attachPivotTables($pac, $request)
     {
-        $tematicas = explode(',', $request->get('ids_tematicas'));
-        $pac->tematicas()->attach($tematicas);
+        if(!empty($request->get('ids_tematicas'))) {
+            $tematicas = explode(',', $request->get('ids_tematicas'));
+            $pac->tematicas()->attach($tematicas);
+        }
 
-        $destinatarios = explode(',', $request->get('ids_destinatarios'));
-        $pac->destinatarios()->attach($destinatarios);
+        if(!empty($request->get('ids_destinatarios'))) {
+            $destinatarios = explode(',', $request->get('ids_destinatarios'));
+            $pac->destinatarios()->attach($destinatarios);
+        }
 
-        $responsables = explode(',', $request->get('ids_responsables'));
-        $pac->responsables()->attach($responsables);
+        if(!empty($request->get('ids_responsables'))) {
+            $responsables = explode(',', $request->get('ids_responsables'));
+            $pac->responsables()->attach($responsables);
+        }
 
-        $pautas = explode(',', $request->get('ids_pautas'));
-        $pac->pautas()->attach($pautas);
+        if(!empty($request->get('ids_pautas'))) {
+            $pautas = explode(',', $request->get('ids_pautas'));
+            $pac->pautas()->attach($pautas);
+        }
 
-        $componentes = explode(',', $request->get('ids_componentes'));
-        $pac->componentes()->attach($componentes);
+        if(!empty($request->get('ids_componentes'))) {
+            $componentes = explode(',', $request->get('ids_componentes'));
+            $pac->componentes()->attach($componentes);
+        }
     }
 
     public function tienePautaConFichaObligatoria($ids_pautas)
@@ -193,13 +205,17 @@ class PacController extends AbmController
         logger()->info('Quiere crear PAC con: '.json_encode($data));
         $v = Validator::make($data, $this->rules);
 
-        if ($v->fails())
+        if ($v->fails()) 
+        {
+            logger()->warning("Falla la creación de PAC/Acción");
+            logger()->warning(json_encode($v->errors()->all()));
             return $v->errors();
-        
-        $ids_pautas = explode(',' ,$data['ids_pautas']);
-        logger()->info("ids_pautas: ".json_encode($ids_pautas));
+        }
 
-        $data['ficha_obligatoria'] = $this->tienePautaConFichaObligatoria($ids_pautas);
+        if (!empty($data['ids_pautas'])) {
+            $ids_pautas = explode(',' ,$data['ids_pautas']);
+            $data['ficha_obligatoria'] = $this->tienePautaConFichaObligatoria($ids_pautas);
+        }
         
         $pac = Pac::create($data);
         logger()->info('Crea pac: '.$pac);
