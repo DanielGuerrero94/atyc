@@ -10,8 +10,25 @@
       <div class="tab-pane in active" id="general">
           {{ csrf_field() }}
           <div class="row">
+            <div class="form-group col-md-6">
+              <label for="anio" class="control-label col-md-4 col-xs-3">Año:</label>
+              <div class="col-md-8 col-xs-9">
+                <select class="select-2 form-control" id="anio" name="anio">
+                  <option></option>
+                  @for($i = intval(date('Y')) + 1; $i > 2012 ; $i--)
+                    @if ($i === intval(date('Y')))
+                    <option data-id="{{$i}}" value={{$i}} selected>{{$i}}</option>
+                    @else
+                    <option data-id="{{$i}}" value={{$i}}>{{$i}}</option>
+                    @endif
+                  @endfor
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
             <div class="form-group col-xs-12 col-md-6">       
-              <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
+              <label for="nombre" class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
               <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
                 <div class="typeahead__field">             
                   <span class="typeahead__query">
@@ -162,9 +179,9 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
+    var pautas = {!! $pautas->toJson() !!};
 
 //Tutorial de alta de PAC
-
     formUploadSinPac = '<form id="upload-ficha_tecnica-sin-pac" name="upload-ficha_tecnica-sin-pac" style="display: none;">{{ csrf_field() }} <label><input type="file" name="csv" style="display: none;"></label>  <label><input type="hidden" name="id_ficha_tecnica" style="display: none;"></label> </form>';
 
     $('.select-2').select2(
@@ -192,6 +209,33 @@
     $('.select-2').on('select2:unselect', function () {
 			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 		});
+
+    function setDisabledElement(ids, object) {
+      if (ids.includes( parseInt(object.val()) )) {
+          object.prop('disabled', true);
+          object.attr('disabled', true);
+          object.attr('selected', false);
+        } else {
+          object.removeAttr('disabled');
+        }
+        object.parent().select2({
+          "width": "200%",
+          "placeholder": "   Seleccionar"
+        });
+    }
+
+    $('#anio').select2({
+      'width': '100%',
+      'placeholder': '   Seleccionar'
+    }).change(function() {
+      pautas = {!! $pautas->toJson() !!};
+      let anio = $('#general #anio option:selected').data('id').toString();
+      let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
+
+      $("#pauta option").each( function () {
+        setDisabledElement(pautasIds, $(this));
+      });
+    });
 
     $.typeahead({
       input: '.curso_typeahead',
@@ -252,7 +296,7 @@
       var ids_responsables = getResponsablesSelected();
       var ids_pautas = getPautasSelected();
       var ids_componentes = getComponentesSelected();
-      var anio = parseInt(moment.utc($('#ediciones-tab #fecha_inicio_1').val(),'DD/MM/YYYY').format('YYYY'));
+      var anio = $('#general #anio option:selected').data('id');
 
       var selected = [
       {
@@ -313,16 +357,22 @@
       let i = 1
       let inicial = $('#form-alta #ediciones-tab #fecha_inicio_'+i).val();
       let final = $('#form-alta #ediciones-tab #fecha_final_'+i).val();
+      let currentYear = $('#form-alta #general #anio').val();
       flag = true;
   
       while(inicial != undefined && inicial !="" && final != undefined && final !="") {
         initialMoment = moment.utc(inicial, 'DD/MM/YYYY');
-        finalMoment = moment.utc(final, 'DD/MM/YYYY');
+        finalMoment = moment.utc(final, 'DD/MM/YYYY')
 
         correctDates = initialMoment.isSameOrBefore(finalMoment);
         if(!correctDates) {
           ($('#form-alta #ediciones-tab #'+i)).next("p").remove();
           text = '<p style="color: #dd4b39; font-weight:bold; padding-left:2rem;"> La fecha inicial debe ser anterior a la fecha final </p>';
+          ($('#form-alta #ediciones-tab #'+i)).after(text);
+          flag = false;
+        } else if(initialMoment.year() != currentYear || finalMoment.year() != currentYear) {
+          ($('#form-alta #ediciones-tab #'+i)).next("p").remove();
+          text = '<p style="color: #dd4b39; font-weight:bold; padding-left:2rem;"> La fecha debe coincidir con el año seleccionado</p>';
           ($('#form-alta #ediciones-tab #'+i)).after(text);
           flag = false;
         } else {
@@ -352,6 +402,9 @@
 
     $('#alta-pac #form-alta').validate({
       rules : {
+        anio: {
+          required: true
+        },
         nombre : {
           required: true
         },

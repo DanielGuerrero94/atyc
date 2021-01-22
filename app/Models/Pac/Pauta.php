@@ -66,5 +66,4 @@ class Pauta extends Model
             'id_provincia'
         );
     }
-
 }

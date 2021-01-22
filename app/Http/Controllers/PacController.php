@@ -646,9 +646,11 @@ class PacController extends AbmController
 
     public function getSelectOptions()
     {
-        $pautas = Cache::remember('pautas', 5, function () {
-            return Pauta::orderBy('numero')->get();
-        });
+        $pautas = Pauta::leftJoin('pac.pautas_anios', 'pac.pautas.id_pauta', '=', 'pac.pautas_anios.id_pauta')
+            ->groupBy('pac.pautas.id_pauta')
+            ->orderBy('numero')
+            ->selectRaw("pac.pautas.id_pauta, array_to_string(array_agg(anio), ',') as anios, nombre, numero, descripcion, id_provincia")
+            ->get();
 
         $componentes = Cache::remember('componentes', 5, function () {
             return Componente::orderBy('numero')->get();
