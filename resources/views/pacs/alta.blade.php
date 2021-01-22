@@ -16,7 +16,11 @@
                 <select class="select-2 form-control" id="anio" name="anio">
                   <option></option>
                   @for($i = intval(date('Y')) + 1; $i > 2012 ; $i--)
+                    @if($i == intval(date('Y')))
+                    <option data-id="{{$i}}" value={{$i}} selected>{{$i}}</option>
+                    @else
                     <option data-id="{{$i}}" value={{$i}}>{{$i}}</option>
+                    @endif
                   @endfor
                 </select>
               </div>
@@ -196,6 +200,14 @@
     $('.select-2').ready(function() {
       $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
 			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
+
+      pautas = {!! $pautas->toJson() !!};
+      let anio = $('#general #anio option:selected').data('id').toString();
+      let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
+
+      $("#pauta option").each( function () {
+        setDisabledElement(pautasIds, $(this));
+      });
     });
       
     $('.select-2').on('select2:select', function () {
