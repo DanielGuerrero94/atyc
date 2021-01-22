@@ -40,6 +40,15 @@
               {{ csrf_field() }}
               {{ method_field('PUT') }}
               <div class="row">
+                <div class="form-group col-xs-12 col-md-6">          
+                  <label for="anio" class="control-label col-md-4 col-xs-3">Año:</label>
+                  <div class="col-md-8 col-xs-9">
+                    <input type="number" class="form-control" name="anio" id="anio" placeholder="Año" value="{{$pac->anio}}" disabled> 
+                  </div>
+                </div>
+              </div>
+              <br>
+              <div class="row">
                 <div class="form-group col-xs-12 col-md-6">       
                   <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
                   <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
@@ -1156,7 +1165,7 @@
         { title: 'Usuario', data: 'user', defaultContent: '-', name: 'id_user',
           render: function(data) {
             if (data) {
-      				return data.name;
+      				return data.title;
             }
           },
           orderable: false, width: '15%'
@@ -1567,6 +1576,9 @@
   function inputValidations() {
     $('#modificacion-pac #form-modificacion').validate({
       rules : {
+        anio : {
+          required: true,
+        },
         nombre : {
           required: true
         },
