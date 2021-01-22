@@ -16,11 +16,7 @@
                 <select class="select-2 form-control" id="anio" name="anio">
                   <option></option>
                   @for($i = intval(date('Y')) + 1; $i > 2012 ; $i--)
-                    @if ($i === intval(date('Y')))
-                    <option data-id="{{$i}}" value={{$i}} selected>{{$i}}</option>
-                    @else
                     <option data-id="{{$i}}" value={{$i}}>{{$i}}</option>
-                    @endif
                   @endfor
                 </select>
               </div>
