@@ -10,6 +10,7 @@ use App\Models\Pac\Destinatario;
 use App\Models\Pac\Pauta;
 use App\Models\Pac\Categoria;
 use App\Models\Pac\Responsable;
+use App\Models\Pac\Actor;
 use App\Models\Pac\FichaTecnica;
 use App\Models\Pac\PacEstado;
 use App\Models\Pac\PacCambioEstado;
@@ -274,20 +275,41 @@ class PacController extends AbmController
             $this->crearCursos($pac, $request);
         
         $pac->update($request->all());
-        $tematicas = explode(',', $request->get('ids_tematicas'));
-        $pac->tematicas()->sync($tematicas);
 
-        $destinatarios = explode(',', $request->get('ids_destinatarios'));
-        $pac->destinatarios()->sync($destinatarios);
+        if (empty($request->get('ids_tematicas'))) {
+            $pac->tematicas()->detach();
+        } else {
+            $tematicas = explode(',', $request->get('ids_tematicas'));
+            $pac->tematicas()->sync($tematicas);
+        }
 
-        $responsables = explode(',', $request->get('ids_responsables'));
-        $pac->responsables()->sync($responsables);
+        if (empty($request->get('ids_destinatarios'))) {
+            $pac->destinatarios()->detach();
+        } else {
+            $destinatarios = explode(',', $request->get('ids_destinatarios'));
+            $pac->destinatarios()->sync($destinatarios);
+        }
+        
+        if (empty($request->get('ids_responsables'))) {
+            $pac->responsables()->detach();
+        } else {
+            $responsables = explode(',', $request->get('ids_responsables'));
+            $pac->responsables()->sync($responsables);
+        }
 
-        $pautas = explode(',', $request->get('ids_pautas'));
-        $pac->pautas()->sync($pautas);
+        if (empty($request->get('ids_pautas'))) {
+            $pac->pautas()->detach();
+        } else {
+            $pautas = explode(',', $request->get('ids_pautas'));
+            $pac->pautas()->sync($pautas);
+        }
 
-        $componentes = explode(',', $request->get('ids_componentes'));
-        $pac->componentes()->sync($componentes);
+        if (empty($request->get('ids_componentes'))) {
+            $pac->componentes()->detach();
+        } else {
+            $componentes = explode(',', $request->get('ids_componentes'));
+            $pac->componentes()->sync($componentes);
+        }
 
         return $pac;
     }
@@ -447,6 +469,9 @@ class PacController extends AbmController
                 return $pacs->withTrashed();
             },
             'componentes' => function ($pacs) {
+                return $pacs->withTrashed();
+            },
+            'actor' => function($pacs) {
                 return $pacs->withTrashed();
             }
         ])
@@ -668,6 +693,10 @@ class PacController extends AbmController
             return AreaTematica::orderBy('nombre')->get();
         });
 
+        $actores = Cache::remember('actores', 5, function () {
+            return Actor::orderBy('nombre')->get();
+        });
+
         $tipoAcciones = Cache::remember('tipo_accion', 5, function () {
             return LineaEstrategica::orderBy('numero')->get();
         });
@@ -686,6 +715,7 @@ class PacController extends AbmController
             'destinatarios' => $destinatarios,
             'responsables' => $responsables,
             'tematicas' => $tematicas,
+            'actores' => $actores,
             'tipoAcciones' => $tipoAcciones,
             'provincias' => $provincias,
             'periodos' => $periodos
@@ -714,6 +744,10 @@ class PacController extends AbmController
             return AreaTematica::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
         });
 
+        $actoresEdit = Cache::remember('actorEdit', 5, function() {
+            return Actor::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
+        });
+
         $tipoAccionesEdit = Cache::remember('tipo_accionEdit', 5, function () {
             return LineaEstrategica::orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
         });
@@ -740,6 +774,7 @@ class PacController extends AbmController
             'destinatariosEdit' => $destinatariosEdit,
             'responsablesEdit' => $responsablesEdit,
             'tematicasEdit' => $tematicasEdit,
+            'actoresEdit' => $actoresEdit,
             'tipoAccionesEdit' => $tipoAccionesEdit,
             'provinciasEdit' => $provinciasEdit,
             'periodos' => $periodos,
@@ -952,7 +987,10 @@ class PacController extends AbmController
                 'fichaTecnica' => function ($query) {
                     return $query->withTrashed();
                 },
-                'cambiosEstado'
+                'cambiosEstado',
+                'actor' => function ($query) {
+                    return $query->withTrashed();
+                }
                 ])
                 ->segunProvincia()
                 ->where('id_pac', $id_pac)->firstOrFail();

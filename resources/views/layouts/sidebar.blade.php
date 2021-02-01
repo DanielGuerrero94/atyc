@@ -430,6 +430,12 @@
                 <span>Componentes</span>
               </a>
             </li>
+            <li>
+              <a href="{{url("/actores")}}">
+                <i class="fa fa-circle-o"></i>
+                <span>Actores</span>
+              </a>
+            </li>
           </ul>
         </li>
         <li class="treeview">

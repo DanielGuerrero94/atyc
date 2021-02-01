@@ -300,6 +300,20 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::delete('lineasEstrategicas/{id}', 'LineasEstrategicasController@destroy');
         Route::delete('lineasEstrategicas/{id}/hard', 'LineasEstrategicasController@hardDestroy');
 
+        //Actores de Accion
+        Route::get('actores', 'ActoresController@getTodos');
+        Route::get('actoresTabla', 'ActoresController@getTabla');
+        Route::get('actores/alta', 'ActoresController@create');
+        Route::get('actores/{id}', 'ActoresController@edit');
+
+        Route::post('actores', 'ActoresController@store');
+
+        Route::put('actores/{id}', 'ActoresController@update');
+        Route::put('actores/{id}/alta', 'ActoresController@alta');
+
+        Route::delete('actores/{id}', 'ActoresController@destroy');
+        Route::delete('actores/{id}/hard', 'ActoresController@hardDestroy');
+
         //Destinatarios
         Route::get('destinatarios', 'DestinatariosController@getTodos');
         Route::get('destinatarios/alta', 'DestinatariosController@create');

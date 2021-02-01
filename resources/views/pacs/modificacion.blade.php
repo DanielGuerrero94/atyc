@@ -49,6 +49,24 @@
               </div>
               <br>
               <div class="row">
+                <div class="form-group col-xs-12 col-md-6">          
+                  <label for="actor" class="control-label col-md-4 col-xs-3">Tipo de acción:</label>
+                  <div class="col-md-8 col-xs-9">
+                    <select class="select-2 form-control" id="actor" name="id_actor">
+                      <option></option>
+                      @foreach ($actoresEdit as $actor)
+                      @if ($actor->id_actor === $pac->id_actor)
+                      <option data-id="{{$actor->id_actor}}" value="{{$actor->id_actor}}" selected="selected">{{$actor->nombre}}</option>
+                      @else
+                      <option data-id="{{$actor->id_actor}}" value="{{$actor->id_actor}}">{{$actor->nombre}}</option>
+                      @endif  
+                      @endforeach
+                    </select>
+                  </div>          
+                </div>
+              </div>
+              <br>
+              <div class="row">
                 <div class="form-group col-xs-12 col-md-6">       
                   <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
                   <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
@@ -1586,6 +1604,9 @@
           required: true,
           number: true
         },
+        id_actor: {
+          selecciono: true
+        },
         id_accion: {
           selecciono: true
         },
@@ -1601,12 +1622,12 @@
         id_responsable: {
           selecciono: true
         },
-        id_pauta: {
-          selecciono: true
-        },
-        id_componente: {
-          selecciono: true
-        },
+        // id_pauta: {
+        //   selecciono: true
+        // },
+        // id_componente: {
+        //   selecciono: true
+        // },
         ediciones: {
           number: true,
           completados: true
@@ -1678,6 +1699,7 @@
   //Seleccion de Valores ingresados
   function getSelected() {
 
+    var id_actor = $('#general #actor').val();
     var id_accion = $('#general #tipo_accion').val();
     var id_provincia = $('#general #provincia').val();
     var ids_tematicas = $('#general #tematica').val();
@@ -1687,6 +1709,10 @@
     var ids_componentes = $('#alcance #componente').val();
 
     var selected = [
+    {
+      name: 'id_actor',
+      value: id_actor
+    },
     {
       name: 'id_accion',
       value: id_accion

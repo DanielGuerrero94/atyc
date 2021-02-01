@@ -25,6 +25,7 @@ td {
 		<th class="table-header">Fecha Próxima Ejecución</th>
 		<th class="table-header">Estado</th>
 		<th class="table-header">Jurisdicción</th>
+		<th class="table-header">Actor que Genera Acción</th>
 		<th class="table-header">Tipo de Acción</th>
 		<th class="table-header">Ficha Técnica</th>
 		<th class="table-header">Nombre</th>
@@ -45,6 +46,7 @@ td {
 		<td>{{date('d/m/y', strtotime($pac->display_date))}}</td>
 		<td>{{$pac->estado ? $pac->estado->nombre : 'No tiene estado'}}</td>
 		<td>{{$pac->provincias->nombre}}</td>
+		<td>{{$pac->actor ? $pac->actor->nombre : "-"}}</td>
 		<td>{{$pac->tipoAccion->numero ." ".$pac->tipoAccion->nombre}}</td>
 		<td>{{(($pac->id_ficha_tecnica) ? (($pac->fichaTecnica->aprobada) ? ("Aprobada (".
 		date('d/m/Y', strtotime($pac->fichaTecnica->updated_at)).")") : ("En diseño (" .
@@ -53,52 +55,52 @@ td {
 		}}</td>
 		<td>{{$pac->nombre}}</td>
 		<td>{{$pac->duracion}}</td>
+		<td>
 		@foreach($pac->destinatarios as $destinatario)
 			@if	($loop->first)
-			<td>{{$destinatario->nombre}}
-			@elseif ($loop->last)
-			{{", ".$destinatario->nombre}}</td>
+			{{$destinatario->nombre}}
 			@else
 			{{", ".$destinatario->nombre}}
 			@endif
 		@endforeach
+		</td>
+		<td>
 		@foreach($pac->tematicas as $tematica)
 			@if	($loop->first)
-			<td>{{$tematica->nombre}}
-			@elseif ($loop->last)
-			{{", ".$tematica->nombre}}</td>
+			{{$tematica->nombre}}
 			@else
 			{{", ".$tematica->nombre}}
 			@endif
 		@endforeach
+		</td>
 		<td>{{$pac->ediciones}}</td>
+		<td>
 		@foreach($pac->responsables as $responsable)
 			@if	($loop->first)
-			<td>{{$responsable->nombre}}
-			@elseif ($loop->last)
-			{{", ".$responsable->nombre}}</td>
-			@else
+			{{$responsable->nombre}}
+			@else ($loop->last)
 			{{", ".$responsable->nombre}}
 			@endif
 		@endforeach
+		</td>
+		<td>
 		@foreach($pac->componentes as $componente)
 			@if	($loop->first)
-			<td>{{$componente->numero." - ".$componente->nombre}}
-			@elseif ($loop->last)
-			{{", ".$componente->numero." - ".$componente->nombre}}</td>
-			@else
+			{{$componente->numero." - ".$componente->nombre}}
+			@else ($loop->last)
 			{{", ".$componente->numero." - ".$componente->nombre}}
 			@endif
 		@endforeach
+		</td>
+		<td>
 		@foreach($pac->pautas as $pauta)
 			@if	($loop->first)
-			<td>{{$pauta->numero." - ".$pauta->nombre}}
-			@elseif ($loop->last)
-			{{", ".$pauta->numero." - ".$pauta->nombre}}</td>
+			{{$pauta->numero." - ".$pauta->nombre}}
 			@else
 			{{", ".$pauta->numero." - ".$pauta->nombre}}
 			@endif
 		@endforeach
+		</td>
 		@foreach($pac->cursos as $curso)
         <td>
         {{$curso->edicion." - ".$curso->estado->nombre.". ".

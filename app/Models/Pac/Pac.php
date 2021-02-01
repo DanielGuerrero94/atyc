@@ -13,7 +13,7 @@ class Pac extends Model
     protected $dates = [ 'created_at', 'updated_at', 'deleted_at'];
 
     protected $fillable = ['nombre', 'id_estado', 'id_accion', 'ediciones', 'duracion',
-    'id_provincia', 'id_ficha_tecnica', 'anio', 'ficha_obligatoria', 'display_date'];
+    'id_provincia', 'id_ficha_tecnica', 'anio', 'ficha_obligatoria', 'display_date', 'id_actor'];
 
     /**
      * The table associated with the model.
@@ -149,6 +149,15 @@ class Pac extends Model
             PacCambioEstado::class,
             'id_pac',
             'id_pac'
+        );
+    }
+
+    public function actor()
+    {
+        return $this->hasOne(
+            Actor::class,
+            'id_actor',
+            'id_actor'
         );
     }
 

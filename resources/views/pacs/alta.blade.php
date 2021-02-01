@@ -27,6 +27,20 @@
             </div>
           </div>
           <div class="row">
+            <div class="form-group col-md-6">
+              <label for="actor" class="control-label col-md-4 col-xs-3">Actor que Origina Acción:</label>
+              <div class="col-md-8 col-xs-9">
+                <select class="select-2 form-control" id="actor" name="id_actor">
+                  <option></option>
+                  @foreach ($actores as $actor)
+                  <option data-id="{{$actor->id_actor}}" value="{{$actor->id_actor}}"> {{$actor->nombre}}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="row">
             <div class="form-group col-xs-12 col-md-6">       
               <label for="nombre" class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
               <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
@@ -59,7 +73,7 @@
               </div>
             </div>
           </div>
-          <br>    
+          <br>
           <div class="row">
             <div class="form-group col-md-6">
               <label for="tematica" class="control-label col-md-4 col-xs-3">Temática/s:</label>
@@ -296,6 +310,7 @@
 
     function getSelected() {
 
+      var id_actor = $('#general #actor option:selected').data('id');
       var id_accion = $('#general #tipo_accion option:selected').data('id');
       var id_provincia = $('#general #provincia option:selected').data('id');
       var id_ficha_tecnica = $('#upload-ficha_tecnica-sin-pac').val();
@@ -307,6 +322,10 @@
       var anio = $('#general #anio option:selected').data('id');
 
       var selected = [
+      {
+        name: 'id_actor',
+        value: id_actor
+      },
       {
         name: 'id_accion',
         value: id_accion
@@ -419,6 +438,9 @@
         duracion : {
           required: true,
           number: true
+        },
+        id_actor: {
+          selecciono: true
         },
         id_accion: {
           selecciono: true
