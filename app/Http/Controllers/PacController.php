@@ -724,9 +724,13 @@ class PacController extends AbmController
 
     public function getEditOptions()
     {
-        $pautasEdit = Cache::remember('pautasEdit', 5, function () {
-            return Pauta::orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
-        });
+        $pautasEdit = Pauta::leftJoin('pac.pautas_anios', 'pac.pautas.id_pauta', '=', 'pac.pautas_anios.id_pauta')
+        ->groupBy('pac.pautas.id_pauta')
+        ->orderBy('deleted_at', 'desc')
+        ->orderBy('numero')
+        ->withTrashed()
+        ->selectRaw("pac.pautas.id_pauta, array_to_string(array_agg(anio), ',') as anios, nombre, numero, descripcion, id_provincia")
+        ->get();
 
         $componentesEdit = Cache::remember('componentesEdit', 5, function () {
             return Componente::orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();

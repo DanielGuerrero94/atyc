@@ -9,10 +9,11 @@
     <div class="tab-content">
       <div class="tab-pane in active" id="general">
           {{ csrf_field() }}
+          <br />
           <div class="row">
-            <div class="form-group col-md-6">
-              <label for="anio" class="control-label col-md-4 col-xs-3">Año:</label>
-              <div class="col-md-8 col-xs-9">
+            <div class="form-group col-md-12 col-xs-12">
+              <label for="anio" class="control-label col-md-2 col-xs-2">Año:</label>
+              <div class="col-md-8 col-xs-8">
                 <select class="select-2 form-control" id="anio" name="anio">
                   <option></option>
                   @for($i = intval(date('Y')) + 1; $i > 2012 ; $i--)
@@ -26,10 +27,11 @@
               </div>
             </div>
           </div>
+          <br />
           <div class="row">
-            <div class="form-group col-md-6">
-              <label for="actor" class="control-label col-md-4 col-xs-3">Actor que Origina Acción:</label>
-              <div class="col-md-8 col-xs-9">
+            <div class="form-group col-md-12 col-xs-12">
+              <label for="actor" class="control-label col-md-2 col-xs-2">Actor que Origina Acción:</label>
+              <div class="col-md-8 col-xs-8">
                 <select class="select-2 form-control" id="actor" name="id_actor">
                   <option></option>
                   @foreach ($actores as $actor)
@@ -39,11 +41,11 @@
               </div>
             </div>
           </div>
-          <br>
+          <br />
           <div class="row">
-            <div class="form-group col-xs-12 col-md-6">       
-              <label for="nombre" class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
-              <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
+            <div class="form-group col-xs-12 col-md-12">
+              <label for="nombre" class="col-md-2 col-xs-2">Nombre:</label>
+              <div class="typeahead__container col-md-8 col-xs-8">
                 <div class="typeahead__field">             
                   <span class="typeahead__query">
                     <input class="curso_typeahead form-control" name="nombre"  type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" style="font-size:1.4rem;">
@@ -52,18 +54,20 @@
               </div>
             </div>
           </div>
+          <br />
           <div class="row">
-            <div class="form-group col-xs-12 col-md-6">          
-              <label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
-              <div class="col-md-8 col-xs-9">
+            <div class="form-group col-xs-12 col-md-12">          
+              <label for="horas" class="control-label col-md-2 col-xs-2">Duración:</label>
+              <div class="col-md-8 col-xs-8">
                 <input type="number" class="form-control" name="duracion" id="horas" placeholder="Duración en horas"> 
               </div>
             </div>
           </div>
+          <br />
           <div class="row">
-            <div class="form-group col-md-6">
-              <label for="tipo_accion" class="control-label col-md-4 col-xs-3">Tipo de acción:</label>
-              <div class="col-md-8 col-xs-9">
+            <div class="form-group col-xs-12 col-md-12">
+              <label for="tipo_accion" class="control-label col-md-2 col-xs-2">Tipo de acción:</label>
+              <div class="col-md-8 col-xs-8">
                 <select class="select-2 form-control" id="tipo_accion" name="id_accion">
                   <option></option>
                   @foreach ($tipoAcciones as $tipo_accion)
@@ -73,11 +77,11 @@
               </div>
             </div>
           </div>
-          <br>
+          <br />
           <div class="row">
-            <div class="form-group col-md-6">
-              <label for="tematica" class="control-label col-md-4 col-xs-3">Temática/s:</label>
-              <div class="col-md-8 col-xs-9">
+          <div class="form-group col-xs-12 col-md-12">
+              <label for="tematica" class="control-label col-md-2 col-xs-2">Temática/s:</label>
+              <div class="col-md-8 col-xs-8">
                 <select class="select-2 form-control" id="tematica" name="id_tematica" aria-hidden="true" multiple>
                   @foreach ($tematicas as $tematica)
                   <option data-id="{{$tematica->id_area_tematica}}" value="{{$tematica->id_area_tematica}}"> {{$tematica->nombre}}</option>
@@ -86,11 +90,11 @@
               </div>
             </div>
           </div>
-          <br>
+          <br />
           <div class="row">
-            <div class="form-group col-xs-12 col-md-6">          
-              <label for="provincia" class="control-label col-md-4 col-xs-3">Jurisdicción / <br> Dependencia Jerárquica:</label>
-              <div class="col-md-8 col-xs-9">
+          <div class="form-group col-xs-12 col-md-12">
+              <label for="provincia" class="control-label col-md-2 col-xs-2">Jurisdicción / <br> Dependencia Jerárquica:</label>
+              <div class="col-md-8 col-xs-8">
               <br>
                 @if(Auth::user()->id_provincia == 25)
                 <select class="select-2 form-control" id="provincia" name="id_provincia">
@@ -107,22 +111,25 @@
               </div>        
             </div>
           </div>
-          <br>  
+          <br />
           <div class="row">
-            <div class="form-group col-xs-12 col-md-6">          
-              <label for="ficha_tecnica" class="control-label col-md-4 col-xs-3">Ficha Técnica</label>
-                <span> <b> Subir Ficha Técnica </b> </span>
-                <a href="#" data-id="0" class="btn btn-circle upload-ficha_tecnica-sin-pac" title="Subir Ficha Técnica">
-                  <i class="fa fa-upload fa-lg" style="color: #228B22;"> </i>
-                </a>
+            <div class="form-group col-xs-12 col-md-12">
+              <label for="ficha_tecnica" class="control-label col-md-2 col-xs-2">Ficha Técnica</label>
+              <div class="col-md-8 col-xs-8">
+                  <span> <b> Subir Ficha Técnica </b> </span>
+                  <a href="#" data-id="0" class="btn btn-circle upload-ficha_tecnica-sin-pac" title="Subir Ficha Técnica">
+                    <i class="fa fa-upload fa-lg" style="color: #228B22;"> </i>
+                  </a>
+                </div>
             </div>
           </div>  
       </div>
       <div class="tab-pane" id="alcance">
+        <br />
           <div class="row">
-            <div class="form-group col-md-6">
-              <label for="destinatario" class="control-label col-md-4 col-xs-3">Destinatarios:</label>
-              <div class="col-md-8 col-xs-9">
+            <div class="form-group col-xs-12 col-md-12">
+              <label for="destinatario" class="control-label col-md-2 col-xs-2">Destinatarios:</label>
+              <div class="col-md-8 col-xs-8">
                 <select class="select-2 form-control" id="destinatario" name="id_destinatario" aria-hidden="true" multiple>
                   @foreach ($destinatarios as $destinatario)
                   <option data-id="{{$destinatario->id_funcion}}" value="{{$destinatario->id_funcion}}"> {{$destinatario->nombre}}</option>
@@ -131,11 +138,11 @@
               </div>
             </div>
           </div>
-          <br>
+          <br />
           <div class="row">
-            <div class="form-group col-md-6">
-              <label for="responsable" class="control-label col-md-4 col-xs-3">Responsables de la ejecución:</label>
-              <div class="col-md-8 col-xs-9">
+            <div class="form-group col-xs-12 col-md-12">
+              <label for="responsable" class="control-label col-md-2 col-xs-2">Responsables de la ejecución:</label>
+              <div class="col-md-8 col-xs-8">
                 <select class="select-2 form-control" id="responsable" name="id_responsable" aria-hidden="true" multiple>
                   @foreach ($responsables as $responsable)
                   <option data-id="{{$responsable->id_responsable}}" value="{{$responsable->id_responsable}}"> {{$responsable->nombre}}</option>
@@ -144,26 +151,26 @@
               </div>
             </div>
           </div>
-          <br>
+          <br />
           <div class="row">
-            <div class="form-group col-md-6">
-              <label for="pauta" class="control-label col-md-4 col-xs-3">Pautas Para PAC:</label>
-              <div class="col-md-8 col-xs-9">
+            <div class="form-group col-xs-12 col-md-12">
+              <label for="pauta" class="control-label col-md-2 col-xs-2">Pautas Para PAC:</label>
+              <div class="col-md-8 col-xs-8">
                 <select class="select-2 form-control" id="pauta" name="id_pauta" aria-hidden="true" multiple>
                   @foreach ($pautas as $pauta)
                   @if($pauta->id_provincia == 25 || $pauta->id_provincia == Auth::user()->id_provincia)
-                  <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}" title="{{$pauta->descripcion}}"> {{$pauta->numero." - ".$pauta->nombre}}</option>
+                  <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}" title="{{$pauta->descripcion}}"> {{$pauta->anios." - ".$pauta->numero.": ".$pauta->nombre}}</option>
                   @endif
                   @endforeach
                 </select>
               </div>
             </div>
           </div>
-          <br>
+          <br />
           <div class="row">
-            <div class="form-group col-md-6">
-              <label for="componentes" class="control-label col-md-4 col-xs-3">Componentes CAI:</label>
-              <div class="col-md-8 col-xs-9">
+            <div class="form-group col-xs-12 col-md-12">
+              <label for="componentes" class="control-label col-md-2 col-xs-2">Componentes CAI:</label>
+              <div class="col-md-8 col-xs-8">
                 <select class="select-2 form-control" id="componentesCai" name="id_componente" aria-hidden="true" multiple>
                   @foreach ($componentes as $componente)
                   <option data-id="{{$componente->id_componente}}" value="{{$componente->id_componente}}"> {{$componente->numero." - ".$componente->nombre}}</option>
@@ -174,10 +181,11 @@
           </div>
       </div>
       <div class="tab-pane" id="ediciones-tab">
+        <br />
           <div class="row" id="ediciones">
-            <div class="form-group col-xs-8 col-md-4">          
-              <label for="ediciones" class="control-label col-md-4 col-xs-3">Ediciones</label>
-              <div class="col-md-6 col-xs-4">
+            <div class="form-group col-xs-12 col-md-12">          
+              <label for="ediciones" class="control-label col-md-2 col-xs-2">Ediciones</label>
+              <div class="col-md-3 col-xs-3">
                 <input type="number" class="form-control" name="ediciones" id="ediciones" placeholder="Cantidad de ediciones"> 
               </div>
             </div>
@@ -192,15 +200,27 @@
 
 <script type="text/javascript">
 
-  $(document).ready(function() {
-    var pautas = {!! $pautas->toJson() !!};
+  function setDisabledElement(ids, object) {
+    if (ids.includes( parseInt(object.val()) )) {
+        object.prop('disabled', true);
+        object.attr('disabled', true);
+        object.attr('selected', false);
+      } else {
+        object.removeAttr('disabled');
+      }
+      object.parent().select2({
+        "width": "100%",
+        "placeholder": "   Seleccionar"
+      });
+  }
 
+  $(document).ready(function() {
 //Tutorial de alta de PAC
     formUploadSinPac = '<form id="upload-ficha_tecnica-sin-pac" name="upload-ficha_tecnica-sin-pac" style="display: none;">{{ csrf_field() }} <label><input type="file" name="csv" style="display: none;"></label>  <label><input type="hidden" name="id_ficha_tecnica" style="display: none;"></label> </form>';
 
     $('.select-2').select2(
       {
-      "width": "200%",
+      "width": "100%",
       "placeholder": "   Seleccionar"
       }).change(function(){
         $(this).valid();
@@ -216,6 +236,7 @@
 			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 
       pautas = {!! $pautas->toJson() !!};
+      console.log(pautas);
       let anio = $('#general #anio option:selected').data('id').toString();
       let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
 
@@ -231,33 +252,6 @@
     $('.select-2').on('select2:unselect', function () {
 			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 		});
-
-    function setDisabledElement(ids, object) {
-      if (ids.includes( parseInt(object.val()) )) {
-          object.prop('disabled', true);
-          object.attr('disabled', true);
-          object.attr('selected', false);
-        } else {
-          object.removeAttr('disabled');
-        }
-        object.parent().select2({
-          "width": "200%",
-          "placeholder": "   Seleccionar"
-        });
-    }
-
-    $('#anio').select2({
-      'width': '100%',
-      'placeholder': '   Seleccionar'
-    }).change(function() {
-      pautas = {!! $pautas->toJson() !!};
-      let anio = $('#general #anio option:selected').data('id').toString();
-      let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
-
-      $("#pauta option").each( function () {
-        setDisabledElement(pautasIds, $(this));
-      });
-    });
 
     $.typeahead({
       input: '.curso_typeahead',

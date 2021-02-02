@@ -39,19 +39,20 @@
             <div class="active tab-pane" id="general" data-id="{{$pac->id_pac}}">
               {{ csrf_field() }}
               {{ method_field('PUT') }}
+              <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">          
-                  <label for="anio" class="control-label col-md-4 col-xs-3">Año:</label>
-                  <div class="col-md-8 col-xs-9">
+                <div class="form-group col-xs-12 col-md-12">
+                  <label for="anio" class="control-label col-md-2 col-xs-2">Año:</label>
+                  <div class="col-md-8 col-xs-8">
                     <input type="number" class="form-control" name="anio" id="anio" placeholder="Año" value="{{$pac->anio}}" disabled> 
                   </div>
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">          
-                  <label for="actor" class="control-label col-md-4 col-xs-3">Tipo de acción:</label>
-                  <div class="col-md-8 col-xs-9">
+                <div class="form-group col-xs-12 col-md-12">          
+                  <label for="actor" class="control-label col-md-2 col-xs-2">Actor que Origina Acción:</label>
+                  <div class="col-md-8 col-xs-8">
                     <select class="select-2 form-control" id="actor" name="id_actor">
                       <option></option>
                       @foreach ($actoresEdit as $actor)
@@ -65,11 +66,11 @@
                   </div>          
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">       
-                  <label class="col-xs-3 col-sm-4 col-md-4 col-lg-4">Nombre:</label>
-                  <div class="typeahead__container col-xs-9 col-sm-8 col-md-8 col-lg-8">
+                <div class="form-group col-xs-12 col-md-12">
+                  <label class="col-md-2 col-xs-2">Nombre:</label>
+                  <div class="typeahead__container col-md-8 col-xs-8">
                     <div class="typeahead__field ">             
                       <span class="typeahead__query ">
                         <input class="curso_typeahead form-control" name="nombre" type="search" placeholder="Buscar o agregar uno nuevo" autocomplete="off" value="{{$pac->nombre}}">
@@ -78,20 +79,20 @@
                   </div>
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">          
-                  <label for="horas" class="control-label col-md-4 col-xs-3">Duración:</label>
-                  <div class="col-md-8 col-xs-9">
+                <div class="form-group col-xs-12 col-md-12">
+                  <label for="horas" class="control-label col-md-2 col-xs-2">Duración:</label>
+                  <div class="col-md-8 col-xs-8">
                     <input type="number" class="form-control" name="duracion" id="horas" placeholder="Duración en horas" value="{{$pac->duracion}}"> 
                   </div>
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">          
-                  <label for="tipo_accion" class="control-label col-md-4 col-xs-3">Tipo de acción:</label>
-                  <div class="col-md-8 col-xs-9">
+                <div class="form-group col-xs-12 col-md-12">
+                  <label for="tipo_accion" class="control-label col-md-2 col-xs-2">Tipo de acción:</label>
+                  <div class="col-md-8 col-xs-8">
                     <select class="select-2 form-control" id="tipo_accion" name="id_accion">
                       <option></option>
                       @foreach ($tipoAccionesEdit as $tipoAccion)
@@ -105,11 +106,11 @@
                   </div>          
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">          
-                  <label for="tematica" class="control-label col-md-4 col-xs-3">Temática/s:</label>
-                  <div class="col-md-8 col-xs-9">
+                <div class="form-group col-xs-12 col-md-12">
+                  <label for="tematica" class="control-label col-md-2 col-xs-2">Temática/s:</label>
+                  <div class="col-md-8 col-xs-8">
                     <select class="select-2 form-control" id="tematica" name="id_tematica" aria-hidden="true" multiple>
                       @foreach ($tematicasEdit as $tematica)
                         @if (in_array ($tematica->id_area_tematica, $pac->tematicas()->withTrashed()->get()->map(function ($_tematica) { return $_tematica->id_area_tematica; })->all() ))
@@ -122,11 +123,11 @@
                   </div>
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">          
-                  <label for="provincia" class="control-label col-md-4 col-xs-3">Jurisdicción / <br> Dependencia Jerárquica:</label>
-                  <div class="col-md-8 col-xs-9">
+                <div class="form-group col-xs-12 col-md-12">
+                  <label for="provincia" class="control-label col-md-2 col-xs-2">Jurisdicción / <br> Dependencia Jerárquica:</label>
+                  <div class="col-md-8 col-xs-8">
                   <br>
                   @if(Auth::user()->id_provincia == 25)
                     <select class="select-2 form-control" id="provincia" name="id_provincia">
@@ -182,10 +183,11 @@
               </div>
             </div>
             <div class="tab-pane" id="alcance">
+            <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">          
-                  <label for="destinatario" class="control-label col-md-4 col-xs-3">Destinatarios:</label>
-                  <div class="col-md-8 col-xs-9">
+                <div class="form-group col-xs-12 col-md-12">
+                  <label for="destinatario" class="control-label col-md-2 col-xs-2">Destinatarios:</label>
+                  <div class="col-md-8 col-xs-8">
                     <select class="select-2 form-control" id="destinatario" name="id_destinatario" aria-hidden="true" multiple>
                       @foreach ($destinatariosEdit as $destinatario)
                         @if (in_array ($destinatario->id_funcion, $pac->destinatarios()->withTrashed()->get()->map(function ($_destinatario) { return $_destinatario->id_funcion; })->all() ))
@@ -198,11 +200,11 @@
                   </div>
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">          
-                  <label for="responsable" class="control-label col-md-4 col-xs-3">Responsables de la Ejecución:</label>
-                  <div class="col-md-8 col-xs-9">
+                <div class="form-group col-xs-12 col-md-12">
+                  <label for="responsable" class="control-label col-md-2 col-xs-2">Responsables de la Ejecución:</label>
+                  <div class="col-md-8 col-xs-8">
                     <select class="select-2 form-control" id="responsable" name="id_responsable" aria-hidden="true" multiple>
                       @foreach ($responsablesEdit as $responsable)
                         @if (in_array ($responsable->id_responsable, $pac->responsables()->withTrashed()->get()->map(function ($_responsable) { return $_responsable->id_responsable; })->all() ))
@@ -215,28 +217,28 @@
                   </div>
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">          
-                  <label for="pauta" class="control-label col-md-4 col-xs-3">Pautas para PAC:</label>
-                  <div class="col-md-8 col-xs-9">
+                <div class="form-group col-xs-12 col-md-12">
+                  <label for="pauta" class="control-label col-md-2 col-xs-2">Pautas para PAC:</label>
+                  <div class="col-md-8 col-xs-8">
                     <select class="select-2 form-control" id="pauta" name="id_pauta" aria-hidden="true" multiple>
                       @foreach ($pautasEdit as $pauta)
                         @if (in_array ($pauta->id_pauta, $pac->pautas()->withTrashed()->get()->map(function ($_pauta) { return $_pauta->id_pauta; })->all() ))
-                        <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}" selected="selected">{{$pauta->numero." - ".$pauta->nombre}}</option>
+                        <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}" selected="selected">{{$pauta->anios." - ".$pauta->numero.": ".$pauta->nombre}}</option>
                         @else
-                        <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}">{{$pauta->numero." - ".$pauta->nombre}}</option>
+                        <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}">{{$pauta->anios." - ".$pauta->numero.": ".$pauta->nombre}}</option>
                         @endif  
                       @endforeach
                     </select>          
                   </div>
                 </div>
               </div>
-              <br>
+              <br />
               <div class="row">
-                <div class="form-group col-xs-12 col-md-6">          
-                  <label for="componente" class="control-label col-md-4 col-xs-3">Componentes CAI:</label>
-                  <div class="col-md-8 col-xs-9">
+                <div class="form-group col-xs-12 col-md-12">
+                  <label for="componente" class="control-label col-md-2 col-xs-2">Componentes CAI:</label>
+                  <div class="col-md-8 col-xs-8">
                     <select class="select-2 form-control" id="componente" name="id_componente" aria-hidden="true" multiple>
                       @foreach ($componentesEdit as $componente)
                         @if (in_array ($componente->id_componente, $pac->componentes()->withTrashed()->get()->map(function ($_componente) { return $_componente->id_componente; })->all() ))
@@ -249,7 +251,7 @@
                   </div>
                 </div>
               </div>
-              <br>
+            <br />
             </div>
             <div class="tab-pane" id="ediciones-tab">
               <div class="row" style="padding-left: 2em;">
@@ -1074,9 +1076,23 @@
   }
 
   //Inicializacion de Select2
+  function setDisabledElement(ids, object) {
+    if (ids.includes( parseInt(object.val()) )) {
+        object.prop('disabled', true);
+        object.attr('disabled', true);
+        object.attr('selected', false);
+    } else {
+      object.removeAttr('disabled');
+    }
+    object.parent().select2({
+      "width": "100%",
+      "placeholder": "   Seleccionar"
+    });
+  }
+
   function inicializarSelect2() {
     $('.select-2').select2({
-      "width": "200%",
+      "width": "100%",
       "placeholder": "   Seleccionar"
     }).change(function(){
       $(this).valid();
@@ -1090,6 +1106,14 @@
     $('.select-2').ready(function() {
       $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
       $('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important')
+
+      pautas = {!! $pautasEdit->toJson() !!};
+      let anio = $('#general #anio').val().toString();
+      let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
+
+      $("#pauta option").each( function () {
+        setDisabledElement(pautasIds, $(this));
+      });
     });
 
     $('.select-2').on('select2:select', function () {
