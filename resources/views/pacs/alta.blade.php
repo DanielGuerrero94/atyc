@@ -232,9 +232,6 @@
       });
 
     $('.select-2').ready(function() {
-      $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
-			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
-
       pautas = {!! $pautas->toJson() !!};
       console.log(pautas);
       let anio = $('#general #anio option:selected').data('id').toString();
@@ -243,6 +240,9 @@
       $("#pauta option").each( function () {
         setDisabledElement(pautasIds, $(this));
       });
+
+      $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
+			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
     });
       
     $('.select-2').on('select2:select', function () {
