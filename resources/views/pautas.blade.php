@@ -194,9 +194,7 @@
 				},
 				{ title: 'Ficha Obligatoria', data: 'ficha_obligatoria', defaultContent: "-",
 					render: function ( data, type, row, meta ) {
-						if(data) {
-							return estadosFicha(data);
-						}
+						return estadosFicha(data);
 					}
 				},
 				{ title: 'Jurisdicción', data: 'provincia_nombre', name: 'id_provincia', defaultContent: '-'},
