@@ -33,4 +33,13 @@ class Categoria extends Model
      * @var bool
      */
     public $timestamps = true;
+
+    public function pautas()
+    {
+        return $this->hasMany(
+            Pauta::class,
+            'id_categoria',
+            'id_categoria'
+        );
+    }
 }

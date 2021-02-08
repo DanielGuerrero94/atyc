@@ -12,3 +12,4 @@ database/backups/*.sql
 .htaccess
 atyc.backup
 composer.phar
+.idea

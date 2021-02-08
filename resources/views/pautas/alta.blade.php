@@ -24,14 +24,14 @@
 							<select class="select-2 form-control categoria" id="categoria" name="id_categoria" aria-hidden="true">
                                 <option></option>
 								@foreach ($categorias as $categoria)
-									<option value="{{$categoria->id_categoria}}" data-id="{{$categoria->id_categoria}}">{{$categoria->id_categoria." - ".$categoria->nombre}}</option>
+									<option value="{{$categoria->id_categoria}}" data-id="{{$categoria->id_categoria}}">{{$categoria->numero." - ".$categoria->nombre}}</option>
 								@endforeach
 							</select>
 							@else
 							<select class="select-2 form-control categoria" id="categoria" name="id_categoria" aria-hidden="true">
 								@foreach ($categorias as $categoria)
 									@if($categoria->numero === 6)
-									<option value="{{$categoria->id_categoria}}" data-id="{{$categoria->id_categoria}}" selected="selected">{{$categoria->id_categoria." - ".$categoria->nombre}}</option>
+									<option value="{{$categoria->id_categoria}}"data-id="{{$categoria->id_categoria}}" selected="selected">{{$categoria->numero." - ".$categoria->nombre}}</option>
 									@endif
 								@endforeach
 							</select>
@@ -75,13 +75,14 @@
 		</div>
 	</div> 
 </div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous"></script>
 <script type="text/javascript">
 
 	function getSelected() {
 		var anios = $('#anio').val();
 		var provincia = {{Auth::user()->id_provincia}};
 		var categoria = $('#categoria').val();
+		var numero = $('#numero').val();
 
 		return [
 			{
@@ -95,6 +96,10 @@
 			{
 				name: 'id_categoria',
 				value: categoria
+			},
+			{
+				name: 'numero',
+				value: numero
 			}
 		];
 	}
@@ -157,6 +162,16 @@
 		});
 
 		inicializarSelect2();
+		var categorias = {!! $categorias->toJson() !!};
+
+		$('#categoria').change(function() {
+			let id = $('#categoria option:selected').data('id');
+			let categoria = categorias.find(categoria => categoria.id_categoria === id);
+			let pauta = categoria.pautas.sort((a, b) => a.numero - b.numero).pop();
+
+			$('#numero').val( (pauta?.numero?.slice(0, -1) ?? categoria?.numero + '.') + ( (parseInt(pauta?.numero?.slice(-1) ?? 0) + 1).toString() ));
+			$('#numero').prop('disabled', true);
+		});
 
 		$('#alta #form-alta').validate({
 			rules : {

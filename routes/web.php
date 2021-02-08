@@ -219,6 +219,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     //Planificacion->Pautas
     Route::get('pautas', 'PautasController@getTodos');
     Route::get('pautasTabla', 'PautasController@getTabla');
+    Route::get('categoriasPautasTabla', 'PautasController@getTablaCategoriasPautas');
 
     Route::get('pautas/alta', 'PautasController@create');
     Route::get('pautas/{id}', 'PautasController@edit');
@@ -314,6 +315,20 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::delete('actores/{id}', 'ActoresController@destroy');
         Route::delete('actores/{id}/hard', 'ActoresController@hardDestroy');
 
+        //Categorias de pautas
+        Route::get('categorias', 'CategoriasController@getTodos');
+        Route::get('categorias/alta', 'CategoriasController@create');
+        Route::get('categoriasTabla', 'CategoriasController@getTabla');
+        Route::get('categorias/{id}', 'CategoriasController@edit');
+
+        Route::post('categorias', 'CategoriasController@store');
+
+        Route::put('categorias/{id}', 'CategoriasController@update');
+        Route::put('categorias/{id}/alta', 'CategoriasController@alta');
+
+        Route::delete('categorias/{id}', 'CategoriasController@destroy');
+        Route::delete('categorias/{id}/hard', 'CategoriasController@hardDestroy');
+
         //Destinatarios
         Route::get('destinatarios', 'DestinatariosController@getTodos');
         Route::get('destinatarios/alta', 'DestinatariosController@create');
@@ -355,20 +370,6 @@ Route::group(['middleware' => ['logueado','logging']], function () {
 
         Route::delete('componentes/{id}', 'ComponentesController@destroy');
         Route::delete('componentes/{id}/hard', 'ComponentesController@hardDestroy');
-
-        //Categorias de pautas
-        Route::get('categorias', 'CategoriasController@getTodos');
-        Route::get('categorias/alta', 'CategoriasController@create');
-        Route::get('categoriasTabla', 'CategoriasController@getTabla');
-        Route::get('categorias/{id}', 'CategoriasController@edit');
-
-        Route::post('categorias', 'CategoriasController@store');
-
-        Route::put('categorias/{id}', 'CategoriasController@update');
-        Route::put('categorias/{id}/alta', 'CategoriasController@alta');
-
-        Route::delete('categorias/{id}', 'CategoriasController@destroy');
-        Route::delete('categorias/{id}/hard', 'CategoriasController@hardDestroy');
 
         //Gestores
         Route::get('gestores/tabla', 'GestoresController@getTabla');

@@ -27,9 +27,9 @@
 						<select class="select-2 form-control categoria" id="categoria" name="id_categoria" aria-hidden="true">
 							@foreach ($categorias as $categoria)
 								@if ($categoria->id_categoria === $pauta->id_categoria)
-									<option value="{{$categoria->id_categoria}}" data-id="{{$categoria->id_categoria}}" title="{{$categoria->nombre}}" selected="selected">{{$categoria->id_categoria." - ".$categoria->nombre}}</option>
+									<option value="{{$categoria->id_categoria}}" data-id="{{$categoria->id_categoria}}" title="{{$categoria->nombre}}" selected="selected">{{$categoria->numero." - ".$categoria->nombre}}</option>
 								@else
-									<option value="{{$categoria->id_categoria}}" data-id="{{$categoria->id_categoria}}" title="{{$categoria->nombre}}">{{$categoria->id_categoria." - ".$categoria->nombre}}</option>
+									<option value="{{$categoria->id_categoria}}" data-id="{{$categoria->id_categoria}}" title="{{$categoria->nombre}}">{{$categoria->numero." - ".$categoria->nombre}}</option>
 								@endif
 							@endforeach
 						</select>
@@ -83,6 +83,7 @@
 		var anios = $('#anio').val();
 		var provincia = {{Auth::user()->id_provincia}};
 		var categoria = $('#categoria').val();
+		var numero = $('#numero').val();
 
 		return [
 			{
@@ -96,6 +97,10 @@
 			{
 				name: 'id_categoria',
 				value: categoria
+			},
+			{
+				name: 'numero',
+				value: numero
 			}
 		];
 	}
@@ -158,6 +163,16 @@
 		});
 		
 		inicializarSelect2();
+		var categorias = {!! $categorias->toJson() !!};
+
+		$('#categoria').change(function() {
+			let id = $('#categoria option:selected').data('id');
+			let categoria = categorias.find(categoria => categoria.id_categoria === id);
+			let pauta = categoria.pautas.sort((a, b) => a.numero - b.numero).pop();
+
+			$('#numero').val( (pauta?.numero?.slice(0, -1) ?? categoria?.numero + '.') + ( (parseInt(pauta?.numero?.slice(-1) ?? 0) + 1).toString() ));
+			$('#numero').prop('disabled', true);
+		});
 
 		$('#alta').on('click','#modificar',function() {
 

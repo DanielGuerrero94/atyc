@@ -1101,6 +1101,18 @@
       var availableHeight = $(window).height() - position - container.outerHeight();
       var bottomPadding = 50; // Set as needed
       $('ul.select2-results__options').css('max-height', (availableHeight - bottomPadding) + 'px');
+
+      pautas = {!! $pautasEdit->toJson() !!};
+
+      let anio = $('#general #anio option:selected').data('id').toString();
+      let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
+
+      $("#pauta option").each( function () {
+        setDisabledElement(pautasIds, $(this));
+      });
+
+      $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
+      $('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
     });
 
     $('.select-2').ready(function() {

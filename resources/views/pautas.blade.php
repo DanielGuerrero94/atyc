@@ -26,7 +26,7 @@
 										@endfor
 									</select>
 								</div>
-							</div>			
+							</div>
 						</div>
 						@if(Auth::user()->id_provincia == 25)
 						<div class="row">
@@ -35,11 +35,11 @@
 								<div class="col-xs-8 col-sm-6">
 									<select class="select-2 form-control provincias" id="provincias" name="id_provincia" aria-hidden="true" multiple>
 										@foreach ($provincias as $provincia)
-										<option data-id="{{$provincia->id_provincia}}" value="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>									
+										<option data-id="{{$provincia->id_provincia}}" value="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>
 										@endforeach
 									</select>
 								</div>
-							</div>	
+							</div>
 						</div>
 						@endif
 					</div>
@@ -57,7 +57,7 @@
 			</div>
 		</div>
 	</div>
-	<div id="alta"></div>	
+	<div id="alta"></div>
 </div>
 @endsection
 
@@ -86,7 +86,7 @@
 		@if(Auth::user()->id_provincia != 25)
 			provincias = [{{Auth::user()->id_provincia}}, 25];
 		@endif
-		
+
 		data = {
 			anios: anios,
 			provincias: provincias
@@ -152,8 +152,8 @@
 		$('.select-2').on('select2:unselect', function () {
 			$('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
 		});
-		
-		$('[data-toggle="popover"]').popover(); 
+
+		$('[data-toggle="popover"]').popover();
 
 		$('#pautas-refresh').click(function () {
 
@@ -163,35 +163,55 @@
 				destroy: true,
 				scrollCollapse: true,
 				ajax : {
-					url: 'pautasTabla',
+					url: 'categoriasPautasTabla',
 					data: {
 						filtros: getFiltrosJson()
 					}
 				},
 				columns: [
-				{ title: 'Creación', data: 'created_at', defaultContent: '-', 
-					render: function(data) {
-						return moment(data).format('DD/MM/YYYY');;
+				{ title: 'Creación', data: 'pauta_created_at', defaultContent: '-',
+					render: function(data, type, row, meta) {
+						if(data) {
+							return moment(data).format('DD/MM/YYYY');
+						} else if(row.categoria_created_at) {
+							return moment(row.categoria_created_at).format('DD/MM/YYYY');
+						}
 					}
 				},
-				{ title: 'Número', data: 'numero'},
-				{ title: 'Nombre', data: 'nombre'},
-				{ title: 'Ficha Obligatoria', data: 'ficha_obligatoria', 
+                { title: 'Categoria', data: 'categoria_numero', defaultContent: '-',
+                    render: function(data, type, row, meta) {
+                        if(data) {
+                            return `<b>${data}</b> - ${row.categoria_nombre}`;
+                        }
+                    }
+                },
+				{ title: 'Pauta', data: 'pauta_numero', defaultContent: '-',
+					render: function(data, type, row, meta) {
+						if(data) {
+							return `<b>${data}</b> - ${row.pauta_nombre}`;
+						}
+					}
+				},
+				{ title: 'Ficha Obligatoria', data: 'ficha_obligatoria', defaultContent: "-",
 					render: function ( data, type, row, meta ) {
+						if(data) {
 							return estadosFicha(data);
+						}
 					}
 				},
-				{ title: 'Jurisdicción', data: 'provincia.nombre', name: 'id_provincia' },
-				{ title: 'Años', data: 'anios', orderable: false,
+				{ title: 'Jurisdicción', data: 'provincia_nombre', name: 'id_provincia', defaultContent: '-'},
+				{ title: 'Años', data: 'anios', orderable: false, defaultContent: "-",
 					render: function ( data, type, row, meta ) {
 						if(Object.entries(data[0]).length != 0)
 							return data[0].map(function(anio) { return ' ' + anio.anio; });
 					}
 				},
-				{ title: 'Descripción', data: 'descripcion' },
-				{ title: 'Acciones', data: 'deleted_at',
+				{ title: 'Descripción', data: 'descripcion', defaultContent: "-" },
+				{ title: 'Acciones', data: 'pauta_deleted_at', defaultContent: "-",
 					render: function( data, type, row, meta ) {
-						return acciones(data, row.created_at, row.id_pauta, row.id_provincia);
+						if(row.pauta_created_at) {
+							return acciones(data, row.pauta_created_at, row.id_pauta, row.id_provincia);
+						}
 					}
 				}
 				]
@@ -217,7 +237,7 @@
 		});
 
 	$('#abm').on('click','.editar',function() {
-		
+
 		var pauta = $(this).data('id');
 
 		$.ajax ({
@@ -233,7 +253,7 @@
 	$('#abm').on("click",".eliminar",function(){
 		var pauta = $(this).data('id');
 		var data = '_token='+$('#abm input').first().val();
-		
+
 		jQuery('<div/>', {
 			id: 'dialogABM',
 			text: ''
@@ -263,7 +283,7 @@
 			{
 				"Aceptar" : function () {
 					$(this).dialog("destroy");
-					$("#dialogABM").html("");				
+					$("#dialogABM").html("");
 
 					$.ajax ({
 						url: 'pautas/'+pauta+'/hard',
@@ -289,11 +309,11 @@
 					location.reload("true");
 				}
 			}
-		});			
+		});
 	});
 
 	$('#abm').on('click','.darBaja',function() {
-		
+
 		var pauta = $(this).data('id');
 		var data = '_token='+$('#abm input').first().val();
 		console.log(pauta);
@@ -316,7 +336,7 @@
 
 
 	$('#abm').on('click','.darAlta',function() {
-		
+
 		var pauta = $(this).data('id');
 		var data = '_token='+$('#abm input').first().val();
 
@@ -335,7 +355,7 @@
 			}
 		});
 	});
-	
-});	
+
+});
 </script>
 @endsection
