@@ -1104,7 +1104,7 @@
 
       pautas = {!! $pautasEdit->toJson() !!};
 
-      let anio = $('#general #anio option:selected').data('id').toString();
+      let anio = $('#general #anio').val().toString();
       let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
 
       $("#pauta option").each( function () {
