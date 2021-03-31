@@ -108,16 +108,6 @@ class Pac extends Model
         );
     }
 
-    public function pautas()
-    {
-        return $this->belongsToMany(
-            'App\Models\Pac\Pauta',
-            'pac.pacs_pautas',
-            'id_pac',
-            'id_pauta'
-        );
-    }
-
     public function destinatarios()
     {
         return $this->belongsToMany(

@@ -13,7 +13,7 @@ class DropTablePacPacsPautas extends Migration
      */
     public function up()
     {
-//        DB::statement('DROP VIEW IF EXISTS pac.pac_joined;');
+        DB::statement('DROP VIEW IF EXISTS pac.pac_joined;');
         Schema::dropIfExists('pac.pacs_pautas');
 
         DB::statement(<<<HEREDOC
