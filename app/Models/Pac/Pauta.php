@@ -15,14 +15,14 @@ class Pauta extends Model
      * @var array
      */
     protected $fillable = ['numero', 'nombre', 'id_categoria', 'ficha_obligatoria', 'descripcion', 'id_provincia'];
-    
+
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
      * The table associated with the model.
      *
      * @var string
-    */
+     */
     protected $table = 'pac.pautas';
 
     /**
@@ -50,12 +50,11 @@ class Pauta extends Model
 
     public function pacs()
     {
-        return $this->belongsToMany(
+        return $this->hasMany(
             'App\Models\Pac\Pac',
-            'pac.pacs_pautas',
             'id_pauta',
-            'id_pac')
-            ->withTimestamps();
+            'id_pauta'
+        );
     }
 
     public function provincia()

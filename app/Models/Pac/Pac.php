@@ -10,10 +10,22 @@ class Pac extends Model
 {
     use SoftDeletes;
 
-    protected $dates = [ 'created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
-    protected $fillable = ['nombre', 'id_estado', 'id_accion', 'ediciones', 'duracion',
-    'id_provincia', 'id_ficha_tecnica', 'anio', 'ficha_obligatoria', 'display_date', 'id_actor'];
+    protected $fillable = [
+        'nombre',
+        'id_estado',
+        'id_accion',
+        'ediciones',
+        'duracion',
+        'id_provincia',
+        'id_ficha_tecnica',
+        'anio',
+        'ficha_obligatoria',
+        'display_date',
+        'id_actor',
+        'id_pauta',
+    ];
 
     /**
      * The table associated with the model.
@@ -87,14 +99,13 @@ class Pac extends Model
             ->withTimestamps();
     }
 
-    public function pautas()
+    public function pauta()
     {
-        return $this->belongsToMany(
+        return $this->belongsTo(
             'App\Models\Pac\Pauta',
-            'pac.pacs_pautas',
-            'id_pac',
-            'id_pauta')
-            ->withTimestamps();
+            'id_pauta',
+            'id_pauta'
+        );
     }
 
     public function destinatarios()
