@@ -1,7 +1,7 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="container-fluid">
+<div class="container">
 	<div id="abm">
 		{{csrf_field()}}
 		<div class="col-xs-12">

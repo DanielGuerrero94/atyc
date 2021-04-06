@@ -217,7 +217,7 @@ Participante
 												@else
 												<div class="form-group col-sm-6" style="display: none">
 													@endif
-													<label for="funcion" class="control-label col-sm-5">Función:</label>
+													<label for="funcion" class="control-label col-sm-5">Rol con respecto al SUMAR:</label>
 													<div class="col-sm-7">
 														<select class="form-control" id="funcion" name="id_funcion">
 

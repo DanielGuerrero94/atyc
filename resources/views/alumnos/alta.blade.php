@@ -177,7 +177,7 @@
 			<br>
 			<div class="row">
 				<div class="form-group col-xs-12 col-sm-6" style="display: none;">
-					<label for="funcion" class="control-label col-xs-4">Función:</label>
+					<label for="funcion" class="control-label col-xs-4">Rol con respecto al SUMAR:</label>
 					<div class="col-xs-8">
 						<select class="form-control" id="funcion" name="id_funcion">
 
