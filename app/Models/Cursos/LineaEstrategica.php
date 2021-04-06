@@ -44,7 +44,7 @@ class LineaEstrategica extends Model
     public function modalidades()
     {
         return $this->belongsToMany(
-            LineaEstrategica::class,
+            Modalidad::class,
             "cursos.lineas_estrategicas_modalidades",
             "id_linea_estrategica",
             "id_modalidad"
