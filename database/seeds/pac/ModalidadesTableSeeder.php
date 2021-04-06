@@ -33,6 +33,6 @@ class ModalidadesTableSeeder extends Seeder
 
         $maxModalidadId = Modalidad::max('id_modalidad') + 1;
 
-        DB::statement("ALTER SEQUENCE modalidades_id_modalidad_seq restart with {$maxModalidadId};");
+        DB::statement("ALTER SEQUENCE cursos.modalidades_id_modalidad_seq restart with {$maxModalidadId};");
     }
 }
