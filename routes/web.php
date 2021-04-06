@@ -54,7 +54,7 @@ Route::get('dashboard/draw/progress', 'DashboardController@progress');
 */
 
 //Logueado
-Route::group(['middleware' => ['logueado','logging']], function () {
+Route::group(['middleware' => ['logueado', 'logging']], function () {
 
     Route::get('omeka', 'OmekaController@iframe');
     //Materiales
@@ -243,7 +243,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::post('encuestas/subida', 'Encuestas\EncuestasController@subida');
     Route::resource('encuestas', 'Encuestas\EncuestasController');
 
-        //Efectores
+    //Efectores
     Route::get('efectores', 'EfectoresController@get');
     Route::get('efectores/tabla', 'EfectoresController@getTabla');
     Route::get('efectores/nombres', 'EfectoresController@getNombres');
@@ -264,8 +264,8 @@ Route::group(['middleware' => ['logueado','logging']], function () {
     Route::get('provincias/localidades/typeahead', 'ProvinciasController@localidadesTypeahead');
 
     //CALIDAD
-    Route::get('calidad/formulario', function() {
-            return view('idasdasdas'); 
+    Route::get('calidad/formulario', function () {
+        return view('idasdasdas');
     });
     //ADMIN
     Route::group(['middleware' => 'admin'], function () {
@@ -300,6 +300,20 @@ Route::group(['middleware' => ['logueado','logging']], function () {
 
         Route::delete('lineasEstrategicas/{id}', 'LineasEstrategicasController@destroy');
         Route::delete('lineasEstrategicas/{id}/hard', 'LineasEstrategicasController@hardDestroy');
+
+        //Modalidades de Tipologia de Accion
+        Route::get('modalidades', 'ModalidadesController@getTodos');
+        Route::get('modalidadesTabla', 'ModalidadesController@getTabla');
+        Route::get('modalidades/alta', 'ModalidadesController@create');
+        Route::get('modalidades/{id}', 'ModalidadesController@edit');
+
+        Route::post('modalidades', 'ModalidadesController@store');
+
+        Route::put('modalidades/{id}', 'ModalidadesController@update');
+        Route::put('modalidades/{id}/alta', 'ModalidadesController@alta');
+
+        Route::delete('modalidades/{id}', 'ModalidadesController@destroy');
+        Route::delete('modalidades/{id}/hard', 'ModalidadesController@hardDestroy');
 
         //Actores de Accion
         Route::get('actores', 'ActoresController@getTodos');
@@ -378,7 +392,7 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         //Periodos
         Route::get('periodos/table', 'PeriodosController@table');
         Route::resource('periodos', 'PeriodosController');
-        
+
         //Tipo de docentes
         Route::get('tipoDocentes/table', 'TipoDocentesController@table');
         Route::resource('tipoDocentes', 'TipoDocentesController');
@@ -398,6 +412,6 @@ Route::group(['middleware' => ['logueado','logging']], function () {
         Route::get('provincias/{id}', 'ProvinciasController@show');
 
         //Logs
-        Route::get('logs/mostrar/{date}','LogController@log');
+        Route::get('logs/mostrar/{date}', 'LogController@log');
     });
 });
