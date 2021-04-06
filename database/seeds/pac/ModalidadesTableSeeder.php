@@ -14,19 +14,19 @@ class ModalidadesTableSeeder extends Seeder
     public function run()
     {
         Modalidad::updateOrCreate([
-            'id_modaliad' => Modalidad::PRESENCIAL
+            'id_modalidad' => Modalidad::PRESENCIAL
         ], [
             'nombre' => 'PRESENCIAL',
         ]);
 
         Modalidad::updateOrCreate([
-            'id_modaliad' => Modalidad::VIRTUAL
+            'id_modalidad' => Modalidad::VIRTUAL
         ], [
             'nombre' => 'VIRTUAL',
         ]);
 
         Modalidad::updateOrCreate([
-            'id_modaliad' => Modalidad::DISPOSITIVO_TEXTO
+            'id_modalidad' => Modalidad::DISPOSITIVO_TEXTO
         ], [
             'nombre' => 'DISPOSITIVO DE TEXTO',
         ]);
