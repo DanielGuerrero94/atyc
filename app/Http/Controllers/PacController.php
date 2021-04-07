@@ -34,21 +34,21 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PacController extends AbmController
 {
-        /**
+    /**
      * Rules for validate the request
      *
      * @var array
      **/
     private $rules = [
-        'nombre' => 'required|string',
-        'id_accion' => 'required|numeric',
-        'ediciones' => 'required|numeric',
-        'duracion' => 'required|numeric',
-        'id_provincia' => 'required|numeric',
+        'nombre'            => 'required|string',
+        'id_accion'         => 'required|numeric',
+        'ediciones'         => 'required|numeric',
+        'duracion'          => 'required|numeric',
+        'id_provincia'      => 'required|numeric',
         // 'ids_tematicas' => 'required',
         'ids_destinatarios' => 'required',
-        'ids_responsables' => 'required',
-        // 'ids_pautas' => 'required',
+        'ids_responsables'  => 'required',
+        // 'id_pauta' => 'required',
         // 'ids_componentes' => 'required'
     ];
 
@@ -58,22 +58,22 @@ class PacController extends AbmController
      * @var array
      **/
     private $filters = [
-        'anios' => 'array',
-        'id_provincia' => 'array',
-        'nombre' => 'string',
-        'duracion' => 'numeric',
-        'ediciones' => 'numeric',
+        'anios'                  => 'array',
+        'id_provincia'           => 'array',
+        'nombre'                 => 'string',
+        'duracion'               => 'numeric',
+        'ediciones'              => 'numeric',
         'ficha_tecnica_aprobada' => 'array',
-        'ficha_obligatoria' => 'array',
-        'id_accion' => 'array',
-        'id_tematica' => 'array',
-        'id_destinatario' => 'array',
-        'id_responsable' => 'array',
-        'id_pauta' => 'array',
-        'id_componente' => 'array',
-        'id_periodo' => 'numeric',
-        'desde' => 'string',
-        'hasta' => 'string'
+        'ficha_obligatoria'      => 'array',
+        'id_accion'              => 'array',
+        'id_tematica'            => 'array',
+        'id_destinatario'        => 'array',
+        'id_responsable'         => 'array',
+        'id_pauta'               => 'array',
+        'id_componente'          => 'array',
+        'id_periodo'             => 'numeric',
+        'desde'                  => 'string',
+        'hasta'                  => 'string'
     ];
 
     /**
@@ -82,10 +82,10 @@ class PacController extends AbmController
      * @var array
      **/
     private $botones = [
-        'editar' => 'fa fa-pencil-square-o',
+        'editar'   => 'fa fa-pencil-square-o',
         'eliminar' => 'fa fa-trash-o',
-        'buscar' => 'fa fa-search',
-        'agregar' => 'fa fa-plus-circle'
+        'buscar'   => 'fa fa-search',
+        'agregar'  => 'fa fa-plus-circle'
     ];
 
     /**
@@ -111,36 +111,37 @@ class PacController extends AbmController
 
     public function crearCursos($pac, $request)
     {
-        for($i = 0; $i < $request->ediciones; $i++) {
+        for ($i = 0; $i < $request->ediciones; $i++) {
             $edicion = Curso::where([
-                ['nombre', '=', $request->nombre],
-                ['id_provincia', '=', $request->id_provincia],
-            ])
-            ->count() + 1;
+                    ['nombre', '=', $request->nombre],
+                    ['id_provincia', '=', $request->id_provincia],
+                ])
+                    ->count() + 1;
 
-            $fecha_inicio_actual = 'fecha_inicio_'.($i+1);
-            $fecha_final_actual = "fecha_final_".($i+1);
+            $fecha_inicio_actual = 'fecha_inicio_' . ($i + 1);
+            $fecha_final_actual  = "fecha_final_" . ($i + 1);
 
-            $data = $request->all(); //only();
+            $data   = $request->all(); //only();
             $estado = 1;
-            $data = array_merge($data, [
-                'id_pac' => $pac->id_pac,
-                'id_estado' => $estado,
-                'edicion' => $edicion,
-                'id_area_tematica' => $request->id_tematica,
+            $data   = array_merge($data, [
+                'id_pac'               => $pac->id_pac,
+                'id_estado'            => $estado,
+                'edicion'              => $edicion,
+                'id_area_tematica'     => $request->id_tematica,
                 'id_linea_estrategica' => $request->id_accion,
-                'fecha_plan_inicial' => $request->$fecha_inicio_actual,
-                'fecha_plan_final' => $request->$fecha_final_actual,
-                'fecha_display' => $request->$fecha_inicio_actual
+                'fecha_plan_inicial'   => $request->$fecha_inicio_actual,
+                'fecha_plan_final'     => $request->$fecha_final_actual,
+                'fecha_display'        => $request->$fecha_inicio_actual
             ]);
 
             $curso = Curso::create($data);
-            logger('Creo el curso: '.json_encode($curso));
+            logger('Creo el curso: ' . json_encode($curso));
 
-            if($pac->id_ficha_tecnica)
+            if ($pac->id_ficha_tecnica) {
                 $this->cambiarEstadoCursos($pac->id_pac, 2);
+            }
 
-            if(!empty($request->get('ids_tematicas'))) {
+            if (!empty($request->get('ids_tematicas'))) {
                 $tematicas = explode(',', $request->get('ids_tematicas'));
                 $curso->areasTematicas()->attach($tematicas);
             }
@@ -151,85 +152,68 @@ class PacController extends AbmController
 
     public function attachPivotTables($pac, $request)
     {
-        if(!empty($request->get('ids_tematicas'))) {
+        if (!empty($request->get('ids_tematicas'))) {
             $tematicas = explode(',', $request->get('ids_tematicas'));
             $pac->tematicas()->attach($tematicas);
         }
 
-        if(!empty($request->get('ids_destinatarios'))) {
+        if (!empty($request->get('ids_destinatarios'))) {
             $destinatarios = explode(',', $request->get('ids_destinatarios'));
             $pac->destinatarios()->attach($destinatarios);
         }
 
-        if(!empty($request->get('ids_responsables'))) {
+        if (!empty($request->get('ids_responsables'))) {
             $responsables = explode(',', $request->get('ids_responsables'));
             $pac->responsables()->attach($responsables);
         }
 
-        if(!empty($request->get('ids_pautas'))) {
-            $pautas = explode(',', $request->get('ids_pautas'));
-            $pac->pautas()->attach($pautas);
-        }
-
-        if(!empty($request->get('ids_componentes'))) {
+        if (!empty($request->get('ids_componentes'))) {
             $componentes = explode(',', $request->get('ids_componentes'));
             $pac->componentes()->attach($componentes);
         }
     }
 
-    public function tienePautaConFichaObligatoria($ids_pautas)
+    public function tienePautaConFichaObligatoria($id_pauta)
     {
-        $fichas_obligatorias = Pauta::select('ficha_obligatoria')
-        ->whereIn('id_pauta', $ids_pautas)
-        ->get()
-        ->toArray();
-        logger()->info("fichas_obligatorias: ".json_encode($fichas_obligatorias));
-
-        $fichas_obligatorias = array_map(function ($val) {
-            return $val['ficha_obligatoria'];
-        }, $fichas_obligatorias);
-        logger()->info("fichas_obligatorias: ".json_encode($fichas_obligatorias));
-
-        return in_array(true, $fichas_obligatorias);
+        return Pauta::find($id_pauta)->ficha_obligatoria;
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $data = $request->all();
         $data = array_merge($data, ['id_estado' => PacEstado::ACCION_NUEVA]);
-        logger()->info('Quiere crear PAC con: '.json_encode($data));
+        logger()->info('Quiere crear PAC con: ' . json_encode($data));
         $v = Validator::make($data, $this->rules);
 
-        if ($v->fails()) 
-        {
+        if ($v->fails()) {
             logger()->warning("Falla la creación de PAC/Acción");
             logger()->warning(json_encode($v->errors()->all()));
             return $v->errors();
         }
 
-        if (!empty($data['ids_pautas'])) {
-            $ids_pautas = explode(',' ,$data['ids_pautas']);
-            $data['ficha_obligatoria'] = $this->tienePautaConFichaObligatoria($ids_pautas);
+        if (!empty($data['id_pauta'])) {
+            $data['ficha_obligatoria'] = $this->tienePautaConFichaObligatoria($data['id_pauta']);
         }
-        
+
         $pac = Pac::create($data);
-        logger()->info('Crea pac: '.$pac);
+        logger()->info('Crea pac: ' . $pac);
 
         $this->attachPivotTables($pac, $request);
         $this->crearCursos($pac, $request);
 
         $id_ficha_tecnica = $request->get('id_ficha_tecnica');
-        logger()->info('id_ficha_tecnica: '.$id_ficha_tecnica);
+        logger()->info('id_ficha_tecnica: ' . $id_ficha_tecnica);
 
-        if($id_ficha_tecnica)
+        if ($id_ficha_tecnica) {
             $this->cambiarEstadoCursos($pac->id_pac, 2);
-        
+        }
+
         $this->setDisplayDate($pac);
         $this->cambiarEstadoPac($pac->id_pac, PacEstado::ACCION_EN_REVISION);
 
@@ -239,7 +223,7 @@ class PacController extends AbmController
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id_pac)
@@ -250,7 +234,7 @@ class PacController extends AbmController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id_pac)
@@ -261,19 +245,20 @@ class PacController extends AbmController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int                      $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $pac = Pac::findOrFail($id);
-        logger()->info("Updateo Pac: ".json_encode($pac));
+        logger()->info("Updateo Pac: " . json_encode($pac));
 
 
-        if ($request->has('ediciones'))
+        if ($request->has('ediciones')) {
             $this->crearCursos($pac, $request);
-        
+        }
+
         $pac->update($request->all());
 
         if (empty($request->get('ids_tematicas'))) {
@@ -289,19 +274,12 @@ class PacController extends AbmController
             $destinatarios = explode(',', $request->get('ids_destinatarios'));
             $pac->destinatarios()->sync($destinatarios);
         }
-        
+
         if (empty($request->get('ids_responsables'))) {
             $pac->responsables()->detach();
         } else {
             $responsables = explode(',', $request->get('ids_responsables'));
             $pac->responsables()->sync($responsables);
-        }
-
-        if (empty($request->get('ids_pautas'))) {
-            $pac->pautas()->detach();
-        } else {
-            $pautas = explode(',', $request->get('ids_pautas'));
-            $pac->pautas()->sync($pautas);
         }
 
         if (empty($request->get('ids_componentes'))) {
@@ -317,7 +295,7 @@ class PacController extends AbmController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id_pac)
@@ -325,34 +303,33 @@ class PacController extends AbmController
         logger()->info("Voy a Borrar:");
 
         $pac = Pac::findOrFail($id_pac);
-        logger()->info("PAC:\n".$pac);
+        logger()->info("PAC:\n" . $pac);
         $pac->delete();
 
-        if($pac->id_ficha_tecnica)
-        {
+        if ($pac->id_ficha_tecnica) {
             $ficha_tecnica = FichaTecnica::findOrFail($pac->id_ficha_tecnica);
-            logger()->info("Ficha Tecnica:\n".$ficha_tecnica);
+            logger()->info("Ficha Tecnica:\n" . $ficha_tecnica);
             $ficha_tecnica->delete();
         }
 
         $cursos = Curso::where('id_pac', $id_pac)->get();
-        logger()->info("Cursos:\n".$cursos);
+        logger()->info("Cursos:\n" . $cursos);
 
-        foreach($cursos as $curso)
-        {
-            logger()->info("Curso a borrar: ".$curso);
+        foreach ($cursos as $curso) {
+            logger()->info("Curso a borrar: " . $curso);
             $curso->delete();
         }
-        
+
         logger("Borro todo");
-    
+
         return response()->json($pac);
     }
+
     /**
-    * View para abm.
-    *
-    * @return \Illuminate\Http\Response
-    */
+     * View para abm.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function get()
     {
         return view('pacs', $this->getEditOptions());
@@ -360,21 +337,22 @@ class PacController extends AbmController
 
     public function logFiltro($key, $value)
     {
-        if(is_array($value))
+        if (is_array($value)) {
             $value = implode(", ", $value);
-        logger()->info($key.": ".$value);
+        }
+        logger()->info($key . ": " . $value);
     }
 
     public function queryFechasPac($query, $signo, $fecha)
     {
         $query->orWhere('pac.pac_joined.fp_desde', $signo, $fecha)
-        ->orWhere('pac.pac_joined.fp_hasta', $signo, $fecha)
-        ->orWhere(function($q) use ($signo, $fecha) {
-            $q->where('pac.pac_joined.fe_desde', '!=', null)
-            ->where('pac.pac_joined.fe_desde', $signo, $fecha)
-            ->where('pac.pac_joined.fe_hasta', '!=', null)
-            ->where('pac.pac_joined.fe_hasta', $signo, $fecha);
-        });
+            ->orWhere('pac.pac_joined.fp_hasta', $signo, $fecha)
+            ->orWhere(function ($q) use ($signo, $fecha) {
+                $q->where('pac.pac_joined.fe_desde', '!=', null)
+                    ->where('pac.pac_joined.fe_desde', $signo, $fecha)
+                    ->where('pac.pac_joined.fe_hasta', '!=', null)
+                    ->where('pac.pac_joined.fe_hasta', $signo, $fecha);
+            });
     }
 
     public function queryLogicaIds($filtros)
@@ -390,58 +368,51 @@ class PacController extends AbmController
         foreach ($filtered as $key => $value) {
             $this->logFiltro($key, $value);
 
-            if($key == 'ficha_tecnica_aprobada')
-            {
-                $query = $query->where(function($q) use ($key, $value) {
-                    if (in_array("no_tiene", $value))
-                    {
+            if ($key == 'ficha_tecnica_aprobada') {
+                $query = $query->where(function ($q) use ($key, $value) {
+                    if (in_array("no_tiene", $value)) {
                         $q->orWhere('pac.pac_joined.id_ficha_tecnica', null);
-                        $value = array_diff($value,["no_tiene"]);
+                        $value = array_diff($value, ["no_tiene"]);
                     }
 
-                    $q = $q->orWhereIn('pac.pac_joined.'.$key, $value);
+                    $q = $q->orWhereIn('pac.pac_joined.' . $key, $value);
                 });
-            }
-            elseif ($key == 'desde')
-            {
-                $query = $query->where(function($q) use ($value) {
+            } elseif ($key == 'desde') {
+                $query = $query->where(function ($q) use ($value) {
                     $this->queryFechasPac($q, '>=', $value);
                 });
-            } elseif ($key == 'hasta')
-            {
-                $query = $query->where(function($q) use ($value) {
+            } elseif ($key == 'hasta') {
+                $query = $query->where(function ($q) use ($value) {
                     $this->queryFechasPac($q, '<=', $value);
                 });
-            }
-            elseif ($key == 'periodo')
-            {
+            } elseif ($key == 'periodo') {
                 $periodo = Periodo::find($value);
 
-                $query = $query->where(function($q) use ($periodo) {
+                $query = $query->where(function ($q) use ($periodo) {
                     $this->queryFechasPac($q, '>=', $periodo->desde);
                 });
 
-                $query = $query->where(function($q) use ($periodo) {
+                $query = $query->where(function ($q) use ($periodo) {
                     $this->queryFechasPac($q, '<=', $periodo->hasta);
                 });
+            } elseif ($key == 'nombre') {
+                $query = $query->where('pac.pac_joined.' . $key, 'ilike', "%{$value}%");
+            } elseif ($key == 'ediciones' || $key == 'duracion') {
+                $query = $query->where('pac.pac_joined.' . $key, $value);
+            } else {
+                $query = $query->whereIn('pac.pac_joined.' . $key, $value);
             }
-            elseif ($key == 'nombre')
-                $query = $query->where('pac.pac_joined.'.$key, 'ilike', "%{$value}%");
-            elseif ($key == 'ediciones' || $key == 'duracion')
-                $query = $query->where('pac.pac_joined.'.$key, $value);
-            else
-                $query = $query->whereIn('pac.pac_joined.'.$key, $value);
         }
 
-        logger()->info("query: ".json_encode($query->toSql()));
+        logger()->info("query: " . json_encode($query->toSql()));
 
         $ids = $query->select('id_pac')->distinct()->get()->toArray();
 
         $ids = array_map(function ($val) {
             return $val->id_pac;
         }, $ids);
-         
-        logger()->info("ids_pac: ".json_encode($ids));
+
+        logger()->info("ids_pac: " . json_encode($ids));
 
         return $ids;
     }
@@ -449,46 +420,56 @@ class PacController extends AbmController
     function getTabla($ids_pac, $order_by)
     {
         $pacs = Pac::with([
-            'tipoAccion' => function ($pacs) {
+            'tipoAccion'   => function ($pacs) {
                 return $pacs->withTrashed();
             },
             'provincias',
-            'tematicas' => function ($pacs) {
+            'tematicas'    => function ($pacs) {
                 return $pacs->select('nombre')->withTrashed();
             },
             'responsables' => function ($pacs) {
                 return $pacs->select('nombre')->withTrashed();
             },
-            'fichaTecnica' => function ($pacs) {	
-                return $pacs->withTrashed();	
-            },
-            'estado' => function ($pacs) {
+            'fichaTecnica' => function ($pacs) {
                 return $pacs->withTrashed();
             },
-            'pautas' => function ($pacs) {
+            'estado'       => function ($pacs) {
                 return $pacs->withTrashed();
             },
-            'componentes' => function ($pacs) {
+            'pauta'        => function ($pacs) {
                 return $pacs->withTrashed();
             },
-            'actor' => function($pacs) {
+            'componentes'  => function ($pacs) {
+                return $pacs->withTrashed();
+            },
+            'actor'        => function ($pacs) {
                 return $pacs->withTrashed();
             }
         ])
-        ->whereIn('pac.pacs.id_pac', $ids_pac)
-        ->segunProvincia();
-        
-        if(isset($order_by))
-        {
-            $ordenadores = ['created_at', 'display_date', 'id_estado', 'nombre', 'nombre', 'ediciones', 'duracion', 'id_ficha_tecnica', 'id_provincia'];
+            ->whereIn('pac.pacs.id_pac', $ids_pac)
+            ->segunProvincia();
 
-            logger()->info("order_by[0][1]: ".$order_by['order_by'][0][1]);
-            logger()->info("ordenador[order_by[0][0]]: ".$ordenadores[$order_by['order_by'][0][0]]); 
+        if (isset($order_by)) {
+            $ordenadores =
+                [
+                    'created_at',
+                    'display_date',
+                    'id_estado',
+                    'nombre',
+                    'nombre',
+                    'ediciones',
+                    'duracion',
+                    'id_ficha_tecnica',
+                    'id_provincia'
+                ];
+
+            logger()->info("order_by[0][1]: " . $order_by['order_by'][0][1]);
+            logger()->info("ordenador[order_by[0][0]]: " . $ordenadores[$order_by['order_by'][0][0]]);
 
             $pacs = $pacs->orderBy($ordenadores[$order_by['order_by'][0][0]], $order_by['order_by'][0][1]);
         }
 
-        logger()->info("pacs: ".json_encode($pacs->toSql()));
+        logger()->info("pacs: " . json_encode($pacs->toSql()));
 
         return $pacs;
     }
@@ -498,24 +479,21 @@ class PacController extends AbmController
         $cursos = $pac->cursos()->orderBy('fecha_plan_inicial')->get();
 
         $todos_ejecutados = true;
-        $estados = array();
+        $estados          = array();
 
-        foreach ($cursos as $curso) 
-        {
-            if(isset($curso->fecha_ejec_inicial))
-            {
-                if((!isset($fecha_ejec_anterior) || $curso->fecha_ejec_inicial <= $fecha_ejec_anterior))
+        foreach ($cursos as $curso) {
+            if (isset($curso->fecha_ejec_inicial)) {
+                if ((!isset($fecha_ejec_anterior) || $curso->fecha_ejec_inicial <= $fecha_ejec_anterior)) {
                     $fecha_ejec_anterior = $curso->fecha_ejec_inicial;
-            }
-            else
-            {
+                }
+            } else {
                 $todos_ejecutados = false;
-                
-                if($curso->fecha_plan_inicial >= Carbon::now()->format('yy-m-d') && (!isset($fecha_plan_posterior) || $curso->fecha_plan_inicial <= $fecha_plan_posterior))
+
+                if ($curso->fecha_plan_inicial >= Carbon::now()->format('yy-m-d') && (!isset($fecha_plan_posterior) || $curso->fecha_plan_inicial <= $fecha_plan_posterior)) {
                     $fecha_plan_posterior = $curso->fecha_plan_inicial;
-                
-                elseif(!isset($fecha_plan_anterior) || $curso->fecha_plan_inicial <= $fecha_plan_anterior)
+                } elseif (!isset($fecha_plan_anterior) || $curso->fecha_plan_inicial <= $fecha_plan_anterior) {
                     $fecha_plan_anterior = $curso->fecha_plan_inicial;
+                }
             }
 
             // logger()->info("Comparacion: ".$curso->fecha_plan_inicial." >= ".Carbon::now()->format('yy-m-d'));
@@ -527,49 +505,49 @@ class PacController extends AbmController
             //     logger()->info("Fecha Ejec Anterior: ".$fecha_ejec_anterior);
         }
         $display = $pac->created_at;
-        
-        if(isset($fecha_plan_posterior))
+
+        if (isset($fecha_plan_posterior)) {
             $display = $fecha_plan_posterior;
-        elseif($todos_ejecutados && isset($fecha_ejec_anterior))
+        } elseif ($todos_ejecutados && isset($fecha_ejec_anterior)) {
             $display = $fecha_ejec_anterior;
-        elseif(isset($fecha_plan_anterior))
+        } elseif (isset($fecha_plan_anterior)) {
             $display = $fecha_plan_anterior;
+        }
 
         $pac->display_date = $display;
         $pac->save();
-        logger()->info("display_date :".$pac->display_date);
+        logger()->info("display_date :" . $pac->display_date);
 
         return response()->json($pac);
     }
 
     public function estadosPorPac(Pac $pac)
     {
-        $cursos = $pac->cursos()->get();
+        $cursos  = $pac->cursos()->get();
         $estados = array();
         $colores = ['warning', 'info', 'ejecutando', 'success', 'reprogramado', 'danger'];
         $titulos = ['Planificado', 'Diseñado', 'En ejecución', 'Finalizado', 'Reprogramado', 'Desactivado'];
 
         foreach ($cursos as $curso) {
-            if(!isset($estados[$curso->id_estado]))
-            {
-                $estados[$curso->id_estado]['cantidad'] = 1;
-                $estados[$curso->id_estado]['titulo'] = $titulos[$curso->id_estado - 1];
-                $estados[$curso->id_estado]['color'] = 'progress-bar-'.$colores[$curso->id_estado - 1];
+            if (!isset($estados[$curso->id_estado])) {
+                $estados[$curso->id_estado]['cantidad']   = 1;
+                $estados[$curso->id_estado]['titulo']     = $titulos[$curso->id_estado - 1];
+                $estados[$curso->id_estado]['color']      = 'progress-bar-' . $colores[$curso->id_estado - 1];
                 $estados[$curso->id_estado]['porcentaje'] = 100;
-            }
-            else {
+            } else {
                 $estados[$curso->id_estado]['cantidad']++;
             }
         }
 
-        foreach($estados as &$estado)
+        foreach ($estados as &$estado) {
             $estado['porcentaje'] = ($estado['cantidad'] / $cursos->count()) * 100;
+        }
 
         //logger()->info("Estados: ".json_encode($estados));
 
         return $estados;
     }
-    
+
     // Funcion mas performante?
     // @danielguerrero94
     // testie y la 1ra dio 12,444 vs 12,76 (segundos) para 1 millon de registros
@@ -578,7 +556,7 @@ class PacController extends AbmController
     // Para eso en la segunda tenes que crear un array de x cantidad siempre.
     // Aparte eso hace que tengas que recorrer el array de 6 entero siempre, en la primera recorres solo en los estados seteados.
     // Lo que tiene la segunda es que no tiene ningun if y parece mas prolija incluso.
-    
+
     // public function estadosPorPac($cursos)
     // {
     //     $cursos = $pac->cursos()->get();
@@ -587,7 +565,7 @@ class PacController extends AbmController
     //     $estados = array();
     //     $colores = ['warning', 'info', 'ejecutando', 'success', 'reprogramado', 'danger'];
     //     $titulos = ['Planificado', 'Diseñado', 'En ejecución', 'Reprogramado', 'Finalizado', 'Desactivado'];
-        
+
     //     foreach ($cursos as $curso)
     //         $repeticiones_estados[$curso->id_estado-1]++;
 
@@ -609,14 +587,14 @@ class PacController extends AbmController
         $v = Validator::make($filtros->all(), $this->filters);
         if (!$v->fails()) {
             $ids_pac = $this->queryLogicaIds($filtros);
-            $pacs = $this->getTabla($ids_pac, null);
+            $pacs    = $this->getTabla($ids_pac, null);
 
             return Datatables::of($pacs)
-            ->addColumn(
-                'estados_por_curso', function (Pac $pac) {
+                ->addColumn(
+                    'estados_por_curso', function (Pac $pac) {
                     return $this->estadosPorPac($pac);
-            })
-            ->make(true);
+                })
+                ->make(true);
         } else {
             return json_encode($v->errors());
         }
@@ -624,14 +602,13 @@ class PacController extends AbmController
 
     public function getAniosyProvinciasPac($pacs)
     {
-        $anios = array();
+        $anios      = array();
         $provincias = array();
-        foreach($pacs as $pac)
-        {
-            $anios[] = $pac->anio;
+        foreach ($pacs as $pac) {
+            $anios[]      = $pac->anio;
             $provincias[] = $pac->provincias()->get()->first()->abreviacion;
         }
-        $anios = implode("-", array_unique($anios));
+        $anios      = implode("-", array_unique($anios));
         $provincias = implode("-", array_unique($provincias));
 
         return ['anios' => $anios, 'provincias' => $provincias];
@@ -646,11 +623,11 @@ class PacController extends AbmController
 
         $ids_pac = $this->queryLogicaIds($filtros);
 
-        $pacs = $this->getTabla($ids_pac, $order_by)->get();
+        $pacs       = $this->getTabla($ids_pac, $order_by)->get();
         $data_extra = $this->getAniosyProvinciasPac($pacs);
 
         $datos = ['pacs' => $pacs];
-        $path = "pacs_".$data_extra['anios'].'_'.$data_extra['provincias'].'_'.date("Y-m-d_H:i:s");
+        $path  = "pacs_" . $data_extra['anios'] . '_' . $data_extra['provincias'] . '_' . date("Y-m-d_H:i:s");
 
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('PAC', function ($sheet) use ($datos) {
@@ -658,7 +635,7 @@ class PacController extends AbmController
                 $sheet->loadView('excel.pacs', $datos);
             });
         })
-        ->store('xls');
+            ->store('xls');
 
         return $path;
     }
@@ -710,27 +687,27 @@ class PacController extends AbmController
         });
 
         return [
-            'pautas' => $pautas,
-            'componentes' => $componentes,
+            'pautas'        => $pautas,
+            'componentes'   => $componentes,
             'destinatarios' => $destinatarios,
-            'responsables' => $responsables,
-            'tematicas' => $tematicas,
-            'actores' => $actores,
-            'tipoAcciones' => $tipoAcciones,
-            'provincias' => $provincias,
-            'periodos' => $periodos
+            'responsables'  => $responsables,
+            'tematicas'     => $tematicas,
+            'actores'       => $actores,
+            'tipoAcciones'  => $tipoAcciones,
+            'provincias'    => $provincias,
+            'periodos'      => $periodos
         ];
     }
 
     public function getEditOptions()
     {
         $pautasEdit = Pauta::leftJoin('pac.pautas_anios', 'pac.pautas.id_pauta', '=', 'pac.pautas_anios.id_pauta')
-        ->groupBy('pac.pautas.id_pauta')
-        ->orderBy('deleted_at', 'desc')
-        ->orderBy('numero')
-        ->withTrashed()
-        ->selectRaw("pac.pautas.id_pauta, array_to_string(array_agg(anio), ',') as anios, nombre, numero, descripcion, id_provincia")
-        ->get();
+            ->groupBy('pac.pautas.id_pauta')
+            ->orderBy('deleted_at', 'desc')
+            ->orderBy('numero')
+            ->withTrashed()
+            ->selectRaw("pac.pautas.id_pauta, array_to_string(array_agg(anio), ',') as anios, nombre, numero, descripcion, id_provincia")
+            ->get();
 
         $componentesEdit = Cache::remember('componentesEdit', 5, function () {
             return Componente::orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
@@ -748,7 +725,7 @@ class PacController extends AbmController
             return AreaTematica::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
         });
 
-        $actoresEdit = Cache::remember('actorEdit', 5, function() {
+        $actoresEdit = Cache::remember('actorEdit', 5, function () {
             return Actor::orderBy('deleted_at', 'desc')->orderBy('nombre')->withTrashed()->get();
         });
 
@@ -773,53 +750,51 @@ class PacController extends AbmController
         });
 
         return [
-            'pautasEdit' => $pautasEdit,
-            'componentesEdit' => $componentesEdit,
+            'pautasEdit'        => $pautasEdit,
+            'componentesEdit'   => $componentesEdit,
             'destinatariosEdit' => $destinatariosEdit,
-            'responsablesEdit' => $responsablesEdit,
-            'tematicasEdit' => $tematicasEdit,
-            'actoresEdit' => $actoresEdit,
-            'tipoAccionesEdit' => $tipoAccionesEdit,
-            'provinciasEdit' => $provinciasEdit,
-            'periodos' => $periodos,
-            'estadosCursos' => $estadosCursos,
-            'estadosPac' => $estadosPac,
+            'responsablesEdit'  => $responsablesEdit,
+            'tematicasEdit'     => $tematicasEdit,
+            'actoresEdit'       => $actoresEdit,
+            'tipoAccionesEdit'  => $tipoAccionesEdit,
+            'provinciasEdit'    => $provinciasEdit,
+            'periodos'          => $periodos,
+            'estadosCursos'     => $estadosCursos,
+            'estadosPac'        => $estadosPac,
         ];
     }
 
     public function cambiarEstadoCursos($id_pac, $id_estado)
     {
-        logger("Voy a actualizar los cursos del PAC: ".$id_pac ." al estado ".$id_estado);
+        logger("Voy a actualizar los cursos del PAC: " . $id_pac . " al estado " . $id_estado);
         $cursos = Curso::where('id_pac', '=', $id_pac)->get();
-        logger("Encontre estos cursos: " .$cursos);
-        foreach($cursos as $curso)
-        {
-            logger("Encontre el curso: ".$curso);
+        logger("Encontre estos cursos: " . $cursos);
+        foreach ($cursos as $curso) {
+            logger("Encontre el curso: " . $curso);
             $curso->update(compact('id_estado'));
-            logger("Actualice el curso: ".$curso);
+            logger("Actualice el curso: " . $curso);
         };
     }
 
     public function storeFichaTecnica(Request $request, $id_pac)
     {
         logger($id_pac);
-        $path = $request->file('csv')->store('fichas_tecnicas');
-        $path = explode('/', $path);
-        $path = $path[1];
+        $path     = $request->file('csv')->store('fichas_tecnicas');
+        $path     = explode('/', $path);
+        $path     = $path[1];
         $original = $request->file('csv')->getClientOriginalName();
         $aprobada = false;
-        
-        $ficha_tecnica = FichaTecnica::create(compact('original', 'path', 'aprobada'));
+
+        $ficha_tecnica    = FichaTecnica::create(compact('original', 'path', 'aprobada'));
         $id_ficha_tecnica = $ficha_tecnica->id_ficha_tecnica;
-        logger("Cree la ficha tecnica: " .$ficha_tecnica);
-        
-        if($id_pac)
-        { 
+        logger("Cree la ficha tecnica: " . $ficha_tecnica);
+
+        if ($id_pac) {
             $pac = Pac::findOrFail($id_pac);
-            logger("Encontre el pac: " .$pac);
+            logger("Encontre el pac: " . $pac);
 
             $pac->update(compact('id_ficha_tecnica'));
-            logger("Actualizo el pac: ".$pac);
+            logger("Actualizo el pac: " . $pac);
 
             $this->cambiarEstadoCursos($id_pac, 2);
         }
@@ -829,13 +804,13 @@ class PacController extends AbmController
 
     public function replaceFichaTecnica(Request $request, $id_ficha)
     {
-        $path = $request->file('csv')->store('fichas_tecnicas');
-        $path = explode('/', $path);
-        $path = $path[1];
+        $path     = $request->file('csv')->store('fichas_tecnicas');
+        $path     = explode('/', $path);
+        $path     = $path[1];
         $original = $request->file('csv')->getClientOriginalName();
 
         $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
-        $replaced = $ficha_tecnica->path;
+        $replaced      = $ficha_tecnica->path;
 
         $ficha_tecnica->update(compact('original', 'path'));
 
@@ -847,17 +822,17 @@ class PacController extends AbmController
     public function downloadFichaTecnica($id_ficha)
     {
         $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
-        $path = storage_path("app/fichas_tecnicas/".$ficha_tecnica->path);
+        $path          = storage_path("app/fichas_tecnicas/" . $ficha_tecnica->path);
         return response()->download($path, $ficha_tecnica->original);
     }
 
     public function aprobarFichaTecnica($id_ficha)
     {
         try {
-            $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
+            $ficha_tecnica           = FichaTecnica::findOrFail($id_ficha);
             $ficha_tecnica->aprobada = true;
             $ficha_tecnica->save();
-            
+
             return response('Ficha Técnica Aprobada', 200);
         } catch (Exception $e) {
             return response("No se pudo hacer aprobar la fichá técnica por {$e->getMessage()}", 409);
@@ -867,10 +842,10 @@ class PacController extends AbmController
     public function desaprobarFichaTecnica($id_ficha)
     {
         try {
-            $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
+            $ficha_tecnica           = FichaTecnica::findOrFail($id_ficha);
             $ficha_tecnica->aprobada = false;
             $ficha_tecnica->save();
-            
+
             return response('Ficha Técnica Desaprobada', 200);
         } catch (Exception $e) {
             return response("No se pudo hacer desaprobar la fichá técnica por {$e->getMessage()}", 409);
@@ -880,10 +855,10 @@ class PacController extends AbmController
     public function obligarFichaTecnica($id_pac)
     {
         try {
-            $pac = Pac::findOrFail($id_pac);
+            $pac                    = Pac::findOrFail($id_pac);
             $pac->ficha_obligatoria = true;
             $pac->save();
-    
+
             return response('Ficha Técnica Obligatoria', 200);
         } catch (Exception $e) {
             return response("No se pudo hacer obligatoria la fichá técnica por {$e->getMessage()}", 409);
@@ -893,10 +868,10 @@ class PacController extends AbmController
     public function desobligarFichaTecnica($id_pac)
     {
         try {
-            $pac = Pac::findOrFail($id_pac);
+            $pac                    = Pac::findOrFail($id_pac);
             $pac->ficha_obligatoria = false;
             $pac->save();
-            
+
             return response('Ficha Técnica Optativa', 200);
         } catch (Exception $e) {
             return response("No se pudo hacer optativa la ficha técnica por {$e->getMessage()}", 409);
@@ -937,10 +912,11 @@ class PacController extends AbmController
         }
     }
 
-    public function cambiarEstadoPac($id_pac, $estadoNuevo, $mensaje = null) {
+    public function cambiarEstadoPac($id_pac, $estadoNuevo, $mensaje = null)
+    {
         $pac = Pac::findOrFail($id_pac);
 
-        if($mensaje == '') {
+        if ($mensaje == '') {
             $mensaje = null;
         }
 
@@ -957,74 +933,76 @@ class PacController extends AbmController
 
     public function see($id_pac)
     {
-        return view('pacs.modificacion', array_merge($this->show($id_pac), $this->getEditOptions(), ['disabled' => true]));
+        return view('pacs.modificacion',
+            array_merge($this->show($id_pac), $this->getEditOptions(), ['disabled' => true]));
     }
 
     public function getPacWithTrashed($id_pac)
     {
         try {
             $pac = Pac::with([
-                'cursos' => function ($query) {
+                'cursos'        => function ($query) {
                     return $query->withTrashed();
                 },
                 'destinatarios' => function ($query) {
                     return $query->withTrashed();
                 },
-                'pautas' => function ($query) {
+                'pauta'         => function ($query) {
                     return $query->withTrashed();
                 },
-                'responsables' => function ($query) {
+                'responsables'  => function ($query) {
                     return $query->withTrashed();
                 },
-                'componentes' => function ($query) {
+                'componentes'   => function ($query) {
                     return $query->withTrashed();
                 },
-                'tipoAccion' => function ($query) {
+                'tipoAccion'    => function ($query) {
                     return $query->withTrashed();
                 },
-                'tematicas' => function ($query){
+                'tematicas'     => function ($query) {
                     return $query->withTrashed();
                 },
-                'estado' => function ($query) {
+                'estado'        => function ($query) {
                     return $query->withTrashed();
                 },
-                'fichaTecnica' => function ($query) {
+                'fichaTecnica'  => function ($query) {
                     return $query->withTrashed();
                 },
                 'cambiosEstado',
-                'actor' => function ($query) {
+                'actor'         => function ($query) {
                     return $query->withTrashed();
                 }
-                ])
+            ])
                 ->segunProvincia()
                 ->where('id_pac', $id_pac)->firstOrFail();
 
-		    return ['pac' => $pac];
-	    } catch (ModelNotFoundException $e) {
-		    return ['error' => "No se encontró a la Acción solicitada en la base de datos"];
-	    }
+            return ['pac' => $pac];
+        } catch (ModelNotFoundException $e) {
+            return ['error' => "No se encontró a la Acción solicitada en la base de datos"];
+        }
     }
 
     public function getCompletoExcel($id_pac)
     {
         $datos = $this->getPacWithTrashed($id_pac);
-        $path = "pac_".$datos['pac']->nombre."_".$datos['pac']->provincias()->get()->first()->nombre."_".date("Y-m-d_H:i:s");
+        $path  =
+            "pac_" . $datos['pac']->nombre . "_" . $datos['pac']->provincias()->get()->first()->nombre . "_" . date("Y-m-d_H:i:s");
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('PAC', function ($sheet) use ($datos) {
                 $sheet->setHeight(1, 20);
                 $sheet->loadView('excel.pacCompleto', $datos);
             });
         })
-        ->store('xls');
+            ->store('xls');
         return response()->download(storage_path("exports/{$path}.xls"))->deleteFileAfterSend(true);
     }
 
     public function getTablaFicha(Request $request, $id_pac)
     {
         $pac = Pac::with('fichaTecnica')
-        ->where('id_pac', $id_pac)
-        ->get();
-        
+            ->where('id_pac', $id_pac)
+            ->get();
+
         return Datatables::of($pac)->make(true);
     }
 
@@ -1033,7 +1011,7 @@ class PacController extends AbmController
         $cursos = Curso::with('estado')
             ->where('id_pac', $id_pac)
             ->get();
-        
+
         return Datatables::of($cursos)->make(true);
     }
 
@@ -1041,7 +1019,7 @@ class PacController extends AbmController
     {
         $pac = Pac::with('estado')
             ->where('id_pac', $id_pac);
-        
+
         return Datatables::of($pac)->make(true);
     }
 
@@ -1051,10 +1029,10 @@ class PacController extends AbmController
             ->where('id_pac', $id_pac)
             ->firstOrFail()
             ->cambiosEstado()
-            ->with(['estadoAnterior','estadoNuevo', 'user'])
+            ->with(['estadoAnterior', 'estadoNuevo', 'user'])
             ->orderBy('created_at', 'desc')
             ->get();
-        
+
         return Datatables::of($pac)->make(true);
     }
 }

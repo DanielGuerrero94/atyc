@@ -459,6 +459,12 @@
                 <span>Tipologias de acción</span>
               </a>
             </li>
+            <li>
+              <a href="{{url("/modalidades")}}">
+                <i class="fa fa-circle-o"></i>
+                <span>Modalidades</span>
+              </a>
+            </li>
           </ul>
         </li>
         <li class="treeview">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cursos\Modalidad;
 use Illuminate\Http\Request;
 use App\Models\Cursos\LineaEstrategica;
 use Datatables;
@@ -23,6 +24,7 @@ class LineasEstrategicasController extends ModelController
     {
         $this->model = $model;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +32,27 @@ class LineasEstrategicasController extends ModelController
      */
     public function index()
     {
-        return $this->model->orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
+        return $this->model
+            ->with('modalidades')
+            ->orderBy('deleted_at', 'desc')
+            ->orderBy('numero')
+            ->withTrashed()
+            ->get();
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $lineaEstrategica = parent::store($request);
+
+        $lineaEstrategica->modalidades()->attach(explode(",", $request->get('ids_modalidad')));
+
+        return response()->json(['linea' => $lineaEstrategica], 200);
     }
 
     /**
@@ -40,18 +62,54 @@ class LineasEstrategicasController extends ModelController
      */
     public function create()
     {
-        return view('lineasEstrategicas/alta');
+        $modalidades = Modalidad::get();
+
+        return view('lineasEstrategicas/alta', compact('modalidades'));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        return [$this->name => $this->model->with('modalidades')->withTrashed()->findOrFail($id)];
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        return view('lineasEstrategicas.modificar', $this->show($id));
+        $modalidades = Modalidad::get();
+
+        return view(
+            'lineasEstrategicas.modificar',
+            array_merge(compact('modalidades'), $this->show($id))
+        );
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $response = parent::update($request, $id);
+
+        $lineaEstrategica = $this->model->withTrashed()->findOrFail($id);
+
+        $lineaEstrategica->modalidades()->sync(explode(",", $request->get('ids_modalidad')));
+
+        return $response;
     }
 
     /**

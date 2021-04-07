@@ -1,7 +1,7 @@
 @extends('layouts.adminlte')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
 	<div id="abm">
 		{{csrf_field()}}
 		<div class="col-xs-12">
@@ -110,7 +110,7 @@
 			jQuery('<div/>', {
 				id: 'dialogABM',
 				text: ''
-			}).appendTo('.container');
+			}).appendTo('.container-fluid');
 
 			$("#dialogABM").dialog({
 				title: "Verificacion",

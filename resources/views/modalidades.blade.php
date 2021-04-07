@@ -7,7 +7,7 @@
             <div class="col-xs-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
-                        <h2 class="box-tittle">Tipologias de accion</h2>
+                        <h2 class="box-tittle">Modalidades de accion</h2>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse">
                                 <i class="fa fa-minus"></i>
@@ -19,9 +19,10 @@
                         </table>
                     </div>
                     <div class="box-footer">
-                        <button class="btn btn-success pull-right" id="nueva_linea_estrategica"><i class="fa fa-plus"
-                                                                                                   aria-hidden="true"></i>Nueva
-                            tipologia de accion
+                        <button class="btn btn-success pull-right" id="nueva_modalidad">
+                            <i class="fa fa-plus"
+                               aria-hidden="true"></i>
+                            Nueva Modalidad
                         </button>
                     </div>
                 </div>
@@ -65,69 +66,30 @@
             return $buttons;
         }
 
-        function getFormData() {
-            data = $.merge(
-                $('form').serializeArray(),
-                [
-                    {
-                        name: 'ids_modalidad',
-                        value: $('#modalidad').val()
-                    },
-                ]
-            );
-
-            console.log(data);
-
-            return data;
-        }
-
         $(document).ready(function () {
 
             $('#table').DataTable({
                 scrollCollapse: true,
-                ajax: 'lineasEstrategicasTabla',
+                ajax: 'modalidadesTabla',
                 columns: [
-                    {
-                        title: 'Numero',
-                        data: 'numero',
-                        orderable: false
-                    },
                     {
                         title: 'Nombre',
                         data: 'nombre'
                     },
                     {
-                        title: 'Modalidades',
-                        data: 'id_modalidad',
-                        orderable: false,
-                        render: function (data, type, row, meta) {
-                            var data = row.modalidades;
-                            var concatenated = '';
-                            for (var i in data) {
-                                var r = data[i];
-                                concatenated = concatenated + r.nombre + ', ';
-                            }
-                            return concatenated.slice(0, concatenated.length - 2);
-                        }
-                    },
-                    {
-                        title: 'Descripción',
-                        data: 'descripcion'
-                    },
-                    {
                         title: 'Acciones',
                         data: 'deleted_at',
                         render: function (data, type, row, meta) {
-                            return acciones(data, row.created_at, row.id_linea_estrategica);
+                            return acciones(data, row.created_at, row.id_modalidad);
                         }
                     }
                 ]
             });
 
-            $('#abm').on('click', '#nueva_linea_estrategica', function () {
+            $('#abm').on('click', '#nueva_modalidad', function () {
                 console.log("Test");
                 $.ajax({
-                    url: 'lineasEstrategicas/alta',
+                    url: 'modalidades/alta',
                     method: 'get',
                     success: function (data) {
                         $('#alta').html(data);
@@ -139,10 +101,10 @@
 
             $('#abm').on('click', '.editar', function () {
 
-                var linea = $(this).data('id');
+                var modalidad = $(this).data('id');
 
                 $.ajax({
-                    url: 'lineasEstrategicas/' + linea,
+                    url: 'modalidades/' + modalidad,
                     method: 'get',
                     success: function (data) {
                         $('#alta').html(data);
@@ -152,8 +114,9 @@
                 });
             });
 
-            $('#abm').on("click", ".eliminar", function () {
-                var linea = $(this).data('id');
+            $('#abm').on('click', '.eliminar', function () {
+                console.log("1");
+                var modalidad = $(this).data('id');
                 var data = '_token=' + $('#abm input').first().val();
                 jQuery('<div/>', {
                     id: 'dialogABM',
@@ -177,7 +140,7 @@
                     open: function () {
                         jQuery('<p/>', {
                             id: 'dialogABM',
-                            text: '¿Esta seguro que quiere dar de baja al tipo de accion?'
+                            text: '¿Esta seguro que quiere dar de baja la modalidad?'
                         }).appendTo('#dialogABM');
                     },
                     buttons:
@@ -186,19 +149,19 @@
                                 $(this).dialog("destroy");
                                 $("#dialogABM").html("");
 
-                                console.log(linea);
+                                console.log(modalidad);
 
                                 $.ajax({
-                                    url: 'lineasEstrategicas/' + linea + '/hard',
+                                    url: 'modalidades/' + modalidad + '/hard',
                                     method: 'delete',
                                     data: data,
                                     success: function (data) {
-                                        console.log('Se borro la linea estrategica.');
-                                        alert('Se borro la linea estrategica.');
+                                        console.log('Se borro la modalidad.');
+                                        alert('Se borro la modalidad.');
                                         $('#table').DataTable().clear().draw();
                                     },
                                     error: function (data) {
-                                        alert("Hay un curso usando ese tipo de accion. No se puede borrar el registro");
+                                        alert("Hay un curso usando esa modalidad. No se puede borrar el registro");
                                         console.log('Hubo un error.');
                                         console.log(data);
                                         location.reload();
@@ -218,12 +181,12 @@
 
             $('#alta').on('click', '#modificar', function () {
 
-                var linea = $(this).data('id');
+                var modalidad = $(this).data('id');
 
                 $.ajax({
-                    url: 'lineasEstrategicas/' + linea,
+                    url: 'modalidades/' + modalidad,
                     method: 'put',
-                    data: getFormData(),
+                    data: $('form').serialize(),
                     success: function (data) {
                         console.log("Success.");
                         location.reload();
@@ -246,14 +209,9 @@
                         nombre: {
                             required: true,
                         },
-                        numero: {
-                            required: true,
-                            number: true
-                        }
                     },
                     messages: {
                         nombre: "Campo obligatorio",
-                        numero: "Tiene que ser un numero"
                     },
                     highlight: function (element) {
                         console.log("highlight");
@@ -268,11 +226,11 @@
                     submitHandler: function (form) {
                         $.ajax({
                             method: 'post',
-                            url: 'lineasEstrategicas',
-                            data: getFormData(),
+                            url: 'modalidades',
+                            data: $('form').serialize(),
                             success: function (data) {
                                 console.log("Success.");
-                                alert('Se creo la tipologia de accion.');
+                                alert('Se creo la modalidad.');
                                 location.reload();
                             },
                             error: function (data) {
@@ -289,17 +247,17 @@
 
             $('#abm').on('click', '.darBaja', function () {
 
-                var linea = $(this).data('id');
+                var modalidad = $(this).data('id');
                 var data = '_token=' + $('#abm input').first().val();
-                console.log(linea);
+                console.log(modalidad);
                 console.log(data);
                 $.ajax({
-                    url: 'lineasEstrategicas/' + linea,
+                    url: 'modalidades/' + modalidad,
                     method: 'delete',
                     data: data,
                     success: function (data) {
-                        console.log("Se dio de baja la tipologia de accion");
-                        alert("Se dio de baja la tipologia de accion");
+                        console.log("Se dio de baja la modalidad");
+                        alert("Se dio de baja la modalidad");
                         $('#table').DataTable().clear().draw();
                     },
                     error: function (data) {
@@ -312,16 +270,16 @@
 
             $('#abm').on('click', '.darAlta', function () {
 
-                var linea = $(this).data('id');
+                var modalidad = $(this).data('id');
                 var data = '_token=' + $('#abm input').first().val();
 
                 $.ajax({
-                    url: 'lineasEstrategicas/' + linea + '/alta',
+                    url: 'modalidades/' + modalidad + '/alta',
                     method: 'put',
                     data: data,
                     success: function (data) {
-                        console.log("Se dio de alta la tipologia de accion");
-                        alert("Se dio de alta la tipologia de accion");
+                        console.log("Se dio de alta la modalidad de accion");
+                        alert("Se dio de alta la modalidad de accion");
                         $('#table').DataTable().clear().draw();
                     },
                     error: function (data) {

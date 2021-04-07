@@ -492,8 +492,7 @@ class StoredProceduresSeeder extends Seeder
         select pr.nombre as provincia, cat.numero || ' - ' || cat.nombre  as numero_categoria, count(*) as cantidad_categoria
         from cursos.cursos as c
         inner join pac.pacs as pa on c.id_pac = pa.id_pac
-        inner join pac.pacs_pautas as pp on pa.id_pac = pp.id_pac
-        inner join pac.pautas as pau on pp.id_pauta = pau.id_pauta
+        inner join pac.pautas as pau on pa.id_pauta = pau.id_pauta
         inner join sistema.provincias as pr on pa.id_provincia = pr.id_provincia
         inner join pac.categorias_pautas as cat on pau.id_categoria = cat.id_categoria
         where (
@@ -511,8 +510,7 @@ class StoredProceduresSeeder extends Seeder
         select pr.nombre as provincia, cat.numero || ' - ' || cat.nombre as numero_categoria, count(*) as cantidad_categoria
         from cursos.cursos as c
         inner join pac.pacs as pa on c.id_pac = pa.id_pac
-        inner join pac.pacs_pautas as pp on pa.id_pac = pp.id_pac
-        inner join pac.pautas as pau on pp.id_pauta = pau.id_pauta
+        inner join pac.pautas as pau on pa.id_pauta = pau.id_pauta
         inner join sistema.provincias as pr on pa.id_provincia = pr.id_provincia
         inner join pac.categorias_pautas as cat on pau.id_categoria = cat.id_categoria
         where (
