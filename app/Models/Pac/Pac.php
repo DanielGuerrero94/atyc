@@ -2,6 +2,7 @@
 
 namespace App\Models\Pac;
 
+use App\Models\Cursos\Modalidad;
 use Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,6 +26,7 @@ class Pac extends Model
         'display_date',
         'id_actor',
         'id_pauta',
+        'id_modalidad',
     ];
 
     /**
@@ -169,6 +171,15 @@ class Pac extends Model
             Actor::class,
             'id_actor',
             'id_actor'
+        );
+    }
+
+    public function modalidad()
+    {
+        return $this->belongsTo(
+            Modalidad::class,
+            'id_modalidad',
+            'id_modalidad'
         );
     }
 

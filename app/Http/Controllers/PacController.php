@@ -675,7 +675,7 @@ class PacController extends AbmController
         });
 
         $tipoAcciones = Cache::remember('tipo_accion', 5, function () {
-            return LineaEstrategica::orderBy('numero')->get();
+            return LineaEstrategica::with('modalidades')->orderBy('numero')->get();
         });
 
         $provincias = Cache::remember('provincias', 5, function () {
@@ -730,7 +730,11 @@ class PacController extends AbmController
         });
 
         $tipoAccionesEdit = Cache::remember('tipo_accionEdit', 5, function () {
-            return LineaEstrategica::orderBy('deleted_at', 'desc')->orderBy('numero')->withTrashed()->get();
+            return LineaEstrategica::with('modalidades')
+                ->orderBy('deleted_at', 'desc')
+                ->orderBy('numero')
+                ->withTrashed()
+                ->get();
         });
 
         $provinciasEdit = Cache::remember('provinciasEdit', 5, function () {

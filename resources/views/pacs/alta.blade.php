@@ -86,6 +86,17 @@
                 <br/>
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
+                        <label for="modalidad" class="control-label col-md-2 col-xs-2">Modalidad:</label>
+                        <div class="col-md-8 col-xs-8">
+                            <select class="select-2 form-control" id="modalidad" name="id_modalidad">
+                                <option></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="form-group col-xs-12 col-md-12">
                         <label for="tematica" class="control-label col-md-2 col-xs-2">Temática/s:</label>
                         <div class="col-md-8 col-xs-8">
                             <select class="select-2 form-control" id="tematica" name="id_tematica" aria-hidden="true"
@@ -288,6 +299,29 @@
             $('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
         });
 
+        $('#tipo_accion').on('select2:select', function () {
+
+            tiposAccion = {!! $tipoAcciones->toJson() !!};
+
+            let idTipoAccion = $('#general #tipo_accion option:selected').data('id');
+
+            let tipoAccion = tiposAccion.find(tipoAccion => tipoAccion.id_linea_estrategica == idTipoAccion);
+
+            console.log(tipoAccion);
+
+            let html = '';
+
+            tipoAccion.modalidades.forEach(modalidad => {
+                html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad} title="${modalidad.nombre}">
+                    ${modalidad.nombre}
+                    </option>`;
+            })
+
+            console.log(html);
+
+            $('#general #modalidad').append(html);
+        });
+
         $.typeahead({
             input: '.curso_typeahead',
             order: "desc",
@@ -341,6 +375,7 @@
 
             var id_actor = $('#general #actor option:selected').data('id');
             var id_accion = $('#general #tipo_accion option:selected').data('id');
+            var id_modalidad = $('#general #modalidad option:selected').data('id');
             var id_provincia = $('#general #provincia option:selected').data('id');
             var id_ficha_tecnica = $('#upload-ficha_tecnica-sin-pac').val();
             var ids_tematicas = getTematicasSelected();
@@ -358,6 +393,10 @@
                 {
                     name: 'id_accion',
                     value: id_accion
+                },
+                {
+                    name: 'id_modalidad',
+                    value: id_modalidad,
                 },
                 {
                     name: 'id_provincia',

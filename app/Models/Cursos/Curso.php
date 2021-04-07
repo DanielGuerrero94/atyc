@@ -39,14 +39,28 @@ class Curso extends Model
      * @var array
      */
     // protected $appends = ['tematica'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['nombre','id_provincia', 'id_pac', 'fecha_ejec_inicial', 'fecha_ejec_final', 'fecha_display', 
-    'id_linea_estrategica','fecha_plan_inicial','fecha_plan_final', 'duracion','edicion','id_estado','id_area_tematica'];
+    protected $fillable = [
+        'nombre',
+        'id_provincia',
+        'id_pac',
+        'fecha_ejec_inicial',
+        'fecha_ejec_final',
+        'fecha_display',
+        'id_linea_estrategica',
+        'fecha_plan_inicial',
+        'fecha_plan_final',
+        'duracion',
+        'edicion',
+        'id_estado',
+        'id_area_tematica',
+        'id_modalidad',
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -71,7 +85,7 @@ class Curso extends Model
             'id_curso',
             'id_profesor'
         )
-        ->withTimestamps();
+            ->withTimestamps();
     }
 
     public function alumnos()
@@ -82,7 +96,7 @@ class Curso extends Model
             'id_curso',
             'id_alumno'
         )
-        ->withTimestamps();
+            ->withTimestamps();
     }
 
     //Retro compatibilidad rapida
@@ -140,37 +154,46 @@ class Curso extends Model
         );
     }
 
+    public function modalidad()
+    {
+        return $this->belongsTo(
+            Modalidad::class,
+            'id_modalidad',
+            'id_modalidad'
+        );
+    }
+
     public function getByCuie($cuie)
     {
         return $this->query()
-        ->join(
-            'cursos.cursos_alumnos',
-            'cursos.cursos_alumnos.id_curso',
-            '=',
-            'cursos.cursos.id_curso'
-        )
-        ->join(
-            'alumnos.alumnos',
-            'alumnos.alumnos.id_alumno',
-            '=',
-            'cursos.cursos_alumnos.id_alumno'
-        )
-        ->select(
-            'alumnos.alumnos.establecimiento1',
-            'cursos.cursos.id_curso',
-            'cursos.cursos.nombre',
-            'cursos.cursos.fecha_ejec_inicial'
-        )
-        ->selectRaw('count(*) as alumnos')
-        ->where('alumnos.alumnos.establecimiento1', $cuie)
-        ->groupBy(
-            'alumnos.alumnos.establecimiento1',
-            'cursos.cursos.id_curso',
-            'cursos.cursos.nombre',
-            'cursos.cursos.fecha_ejec_inicial'
-        )
-        ->orderBy('cursos.cursos.fecha_ejec_inicial', 'desc')
-        ->get();
+            ->join(
+                'cursos.cursos_alumnos',
+                'cursos.cursos_alumnos.id_curso',
+                '=',
+                'cursos.cursos.id_curso'
+            )
+            ->join(
+                'alumnos.alumnos',
+                'alumnos.alumnos.id_alumno',
+                '=',
+                'cursos.cursos_alumnos.id_alumno'
+            )
+            ->select(
+                'alumnos.alumnos.establecimiento1',
+                'cursos.cursos.id_curso',
+                'cursos.cursos.nombre',
+                'cursos.cursos.fecha_ejec_inicial'
+            )
+            ->selectRaw('count(*) as alumnos')
+            ->where('alumnos.alumnos.establecimiento1', $cuie)
+            ->groupBy(
+                'alumnos.alumnos.establecimiento1',
+                'cursos.cursos.id_curso',
+                'cursos.cursos.nombre',
+                'cursos.cursos.fecha_ejec_inicial'
+            )
+            ->orderBy('cursos.cursos.fecha_ejec_inicial', 'desc')
+            ->get();
     }
 
     public function scopeSegunProvincia($query)
