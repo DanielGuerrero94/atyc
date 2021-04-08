@@ -314,12 +314,16 @@
             let tipoAccion = tiposAccion.find(tipoAccion => tipoAccion.id_linea_estrategica == idTipoAccion);
 
             tipoAccion.modalidades.forEach(modalidad => {
-                html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad} title="${modalidad.nombre}">
+                html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}" title="${modalidad.nombre}">
                     ${modalidad.nombre}
                     </option>`;
             })
 
             $('#general #modalidad').append(html);
+
+            if (tipoAccion.modalidades.length === 1) {
+                $('#general #modalidad').val(tipoAccion.modalidades[0].id_modalidad).trigger('change');
+            }
         });
 
         $.typeahead({
