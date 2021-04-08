@@ -301,23 +301,23 @@
 
         $('#tipo_accion').on('select2:select', function () {
 
+            $('#general #modalidad').children().remove();
+
+            let html = '<option></option>';
+
+            $('#general #modalidad').append(html);
+
             tiposAccion = {!! $tipoAcciones->toJson() !!};
 
             let idTipoAccion = $('#general #tipo_accion option:selected').data('id');
 
             let tipoAccion = tiposAccion.find(tipoAccion => tipoAccion.id_linea_estrategica == idTipoAccion);
 
-            console.log(tipoAccion);
-
-            let html = '';
-
             tipoAccion.modalidades.forEach(modalidad => {
                 html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad} title="${modalidad.nombre}">
                     ${modalidad.nombre}
                     </option>`;
             })
-
-            console.log(html);
 
             $('#general #modalidad').append(html);
         });
