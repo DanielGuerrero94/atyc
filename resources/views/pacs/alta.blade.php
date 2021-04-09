@@ -77,7 +77,9 @@
                                 <option></option>
                                 @foreach ($tipoAcciones as $tipo_accion)
                                     <option data-id="{{$tipo_accion->id_linea_estrategica}}"
-                                            value="{{$tipo_accion->id_linea_estrategica}}"> {{$tipo_accion->numero ." " .$tipo_accion->nombre}}</option>
+                                            value="{{$tipo_accion->id_linea_estrategica}}"
+                                            title="{{$tipo_accion->descripcion ? : $tipo_accion->nombre}}"
+                                    > {{$tipo_accion->numero ." " .$tipo_accion->nombre}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -121,8 +123,7 @@
                                     <option></option>
                                     @foreach ($provincias as $provincia)
                                         <option data-id="{{$provincia->id_provincia}}"
-                                                value="{{$provincia->id_provincia}}"
-                                                title="{{$provincia->titulo}}">{{$provincia->nombre}}</option>
+                                                value="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>
                                     @endforeach
                                 </select>
                             @else
@@ -314,7 +315,7 @@
             let tipoAccion = tiposAccion.find(tipoAccion => tipoAccion.id_linea_estrategica == idTipoAccion);
 
             tipoAccion.modalidades.forEach(modalidad => {
-                html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}" title="${modalidad.nombre}">
+                html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}">
                     ${modalidad.nombre}
                     </option>`;
             })
@@ -385,7 +386,8 @@
             var ids_tematicas = getTematicasSelected();
             var ids_destinatarios = getDestinatariosSelected();
             var ids_responsables = getResponsablesSelected();
-            var id_pauta = $('#alcance #pauta option:selected').data('id');
+            var id_pauta = $('#alcance #pauta option:selected').data('id')
+            console.log("id_pauta"+id_pauta);
             var ids_componentes = getComponentesSelected();
             var anio = $('#general #anio option:selected').data('id');
 
@@ -417,10 +419,6 @@
                 {
                     name: 'ids_responsables',
                     value: ids_responsables.toArray()
-                },
-                {
-                    name: 'id_pauta',
-                    value: id_pauta
                 },
                 {
                     name: 'anio',
@@ -511,6 +509,9 @@
                     selecciono: true
                 },
                 id_accion: {
+                    selecciono: true
+                },
+                id_modalidad: {
                     selecciono: true
                 },
                 // id_tematica: {

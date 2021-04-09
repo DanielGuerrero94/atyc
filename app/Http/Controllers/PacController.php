@@ -8,12 +8,10 @@ use App\Models\Pac\Pac;
 use App\Models\Pac\Componente;
 use App\Models\Pac\Destinatario;
 use App\Models\Pac\Pauta;
-use App\Models\Pac\Categoria;
 use App\Models\Pac\Responsable;
 use App\Models\Pac\Actor;
 use App\Models\Pac\FichaTecnica;
 use App\Models\Pac\PacEstado;
-use App\Models\Pac\PacCambioEstado;
 use App\Models\Cursos\Curso;
 use App\Models\Cursos\AreaTematica;
 use App\Models\Cursos\LineaEstrategica;
@@ -73,7 +71,7 @@ class PacController extends AbmController
         'id_componente'          => 'array',
         'id_periodo'             => 'numeric',
         'desde'                  => 'string',
-        'hasta'                  => 'string'
+        'hasta'                  => 'string',
     ];
 
     /**
@@ -85,7 +83,7 @@ class PacController extends AbmController
         'editar'   => 'fa fa-pencil-square-o',
         'eliminar' => 'fa fa-trash-o',
         'buscar'   => 'fa fa-search',
-        'agregar'  => 'fa fa-plus-circle'
+        'agregar'  => 'fa fa-plus-circle',
     ];
 
     /**
@@ -131,7 +129,7 @@ class PacController extends AbmController
                 'id_linea_estrategica' => $request->id_accion,
                 'fecha_plan_inicial'   => $request->$fecha_inicio_actual,
                 'fecha_plan_final'     => $request->$fecha_final_actual,
-                'fecha_display'        => $request->$fecha_inicio_actual
+                'fecha_display'        => $request->$fecha_inicio_actual,
             ]);
 
             $curso = Curso::create($data);
@@ -182,6 +180,7 @@ class PacController extends AbmController
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -194,11 +193,14 @@ class PacController extends AbmController
         if ($v->fails()) {
             logger()->warning("Falla la creación de PAC/Acción");
             logger()->warning(json_encode($v->errors()->all()));
+
             return $v->errors();
         }
 
         if (!empty($data['id_pauta'])) {
             $data['ficha_obligatoria'] = $this->tienePautaConFichaObligatoria($data['id_pauta']);
+        } else {
+            unset($data['id_pauta']);
         }
 
         $pac = Pac::create($data);
@@ -224,6 +226,7 @@ class PacController extends AbmController
      * Display the specified resource.
      *
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id_pac)
@@ -235,6 +238,7 @@ class PacController extends AbmController
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id_pac)
@@ -246,7 +250,8 @@ class PacController extends AbmController
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int                       $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -296,6 +301,7 @@ class PacController extends AbmController
      * Remove the specified resource from storage.
      *
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id_pac)
@@ -444,7 +450,7 @@ class PacController extends AbmController
             },
             'actor'        => function ($pacs) {
                 return $pacs->withTrashed();
-            }
+            },
         ])
             ->whereIn('pac.pacs.id_pac', $ids_pac)
             ->segunProvincia();
@@ -460,7 +466,7 @@ class PacController extends AbmController
                     'ediciones',
                     'duracion',
                     'id_ficha_tecnica',
-                    'id_provincia'
+                    'id_provincia',
                 ];
 
             logger()->info("order_by[0][1]: " . $order_by['order_by'][0][1]);
@@ -479,7 +485,6 @@ class PacController extends AbmController
         $cursos = $pac->cursos()->orderBy('fecha_plan_inicial')->get();
 
         $todos_ejecutados = true;
-        $estados          = array();
 
         foreach ($cursos as $curso) {
             if (isset($curso->fecha_ejec_inicial)) {
@@ -489,7 +494,8 @@ class PacController extends AbmController
             } else {
                 $todos_ejecutados = false;
 
-                if ($curso->fecha_plan_inicial >= Carbon::now()->format('yy-m-d') && (!isset($fecha_plan_posterior) || $curso->fecha_plan_inicial <= $fecha_plan_posterior)) {
+                if ($curso->fecha_plan_inicial >= Carbon::now()
+                        ->format('yy-m-d') && (!isset($fecha_plan_posterior) || $curso->fecha_plan_inicial <= $fecha_plan_posterior)) {
                     $fecha_plan_posterior = $curso->fecha_plan_inicial;
                 } elseif (!isset($fecha_plan_anterior) || $curso->fecha_plan_inicial <= $fecha_plan_anterior) {
                     $fecha_plan_anterior = $curso->fecha_plan_inicial;
@@ -524,7 +530,7 @@ class PacController extends AbmController
     public function estadosPorPac(Pac $pac)
     {
         $cursos  = $pac->cursos()->get();
-        $estados = array();
+        $estados = [];
         $colores = ['warning', 'info', 'ejecutando', 'success', 'reprogramado', 'danger'];
         $titulos = ['Planificado', 'Diseñado', 'En ejecución', 'Finalizado', 'Reprogramado', 'Desactivado'];
 
@@ -602,8 +608,8 @@ class PacController extends AbmController
 
     public function getAniosyProvinciasPac($pacs)
     {
-        $anios      = array();
-        $provincias = array();
+        $anios      = [];
+        $provincias = [];
         foreach ($pacs as $pac) {
             $anios[]      = $pac->anio;
             $provincias[] = $pac->provincias()->get()->first()->abreviacion;
@@ -695,7 +701,7 @@ class PacController extends AbmController
             'actores'       => $actores,
             'tipoAcciones'  => $tipoAcciones,
             'provincias'    => $provincias,
-            'periodos'      => $periodos
+            'periodos'      => $periodos,
         ];
     }
 
@@ -827,6 +833,7 @@ class PacController extends AbmController
     {
         $ficha_tecnica = FichaTecnica::findOrFail($id_ficha);
         $path          = storage_path("app/fichas_tecnicas/" . $ficha_tecnica->path);
+
         return response()->download($path, $ficha_tecnica->original);
     }
 
@@ -896,6 +903,7 @@ class PacController extends AbmController
             return response("Acción aprobada", 200);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response("No se pudo aprobar la acción por {$e->getMessage()}", 409);
         }
     }
@@ -912,6 +920,7 @@ class PacController extends AbmController
             return response("Acción rechazada", 200);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response("No se pudo rechazar la acción por {$e->getMessage()}", 409);
         }
     }
@@ -928,7 +937,7 @@ class PacController extends AbmController
             'mensaje'            => $mensaje,
             'id_estado_anterior' => $pac->id_estado,
             'id_estado_nuevo'    => $estadoNuevo,
-            'id_user'            => Auth::user()->id_user
+            'id_user'            => Auth::user()->id_user,
         ]);
 
         $pac->id_estado = $estadoNuevo;
@@ -975,7 +984,7 @@ class PacController extends AbmController
                 'cambiosEstado',
                 'actor'         => function ($query) {
                     return $query->withTrashed();
-                }
+                },
             ])
                 ->segunProvincia()
                 ->where('id_pac', $id_pac)->firstOrFail();
@@ -990,7 +999,8 @@ class PacController extends AbmController
     {
         $datos = $this->getPacWithTrashed($id_pac);
         $path  =
-            "pac_" . $datos['pac']->nombre . "_" . $datos['pac']->provincias()->get()->first()->nombre . "_" . date("Y-m-d_H:i:s");
+            "pac_" . $datos['pac']->nombre . "_" . $datos['pac']->provincias()->get()
+                ->first()->nombre . "_" . date("Y-m-d_H:i:s");
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('PAC', function ($sheet) use ($datos) {
                 $sheet->setHeight(1, 20);
@@ -998,6 +1008,7 @@ class PacController extends AbmController
             });
         })
             ->store('xls');
+
         return response()->download(storage_path("exports/{$path}.xls"))->deleteFileAfterSend(true);
     }
 

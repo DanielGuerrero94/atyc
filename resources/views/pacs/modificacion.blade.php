@@ -118,12 +118,14 @@
                                                             <option
                                                                     data-id="{{$tipoAccion->id_linea_estrategica}}"
                                                                     value="{{$tipoAccion->id_linea_estrategica}}"
+                                                                    title="{{$tipoAccion->descripcion ? : $tipoAccion->nombre}}"
                                                                     selected="selected"
                                                             >{{$tipoAccion->numero ." " .$tipoAccion->nombre}}</option>
                                                         @else
                                                             <option
                                                                     data-id="{{$tipoAccion->id_linea_estrategica}}"
                                                                     value="{{$tipoAccion->id_linea_estrategica}}"
+                                                                    title="{{$tipoAccion->descripcion ? : $tipoAccion->nombre}}"
                                                             >{{$tipoAccion->numero ." " .$tipoAccion->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -201,7 +203,6 @@
                                                                 <option
                                                                         value="{{$provincia->id_provincia}}"
                                                                         data-id="{{$provincia->id_provincia}}"
-                                                                        title="{{$provincia->titulo}}"
                                                                 >{{$provincia->nombre}}</option>
                                                             @endif
                                                         @endforeach
@@ -216,7 +217,6 @@
                                                                 <option
                                                                         value="{{$provincia->id_provincia}}"
                                                                         data-id="{{$provincia->id_provincia}}"
-                                                                        title="{{$provincia->titulo}}"
                                                                 >{{$provincia->nombre}}</option>
                                                             @endif
                                                         @endforeach
@@ -989,28 +989,28 @@
             }
 
             var data =
-                    [
-                        {
-                            name : '_token',
-                            value: $('.container-fluid input').first().val()
-                        },
-                        {
-                            name : 'fecha_ejec_inicial',
-                            value: $('#fecha_ejec_inicial').val()
-                        },
-                        {
-                            name : 'fecha_ejec_final',
-                            value: $('#fecha_ejec_final').val()
-                        },
-                        {
-                            name : 'fecha_display',
-                            value: $('#fecha_ejec_inicial').val()
-                        },
-                        {
-                            name : 'id_estado',
-                            value: 4
-                        }
-                    ];
+                [
+                    {
+                        name : '_token',
+                        value: $('.container-fluid input').first().val()
+                    },
+                    {
+                        name : 'fecha_ejec_inicial',
+                        value: $('#fecha_ejec_inicial').val()
+                    },
+                    {
+                        name : 'fecha_ejec_final',
+                        value: $('#fecha_ejec_final').val()
+                    },
+                    {
+                        name : 'fecha_display',
+                        value: $('#fecha_ejec_inicial').val()
+                    },
+                    {
+                        name : 'id_estado',
+                        value: 4
+                    }
+                ];
 
             return data;
         }
@@ -1134,28 +1134,28 @@
             }
 
             var data =
-                    [
-                        {
-                            name : '_token',
-                            value: $('.container-fluid input').first().val()
-                        },
-                        {
-                            name : 'fecha_plan_inicial',
-                            value: $('#fecha_reprograma_inicial').val()
-                        },
-                        {
-                            name : 'fecha_plan_final',
-                            value: $('#fecha_reprograma_final').val()
-                        },
-                        {
-                            name : 'fecha_display',
-                            value: $('#fecha_reprograma_inicial').val()
-                        },
-                        {
-                            name : 'id_estado',
-                            value: 5
-                        }
-                    ];
+                [
+                    {
+                        name : '_token',
+                        value: $('.container-fluid input').first().val()
+                    },
+                    {
+                        name : 'fecha_plan_inicial',
+                        value: $('#fecha_reprograma_inicial').val()
+                    },
+                    {
+                        name : 'fecha_plan_final',
+                        value: $('#fecha_reprograma_final').val()
+                    },
+                    {
+                        name : 'fecha_display',
+                        value: $('#fecha_reprograma_inicial').val()
+                    },
+                    {
+                        name : 'id_estado',
+                        value: 5
+                    }
+                ];
 
             return data;
         }
@@ -1224,16 +1224,16 @@
         //Selecciona los inputs de la desactivacion de un curso
         function getDataDesactivacionCurso() {
             var data =
-                    [
-                        {
-                            name : '_token',
-                            value: $('.container-fluid input').first().val()
-                        },
-                        {
-                            name : 'id_estado',
-                            value: 6
-                        }
-                    ];
+                [
+                    {
+                        name : '_token',
+                        value: $('.container-fluid input').first().val()
+                    },
+                    {
+                        name : 'id_estado',
+                        value: 6
+                    }
+                ];
 
             console.log(data);
 
@@ -1272,6 +1272,7 @@
         //Inicializacion de Select2
         function setDisabledElement(ids, object) {
             if (ids.includes(parseInt(object.val()))) {
+                object.prop('disabled', true);
                 object.prop('disabled', true);
                 object.attr('disabled', true);
                 object.attr('selected', false);
@@ -1351,7 +1352,7 @@
                 let tipoAccion = tiposAccion.find(tipoAccion => tipoAccion.id_linea_estrategica == idTipoAccion);
 
                 tipoAccion.modalidades.forEach(modalidad => {
-                    html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}" title="${modalidad.nombre}">
+                    html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}">
                     ${modalidad.nombre}
                     </option>`;
                 })
@@ -1408,7 +1409,7 @@
 
             if (datatable) {
                 let title =
-                        `<div class="row">
+                    `<div class="row">
         <span class="col-md-5 col-xs-4"><b>Estado de Acción</b></span>
       </div>`;
 
@@ -1475,7 +1476,7 @@
 
             if (datatable) {
                 let title =
-                        `<div class="row">
+                    `<div class="row">
         <span class="col-md-5 col-xs-4"><b>Historial de Estados de Acción</b></span>
       </div>`;
 
@@ -1837,16 +1838,16 @@
         //Selecciona los inputs de un cambio de Estado de una Acción
         function getDataCambioEstadoAccion() {
             var data =
-                    [
-                        {
-                            name : '_token',
-                            value: $('.container-fluid input').first().val()
-                        },
-                        {
-                            name : 'mensaje',
-                            value: $('#mensaje').val()
-                        },
-                    ];
+                [
+                    {
+                        name : '_token',
+                        value: $('.container-fluid input').first().val()
+                    },
+                    {
+                        name : 'mensaje',
+                        value: $('#mensaje').val()
+                    },
+                ];
 
             console.log(data);
 
@@ -1937,6 +1938,9 @@
                         selecciono: true
                     },
                     id_accion      : {
+                        selecciono: true
+                    },
+                    id_modalidad   : {
                         selecciono: true
                     },
                     id_tematica    : {

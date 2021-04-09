@@ -43,7 +43,7 @@
                         <div class="col-xs-8">
                             <textarea class="form-control" id="descripcion" name="descripcion"
                                       placeholder="Descripción de la tipologia"
-                                      data-autosize-input='{ "space": 40 }'></textarea>
+                                      data-autosize-input='{ "space": 40 }'>{{$linea->descripcion}}</textarea>
                         </div>
                     </div>
                 </div>
