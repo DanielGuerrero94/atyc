@@ -118,18 +118,26 @@
                                                             <option
                                                                     data-id="{{$tipoAccion->id_linea_estrategica}}"
                                                                     value="{{$tipoAccion->id_linea_estrategica}}"
-                                                                    title="{{$tipoAccion->descripcion ? : $tipoAccion->nombre}}"
                                                                     selected="selected"
                                                             >{{$tipoAccion->numero ." " .$tipoAccion->nombre}}</option>
                                                         @else
                                                             <option
                                                                     data-id="{{$tipoAccion->id_linea_estrategica}}"
                                                                     value="{{$tipoAccion->id_linea_estrategica}}"
-                                                                    title="{{$tipoAccion->descripcion ? : $tipoAccion->nombre}}"
                                                             >{{$tipoAccion->numero ." " .$tipoAccion->nombre}}</option>
                                                         @endif
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="form-group col-xs-12 col-md-12">
+                                            <label for="descripcion_tipo_accion" class="control-label col-md-2 col-xs-2"></label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <p id="descripcion_tipo_accion">
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -196,7 +204,6 @@
                                                                 <option
                                                                         value="{{$provincia->id_provincia}}"
                                                                         data-id="{{$provincia->id_provincia}}"
-                                                                        title="{{$provincia->titulo}}"
                                                                         selected="selected"
                                                                 >{{$provincia->nombre}}</option>
                                                             @else
@@ -342,6 +349,16 @@
                                                         @endif
                                                     @endforeach
                                                 </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="form-group col-xs-12 col-md-12">
+                                            <label for="descripcion_pauta" class="control-label col-md-2 col-xs-2"></label>
+                                            <div class="col-md-8 col-xs-8">
+                                                <p id="descripcion_pauta">
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -1270,21 +1287,6 @@
         }
 
         //Inicializacion de Select2
-        function setDisabledElement(ids, object) {
-            if (ids.includes(parseInt(object.val()))) {
-                object.prop('disabled', true);
-                object.prop('disabled', true);
-                object.attr('disabled', true);
-                object.attr('selected', false);
-            } else {
-                object.removeAttr('disabled');
-            }
-            object.parent().select2({
-                "width"      : "100%",
-                "placeholder": "   Seleccionar"
-            });
-        }
-
         function inicializarSelect2() {
             $('.select-2').select2({
                 "width"      : "100%",
@@ -1296,35 +1298,65 @@
                 var availableHeight = $(window).height() - position - container.outerHeight();
                 var bottomPadding = 50; // Set as needed
                 $('ul.select2-results__options').css('max-height', (availableHeight - bottomPadding) + 'px');
-
-                pautas = {!! $pautasEdit->toJson() !!};
-
-                let anio = $('#general #anio').val().toString();
-                let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio)))
-                    .map(pauta => pauta.id_pauta);
-
-                $("#pauta option").each(function () {
-                    setDisabledElement(pautasIds, $(this));
-                });
-
                 $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
                 $('.select2-container--default .select2-selection--multiple .select2-selection__choice')
                     .css('color', '#444 !important');
             });
 
             $('.select-2').ready(function () {
-                pautas = {!! $pautasEdit->toJson() !!};
-                let anio = $('#general #anio').val().toString();
-                let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio)))
-                    .map(pauta => pauta.id_pauta);
-
-                $("#pauta option").each(function () {
-                    setDisabledElement(pautasIds, $(this));
-                });
-
                 $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
                 $('.select2-container--default .select2-selection--multiple .select2-selection__choice')
                     .css('color', '#444 !important');
+
+                $('#general #modalidad').children().remove();
+
+                let html = '<option></option>';
+
+                $('#general #modalidad').append(html);
+
+                tiposAccion = {!! $tipoAccionesEdit->toJson() !!};
+
+                pac = {!! $pac->toJson() !!};
+
+                let idTipoAccion = $('#general #tipo_accion option:selected').data('id');
+
+                let tipoAccion = tiposAccion.find(tipoAccion => tipoAccion.id_linea_estrategica == idTipoAccion);
+
+                tipoAccion.modalidades.forEach(modalidad => {
+                    if (pac.id_modalidad == modalidad.id_modalidad) {
+                        html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}" selected>${modalidad.nombre}</option>`;
+                    } else {
+                        html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}">${modalidad.nombre}</option>`;
+                    }
+                });
+
+                $('#general #modalidad').append(html);
+
+                if (tipoAccion.modalidades.length === 1) {
+                    $('#general #modalidad').val(tipoAccion.modalidades[0].id_modalidad).trigger('change');
+                }
+
+                $('#pauta').children().remove();
+
+                let pautasHtml = '<option></option>';
+
+                pautas = {!! $pautasEdit->toJson() !!};
+
+                let anio = $('#general #anio').val().toString();
+
+                let pautasIds = pautas.filter(pauta => (pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
+
+                $('#pauta').append(pautasHtml);
+
+                pautas.forEach(pauta => {
+                    if (pautasIds.includes(pauta.id_pauta)) {
+                        pautasHtml += `<option data-id="${pauta.id_pauta}" value="${pauta.id_pauta}">
+                    ${pauta.anios} - ${pauta.numero}: ${pauta.nombre}
+                    </option>`;
+                    }
+                });
+
+                $('#pauta').append(pautasHtml);
             });
 
             $('.select-2').on('select2:select', function () {
@@ -1339,17 +1371,23 @@
 
             $('#tipo_accion').on('select2:select', function () {
 
+                $('#general #descripcion_tipo_accion').children().remove();
+
                 $('#general #modalidad').children().remove();
 
                 let html = '<option></option>';
-
-                $('#general #modalidad').append(html);
 
                 tiposAccion = {!! $tipoAccionesEdit->toJson() !!};
 
                 let idTipoAccion = $('#general #tipo_accion option:selected').data('id');
 
                 let tipoAccion = tiposAccion.find(tipoAccion => tipoAccion.id_linea_estrategica == idTipoAccion);
+
+                let descripcion = tipoAccion.descripcion ? `<p><b>Descripción</b></p><p>${tipoAccion.descripcion}</p>` : '';
+
+                $('#general #modalidad').append(html);
+
+                $('#general #descripcion_tipo_accion').append(descripcion);
 
                 tipoAccion.modalidades.forEach(modalidad => {
                     html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}">
@@ -1362,6 +1400,21 @@
                 if (tipoAccion.modalidades.length === 1) {
                     $('#general #modalidad').val(tipoAccion.modalidades[0].id_modalidad).trigger('change');
                 }
+            });
+
+            $('#pauta').on('select2:select', function () {
+
+                $('#descripcion_pauta').children().remove();
+
+                pautas = {!! $pautasEdit->toJson() !!};
+
+                let idPauta = $('#pauta option:selected').data('id');
+
+                let pauta = pautas.find(pauta => pauta.id_pauta == idPauta);
+
+                let descripcionPauta = pauta.descripcion ? `<p><b>Descripción</b></p><p>${pauta.descripcion}</p>` : '';
+
+                $('#descripcion_pauta').append(descripcionPauta);
             });
         }
 

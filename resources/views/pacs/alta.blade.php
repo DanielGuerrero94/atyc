@@ -11,7 +11,7 @@
         <div class="tab-content">
             <div class="tab-pane in active" id="general">
                 {{ csrf_field() }}
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-md-12 col-xs-12">
                         <label for="anio" class="control-label col-md-2 col-xs-2">Año:</label>
@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-md-12 col-xs-12">
                         <label for="actor" class="control-label col-md-2 col-xs-2">Actor que Origina Acción:</label>
@@ -37,38 +37,44 @@
                             <select class="select-2 form-control" id="actor" name="id_actor">
                                 <option></option>
                                 @foreach ($actores as $actor)
-                                    <option data-id="{{$actor->id_actor}}"
-                                            value="{{$actor->id_actor}}"> {{$actor->nombre}}</option>
+                                    <option
+                                            data-id="{{$actor->id_actor}}"
+                                            value="{{$actor->id_actor}}"
+                                    > {{$actor->nombre}}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="nombre" class="col-md-2 col-xs-2">Nombre:</label>
                         <div class="typeahead__container col-md-8 col-xs-8">
                             <div class="typeahead__field">
                   <span class="typeahead__query">
-                    <input class="curso_typeahead form-control" name="nombre" type="search"
-                           placeholder="Buscar o agregar uno nuevo" autocomplete="off" style="font-size:1.4rem;">
+                    <input
+                            class="curso_typeahead form-control" name="nombre" type="search"
+                            placeholder="Buscar o agregar uno nuevo" autocomplete="off" style="font-size:1.4rem;"
+                    >
                   </span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="horas" class="control-label col-md-2 col-xs-2">Duración:</label>
                         <div class="col-md-8 col-xs-8">
-                            <input type="number" class="form-control" name="duracion" id="horas"
-                                   placeholder="Duración en horas">
+                            <input
+                                    type="number" class="form-control" name="duracion" id="horas"
+                                    placeholder="Duración en horas"
+                            >
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="tipo_accion" class="control-label col-md-2 col-xs-2">Tipo de acción:</label>
@@ -76,16 +82,26 @@
                             <select class="select-2 form-control" id="tipo_accion" name="id_accion">
                                 <option></option>
                                 @foreach ($tipoAcciones as $tipo_accion)
-                                    <option data-id="{{$tipo_accion->id_linea_estrategica}}"
+                                    <option
+                                            data-id="{{$tipo_accion->id_linea_estrategica}}"
                                             value="{{$tipo_accion->id_linea_estrategica}}"
-                                            title="{{$tipo_accion->descripcion ? : $tipo_accion->nombre}}"
                                     > {{$tipo_accion->numero ." " .$tipo_accion->nombre}}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
+                <div class="row">
+                    <div class="form-group col-xs-12 col-md-12">
+                        <label for="descripcion_tipo_accion" class="control-label col-md-2 col-xs-2"></label>
+                        <div class="col-md-8 col-xs-8">
+                            <p id="descripcion_tipo_accion">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="modalidad" class="control-label col-md-2 col-xs-2">Modalidad:</label>
@@ -96,22 +112,26 @@
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="tematica" class="control-label col-md-2 col-xs-2">Temática/s:</label>
                         <div class="col-md-8 col-xs-8">
-                            <select class="select-2 form-control" id="tematica" name="id_tematica" aria-hidden="true"
-                                    multiple>
+                            <select
+                                    class="select-2 form-control" id="tematica" name="id_tematica" aria-hidden="true"
+                                    multiple
+                            >
                                 @foreach ($tematicas as $tematica)
-                                    <option data-id="{{$tematica->id_area_tematica}}"
-                                            value="{{$tematica->id_area_tematica}}"> {{$tematica->nombre}}</option>
+                                    <option
+                                            data-id="{{$tematica->id_area_tematica}}"
+                                            value="{{$tematica->id_area_tematica}}"
+                                    > {{$tematica->nombre}}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="provincia" class="control-label col-md-2 col-xs-2">Jurisdicción / <br> Dependencia
@@ -122,27 +142,33 @@
                                 <select class="select-2 form-control" id="provincia" name="id_provincia">
                                     <option></option>
                                     @foreach ($provincias as $provincia)
-                                        <option data-id="{{$provincia->id_provincia}}"
-                                                value="{{$provincia->id_provincia}}">{{$provincia->nombre}}</option>
+                                        <option
+                                                data-id="{{$provincia->id_provincia}}"
+                                                value="{{$provincia->id_provincia}}"
+                                        >{{$provincia->nombre}}</option>
                                     @endforeach
                                 </select>
                             @else
                                 <select class="form-control" id="provincia" name="id_provincia" disabled>
-                                    <option data-id="{{Auth::user()->id_provincia}}"
-                                            value="{{Auth::user()->id_provincia}}">{{Auth::user()->title}}</option>
+                                    <option
+                                            data-id="{{Auth::user()->id_provincia}}"
+                                            value="{{Auth::user()->id_provincia}}"
+                                    >{{Auth::user()->title}}</option>
                                 </select>
                             @endif
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="ficha_tecnica" class="control-label col-md-2 col-xs-2">Ficha Técnica</label>
                         <div class="col-md-8 col-xs-8">
                             <span> <b> Subir Ficha Técnica </b> </span>
-                            <a href="#" data-id="0" class="btn btn-circle upload-ficha_tecnica-sin-pac"
-                               title="Subir Ficha Técnica">
+                            <a
+                                    href="#" data-id="0" class="btn btn-circle upload-ficha_tecnica-sin-pac"
+                                    title="Subir Ficha Técnica"
+                            >
                                 <i class="fa fa-upload fa-lg" style="color: #228B22;"> </i>
                             </a>
                         </div>
@@ -150,38 +176,46 @@
                 </div>
             </div>
             <div class="tab-pane" id="alcance">
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="destinatario" class="control-label col-md-2 col-xs-2">Destinatarios:</label>
                         <div class="col-md-8 col-xs-8">
-                            <select class="select-2 form-control" id="destinatario" name="id_destinatario"
-                                    aria-hidden="true" multiple>
+                            <select
+                                    class="select-2 form-control" id="destinatario" name="id_destinatario"
+                                    aria-hidden="true" multiple
+                            >
                                 @foreach ($destinatarios as $destinatario)
-                                    <option data-id="{{$destinatario->id_funcion}}"
-                                            value="{{$destinatario->id_funcion}}"> {{$destinatario->nombre}}</option>
+                                    <option
+                                            data-id="{{$destinatario->id_funcion}}"
+                                            value="{{$destinatario->id_funcion}}"
+                                    > {{$destinatario->nombre}}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="responsable" class="control-label col-md-2 col-xs-2">Responsables de la
                             ejecución:</label>
                         <div class="col-md-8 col-xs-8">
-                            <select class="select-2 form-control" id="responsable" name="id_responsable"
-                                    aria-hidden="true" multiple>
+                            <select
+                                    class="select-2 form-control" id="responsable" name="id_responsable"
+                                    aria-hidden="true" multiple
+                            >
                                 @foreach ($responsables as $responsable)
-                                    <option data-id="{{$responsable->id_responsable}}"
-                                            value="{{$responsable->id_responsable}}"> {{$responsable->nombre}}</option>
+                                    <option
+                                            data-id="{{$responsable->id_responsable}}"
+                                            value="{{$responsable->id_responsable}}"
+                                    > {{$responsable->nombre}}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="pauta" class="control-label col-md-2 col-xs-2">Pauta Para PAC:</label>
@@ -190,24 +224,39 @@
                                 <option></option>
                                 @foreach ($pautas as $pauta)
                                     @if($pauta->id_provincia == 25 || $pauta->id_provincia == Auth::user()->id_provincia)
-                                        <option data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}"
-                                                title="{{$pauta->descripcion}}"> {{$pauta->anios." - ".$pauta->numero.": ".$pauta->nombre}}</option>
+                                        <option
+                                                data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}"
+                                        > {{$pauta->anios." - ".$pauta->numero.": ".$pauta->nombre}}</option>
                                     @endif
                                 @endforeach
                             </select>
                         </div>
                     </div>
                 </div>
-                <br/>
+                <br />
+                <div class="row">
+                    <div class="form-group col-xs-12 col-md-12">
+                        <label for="descripcion_pauta" class="control-label col-md-2 col-xs-2"></label>
+                        <div class="col-md-8 col-xs-8">
+                            <p id="descripcion_pauta">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <br />
                 <div class="row">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="componentes" class="control-label col-md-2 col-xs-2">Componentes CAI:</label>
                         <div class="col-md-8 col-xs-8">
-                            <select class="select-2 form-control" id="componentesCai" name="id_componente"
-                                    aria-hidden="true" multiple>
+                            <select
+                                    class="select-2 form-control" id="componentesCai" name="id_componente"
+                                    aria-hidden="true" multiple
+                            >
                                 @foreach ($componentes as $componente)
-                                    <option data-id="{{$componente->id_componente}}"
-                                            value="{{$componente->id_componente}}"> {{$componente->numero." - ".$componente->nombre}}</option>
+                                    <option
+                                            data-id="{{$componente->id_componente}}"
+                                            value="{{$componente->id_componente}}"
+                                    > {{$componente->numero." - ".$componente->nombre}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -215,13 +264,15 @@
                 </div>
             </div>
             <div class="tab-pane" id="ediciones-tab">
-                <br/>
+                <br />
                 <div class="row" id="ediciones">
                     <div class="form-group col-xs-12 col-md-12">
                         <label for="ediciones" class="control-label col-md-2 col-xs-2">Ediciones</label>
                         <div class="col-md-3 col-xs-3">
-                            <input type="number" class="form-control" name="ediciones" id="ediciones"
-                                   placeholder="Cantidad de ediciones">
+                            <input
+                                    type="number" class="form-control" name="ediciones" id="ediciones"
+                                    placeholder="Cantidad de ediciones"
+                            >
                         </div>
                     </div>
                 </div>
@@ -236,26 +287,12 @@
 
 <script type="text/javascript">
 
-    function setDisabledElement(ids, object) {
-        if (ids.includes(parseInt(object.val()))) {
-            object.prop('disabled', true);
-            object.attr('disabled', true);
-            object.attr('selected', false);
-        } else {
-            object.removeAttr('disabled');
-        }
-        object.parent().select2({
-            "width": "100%",
-            "placeholder": "   Seleccionar"
-        });
-    }
-
     $(document).ready(function () {
 //Tutorial de alta de PAC
         formUploadSinPac = '<form id="upload-ficha_tecnica-sin-pac" name="upload-ficha_tecnica-sin-pac" style="display: none;">{{ csrf_field() }} <label><input type="file" name="csv" style="display: none;"></label>  <label><input type="hidden" name="id_ficha_tecnica" style="display: none;"></label> </form>';
 
         $('.select-2').select2({
-            "width": "100%",
+            "width"      : "100%",
             "placeholder": "   Seleccionar"
         }).change(function () {
             $(this).valid();
@@ -265,31 +302,35 @@
             var bottomPadding = 50; // Set as needed
             $('ul.select2-results__options').css('max-height', (availableHeight - bottomPadding) + 'px');
 
-            pautas = {!! $pautas->toJson() !!};
-
-            let anio = $('#general #anio option:selected').data('id').toString();
-            let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
-
-            $("#pauta option").each(function () {
-                setDisabledElement(pautasIds, $(this));
-            });
-
             $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
             $('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
         });
 
         $('.select-2').ready(function () {
-            pautas = {!! $pautas->toJson() !!};
-            console.log(pautas);
-            let anio = $('#general #anio option:selected').data('id').toString();
-            let pautasIds = pautas.filter(pauta => !(pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
-
-            $("#pauta option").each(function () {
-                setDisabledElement(pautasIds, $(this));
-            });
-
             $('.select2-container--default .select2-selection--multiple').css('height', 'auto');
             $('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
+
+            $('#pauta').children().remove();
+
+            let html = '<option></option>';
+
+            pautas = {!! $pautas->toJson() !!};
+
+            let anio = $('#general #anio option:selected').data('id').toString();
+
+            let pautasIds = pautas.filter(pauta => (pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
+
+            $('#pauta').append(html);
+
+            pautas.forEach(pauta => {
+                if (pautasIds.includes(pauta.id_pauta)) {
+                    html += `<option data-id="${pauta.id_pauta}" value="${pauta.id_pauta}">
+                    ${pauta.anios} - ${pauta.numero}: ${pauta.nombre}
+                    </option>`;
+                }
+            });
+
+            $('#pauta').append(html);
         });
 
         $('.select-2').on('select2:select', function () {
@@ -300,19 +341,50 @@
             $('.select2-container--default .select2-selection--multiple .select2-selection__choice').css('color', '#444 !important');
         });
 
+        $('#anio').on('select2:select', function () {
+
+            $('#pauta').children().remove();
+
+            let html = '<option></option>';
+
+            pautas = {!! $pautas->toJson() !!};
+
+            let anio = $('#general #anio option:selected').data('id').toString();
+
+            let pautasIds = pautas.filter(pauta => (pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
+
+            $('#pauta').append(html);
+
+            pautas.forEach(pauta => {
+                if (pautasIds.includes(pauta.id_pauta)) {
+                    html += `<option data-id="${pauta.id_pauta}" value="${pauta.id_pauta}">
+                    ${pauta.anios} - ${pauta.numero}: ${pauta.nombre}
+                    </option>`;
+                }
+            });
+
+            $('#pauta').append(html);
+        });
+
         $('#tipo_accion').on('select2:select', function () {
+
+            $('#general #descripcion_tipo_accion').children().remove();
 
             $('#general #modalidad').children().remove();
 
             let html = '<option></option>';
-
-            $('#general #modalidad').append(html);
 
             tiposAccion = {!! $tipoAcciones->toJson() !!};
 
             let idTipoAccion = $('#general #tipo_accion option:selected').data('id');
 
             let tipoAccion = tiposAccion.find(tipoAccion => tipoAccion.id_linea_estrategica == idTipoAccion);
+
+            let descripcion = tipoAccion.descripcion ? `<p><b>Descripción</b></p><p>${tipoAccion.descripcion}</p>` : '';
+
+            $('#general #modalidad').append(html);
+
+            $('#general #descripcion_tipo_accion').append(descripcion);
 
             tipoAccion.modalidades.forEach(modalidad => {
                 html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}">
@@ -327,14 +399,29 @@
             }
         });
 
+        $('#pauta').on('select2:select', function () {
+
+            $('#descripcion_pauta').children().remove();
+
+            pautas = {!! $pautas->toJson() !!};
+
+            let idPauta = $('#pauta option:selected').data('id');
+
+            let pauta = pautas.find(pauta => pauta.id_pauta == idPauta);
+
+            let descripcionPauta = pauta.descripcion ? `<p><b>Descripción</b></p><p>${pauta.descripcion}</p>` : '';
+
+            $('#descripcion_pauta').append(descripcionPauta);
+        });
+
         $.typeahead({
-            input: '.curso_typeahead',
-            order: "desc",
-            source: {
+            input   : '.curso_typeahead',
+            order   : "desc",
+            source  : {
                 info: {
                     ajax: {
                         type: "get",
-                        url: "cursos/nombres",
+                        url : "cursos/nombres",
                         path: "data.info"
                     }
                 }
@@ -387,45 +474,45 @@
             var ids_destinatarios = getDestinatariosSelected();
             var ids_responsables = getResponsablesSelected();
             var id_pauta = $('#alcance #pauta option:selected').data('id')
-            console.log("id_pauta"+id_pauta);
+            console.log("id_pauta" + id_pauta);
             var ids_componentes = getComponentesSelected();
             var anio = $('#general #anio option:selected').data('id');
 
             var selected = [
                 {
-                    name: 'id_actor',
+                    name : 'id_actor',
                     value: id_actor
                 },
                 {
-                    name: 'id_accion',
+                    name : 'id_accion',
                     value: id_accion
                 },
                 {
-                    name: 'id_modalidad',
+                    name : 'id_modalidad',
                     value: id_modalidad,
                 },
                 {
-                    name: 'id_provincia',
+                    name : 'id_provincia',
                     value: id_provincia
                 },
                 {
-                    name: 'ids_tematicas',
+                    name : 'ids_tematicas',
                     value: ids_tematicas.toArray()
                 },
                 {
-                    name: 'ids_destinatarios',
+                    name : 'ids_destinatarios',
                     value: ids_destinatarios.toArray()
                 },
                 {
-                    name: 'ids_responsables',
+                    name : 'ids_responsables',
                     value: ids_responsables.toArray()
                 },
                 {
-                    name: 'anio',
+                    name : 'anio',
                     value: anio
                 },
                 {
-                    name: 'ids_componentes',
+                    name : 'ids_componentes',
                     value: ids_componentes.toArray()
                 }];
 
@@ -433,7 +520,7 @@
 
             if (id_ficha_tecnica) {
                 selected.push({
-                    name: 'id_ficha_tecnica',
+                    name : 'id_ficha_tecnica',
                     value: id_ficha_tecnica
                 });
             }
@@ -494,21 +581,21 @@
         }, "Falta la fecha de alguna edicion");
 
         $('#alta-pac #form-alta').validate({
-            rules: {
-                anio: {
+            rules         : {
+                anio        : {
                     required: true
                 },
-                nombre: {
+                nombre      : {
                     required: true
                 },
-                duracion: {
+                duracion    : {
                     required: true,
-                    number: true
+                    number  : true
                 },
-                id_actor: {
+                id_actor    : {
                     selecciono: true
                 },
-                id_accion: {
+                id_accion   : {
                     selecciono: true
                 },
                 id_modalidad: {
@@ -517,13 +604,13 @@
                 // id_tematica: {
                 //   selecciono: true
                 // },
-                id_provincia: {
+                id_provincia   : {
                     selecciono: true
                 },
                 id_destinatario: {
                     selecciono: true
                 },
-                id_responsable: {
+                id_responsable : {
                     selecciono: true
                 },
                 // id_pauta: {
@@ -533,11 +620,11 @@
                 //   selecciono: true
                 // },
                 ediciones: {
-                    required: true,
-                    number: true,
+                    required   : true,
+                    number     : true,
                     completados: true
                 },
-                csv: {
+                csv      : {
                     required: false,
                     filesize: 16777216 //16MB (1MB = 1048576)
                 }
@@ -551,29 +638,29 @@
                     error.insertAfter(element);
                 }
             },
-            ignore: '.select2-input, .select2-focusser, .select2-search__field, input[type="hidden"]',
-            messages: {
-                nombre: "Campo obligatorio",
+            ignore        : '.select2-input, .select2-focusser, .select2-search__field, input[type="hidden"]',
+            messages      : {
+                nombre  : "Campo obligatorio",
                 duracion: "Campo obligatorio",
             },
-            highlight: function (element) {
+            highlight     : function (element) {
                 $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
             },
-            success: function (element) {
+            success       : function (element) {
                 $(element).text('').addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
             },
 
             submitHandler: function (form) {
                 $.ajax({
-                    method: 'post',
-                    url: 'pacs',
-                    data: getInput(),
+                    method : 'post',
+                    url    : 'pacs',
+                    data   : getInput(),
                     success: function (data) {
                         console.log(data);
                         alert("Se crea la pac.");
                         location.replace('pacs');
                     },
-                    error: function (data) {
+                    error  : function (data) {
                         console.log(data);
                         alert("No se pudo crear la pac.");
                     }
@@ -617,8 +704,8 @@
             }
 
             $('.datepicker').datepicker({
-                format: 'dd/mm/yyyy',
-                language: 'es',
+                format   : 'dd/mm/yyyy',
+                language : 'es',
                 autoclose: true,
             });
 
@@ -637,19 +724,19 @@
             filesize = $('#upload-ficha_tecnica-sin-pac').children()[1].control.files[0].size;
 
             $.ajax({
-                url: "{{url('pacs')}}" + "/" + id_pac,
-                type: 'post',
-                data: data,
+                url        : "{{url('pacs')}}" + "/" + id_pac,
+                type       : 'post',
+                data       : data,
                 processData: false,
                 contentType: false,
-                success: function (data) {
+                success    : function (data) {
                     console.log("success");
                     $('#upload-ficha_tecnica-sin-pac').val(data);
                     $('#upload-ficha_tecnica-sin-pac').valid();
                     $('.upload-ficha_tecnica-sin-pac').parent().children().closest('span').replaceWith('<span><b>  Subida  </b></span>');
                     $('.upload-ficha_tecnica-sin-pac').parent().children().closest('a').replaceWith('<i class="fa fa-check fa-lg" title="Subida" style="color:green;"></i>')
                 },
-                error: function (data) {
+                error      : function (data) {
                     console.log(data);
                     alert("Error al subir el archivo.");
                     // location.reload();
