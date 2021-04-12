@@ -25,7 +25,7 @@ class AlterPacPacsChangeUint extends Migration
             $table->unsignedInteger('id_actor')->default(Actor::INTEGRADO)->nullable(false)->change();
             $table->unsignedInteger('id_pauta')->nullable()->change();
             $table->unsignedInteger('id_modalidad')->default(Modalidad::VIRTUAL)->nullable(false)->change();
-
+            $table->unsignedInteger('id_estado')->nullable()->change();
 
             DB::statement(<<<HEREDOC
 
