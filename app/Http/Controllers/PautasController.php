@@ -246,9 +246,9 @@ class PautasController extends ModelController
                     return $val->id_pauta;
                 }, $ids);
 
-                $query = $query->whereIn('id_pauta', $ids);
+                $query = $query->whereIn('p.id_pauta', $ids);
             } elseif ($key == 'provincias')
-                $query = $query->whereIn('id_provincia', $value);
+                $query = $query->whereIn('pr.id_provincia', $value);
         }
 
         return Datatables::of($query)
