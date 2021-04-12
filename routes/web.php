@@ -234,6 +234,20 @@ Route::group(['middleware' => ['logueado', 'logging']], function () {
     Route::delete('pautas/{id}', 'PautasController@destroy');
     Route::delete('pautas/{id}/hard', 'PautasController@hardDestroy');
 
+    //Tipos de accion
+    Route::get('lineasEstrategicas', 'LineasEstrategicasController@getTodos');
+    Route::get('lineasEstrategicasTabla', 'LineasEstrategicasController@getTabla');
+    Route::get('lineasEstrategicas/alta', 'LineasEstrategicasController@create');
+    Route::get('lineasEstrategicas/{id}', 'LineasEstrategicasController@edit');
+
+    Route::post('lineasEstrategicas', 'LineasEstrategicasController@store');
+
+    Route::put('lineasEstrategicas/{id}', 'LineasEstrategicasController@update');
+    Route::put('lineasEstrategicas/{id}/alta', 'LineasEstrategicasController@alta');
+
+    Route::delete('lineasEstrategicas/{id}', 'LineasEstrategicasController@destroy');
+    Route::delete('lineasEstrategicas/{id}/hard', 'LineasEstrategicasController@hardDestroy');
+
     //Encuestas
     Route::get('encuestas/g_plannacer', 'Encuestas\EncuestasController@gPlannacer');
     Route::get('encuestas/g_plannacer/datos', 'Encuestas\EncuestasController@gPlannacerDatos');
@@ -286,20 +300,6 @@ Route::group(['middleware' => ['logueado', 'logging']], function () {
 
         Route::delete('areasTematicas/{id}', 'AreasTematicasController@destroy');
         Route::delete('areasTematicas/{id}/hard', 'AreasTematicasController@hardDestroy');
-
-        //Tipos de accion
-        Route::get('lineasEstrategicas', 'LineasEstrategicasController@getTodos');
-        Route::get('lineasEstrategicasTabla', 'LineasEstrategicasController@getTabla');
-        Route::get('lineasEstrategicas/alta', 'LineasEstrategicasController@create');
-        Route::get('lineasEstrategicas/{id}', 'LineasEstrategicasController@edit');
-
-        Route::post('lineasEstrategicas', 'LineasEstrategicasController@store');
-
-        Route::put('lineasEstrategicas/{id}', 'LineasEstrategicasController@update');
-        Route::put('lineasEstrategicas/{id}/alta', 'LineasEstrategicasController@alta');
-
-        Route::delete('lineasEstrategicas/{id}', 'LineasEstrategicasController@destroy');
-        Route::delete('lineasEstrategicas/{id}/hard', 'LineasEstrategicasController@hardDestroy');
 
         //Modalidades de Tipologia de Accion
         Route::get('modalidades', 'ModalidadesController@getTodos');

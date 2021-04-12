@@ -66,6 +66,12 @@
           </a>
         </li>
         <li>
+          <a href="{{url("/lineasEstrategicas")}}">
+            <i class="fa fa-table"></i>
+            <span>Tipologías de Acción</span>
+          </a>
+        </li>
+        <li>
           <a href="{{url("/cursos/planificados")}}">
             <i class="fa fa-address-book"></i>
             <span>Acciones Planificadas</span>
