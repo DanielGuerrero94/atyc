@@ -134,7 +134,10 @@
                                     <br />
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
-                                            <label for="descripcion_tipo_accion" class="control-label col-md-2 col-xs-2"></label>
+                                            <label
+                                                    for="descripcion_tipo_accion"
+                                                    class="control-label col-md-2 col-xs-2"
+                                            ></label>
                                             <div class="col-md-8 col-xs-8">
                                                 <p id="descripcion_tipo_accion">
                                                 </p>
@@ -341,6 +344,7 @@
                                                                     value="{{$pauta->id_pauta}}"
                                                                     selected="selected"
                                                             >{{$pauta->anios." - ".$pauta->numero.": ".$pauta->nombre}}</option>
+                                                            {{logger("PAUTA : $pauta")}}
                                                         @else
                                                             <option
                                                                     data-id="{{$pauta->id_pauta}}"
@@ -355,7 +359,9 @@
                                     <br />
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
-                                            <label for="descripcion_pauta" class="control-label col-md-2 col-xs-2"></label>
+                                            <label
+                                                    for="descripcion_pauta" class="control-label col-md-2 col-xs-2"
+                                            ></label>
                                             <div class="col-md-8 col-xs-8">
                                                 <p id="descripcion_pauta">
                                                 </p>
@@ -1349,10 +1355,16 @@
                 $('#pauta').append(pautasHtml);
 
                 pautas.forEach(pauta => {
+                    const startHtml = `<option data-id="${pauta.id_pauta}" value="${pauta.id_pauta}"`;
+                    const endHtml = `>${pauta.anios} - ${pauta.numero}: ${pauta.nombre}</option>`;
+
+                    if (pauta.id_pauta === pac.id_pauta) {
+                        pautasHtml += startHtml + 'selected="selected"' + endHtml;
+                        return;
+                    }
+
                     if (pautasIds.includes(pauta.id_pauta)) {
-                        pautasHtml += `<option data-id="${pauta.id_pauta}" value="${pauta.id_pauta}">
-                    ${pauta.anios} - ${pauta.numero}: ${pauta.nombre}
-                    </option>`;
+                        pautasHtml += startHtml + endHtml;
                     }
                 });
 
@@ -2088,7 +2100,6 @@
             var ids_tematicas = $('#general #tematica').val();
             var ids_destinatarios = $('#alcance #destinatario').val();
             var ids_responsables = $('#alcance #responsable').val();
-            var ids_pautas = $('#alcance #pauta').val();
             var ids_componentes = $('#alcance #componente').val();
 
             var selected = [
@@ -2119,10 +2130,6 @@
                 {
                     name : 'ids_responsables',
                     value: ids_responsables
-                },
-                {
-                    name : 'ids_pautas',
-                    value: ids_pautas
                 },
                 {
                     name : 'ids_componentes',
