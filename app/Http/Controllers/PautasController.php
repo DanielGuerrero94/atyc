@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Pac\Pauta;
 use App\Models\Pac\Categoria;
@@ -17,11 +18,11 @@ class PautasController extends ModelController
      * @var array
      **/
     protected $rules = [
-        'numero' => 'required|numeric',
-        'nombre' => 'required|string',
-        'id_categoria' => 'required|numeric',
+        'numero'            => 'required|numeric',
+        'nombre'            => 'required|string',
+        'id_categoria'      => 'required|numeric',
         'ficha_obligatoria' => 'required',
-        'anios' => 'required'
+        'anios'             => 'required',
     ];
 
     protected $name = 'pauta';
@@ -38,17 +39,22 @@ class PautasController extends ModelController
      */
     public function index()
     {
-        return $this->model
+        $query = $this->model
             ->with([
                 'categoria' => function ($q) {
                     return $q->withTrashed();
                 },
-                'provincia'
+                'provincia',
             ])
             ->orderBy('id_provincia', 'desc')
             ->orderBy('deleted_at', 'desc')
-            ->orderBy('numero')
-            ->withTrashed();
+            ->orderBy('numero');
+
+        if (Auth::user() == 25) {
+            $query = $query->withTrashed();
+        }
+
+        return $query;
     }
 
     /**
@@ -58,9 +64,11 @@ class PautasController extends ModelController
      */
     public function create()
     {
-        $categorias = Categoria::with(['pautas' => function ($q) {
-            return $q->withTrashed();
-        }])->withTrashed()->get();
+        $categorias = Categoria::with([
+            'pautas' => function ($q) {
+                return $q->withTrashed();
+            },
+        ])->withTrashed()->get();
 
         return view('pautas/alta', compact('categorias'));
     }
@@ -68,7 +76,8 @@ class PautasController extends ModelController
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
 
@@ -82,8 +91,9 @@ class PautasController extends ModelController
         $anios = explode(',', $request->get('anios'));
         logger()->info("Anios: " . json_encode($anios));
 
-        foreach ($anios as $anio)
+        foreach ($anios as $anio) {
             DB::insert('insert into pac.pautas_anios (id_pauta, anio) values (?, ?)', [$pauta->id_pauta, $anio]);
+        }
 
         return $pauta;
     }
@@ -91,8 +101,9 @@ class PautasController extends ModelController
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -101,7 +112,7 @@ class PautasController extends ModelController
 
         $pauta = $this->model->withTrashed()->findOrFail($id);
 
-        $current_years = array();
+        $current_years = [];
         foreach ($this->anios($id) as $anio) {
             $current_years[] = $anio->anio;
         };
@@ -111,7 +122,7 @@ class PautasController extends ModelController
         $intersect = array_intersect($current_years, $new_years);
 
         $deleted_years = array_diff($current_years, $intersect);
-        $added_years = array_diff($new_years, $intersect);
+        $added_years   = array_diff($new_years, $intersect);
 
         // logger()->info(json_encode($current_years));
         // logger()->info(json_encode($new_years));
@@ -119,35 +130,42 @@ class PautasController extends ModelController
         // logger()->info(json_encode($deleted_years));
         // logger()->info(json_encode($added_years));
 
-        foreach ($deleted_years as $year)
+        foreach ($deleted_years as $year) {
             DB::table('pac.pautas_anios')->where('id_pauta', $id)->where('anio', $year)->delete();
-        foreach ($added_years as $year)
+        }
+        foreach ($added_years as $year) {
             DB::insert('insert into pac.pautas_anios (id_pauta, anio) values (?, ?)', [$id, $year]);
+        }
 
         return $response;
     }
 
     public function show($id)
     {
-        $categorias = Categoria::with(['pautas' => function ($q) {
-            return $q->withTrashed();
-        }])->withTrashed()->get();
+        $categorias = Categoria::with([
+            'pautas' => function ($q) {
+                return $q->withTrashed();
+            },
+        ])->withTrashed()->get();
 
         return [
-            $this->name => $this->model
-                ->with(['categoria' => function ($categoria) {
-                    return $categoria->withTrashed();
-                }])
+            $this->name  => $this->model
+                ->with([
+                    'categoria' => function ($categoria) {
+                        return $categoria->withTrashed();
+                    },
+                ])
                 ->withTrashed()
                 ->findOrFail($id),
             'categorias' => $categorias,
-            'anios' => $this->anios($id)];
+            'anios'      => $this->anios($id),
+        ];
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      *
      * @return \Illuminate\Http\Response
      */
@@ -196,15 +214,16 @@ class PautasController extends ModelController
                 }, $ids);
 
                 $pautas = $pautas->whereIn('id_pauta', $ids);
-            } elseif ($key == 'provincias')
+            } elseif ($key == 'provincias') {
                 $pautas = $pautas->whereIn('pac.pautas.id_provincia', $value);
+            }
         }
 
         return Datatables::of($pautas->get())
             ->addColumn(
                 'anios',
                 function ($ret) {
-                    return array($this->anios($ret->id_pauta));
+                    return [$this->anios($ret->id_pauta)];
                 }
             )
             ->make(true);
@@ -221,9 +240,12 @@ class PautasController extends ModelController
 
         $query = DB::table('pac.categorias_pautas AS c')
             ->select(
-                'c.id_categoria', 'c.numero AS categoria_numero', 'c.nombre AS categoria_nombre', 'c.created_at AS categoria_created_at',
-                'p.id_pauta', 'p.numero AS pauta_numero', 'p.nombre AS pauta_nombre', 'p.descripcion', 'p.ficha_obligatoria',
-                'p.created_at AS pauta_created_at', 'p.deleted_at AS pauta_deleted_at', 'pr.id_provincia', 'pr.nombre as provincia_nombre'
+                'c.id_categoria', 'c.numero AS categoria_numero', 'c.nombre AS categoria_nombre',
+                'c.created_at AS categoria_created_at',
+                'p.id_pauta', 'p.numero AS pauta_numero', 'p.nombre AS pauta_nombre', 'p.descripcion',
+                'p.ficha_obligatoria',
+                'p.created_at AS pauta_created_at', 'p.deleted_at AS pauta_deleted_at', 'pr.id_provincia',
+                'pr.nombre as provincia_nombre'
             )
             ->leftJoin('pac.pautas AS p', 'p.id_categoria', '=', 'c.id_categoria')
             ->leftJoin('sistema.provincias AS pr', 'p.id_provincia', '=', 'pr.id_provincia')
@@ -247,24 +269,29 @@ class PautasController extends ModelController
                 }, $ids);
 
                 $query = $query->whereIn('p.id_pauta', $ids);
-            } elseif ($key == 'provincias')
+            } elseif ($key == 'provincias') {
                 $query = $query->whereIn('pr.id_provincia', $value);
+            }
+        }
+
+        if (Auth::user()->id_provincia != 25) {
+            $query = $query->whereNull('p.deleted_at')
+                ->whereNull('c.deleted_at');
         }
 
         return Datatables::of($query)
             ->addColumn(
                 'anios',
                 function ($ret) {
-                    return array($this->anios($ret->id_pauta));
+                    return [$this->anios($ret->id_pauta)];
                 }
             )
             ->make(true);
-
     }
 
     public function obligarFichaTecnica($id_pauta)
     {
-        $pauta = Pauta::findOrFail($id_pauta);
+        $pauta                    = Pauta::findOrFail($id_pauta);
         $pauta->ficha_obligatoria = true;
         $pauta->save();
 

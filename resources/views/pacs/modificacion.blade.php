@@ -958,7 +958,6 @@
                                     method : 'put',
                                     data   : getDataEjecucionCurso(),
                                     success: function (data) {
-                                        console.log(data);
                                         if (data != "error") {
                                             console.log("Se informó la ejecución del curso: " + id + " y va a editarlo ahora");
                                             alert("Se informó la ejecución del curso. Va a completar los alumnos y profesor ahora");
@@ -1913,8 +1912,6 @@
                         value: $('#mensaje').val()
                     },
                 ];
-
-            console.log(data);
 
             return data;
         }

@@ -6,6 +6,7 @@ use App\Models\Cursos\Modalidad;
 use Illuminate\Http\Request;
 use App\Models\Cursos\LineaEstrategica;
 use Datatables;
+use Illuminate\Support\Facades\Auth;
 
 class LineasEstrategicasController extends ModelController
 {
@@ -15,7 +16,7 @@ class LineasEstrategicasController extends ModelController
      * @var array
      **/
     protected $rules = [
-        'nombre' => 'required|string'
+        'nombre' => 'required|string',
     ];
 
     protected $name = 'linea';
@@ -32,18 +33,23 @@ class LineasEstrategicasController extends ModelController
      */
     public function index()
     {
-        return $this->model
+        $query = $this->model
             ->with('modalidades')
             ->orderBy('deleted_at', 'desc')
-            ->orderBy('numero')
-            ->withTrashed()
-            ->get();
+            ->orderBy('numero');
+
+        if (Auth::user()->id_provincia == 25) {
+            $query = $query->withTrashed();
+        }
+
+        return $query->get();
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -71,6 +77,7 @@ class LineasEstrategicasController extends ModelController
      * Display the specified resource.
      *
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -82,6 +89,7 @@ class LineasEstrategicasController extends ModelController
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -99,6 +107,7 @@ class LineasEstrategicasController extends ModelController
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
