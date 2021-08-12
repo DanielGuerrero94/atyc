@@ -1327,6 +1327,14 @@
 
                 let tipoAccion = tiposAccion.find(tipoAccion => tipoAccion.id_linea_estrategica == idTipoAccion);
 
+                if (!tipoAccion.modalidades.length) {
+                    const nombreModalidad = tiposAccion.flatMap(tipoAccion => tipoAccion.modalidades)
+                        .find(modalidad => modalidad.id_modalidad == pac.id_modalidad)
+                        .nombre;
+
+                    html += `<option data-id="${pac.id_modalidad}" value="${pac.id_modalidad}" selected>${nombreModalidad}</option>`;
+                }
+
                 tipoAccion.modalidades.forEach(modalidad => {
                     if (pac.id_modalidad == modalidad.id_modalidad) {
                         html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}" selected>${modalidad.nombre}</option>`;
@@ -1399,6 +1407,16 @@
                 $('#general #modalidad').append(html);
 
                 $('#general #descripcion_tipo_accion').append(descripcion);
+
+                if (!tipoAccion.modalidades.length) {
+                    nombreModalidad = tiposAccion.flatMap(tipoAccion => tipoAccion.modalidades)
+                        .find(modalidad => modalidad.id_modalidad == pac.id_modalidad)
+                        .nombre;
+
+                    console.log(nombreModalidad);
+
+                    html += `<option data-id="${pac.id_modalidad}" value="${pac.id_modalidad}" selected>${nombreModalidad}</option>`;
+                }
 
                 tipoAccion.modalidades.forEach(modalidad => {
                     html += `<option data-id="${modalidad.id_modalidad}" value="${modalidad.id_modalidad}">
