@@ -343,13 +343,13 @@
                                                                     data-id="{{$pauta->id_pauta}}"
                                                                     value="{{$pauta->id_pauta}}"
                                                                     selected="selected"
-                                                            >{{$pauta->anios." - ".$pauta->numero.": ".$pauta->nombre}}</option>
-                                                            {{logger("PAUTA : $pauta")}}
+                                                            >
+                                                                {{ $pauta->anios->implode('anio', ',') ." - ".$pauta->numero.": ".$pauta->nombre}}</option>
                                                         @else
                                                             <option
                                                                     data-id="{{$pauta->id_pauta}}"
                                                                     value="{{$pauta->id_pauta}}"
-                                                            >{{$pauta->anios." - ".$pauta->numero.": ".$pauta->nombre}}</option>
+                                                            {{ $pauta->anios->implode('anio', ',') ." - ".$pauta->numero.": ".$pauta->nombre}}</option>
                                                         @endif
                                                     @endforeach
                                                 </select>
@@ -1355,15 +1355,17 @@
 
                 pautas = {!! $pautasEdit->toJson() !!};
 
-                let anio = $('#general #anio').val().toString();
+                let anio = $('#general #anio').val();
 
-                let pautasIds = pautas.filter(pauta => (pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
+                let pautasIds = pautas.filter(pauta =>
+                    pauta.anios.some(pautaAnio => pautaAnio.anio.toString() === anio)
+                ).map(pauta => pauta.id_pauta);
 
                 $('#pauta').append(pautasHtml);
 
                 pautas.forEach(pauta => {
                     const startHtml = `<option data-id="${pauta.id_pauta}" value="${pauta.id_pauta}"`;
-                    const endHtml = `>${pauta.anios} - ${pauta.numero}: ${pauta.nombre}</option>`;
+                    const endHtml = `>${pauta.anios.map(anio => anio.anio).join(', ')} - ${pauta.numero}: ${pauta.nombre}</option>`;
 
                     if (pauta.id_pauta === pac.id_pauta) {
                         pautasHtml += startHtml + 'selected="selected"' + endHtml;

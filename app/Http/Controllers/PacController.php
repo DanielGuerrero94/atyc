@@ -654,10 +654,13 @@ class PacController extends AbmController
 
     public function getSelectOptions()
     {
-        $pautas = Pauta::leftJoin('pac.pautas_anios', 'pac.pautas.id_pauta', '=', 'pac.pautas_anios.id_pauta')
-            ->groupBy('pac.pautas.id_pauta')
-            ->orderBy('numero')
-            ->selectRaw("pac.pautas.id_pauta, array_to_string(array_agg(anio), ',') as anios, nombre, numero, descripcion, id_provincia")
+        $pautas = Pauta::with([
+            'categoria' => function ($query) {
+                $query->withTrashed();
+            },
+            'anios',
+        ])->orderBy('numero')
+            ->segunProvincia()
             ->get();
 
         $componentes = Cache::remember('componentes', 5, function () {
@@ -707,12 +710,16 @@ class PacController extends AbmController
 
     public function getEditOptions()
     {
-        $pautasEdit = Pauta::leftJoin('pac.pautas_anios', 'pac.pautas.id_pauta', '=', 'pac.pautas_anios.id_pauta')
-            ->groupBy('pac.pautas.id_pauta')
-            ->orderBy('deleted_at', 'desc')
+        $pautasEdit = Pauta::with([
+            'categoria' => function ($query) {
+                $query->withTrashed();
+            },
+            'anios',
+        ])
+            ->orderBy('deleted_at', 'DESC')
             ->orderBy('numero')
             ->withTrashed()
-            ->selectRaw("pac.pautas.id_pauta, array_to_string(array_agg(anio), ',') as anios, nombre, numero, descripcion, id_provincia")
+            ->segunProvincia()
             ->get();
 
         $componentesEdit = Cache::remember('componentesEdit', 5, function () {

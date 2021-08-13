@@ -4,6 +4,7 @@ namespace App\Models\Pac;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Pauta extends Model
 {
@@ -64,5 +65,22 @@ class Pauta extends Model
             'id_provincia',
             'id_provincia'
         );
+    }
+
+    public function anios()
+    {
+        return $this->hasMany(
+            PautaAnio::class,
+            'id_pauta',
+            'id_pauta'
+        );
+    }
+
+    public function scopeSegunProvincia($query)
+    {
+        $idProvincia = Auth::user()->id_provincia;
+        if ($idProvincia !== 25) {
+            return $query->whereIn('id_provincia', [25, $idProvincia]);
+        }
     }
 }

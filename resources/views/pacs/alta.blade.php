@@ -223,11 +223,10 @@
                             <select class="select-2 form-control" id="pauta" name="id_pauta" aria-hidden="true">
                                 <option></option>
                                 @foreach ($pautas as $pauta)
-                                    @if($pauta->id_provincia == 25 || $pauta->id_provincia == Auth::user()->id_provincia)
-                                        <option
-                                                data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}"
-                                        > {{$pauta->anios." - ".$pauta->numero.": ".$pauta->nombre}}</option>
-                                    @endif
+                                    <option
+                                            data-id="{{$pauta->id_pauta}}" value="{{$pauta->id_pauta}}"
+                                    >
+                                        {{ $pauta->anios->implode('anio', ',') ." - ".$pauta->numero.": ".$pauta->nombre}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -316,18 +315,20 @@
 
             pautas = {!! $pautas->toJson() !!};
 
-            let anio = $('#general #anio option:selected').data('id').toString();
+            let anio = $('#general #anio option:selected').data('id');
 
-            let pautasIds = pautas.filter(pauta => (pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
+            let pautasIds = pautas.filter(pauta => (pauta.anios.some(pautaAnio => pautaAnio.anio === anio))).map(pauta => pauta.id_pauta);
 
             $('#pauta').append(html);
 
             pautas.forEach(pauta => {
-                if (pautasIds.includes(pauta.id_pauta)) {
-                    html += `<option data-id="${pauta.id_pauta}" value="${pauta.id_pauta}">
-                    ${pauta.anios} - ${pauta.numero}: ${pauta.nombre}
-                    </option>`;
+                if (!pautasIds.includes(pauta.id_pauta)) {
+                    return;
                 }
+
+                html += `<option data-id="${pauta.id_pauta}" value="${pauta.id_pauta}">
+                    ${pauta.anios.map(anio => anio.anio).join(', ')} - ${pauta.numero}: ${pauta.nombre}
+                    </option>`;
             });
 
             $('#pauta').append(html);
@@ -349,21 +350,24 @@
 
             pautas = {!! $pautas->toJson() !!};
 
-            let anio = $('#general #anio option:selected').data('id').toString();
+            let anio = $('#general #anio option:selected').data('id');
 
-            let pautasIds = pautas.filter(pauta => (pauta.anios.split(',').includes(anio))).map(pauta => pauta.id_pauta);
+            let pautasIds = pautas.filter(pauta => (pauta.anios.some(pautaAnio => pautaAnio.anio === anio))).map(pauta => pauta.id_pauta);
 
             $('#pauta').append(html);
 
             pautas.forEach(pauta => {
-                if (pautasIds.includes(pauta.id_pauta)) {
-                    html += `<option data-id="${pauta.id_pauta}" value="${pauta.id_pauta}">
-                    ${pauta.anios} - ${pauta.numero}: ${pauta.nombre}
-                    </option>`;
+                if (!pautasIds.includes(pauta.id_pauta)) {
+                    return;
                 }
+
+                html += `<option data-id="${pauta.id_pauta}" value="${pauta.id_pauta}">
+                    ${pauta.anios.map(anio => anio.anio).join(', ')} - ${pauta.numero}: ${pauta.nombre}
+                    </option>`;
             });
 
             $('#pauta').append(html);
+
         });
 
         $('#tipo_accion').on('select2:select', function () {
@@ -473,8 +477,6 @@
             var ids_tematicas = getTematicasSelected();
             var ids_destinatarios = getDestinatariosSelected();
             var ids_responsables = getResponsablesSelected();
-            var id_pauta = $('#alcance #pauta option:selected').data('id')
-            console.log("id_pauta" + id_pauta);
             var ids_componentes = getComponentesSelected();
             var anio = $('#general #anio option:selected').data('id');
 
