@@ -195,29 +195,6 @@
                 });
             });
 
-            // $('#alta').on('click', '#modificar', function () {
-            //     const input = $.merge($('form').serializeArray(), [{
-            //         name : 'anios',
-            //         value: $('#anio').val()
-            //     }]);
-            //
-            //     const categoria = $(this).data('id');
-            //
-            //     $.ajax({
-            //         url    : 'categorias/' + categoria,
-            //         method : 'put',
-            //         data   : input,
-            //         success: function (data) {
-            //             console.log("Success.");
-            //             alert("Se modifico la categoria");
-            //             location.reload();
-            //         },
-            //         error  : function (data) {
-            //             console.log("Error.");
-            //         }
-            //     });
-            // });
-
             $('#abm').on('click', '.darBaja', function () {
 
                 var categoria = $(this).data('id');
