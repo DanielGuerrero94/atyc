@@ -17,7 +17,7 @@ class Categoria extends Model
      * The table associated with the model.
      *
      * @var string
-    */
+     */
     protected $table = 'pac.categorias_pautas';
 
     /**
@@ -38,6 +38,15 @@ class Categoria extends Model
     {
         return $this->hasMany(
             Pauta::class,
+            'id_categoria',
+            'id_categoria'
+        );
+    }
+
+    public function anios()
+    {
+        return $this->hasMany(
+            CategoriaAnio::class,
             'id_categoria',
             'id_categoria'
         );

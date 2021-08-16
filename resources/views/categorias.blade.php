@@ -77,6 +77,16 @@
                     title: 'Nombre',
                     data : 'nombre'
                 }, {
+                    title    : 'Años',
+                    data     : 'anios',
+                    orderable: false,
+                    render   : function (data) {
+                        if (!data.length) {
+                            return '-';
+                        }
+                        return data.map(anio => anio.anio).join(', ');
+                    }
+                }, {
                     title : 'Provincial',
                     data  : 'provincial',
                     render: function (data) {
@@ -186,13 +196,17 @@
             });
 
             $('#alta').on('click', '#modificar', function () {
+                const input = $.merge($('form').serializeArray(), [{
+                    name : 'anios',
+                    value: $('#anio').val()
+                }]);
 
-                var categoria = $(this).data('id');
+                const categoria = $(this).data('id');
 
                 $.ajax({
                     url    : 'categorias/' + categoria,
                     method : 'put',
-                    data   : $('form').serialize(),
+                    data   : input,
                     success: function (data) {
                         console.log("Success.");
                         alert("Se modifico la categoria");

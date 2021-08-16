@@ -160,6 +160,7 @@ class ModelController extends Controller
             parent::validate($request, $rules, $messages, $customAttributes);
         } catch (ValidationException $e) {
             logger($e->getMessage());
+            logger($e->validator->getMessageBag());
             return $e->getMessage();
         }
     }
