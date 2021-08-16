@@ -122,7 +122,6 @@
                 provincial: "Campo obligatorio",
             },
             highlight    : function (element) {
-                console.log(element);
                 $(element).closest('.form-control').removeClass('success').addClass('error');
             },
             success      : function (element) {
