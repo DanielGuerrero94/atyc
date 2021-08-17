@@ -264,7 +264,7 @@ class PacController extends AbmController
             $this->crearCursos($pac, $request);
         }
 
-        $pac->update($request->all());
+        $pac->update(array_filter($request->all()));
 
         if (empty($request->get('ids_tematicas'))) {
             $pac->tematicas()->detach();
