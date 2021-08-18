@@ -26,8 +26,12 @@
                         <label for="numero" class="control-label col-xs-4">Numero:</label>
                         <div class="col-xs-8">
                             <input
-                                    type="text" class="form-control" id="numero" name="numero"
-                                    value="{{$categoria->numero}}" required
+                                    type="text"
+                                    class="form-control"
+                                    id="numero"
+                                    name="numero"
+                                    value="{{$categoria->numero}}"
+                                    required
                             >
                         </div>
                     </div>
@@ -35,8 +39,12 @@
                         <label for="nombre" class="control-label col-xs-4">Nombre:</label>
                         <div class="col-xs-8">
                             <input
-                                    type="text" class="form-control" id="nombre" name="nombre"
-                                    value="{{$categoria->nombre}}" required
+                                    type="text"
+                                    class="form-control"
+                                    id="nombre"
+                                    name="nombre"
+                                    value="{{$categoria->nombre}}"
+                                    required
                             >
                         </div>
                     </div>
@@ -58,9 +66,13 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    <button class="btn btn-warning" id="volver" title="Volver" type="reset"><i
-                                class="fa fa-undo" aria-hidden="true"
-                        ></i>Volver
+                    <button
+                            class="btn btn-warning"
+                            id="volver"
+                            title="Volver"
+                            type="reset"
+                    >
+                        <i class="fa fa-undo" aria-hidden="true"></i>Volver
                     </button>
                     <button
                             class="btn btn-primary pull-right"
@@ -131,9 +143,6 @@
                     .closest('.control-group').removeClass('error').addClass('success');
             },
             submitHandler: function (form) {
-
-                console.log("submit");
-
                 const input = $.merge($('form').serializeArray(), [{
                     name : 'anios',
                     value: $('#anio').val()

@@ -18,7 +18,7 @@ class PautasController extends ModelController
      * @var array
      **/
     protected $rules = [
-        'numero'            => 'required|numeric',
+        'numero'            => 'required',
         'nombre'            => 'required|string',
         'id_categoria'      => 'required|numeric',
         'ficha_obligatoria' => 'required',
@@ -68,7 +68,10 @@ class PautasController extends ModelController
             'pautas' => function ($q) {
                 return $q->withTrashed();
             },
-        ])->withTrashed()->get();
+            'anios',
+        ])->withTrashed()
+            ->orderBy('numero')
+            ->get();
 
         return view('pautas/alta', compact('categorias'));
     }
@@ -83,13 +86,15 @@ class PautasController extends ModelController
 
     public function store(Request $request)
     {
-        logger()->info("Request: " . json_encode($request));
-        $pauta = ModelController::store($request);
+        $error = $this->validate($request, $this->rules);
 
-        logger()->info("Pauta: " . json_encode($pauta));
+        if ($error) {
+            return response($error, 400);
+        }
+
+        $pauta = $this->model->create($request->all());
 
         $anios = explode(',', $request->get('anios'));
-        logger()->info("Anios: " . json_encode($anios));
 
         foreach ($anios as $anio) {
             DB::insert('insert into pac.pautas_anios (id_pauta, anio) values (?, ?)', [$pauta->id_pauta, $anio]);
@@ -108,9 +113,15 @@ class PautasController extends ModelController
      */
     public function update(Request $request, $id)
     {
-        $response = ModelController::update($request, $id);
+        $error = $this->validate($request, $this->rules);
+
+        if ($error) {
+            return response($error, 400);
+        }
 
         $pauta = $this->model->withTrashed()->findOrFail($id);
+
+        $pauta->update($request->all());
 
         $current_years = [];
         foreach ($this->anios($id) as $anio) {
@@ -124,12 +135,6 @@ class PautasController extends ModelController
         $deleted_years = array_diff($current_years, $intersect);
         $added_years   = array_diff($new_years, $intersect);
 
-        // logger()->info(json_encode($current_years));
-        // logger()->info(json_encode($new_years));
-        // logger()->info(json_encode($intersect));
-        // logger()->info(json_encode($deleted_years));
-        // logger()->info(json_encode($added_years));
-
         foreach ($deleted_years as $year) {
             DB::table('pac.pautas_anios')->where('id_pauta', $id)->where('anio', $year)->delete();
         }
@@ -137,7 +142,7 @@ class PautasController extends ModelController
             DB::insert('insert into pac.pautas_anios (id_pauta, anio) values (?, ?)', [$id, $year]);
         }
 
-        return $response;
+        return response()->json($pauta);
     }
 
     public function show($id)
@@ -146,6 +151,7 @@ class PautasController extends ModelController
             'pautas' => function ($q) {
                 return $q->withTrashed();
             },
+            'anios',
         ])->withTrashed()->get();
 
         return [
@@ -154,6 +160,7 @@ class PautasController extends ModelController
                     'categoria' => function ($categoria) {
                         return $categoria->withTrashed();
                     },
+                    'anios',
                 ])
                 ->withTrashed()
                 ->findOrFail($id),
