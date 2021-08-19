@@ -246,7 +246,7 @@
             pautas = pautas.filter(pauta => pauta.id_provincia === provinciaId);
         }
 
-        const pauta = pautas.sort((a, b) => a.numero - b.numero).pop();
+        const pauta = pautas.sort((a, b) => a.numero >= b.numero ? 1 : -1).pop();
 
         if (!pauta) {
             const provincia = provinciaId !== 25 ? `${provinciaId}.` : '';
