@@ -217,7 +217,7 @@
         }
 
         const categoriasIds = categorias.filter(categoria =>
-            (categoria.anios.some(categoriaAnio => anios.includes(categoriaAnio.anio.toString())))
+            (categoria.anios.some(categoriaAnio => anios?.includes(categoriaAnio.anio.toString())))
         ).map(categoria => categoria.id_categoria);
 
         $('#categoria').append(html);
