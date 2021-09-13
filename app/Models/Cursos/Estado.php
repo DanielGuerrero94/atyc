@@ -7,6 +7,13 @@ use Illuminate\Http\Request;
 
 class Estado extends Model
 {
+    const CURSO_PLANIFICADO  = 1;
+    const CURSO_DISENIADO    = 2;
+    const CURSO_EN_EJECUCION = 3;
+    const CURSO_FINALIZADO   = 4;
+    const CURSO_REPROGRAMADO = 5;
+    const CURSO_DESACTIVADO  = 6;
+
     /**
      * The table associated with the model.
      *
