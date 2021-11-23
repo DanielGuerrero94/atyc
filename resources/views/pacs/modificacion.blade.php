@@ -12,6 +12,8 @@
         <div class="row">
             <div id="modificacion-pac" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <form id="form-modificacion">
+                    {{ csrf_field() }}
+                    {{ method_field('PUT') }}
                     <div class="box">
                         <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
@@ -37,16 +39,14 @@
                             </ul>
                             <div class="tab-content">
                                 <div class="active tab-pane" id="general" data-id="{{$pac->id_pac}}">
-                                    {{ csrf_field() }}
-                                    {{ method_field('PUT') }}
                                     <br />
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label for="anio" class="control-label col-md-2 col-xs-2">Año:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <input
-                                                        type="number" class="form-control" name="anio" id="anio"
-                                                        placeholder="Año" value="{{$pac->anio}}" disabled
+                                                    type="number" class="form-control" name="anio" id="anio"
+                                                    placeholder="Año" value="{{$pac->anio}}" disabled
                                                 >
                                             </div>
                                         </div>
@@ -62,14 +62,14 @@
                                                     @foreach ($actoresEdit as $actor)
                                                         @if ($actor->id_actor === $pac->id_actor)
                                                             <option
-                                                                    data-id="{{$actor->id_actor}}"
-                                                                    value="{{$actor->id_actor}}"
-                                                                    selected="selected"
+                                                                data-id="{{$actor->id_actor}}"
+                                                                value="{{$actor->id_actor}}"
+                                                                selected="selected"
                                                             >{{$actor->nombre}}</option>
                                                         @else
                                                             <option
-                                                                    data-id="{{$actor->id_actor}}"
-                                                                    value="{{$actor->id_actor}}"
+                                                                data-id="{{$actor->id_actor}}"
+                                                                value="{{$actor->id_actor}}"
                                                             >{{$actor->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -83,12 +83,16 @@
                                             <label class="col-md-2 col-xs-2">Nombre:</label>
                                             <div class="typeahead__container col-md-8 col-xs-8">
                                                 <div class="typeahead__field ">
-                      <span class="typeahead__query ">
-                        <input
-                                class="curso_typeahead form-control" name="nombre" type="search"
-                                placeholder="Buscar o agregar uno nuevo" autocomplete="off" value="{{$pac->nombre}}"
-                        >
-                      </span>
+                                                  <span class="typeahead__query ">
+                                                    <input
+                                                        class="curso_typeahead form-control"
+                                                        name="nombre"
+                                                        type="search"
+                                                        placeholder="Buscar o agregar uno nuevo"
+                                                        autocomplete="off"
+                                                        value="{{$pac->nombre}}"
+                                                    >
+                                                  </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -99,8 +103,12 @@
                                             <label for="horas" class="control-label col-md-2 col-xs-2">Duración:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <input
-                                                        type="number" class="form-control" name="duracion" id="horas"
-                                                        placeholder="Duración en horas" value="{{$pac->duracion}}"
+                                                    type="number"
+                                                    class="form-control"
+                                                    name="duracion"
+                                                    id="horas"
+                                                    placeholder="Duración en horas"
+                                                    value="{{$pac->duracion}}"
                                                 >
                                             </div>
                                         </div>
@@ -116,14 +124,14 @@
                                                     @foreach ($tipoAccionesEdit as $tipoAccion)
                                                         @if ($tipoAccion->id_linea_estrategica === $pac->id_accion)
                                                             <option
-                                                                    data-id="{{$tipoAccion->id_linea_estrategica}}"
-                                                                    value="{{$tipoAccion->id_linea_estrategica}}"
-                                                                    selected="selected"
+                                                                data-id="{{$tipoAccion->id_linea_estrategica}}"
+                                                                value="{{$tipoAccion->id_linea_estrategica}}"
+                                                                selected="selected"
                                                             >{{$tipoAccion->numero ." " .$tipoAccion->nombre}}</option>
-                                                        @else
+                                                        @elseif(is_null($tipoAccion->deleted_at))
                                                             <option
-                                                                    data-id="{{$tipoAccion->id_linea_estrategica}}"
-                                                                    value="{{$tipoAccion->id_linea_estrategica}}"
+                                                                data-id="{{$tipoAccion->id_linea_estrategica}}"
+                                                                value="{{$tipoAccion->id_linea_estrategica}}"
                                                             >{{$tipoAccion->numero ." " .$tipoAccion->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -135,8 +143,8 @@
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label
-                                                    for="descripcion_tipo_accion"
-                                                    class="control-label col-md-2 col-xs-2"
+                                                for="descripcion_tipo_accion"
+                                                class="control-label col-md-2 col-xs-2"
                                             ></label>
                                             <div class="col-md-8 col-xs-8">
                                                 <p id="descripcion_tipo_accion">
@@ -148,11 +156,11 @@
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label
-                                                    for="modalidad" class="control-label col-md-2 col-xs-2"
+                                                for="modalidad" class="control-label col-md-2 col-xs-2"
                                             >Modalidad:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                        class="select-2 form-control" id="modalidad" name="id_modalidad"
+                                                    class="select-2 form-control" id="modalidad" name="id_modalidad"
                                                 >
                                                     <option></option>
                                                 </select>
@@ -163,25 +171,25 @@
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label
-                                                    for="tematica"
-                                                    class="control-label col-md-2 col-xs-2"
+                                                for="tematica"
+                                                class="control-label col-md-2 col-xs-2"
                                             >Temática/s:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                        class="select-2 form-control" id="tematica" name="id_tematica"
-                                                        aria-hidden="true" multiple
+                                                    class="select-2 form-control" id="tematica" name="id_tematica"
+                                                    aria-hidden="true" multiple
                                                 >
                                                     @foreach ($tematicasEdit as $tematica)
                                                         @if (in_array ($tematica->id_area_tematica, $pac->tematicas()->withTrashed()->get()->map(function ($_tematica) { return $_tematica->id_area_tematica; })->all() ))
                                                             <option
-                                                                    data-id="{{$tematica->id_area_tematica}}"
-                                                                    value="{{$tematica->id_area_tematica}}"
-                                                                    selected="selected"
+                                                                data-id="{{$tematica->id_area_tematica}}"
+                                                                value="{{$tematica->id_area_tematica}}"
+                                                                selected="selected"
                                                             >{{$tematica->nombre}}</option>
-                                                        @else
+                                                        @elseif(is_null($tematica->deleted_at))
                                                             <option
-                                                                    data-id="{{$tematica->id_area_tematica}}"
-                                                                    value="{{$tematica->id_area_tematica}}"
+                                                                data-id="{{$tematica->id_area_tematica}}"
+                                                                value="{{$tematica->id_area_tematica}}"
                                                             >{{$tematica->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -198,35 +206,35 @@
                                                 <br>
                                                 @if(Auth::user()->id_provincia == 25)
                                                     <select
-                                                            class="select-2 form-control" id="provincia"
-                                                            name="id_provincia"
+                                                        class="select-2 form-control" id="provincia"
+                                                        name="id_provincia"
                                                     >
                                                         <option></option>
                                                         @foreach ($provinciasEdit as $provincia)
                                                             @if ($provincia->id_provincia === $pac->id_provincia)
                                                                 <option
-                                                                        value="{{$provincia->id_provincia}}"
-                                                                        data-id="{{$provincia->id_provincia}}"
-                                                                        selected="selected"
+                                                                    value="{{$provincia->id_provincia}}"
+                                                                    data-id="{{$provincia->id_provincia}}"
+                                                                    selected="selected"
                                                                 >{{$provincia->nombre}}</option>
                                                             @else
                                                                 <option
-                                                                        value="{{$provincia->id_provincia}}"
-                                                                        data-id="{{$provincia->id_provincia}}"
+                                                                    value="{{$provincia->id_provincia}}"
+                                                                    data-id="{{$provincia->id_provincia}}"
                                                                 >{{$provincia->nombre}}</option>
                                                             @endif
                                                         @endforeach
                                                     </select>
                                                 @else
                                                     <select
-                                                            class="select2 form-control" id="provincia" name="provincia"
-                                                            disabled
+                                                        class="select2 form-control" id="provincia" name="provincia"
+                                                        disabled
                                                     >
                                                         @foreach ($provinciasEdit as $provincia)
                                                             @if ($provincia->id_provincia === $pac->id_provincia)
                                                                 <option
-                                                                        value="{{$provincia->id_provincia}}"
-                                                                        data-id="{{$provincia->id_provincia}}"
+                                                                    value="{{$provincia->id_provincia}}"
+                                                                    data-id="{{$provincia->id_provincia}}"
                                                                 >{{$provincia->nombre}}</option>
                                                             @endif
                                                         @endforeach
@@ -262,8 +270,8 @@
                                             </table>
                                         </div>
                                         <div
-                                                class="row" id="ficha-obligatoria"
-                                                data-ficha-obligatoria-id="{{$pac->ficha_obligatoria}}"
+                                            class="row" id="ficha-obligatoria"
+                                            data-ficha-obligatoria-id="{{$pac->ficha_obligatoria}}"
                                         >
                                         </div>
                                     </div>
@@ -273,24 +281,24 @@
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label
-                                                    for="destinatario" class="control-label col-md-2 col-xs-2"
+                                                for="destinatario" class="control-label col-md-2 col-xs-2"
                                             >Destinatarios:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                        class="select-2 form-control" id="destinatario"
-                                                        name="id_destinatario" aria-hidden="true" multiple
+                                                    class="select-2 form-control" id="destinatario"
+                                                    name="id_destinatario" aria-hidden="true" multiple
                                                 >
                                                     @foreach ($destinatariosEdit as $destinatario)
                                                         @if (in_array ($destinatario->id_funcion, $pac->destinatarios()->withTrashed()->get()->map(function ($_destinatario) { return $_destinatario->id_funcion; })->all() ))
                                                             <option
-                                                                    data-id="{{$destinatario->id_funcion}}"
-                                                                    value="{{$destinatario->id_funcion}}"
-                                                                    selected="selected"
+                                                                data-id="{{$destinatario->id_funcion}}"
+                                                                value="{{$destinatario->id_funcion}}"
+                                                                selected="selected"
                                                             >{{$destinatario->nombre}}</option>
-                                                        @else
+                                                        @elseif(is_null($destinatario->deleted_at))
                                                             <option
-                                                                    data-id="{{$destinatario->id_funcion}}"
-                                                                    value="{{$destinatario->id_funcion}}"
+                                                                data-id="{{$destinatario->id_funcion}}"
+                                                                value="{{$destinatario->id_funcion}}"
                                                             >{{$destinatario->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -305,20 +313,20 @@
                                                 de la Ejecución:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                        class="select-2 form-control" id="responsable"
-                                                        name="id_responsable" aria-hidden="true" multiple
+                                                    class="select-2 form-control" id="responsable"
+                                                    name="id_responsable" aria-hidden="true" multiple
                                                 >
                                                     @foreach ($responsablesEdit as $responsable)
                                                         @if (in_array ($responsable->id_responsable, $pac->responsables()->withTrashed()->get()->map(function ($_responsable) { return $_responsable->id_responsable; })->all() ))
                                                             <option
-                                                                    data-id="{{$responsable->id_responsable}}"
-                                                                    value="{{$responsable->id_responsable}}"
-                                                                    selected="selected"
+                                                                data-id="{{$responsable->id_responsable}}"
+                                                                value="{{$responsable->id_responsable}}"
+                                                                selected="selected"
                                                             >{{$responsable->nombre}}</option>
-                                                        @else
+                                                        @elseif(is_null($responsable->deleted_at))
                                                             <option
-                                                                    data-id="{{$responsable->id_responsable}}"
-                                                                    value="{{$responsable->id_responsable}}"
+                                                                data-id="{{$responsable->id_responsable}}"
+                                                                value="{{$responsable->id_responsable}}"
                                                             >{{$responsable->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -333,22 +341,21 @@
                                                 PAC:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                        class="select-2 form-control" id="pauta" name="id_pauta"
-                                                        aria-hidden="true"
+                                                    class="select-2 form-control" id="pauta" name="id_pauta"
+                                                    aria-hidden="true"
                                                 >
-                                                    <option></option>
                                                     @foreach ($pautasEdit as $pauta)
                                                         @if ($pauta->id_pauta === $pac->id_pauta)
                                                             <option
-                                                                    data-id="{{$pauta->id_pauta}}"
-                                                                    value="{{$pauta->id_pauta}}"
-                                                                    selected="selected"
+                                                                data-id="{{$pauta->id_pauta}}"
+                                                                value="{{$pauta->id_pauta}}"
+                                                                selected="selected"
                                                             >
                                                                 {{ $pauta->anios->implode('anio', ',') ." - ".$pauta->numero.": ".$pauta->nombre}}</option>
-                                                        @else
+                                                        @elseif(is_null($pauta->deleted_at))
                                                             <option
-                                                                    data-id="{{$pauta->id_pauta}}"
-                                                                    value="{{$pauta->id_pauta}}"
+                                                                data-id="{{$pauta->id_pauta}}"
+                                                                value="{{$pauta->id_pauta}}"
                                                             {{ $pauta->anios->implode('anio', ',') ." - ".$pauta->numero.": ".$pauta->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -360,7 +367,7 @@
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label
-                                                    for="descripcion_pauta" class="control-label col-md-2 col-xs-2"
+                                                for="descripcion_pauta" class="control-label col-md-2 col-xs-2"
                                             ></label>
                                             <div class="col-md-8 col-xs-8">
                                                 <p id="descripcion_pauta">
@@ -375,20 +382,20 @@
                                                 CAI:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                        class="select-2 form-control" id="componente"
-                                                        name="id_componente" aria-hidden="true" multiple
+                                                    class="select-2 form-control" id="componente"
+                                                    name="id_componente" aria-hidden="true" multiple
                                                 >
                                                     @foreach ($componentesEdit as $componente)
                                                         @if (in_array ($componente->id_componente, $pac->componentes()->withTrashed()->get()->map(function ($_componente) { return $_componente->id_componente; })->all() ))
                                                             <option
-                                                                    data-id="{{$componente->id_componente}}"
-                                                                    value="{{$componente->id_componente}}"
-                                                                    selected="selected"
+                                                                data-id="{{$componente->id_componente}}"
+                                                                value="{{$componente->id_componente}}"
+                                                                selected="selected"
                                                             >{{$componente->numero." - ".$componente->nombre}}</option>
-                                                        @else
+                                                        @elseif(is_null($componente->deleted_at))
                                                             <option
-                                                                    data-id="{{$componente->id_componente}}"
-                                                                    value="{{$componente->id_componente}}"
+                                                                data-id="{{$componente->id_componente}}"
+                                                                value="{{$componente->id_componente}}"
                                                             >{{$componente->numero." - ".$componente->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -407,8 +414,9 @@
                                     @if(!isset($disabled))
                                         <div class="row" style="padding-left: 1.5em;">
                                             <div
-                                                    class="btn btn-info agregar_ediciones" id="agregar_ediciones"
-                                                    title="Agregar Ediciones"
+                                                class="btn btn-info agregar_ediciones"
+                                                id="agregar_ediciones"
+                                                title="Agregar Ediciones"
                                             ><i class="fa fa-plus" aria-hidden="true"></i>
                                                 Agregar Ediciones
                                             </div>
@@ -418,16 +426,20 @@
                             </div>
                             <div class="box-body">
                                 <a href="{{url()->previous()}}">
-                                    <div class="btn btn-warning" id="volver" title="Volver"><i
-                                                class="fa fa-undo"
-                                                aria-hidden="true"
-                                        ></i>
+                                    <div
+                                        class="btn btn-warning"
+                                        id="volver"
+                                        title="Volver"
+                                    ><i class="fa fa-undo" aria-hidden="true"></i>
                                         Volver
                                     </div>
                                 </a>
-                                <div class="btn btn-primary pull-right" id="modificar" title="Modificar"><i
-                                            class="fa fa-plus" aria-hidden="true"
-                                    ></i> Modificar
+                                <div
+                                    class="btn btn-primary pull-right"
+                                    id="modificar"
+                                    title="Modificar"
+                                ><i class="fa fa-plus" aria-hidden="true"></i>
+                                    Modificar
                                 </div>
                             </div>
                         </div>
@@ -443,18 +455,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
     <script
-            type="text/javascript"
-            src="{{asset("/bower_components/admin-lte/plugins/datepicker/bootstrap-datepicker.js")}}"
+        type="text/javascript"
+        src="{{asset("/bower_components/admin-lte/plugins/datepicker/bootstrap-datepicker.js")}}"
     ></script>
 
     <script
-            src="{{asset("/bower_components/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.es.js")}}"
-            charset="UTF-8"
+        src="{{asset("/bower_components/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.es.js")}}"
+        charset="UTF-8"
     ></script>
 
     <script
-            type="text/javascript"
-            src="{{"https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"}}"
+        type="text/javascript"
+        src="{{"https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"}}"
     ></script>
 
     <script type="text/javascript">
@@ -1257,8 +1269,6 @@
                     }
                 ];
 
-            console.log(data);
-
             return data;
         }
 
@@ -1287,7 +1297,6 @@
                     }
                 ];
 
-            console.log(data);
             return data;
         }
 
@@ -1355,6 +1364,8 @@
 
                 pautas = {!! $pautasEdit->toJson() !!};
 
+                console.log(pautas)
+
                 let anio = $('#general #anio').val();
 
                 let pautasIds = pautas.filter(pauta =>
@@ -1372,7 +1383,7 @@
                         return;
                     }
 
-                    if (pautasIds.includes(pauta.id_pauta)) {
+                    if (pautasIds.includes(pauta.id_pauta) && pauta.deleted_at == null) {
                         pautasHtml += startHtml + endHtml;
                     }
                 });
@@ -1414,8 +1425,6 @@
                     nombreModalidad = tiposAccion.flatMap(tipoAccion => tipoAccion.modalidades)
                         .find(modalidad => modalidad.id_modalidad == pac.id_modalidad)
                         .nombre;
-
-                    console.log(nombreModalidad);
 
                     html += `<option data-id="${pac.id_modalidad}" value="${pac.id_modalidad}" selected>${nombreModalidad}</option>`;
                 }
@@ -2003,8 +2012,78 @@
         }
 
         //Validaciones de los campos
-        function inputValidations() {
-            $('#modificacion-pac #form-modificacion').validate({
+
+        //Comportamiento al clickear en modificar
+        function modificarClick(validator) {
+            $('.container-fluid').on('click', '#modificar', function () {
+                $('.container-fluid #form-modificacion .nav-tabs').children().first().children().click();
+                if (validator.valid() && validateDates()) {
+                    $('.container-fluid #form-modificacion').submit();
+                } else {
+                    alert('Hay campos que no cumplen con la validacion.');
+                }
+            });
+        }
+
+        //Seleccion de Valores ingresados
+        function getSelected() {
+
+            var id_actor = $('#general #actor').val();
+            var id_accion = $('#general #tipo_accion').val();
+            var id_modalidad = $('#general #modalidad option:selected').data('id');
+            var id_provincia = $('#general #provincia').val();
+            var ids_tematicas = $('#general #tematica').val();
+            var ids_destinatarios = $('#alcance #destinatario').val();
+            var ids_responsables = $('#alcance #responsable').val();
+            var ids_componentes = $('#alcance #componente').val();
+
+            var selected = [
+                {
+                    name : 'id_actor',
+                    value: id_actor
+                },
+                {
+                    name : 'id_accion',
+                    value: id_accion
+                },
+                {
+                    name : 'id_modalidad',
+                    value: id_modalidad,
+                },
+                {
+                    name : 'id_provincia',
+                    value: id_provincia
+                },
+                {
+                    name : 'ids_tematicas',
+                    value: ids_tematicas
+                },
+                {
+                    name : 'ids_destinatarios',
+                    value: ids_destinatarios
+                },
+                {
+                    name : 'ids_responsables',
+                    value: ids_responsables
+                },
+                {
+                    name : 'ids_componentes',
+                    value: ids_componentes
+                }];
+
+            return selected;
+        }
+
+        function getInput() {
+            const input = $.merge($('#form-modificacion').serializeArray(), getSelected());
+
+            return input;
+        }
+
+        $(document).ready(function () {
+            newValidationMethods();
+
+            const validator = $('#modificacion-pac #form-modificacion').validate({
                 rules         : {
                     anio           : {
                         required: true,
@@ -2072,6 +2151,7 @@
 
                 submitHandler: function (form) {
                     $.ajax({
+                        type   : 'put',
                         method : 'put',
                         url    : "{{url('pacs')}}" + '/' + "{{$pac->id_pac}}",
                         data   : getInput(),
@@ -2085,84 +2165,7 @@
                     });
                 }
             });
-        }
 
-        //Comportamiento al clickear en modificar
-        function modificarClick() {
-            $('.container-fluid').on('click', '#modificar', function () {
-                $('.container-fluid #form-modificacion .nav-tabs').children().first().children().click();
-
-                if ($('#modificacion-pac #form-modificacion').valid() && validateDates()) {
-                    $('.container-fluid #form-modificacion').submit();
-                } else {
-                    alert('Hay campos que no cumplen con la validacion.');
-                }
-            });
-        }
-
-        //Comportamiento de las modific aciones
-        function modificacionesBehaviour() {
-            newValidationMethods();
-            inputValidations();
-            modificarClick();
-        }
-
-        //Seleccion de Valores ingresados
-        function getSelected() {
-
-            var id_actor = $('#general #actor').val();
-            var id_accion = $('#general #tipo_accion').val();
-            var id_modalidad = $('#general #modalidad option:selected').data('id');
-            var id_provincia = $('#general #provincia').val();
-            var ids_tematicas = $('#general #tematica').val();
-            var ids_destinatarios = $('#alcance #destinatario').val();
-            var ids_responsables = $('#alcance #responsable').val();
-            var ids_componentes = $('#alcance #componente').val();
-
-            var selected = [
-                {
-                    name : 'id_actor',
-                    value: id_actor
-                },
-                {
-                    name : 'id_accion',
-                    value: id_accion
-                },
-                {
-                    name : 'id_modalidad',
-                    value: id_modalidad,
-                },
-                {
-                    name : 'id_provincia',
-                    value: id_provincia
-                },
-                {
-                    name : 'ids_tematicas',
-                    value: ids_tematicas
-                },
-                {
-                    name : 'ids_destinatarios',
-                    value: ids_destinatarios
-                },
-                {
-                    name : 'ids_responsables',
-                    value: ids_responsables
-                },
-                {
-                    name : 'ids_componentes',
-                    value: ids_componentes
-                }];
-
-            return selected;
-        }
-
-        function getInput() {
-            var input = $.merge($('#form-modificacion').serializeArray(), getSelected());
-
-            return input;
-        }
-
-        $(document).ready(function () {
             inicializarSelect2();
             inicializarTypeahead();
             disableSeeButtons();
@@ -2176,6 +2179,6 @@
             estadosBehaviour();
             fichaTecnicaBehaviour();
             accionesBehaviour();
-            modificacionesBehaviour();
+            modificarClick(validator);
         });
     </script>

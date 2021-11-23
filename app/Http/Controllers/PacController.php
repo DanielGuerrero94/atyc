@@ -294,7 +294,7 @@ class PacController extends AbmController
             $pac->componentes()->sync($componentes);
         }
 
-        return $pac;
+        return response()->json(compact('pac'));
     }
 
     /**
