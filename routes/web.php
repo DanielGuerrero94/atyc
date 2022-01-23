@@ -160,6 +160,10 @@ Route::group(['middleware' => ['logueado', 'logging']], function () {
     Route::put('cursos/{id}/ejecutar', 'CursosController@ejecutar');
     Route::put('cursos/{id}/reprogramar', 'CursosController@reprogramar');
     Route::put('cursos/{id}/desactivar', 'CursosController@desactivar');
+    Route::put('cursos/{id}/addAlumno', 'CursosController@addAlumno');
+    Route::put('cursos/{id}/removeAlumno', 'CursosController@removeAlumno');
+    Route::put('cursos/{id}/addProfesor', 'CursosController@addProfesor');
+    Route::put('cursos/{id}/removeProfesor', 'CursosController@removeProfesor');
 
 
     Route::delete('cursos/{id}', 'CursosController@destroy');

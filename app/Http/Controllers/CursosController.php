@@ -32,11 +32,11 @@ class CursosController extends AbmController
      * @var array
      **/
     private $rules = [
-        'nombre' => 'required|string',
-        'duracion' => 'required|numeric',
-        'id_area_tematica' => 'required|numeric',
+        'nombre'               => 'required|string',
+        'duracion'             => 'required|numeric',
+        'id_area_tematica'     => 'required|numeric',
         'id_linea_estrategica' => 'required|numeric',
-        'id_provincia' => 'required|numeric'
+        'id_provincia'         => 'required|numeric'
     ];
 
     /**
@@ -45,16 +45,16 @@ class CursosController extends AbmController
      * @var array
      **/
     private $filters = [
-        'nombre' => 'string',
-        'duracion' => 'numeric',
-        'edicion' => 'numeric',
-        'id_provincia' => 'array',
+        'nombre'               => 'string',
+        'duracion'             => 'numeric',
+        'edicion'              => 'numeric',
+        'id_provincia'         => 'array',
         'id_linea_estrategica' => 'array',
-        'id_area_tematica' => 'array',
-        'id_estado' => 'array',
-        'id_periodo' => 'numeric',
-        'desde' => 'string',
-        'hasta' => 'string'
+        'id_area_tematica'     => 'array',
+        'id_estado'            => 'array',
+        'id_periodo'           => 'numeric',
+        'desde'                => 'string',
+        'hasta'                => 'string'
     ];
 
     /**
@@ -63,10 +63,10 @@ class CursosController extends AbmController
      * @var array
      **/
     private $botones = [
-        'editar' => 'fa fa-pencil-square-o',
+        'editar'   => 'fa fa-pencil-square-o',
         'eliminar' => 'fa fa-trash-o',
-        'buscar' => 'fa fa-search',
-        'agregar' => 'fa fa-plus-circle'
+        'buscar'   => 'fa fa-search',
+        'agregar'  => 'fa fa-plus-circle'
     ];
 
     /**
@@ -98,7 +98,7 @@ class CursosController extends AbmController
     public function store(Request $request)
     {
         $data = $request->all();
-        logger('Quiere crear accion con: '.json_encode($data));
+        logger('Quiere crear accion con: ' . json_encode($data));
         $v = Validator::make($data, $this->rules);
 
         if ($v->fails()) {
@@ -107,12 +107,14 @@ class CursosController extends AbmController
 
         //Calculo la edicion del curso, despues puede ser un trigger before insert
         $edicion = Curso::where([
-            ['nombre', '=', $request->nombre],
-            ['id_provincia', '=', $request->id_provincia],
-        ])
-        ->count() + 1;
+                ['nombre', '=', $request->nombre],
+                ['id_provincia', '=', $request->id_provincia],
+            ])
+                ->count() + 1;
 
-        $data = array_merge($data, ['edicion' => $edicion, 'id_estado' => 4, 'fecha_display' => $data['fecha_ejec_inicial']]);
+        $data  =
+            array_merge($data,
+                ['edicion' => $edicion, 'id_estado' => 4, 'fecha_display' => $data['fecha_ejec_inicial']]);
         $curso = Curso::create($data);
 
         $areas_tematicas = explode(',', $request->get('id_area_tematica'));
@@ -141,12 +143,12 @@ class CursosController extends AbmController
     {
         return $this->getCursoWithTrashed($id);
     }
-    
+
     public function getCursoWithTrashed($id)
     {
         try {
             $curso = Curso::with([
-                'alumnos' => function ($query) {
+                'alumnos'          => function ($query) {
                     return $query->select(
                         'alumnos.id_alumno',
                         'nombres',
@@ -167,7 +169,7 @@ class CursosController extends AbmController
                         'organismo2'
                     );
                 },
-                'profesores' => function ($query) {
+                'profesores'       => function ($query) {
                     return $query->select(
                         'sistema.profesores.id_profesor',
                         'nombres',
@@ -180,19 +182,20 @@ class CursosController extends AbmController
                 'lineaEstrategica' => function ($query) {
                     return $query->withTrashed();
                 },
-                'areaTematica' => function ($query) {
+                'areaTematica'     => function ($query) {
                     return $query->withTrashed();
                 }
             ])
-            ->segunProvincia()
-            ->where('id_curso', $id)
-            ->firstOrFail();
-    
+                ->segunProvincia()
+                ->where('id_curso', $id)
+                ->firstOrFail();
+
             return ['curso' => $curso];
         } catch (ModelNotFoundException $e) {
-		    return ['response' => response()->json(['success' => false, 'error' => $e->getMessage()])];
+            return ['response' => response()->json(['success' => false, 'error' => $e->getMessage()])];
         }
     }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -213,7 +216,7 @@ class CursosController extends AbmController
      */
     public function update(Request $request, $id, $flag_update_pac = false)
     {
-        logger("Quiere actualizar accion {$id} con: ".json_encode($request->all()));
+        logger("Quiere actualizar accion {$id} con: " . json_encode($request->all()));
         $curso = Curso::findOrFail($id);
 
         if ($request->has('alumnos')) {
@@ -230,17 +233,17 @@ class CursosController extends AbmController
             $curso->profesores()->detach();
         }
 
-        if($request->has('error'))
-        {
-            logger()->warning('Curso '.$id.': No lleno la fecha de ejecucion o reprogramacion. Lo tiene que volver a intentar');
+        if ($request->has('error')) {
+            logger()->warning('Curso ' . $id . ': No lleno la fecha de ejecucion o reprogramacion. Lo tiene que volver a intentar');
             return response('error');
         }
-        
+
         $curso->update($request->all());
 
-        if($flag_update_pac)
+        if ($flag_update_pac) {
             $this->updateDisplayDatePac($curso);
-        
+        }
+
         return response()->json($curso);
     }
 
@@ -273,7 +276,13 @@ class CursosController extends AbmController
      */
     public function getPlanificados()
     {
-        return view('cursos', array_merge($this->getEditOptions(), ['prefilters' => [1, 2, 5]]));
+        return view('cursos', array_merge($this->getEditOptions(), [
+            'prefilters' => [
+                Estado::CURSO_PLANIFICADO,
+                Estado::CURSO_DISENIADO,
+                Estado::CURSO_REPROGRAMADO
+            ]
+        ]));
     }
 
     /**
@@ -283,7 +292,12 @@ class CursosController extends AbmController
      */
     public function getEjecutados()
     {
-        return view('cursos', array_merge($this->getEditOptions(), ['prefilters' => [3, 4]]));
+        return view('cursos', array_merge($this->getEditOptions(), [
+            'prefilters' => [
+                Estado::CURSO_EN_EJECUCION,
+                Estado::CURSO_FINALIZADO
+            ]
+        ]));
     }
 
     public function getAprobadosPorAlumno($alumno)
@@ -291,14 +305,14 @@ class CursosController extends AbmController
         $returns = Curso::whereHas('alumnos', function ($query) use ($alumno) {
             $query->where('alumnos.id_alumno', $alumno);
         })
-        ->select('id_curso', 'nombre', 'duracion', 'id_provincia')
-        ->with('provincia');
+            ->select('id_curso', 'nombre', 'duracion', 'id_provincia')
+            ->with('provincia');
 
         return Datatables::of($returns)
-        ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver">'.
-            '<i class="'.$this->botones['buscar'].'" aria-hidden="true"></i></button></a>';
-        })->make(true);
+            ->addColumn('acciones', function ($ret) {
+                return '<a href="' . url('cursos') . '/' . $ret->id_curso . '"><button class="btn btn-info btn-xs" title="Ver">' .
+                    '<i class="' . $this->botones['buscar'] . '" aria-hidden="true"></i></button></a>';
+            })->make(true);
     }
 
     public function getDictadosPorProfesor($id_profesor)
@@ -306,14 +320,14 @@ class CursosController extends AbmController
         $returns = Curso::whereHas('profesores', function ($query) use ($id_profesor) {
             $query->where('profesores.id_profesor', $id_profesor);
         })
-        ->select('id_curso', 'nombre', 'fecha_ejec_inicial', 'id_provincia')
-        ->with('provincia');
+            ->select('id_curso', 'nombre', 'fecha_ejec_inicial', 'id_provincia')
+            ->with('provincia');
 
         return Datatables::of($returns)
-        ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button class="btn btn-info btn-xs" title="Ver">'.
-            '<i class="'.$this->botones['buscar'].'" aria-hidden="true"></i></button></a>';
-        })->make(true);
+            ->addColumn('acciones', function ($ret) {
+                return '<a href="' . url('cursos') . '/' . $ret->id_curso . '"><button class="btn btn-info btn-xs" title="Ver">' .
+                    '<i class="' . $this->botones['buscar'] . '" aria-hidden="true"></i></button></a>';
+            })->make(true);
     }
 
     /**
@@ -324,13 +338,13 @@ class CursosController extends AbmController
     public function getNombres()
     {
         $nombres = Curso::select('nombre')
-        ->groupBy('nombre')
-        ->orderBy('nombre')
-        ->segunProvincia()
-        ->get()
-        ->map(function ($item, $key) {
-            return $item->nombre;
-        });
+            ->groupBy('nombre')
+            ->orderBy('nombre')
+            ->segunProvincia()
+            ->get()
+            ->map(function ($item, $key) {
+                return $item->nombre;
+            });
 
         return $this->typeaheadResponse($nombres);
     }
@@ -338,57 +352,57 @@ class CursosController extends AbmController
     public function getProfesores($id)
     {
         $curso = Curso::findOrFail($id)
-        ->profesores()
-        ->join(
-            'sistema.tipos_documentos',
-            'sistema.tipos_documentos.id_tipo_documento',
-            '=',
-            'sistema.profesores.id_tipo_documento'
-        )
-        ->select(
-            'profesores.id_profesor',
-            'nombres',
-            'apellidos',
-            'sistema.tipos_documentos.nombre as id_tipo_documento',
-            'nro_doc'
-        );
+            ->profesores()
+            ->join(
+                'sistema.tipos_documentos',
+                'sistema.tipos_documentos.id_tipo_documento',
+                '=',
+                'sistema.profesores.id_tipo_documento'
+            )
+            ->select(
+                'profesores.id_profesor',
+                'nombres',
+                'apellidos',
+                'sistema.tipos_documentos.nombre as id_tipo_documento',
+                'nro_doc'
+            );
 
         return Datatables::of($curso)
-        ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('profesores/'.$ret['id_profesor']).'"><button data-id="'.$ret['id_profesor'].
-            '" class="btn btn-info btn-xs ver" title="Ver"><i class="'.$this->botones['editar'].
-            '" aria-hidden="true"></i></button></a>';
-        })
-        ->make(true);
+            ->addColumn('acciones', function ($ret) {
+                return '<a href="' . url('profesores/' . $ret['id_profesor']) . '"><button data-id="' . $ret['id_profesor'] .
+                    '" class="btn btn-info btn-xs ver" title="Ver"><i class="' . $this->botones['editar'] .
+                    '" aria-hidden="true"></i></button></a>';
+            })
+            ->make(true);
     }
 
     public function getAlumnos($id)
     {
         $curso = Curso::findOrFail($id)
-        ->alumnos()
-        ->join('sistema.provincias', 'sistema.provincias.id_provincia', '=', 'alumnos.id_provincia')
-        ->join(
-            'sistema.tipos_documentos',
-            'sistema.tipos_documentos.id_tipo_documento',
-            '=',
-            'alumnos.alumnos.id_tipo_documento'
-        )
-        ->select(
-            'alumnos.id_alumno',
-            'nombres',
-            'apellidos',
-            'sistema.tipos_documentos.nombre as id_tipo_documento',
-            'nro_doc',
-            'sistema.provincias.nombre as provincia'
-        );
+            ->alumnos()
+            ->join('sistema.provincias', 'sistema.provincias.id_provincia', '=', 'alumnos.id_provincia')
+            ->join(
+                'sistema.tipos_documentos',
+                'sistema.tipos_documentos.id_tipo_documento',
+                '=',
+                'alumnos.alumnos.id_tipo_documento'
+            )
+            ->select(
+                'alumnos.id_alumno',
+                'nombres',
+                'apellidos',
+                'sistema.tipos_documentos.nombre as id_tipo_documento',
+                'nro_doc',
+                'sistema.provincias.nombre as provincia'
+            );
 
         return Datatables::of($curso)
-        ->addColumn('acciones', function ($ret) {
-            return '<a href="'.url('alumnos/'.$ret['id_alumno']).'"><button data-id="'.$ret['id_alumno'].
-            '" class="btn btn-info btn-xs ver" title="Ver"><i class="'.$this->botones['buscar'].
-            '" aria-hidden="true"></i></button></a>';
-        })
-        ->make(true);
+            ->addColumn('acciones', function ($ret) {
+                return '<a href="' . url('alumnos/' . $ret['id_alumno']) . '"><button data-id="' . $ret['id_alumno'] .
+                    '" class="btn btn-info btn-xs ver" title="Ver"><i class="' . $this->botones['buscar'] .
+                    '" aria-hidden="true"></i></button></a>';
+            })
+            ->make(true);
     }
 
     public function getCountAlumnos(Request $request, $id)
@@ -399,7 +413,7 @@ class CursosController extends AbmController
         $cursos = collect($cursos);
 
         return Datatables::of($cursos)
-        ->make(true);
+            ->make(true);
     }
 
     private function queryCountAlumnos(Request $r, $id_provincia)
@@ -413,7 +427,7 @@ class CursosController extends AbmController
         inner join cursos.lineas_estrategicas LE ON LE.id_linea_estrategica = C.id_linea_estrategica";
 
         if ($id_provincia !== '0' and $id_provincia !== 25) {
-            $query .= " WHERE C.id_provincia = '".$id_provincia."'";
+            $query .= " WHERE C.id_provincia = '" . $id_provincia . "'";
         }
 
         $query .= "group by C.id_curso,C.nombre,LE.numero,LE.nombre,AT.nombre,P.nombre";
@@ -449,7 +463,7 @@ class CursosController extends AbmController
             return Periodo::orderBy('hasta', 'desc')->orderBy('desde')->orderBy('id_periodo', 'desc')->get();
         });
 
-        $estados = Cache::remember('estados', 5, function() {
+        $estados = Cache::remember('estados', 5, function () {
             return Estado::orderBy('id_estado')->get();
         });
 
@@ -474,36 +488,38 @@ class CursosController extends AbmController
             return Periodo::orderBy('hasta', 'desc')->orderBy('desde')->orderBy('id_periodo', 'desc')->get();
         });
 
-        $estados_edit = Cache::remember('estados_edit', 5, function() {
+        $estados_edit = Cache::remember('estados_edit', 5, function () {
             return Estado::orderBy('id_estado')->get();
         });
 
-        return compact('areas_tematicas_edit', 'lineas_estrategicas_edit', 'provincias_edit', 'periodos_edit', 'estados_edit');
+        return compact('areas_tematicas_edit', 'lineas_estrategicas_edit', 'provincias_edit', 'periodos_edit',
+            'estados_edit');
     }
 
     public function logFiltro($key, $value)
     {
-        if(is_array($value))
+        if (is_array($value)) {
             $value = implode(", ", $value);
-        logger()->info($key.": ".$value);
+        }
+        logger()->info($key . ": " . $value);
     }
 
     private function queryFechasCurso($query, $signo, $fecha)
     {
         $query->orWhere('cursos.cursos.fecha_ejec_inicial', $signo, $fecha)
-        ->orWhere('cursos.cursos.fecha_ejec_final', $signo, $fecha)
-        ->orWhere(function($q) use ($signo, $fecha) {
-            $q->where('cursos.cursos.fecha_plan_inicial', '!=', null)
-            ->where('cursos.cursos.fecha_plan_inicial', $signo, $fecha)
-            ->where('cursos.cursos.fecha_plan_final', '!=', null)
-            ->where('cursos.cursos.fecha_plan_final', $signo, $fecha);
-        });
+            ->orWhere('cursos.cursos.fecha_ejec_final', $signo, $fecha)
+            ->orWhere(function ($q) use ($signo, $fecha) {
+                $q->where('cursos.cursos.fecha_plan_inicial', '!=', null)
+                    ->where('cursos.cursos.fecha_plan_inicial', $signo, $fecha)
+                    ->where('cursos.cursos.fecha_plan_final', '!=', null)
+                    ->where('cursos.cursos.fecha_plan_final', $signo, $fecha);
+            });
     }
 
     private function queryLogica(Request $r, $filtros, $order_by)
     {
         ini_set('max_execution_time', '300');
-        
+
         //Filtros las que estan vacias si es que me las pasaron
         $filtered = $filtros->filter(function ($value, $key) {
             return $value != "" && $value != "0";
@@ -514,52 +530,61 @@ class CursosController extends AbmController
         $query = Curso::with([
             'provincia',
             'estado',
-            'areasTematicas' => function ($query) {
+            'areasTematicas'   => function ($query) {
                 return $query->withTrashed();
             },
-            'areaTematica' => function ($query) {
+            'areaTematica'     => function ($query) {
                 return $query->withTrashed();
             },
             'lineaEstrategica' => function ($query) {
                 return $query->withTrashed();
             },
-            'pac' => function ($query) {
-                return $query->withTrashed();
+            'pac'              => function ($query) {
+                return $query->withTrashed()->with('fichaTecnica');
             }
         ])
-        ->segunProvincia();
+            ->segunProvincia();
 
         foreach ($filtered as $key => $value) {
             $this->logFiltro($key, $value);
             if ($key == 'nombre') {
-                $query = $query->where('cursos.cursos.'.$key, 'ilike', "%{$value}%");
+                $query = $query->where('cursos.cursos.' . $key, 'ilike', "%{$value}%");
             } elseif ($key == 'desde') {
-                $query = $query->where(function($q) use ($value) {
+                $query = $query->where(function ($q) use ($value) {
                     $this->queryFechasCurso($q, '>=', $value);
-                }); 
+                });
             } elseif ($key == 'hasta') {
-                $query = $query->where(function($q) use ($value) {
+                $query = $query->where(function ($q) use ($value) {
                     $this->queryFechasCurso($q, '<=', $value);
                 });
             } elseif ($key == 'id_periodo') {
                 $periodo = Periodo::find($value);
-                $query = $query->where(function($q) use ($periodo) {
+                $query   = $query->where(function ($q) use ($periodo) {
                     $this->queryFechasCurso($q, '>=', $periodo->desde);
                 });
 
-                $query = $query->where(function($q) use ($periodo) {
+                $query = $query->where(function ($q) use ($periodo) {
                     $this->queryFechasCurso($q, '<=', $periodo->hasta);
                 });
             } elseif ($key == 'duracion' || $key == 'edicion') {
-                $query = $query->where('cursos.cursos.'.$key, $value);
+                $query = $query->where('cursos.cursos.' . $key, $value);
             } else {
-                $query = $query->whereIn('cursos.cursos.'.$key, $value);
+                $query = $query->whereIn('cursos.cursos.' . $key, $value);
             }
         }
 
-        if(isset($order_by))
-        {
-            $ordenadores = ['fecha_display', 'nombre', 'id_estado', 'edicion', 'duracion', 'id_tematica', 'id_linea_estrategica', 'id_provincia'];
+        if (isset($order_by)) {
+            $ordenadores =
+                [
+                    'fecha_display',
+                    'nombre',
+                    'id_estado',
+                    'edicion',
+                    'duracion',
+                    'id_tematica',
+                    'id_linea_estrategica',
+                    'id_provincia'
+                ];
 
             // logger()->info("order_by[0][1]: ".$order_by['order_by'][0][1]);
             // logger()->info("ordenador[order_by[0][0]]: ".$ordenadores[$order_by['order_by'][0][0]]); 
@@ -595,22 +620,23 @@ class CursosController extends AbmController
     public function toDatatable(Request $r, $resultados)
     {
         return Datatables::of($resultados)
-        ->addColumn('acciones', function ($ret) use ($r) {
+            ->addColumn('acciones', function ($ret) use ($r) {
 
-            $accion = $r->has('botones')?$r->botones:null;
+                $accion = $r->has('botones') ? $r->botones : null;
 
-            $editarYEliminar = '<a href="'.url('cursos').'/'.$ret->id_curso.'"><button data-id="'.$ret->id_curso.
-            '" class="btn btn-info btn-xs editar" title="Editar"><i class="'.$this->botones['editar'].
-            '" aria-hidden="true"></i></button></a>'.'<button data-id="'.$ret->id_curso.
-            '" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="'.$this->botones['eliminar'].
-            '" aria-hidden="true"></i></button>';
-            
-            $agregar = '<button data-id="'.$ret->id_curso.'" class="btn btn-info btn-xs agregar" '.
-            'title="Agregar"><i class="'.$this->botones['agregar'].'" aria-hidden="true"></i></button>';
+                $editarYEliminar =
+                    '<a href="' . url('cursos') . '/' . $ret->id_curso . '"><button data-id="' . $ret->id_curso .
+                    '" class="btn btn-info btn-xs editar" title="Editar"><i class="' . $this->botones['editar'] .
+                    '" aria-hidden="true"></i></button></a>' . '<button data-id="' . $ret->id_curso .
+                    '" class="btn btn-danger btn-xs eliminar" title="Eliminar"><i class="' . $this->botones['eliminar'] .
+                    '" aria-hidden="true"></i></button>';
 
-            return $accion == 'agregar'?$agregar:$editarYEliminar;
-        })
-        ->make(true);
+                $agregar = '<button data-id="' . $ret->id_curso . '" class="btn btn-info btn-xs agregar" ' .
+                    'title="Agregar"><i class="' . $this->botones['agregar'] . '" aria-hidden="true"></i></button>';
+
+                return $accion == 'agregar' ? $agregar : $editarYEliminar;
+            })
+            ->make(true);
     }
 
     /**
@@ -627,9 +653,9 @@ class CursosController extends AbmController
 
         $order_by = collect($r->only('order_by'));
 
-        $data = $this->queryLogica($r, $filtros, $order_by)->get()->toArray();
+        $data  = $this->queryLogica($r, $filtros, $order_by)->get()->toArray();
         $datos = ['cursos' => $data];
-        $path = "acciones_".date("Y-m-d_H:i:s");
+        $path  = "acciones_" . date("Y-m-d_H:i:s");
 
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('Acciones', function ($sheet) use ($datos) {
@@ -637,7 +663,7 @@ class CursosController extends AbmController
                 $sheet->loadView('excel.cursos', $datos);
             });
         })
-        ->store('xls');
+            ->store('xls');
 
         return $path;
     }
@@ -656,8 +682,9 @@ class CursosController extends AbmController
 
         $data = $this->queryLogica($r, $filtros, null)->get();
 
-        $header = array('Nombre','Fecha','Edicion','Duracion','Area Tematica','Linea Estrategica','Provincia');
-        $column_size =  array(80,25,15,17,60,60,20);
+        $header      =
+            array('Nombre', 'Fecha', 'Edicion', 'Duracion', 'Area Tematica', 'Linea Estrategica', 'Provincia');
+        $column_size = array(80, 25, 15, 17, 60, 60, 20);
 
         $mapped = $data->map(function ($item, $key) {
             return [
@@ -687,10 +714,10 @@ class CursosController extends AbmController
         } else {
             $id_provincia = Auth::user()->id_provincia;
         }
-        $data = DB::select($this->queryCountAlumnos($r, $id_provincia));
-        $data = collect($data);
+        $data  = DB::select($this->queryCountAlumnos($r, $id_provincia));
+        $data  = collect($data);
         $datos = ['cursos' => $data];
-        $path = "cant_participantes_acciones_".date("Y-m-d_H:i:s");
+        $path  = "cant_participantes_acciones_" . date("Y-m-d_H:i:s");
 
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('Reporte', function ($sheet) use ($datos) {
@@ -698,7 +725,7 @@ class CursosController extends AbmController
                 $sheet->loadView('excel.reporte_6', $datos);
             });
         })
-        ->store('xls');
+            ->store('xls');
 
         return $path;
     }
@@ -712,26 +739,27 @@ class CursosController extends AbmController
     public function getCompletoExcel($id)
     {
         $datos = $this->getCursoWithTrashed($id);
-        $path = "accion_completa_".date("Y-m-d_H:i:s");
+        $path  = "accion_completa_" . date("Y-m-d_H:i:s");
         Excel::create($path, function ($excel) use ($datos) {
             $excel->sheet('Accion', function ($sheet) use ($datos) {
                 $sheet->setHeight(1, 20);
                 $sheet->loadView('excel.cursoCompleto', $datos);
             });
         })
-        ->store('xls');
+            ->store('xls');
         return response()->download(storage_path("exports/{$path}.xls"))->deleteFileAfterSend(true);
     }
 
     /**
      * Show the form for seeing the specified resource.
      *
-     * @param  int $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function see($id)
     {
-        return view('cursos/modificacion', array_merge($this->show($id), $this->getEditOptions(), ['disabled' => true]));
+        return view('cursos/modificacion',
+            array_merge($this->show($id), $this->getEditOptions(), ['disabled' => true]));
     }
 
     public function updateDisplayDatePac(Curso $curso)
@@ -742,19 +770,71 @@ class CursosController extends AbmController
 
     public function ejecutar(Request $request, $id)
     {
-        logger()->info("Ejecuto el curso: ".$id);
+        logger()->info("Ejecuto el curso: " . $id);
         return $this->update($request, $id, $flag_update_pac = true);
     }
 
     public function reprogramar(Request $request, $id)
     {
-        logger()->info("Reprogramo el curso: ".$id);
+        logger()->info("Reprogramo el curso: " . $id);
         return $this->update($request, $id, $flag_update_pac = true);
     }
 
     public function desactivar(Request $request, $id)
     {
-        logger()->info("Desactivo el curso: ".$id);
+        logger()->info("Desactivo el curso: " . $id);
         return $this->update($request, $id, $flag_update_pac = true);
+    }
+
+    public function addAlumno(Request $request, $id)
+    {
+        $alumnoId = $request->get('alumno_id');
+
+        $curso = Curso::findOrFail($id);
+
+        $curso->alumnos()->sync(
+            array_merge($curso->alumnos->pluck('id_alumno')->toArray(), [$alumnoId])
+        );
+
+        return response()->json($curso);
+    }
+
+    public function removeAlumno(Request $request, $id)
+    {
+        $alumnoId = $request->get('alumno_id');
+
+        $curso = Curso::findOrFail($id);
+
+        $curso->alumnos()->sync(
+            array_diff($curso->alumnos->pluck('id_alumno')->toArray(), [$alumnoId])
+        );
+
+        return response()->json($curso);
+    }
+
+    public function addProfesor(Request $request, $id)
+    {
+        $profesorId = $request->get('profesor_id');
+
+        $curso = Curso::findOrFail($id);
+
+        $curso->profesores()->sync(
+            array_merge($curso->profesores->pluck('id_profesor')->toArray(), [$profesorId])
+        );
+
+        return response()->json($curso);
+    }
+
+    public function removeProfesor(Request $request, $id)
+    {
+        $profesorId = $request->get('profesor_id');
+
+        $curso = Curso::findOrFail($id);
+
+        $curso->profesores()->sync(
+            array_diff($curso->profesores->pluck('id_profesor')->toArray(), [$profesorId])
+        );
+
+        return response()->json($curso);
     }
 }

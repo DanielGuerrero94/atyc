@@ -8,7 +8,7 @@
 						<div class="typeahead__container col-xs-10 col-sm-10 col-md-10 col-lg-10">
 							<div class="typeahead__field">             
 								<span class="typeahead__query">
-									<input class="profesores_typeahead form-control" name="profesor" type="search" placeholder="Número de documento, nombres, apellido -- Min 3 caracteres" autocomplete="off" id="profesor">
+									<input class="profesores_typeahead form-control" name="profesor" type="search" placeholder="Número de documento, nombres, apellido -- Min 3 caracteres" autocomplete="off" id="profesor"/>
 								</span>
 							</div>
 						</div> 
@@ -48,7 +48,7 @@
 									<td>
                                         <div class="btn btn-xs btn-info"><a href="{{url('/profesores/'.$profesor->id_profesor)}}"><i class="fa fa-search" data-id="{{$profesor->id_profesor}}"></i></a></div>
     @if(!isset($disabled))
-                                        <div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
+                                        <div class="btn btn-xs btn-danger quitar" data-id="{{$profesor->id_profesor}}"><i class="fa fa-minus"></i></div>
 @endif
 									</td>
 								</tr>
@@ -60,5 +60,4 @@
 				</div>
 			</div>
 		</div>
-	</div>
 </form>

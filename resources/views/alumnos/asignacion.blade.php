@@ -3,10 +3,10 @@
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<form role="form">
 				<div class="row" id="busqueda-participantes">
-					<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">          
+					<div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
 						<label for="alumno" class="control-label col-xs-2 col-sm-2 col-md-2 col-lg-2">Buscar participante:</label>
 						<div class="typeahead__container col-xs-10 col-sm-10 col-md-10 col-lg-10">
-							<div class="typeahead__field">             
+							<div class="typeahead__field">
 								<span class="typeahead__query">
 									<input class="alumnos_typeahead form-control" name="alumno" type="search" placeholder="Número de documento, nombres, apellido -- Min 3 caracteres" autocomplete="off" id="alumno"/>
 								</span>
@@ -15,7 +15,7 @@
 					</div>
 				</div>
 			</form>
-		</div>	
+		</div>
 	</div>
 	<br>
 	<div class="row">
@@ -48,7 +48,7 @@
 									<td>
 										<div class="btn btn-xs btn-info"><a href="{{url('alumnos/'.$alumno->id_alumno)}}"><i class="fa fa-search" data-id="{{$alumno->id_alumno}}"></i></a></div>
     @if(!isset($disabled))
-                                    <div class="btn btn-xs btn-danger quitar"><i class="fa fa-minus"></i></div>
+                                    <div class="btn btn-xs btn-danger quitar" data-id="{{$alumno->id_alumno}}"><i class="fa fa-minus"></i></div>
         @endif
 									</td>
 								</tr>

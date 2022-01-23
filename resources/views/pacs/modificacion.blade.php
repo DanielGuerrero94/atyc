@@ -1,3 +1,7 @@
+<?php
+use App\Models\Cursos\Estado as CursoEstado;
+use App\Models\Pac\PacEstado;
+?>
 @extends('layouts.adminlte')
 @section('content')
     @if(isset($error))
@@ -39,19 +43,19 @@
                             </ul>
                             <div class="tab-content">
                                 <div class="active tab-pane" id="general" data-id="{{$pac->id_pac}}">
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label for="anio" class="control-label col-md-2 col-xs-2">Año:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <input
-                                                    type="number" class="form-control" name="anio" id="anio"
-                                                    placeholder="Año" value="{{$pac->anio}}" disabled
+                                                        type="number" class="form-control" name="anio" id="anio"
+                                                        placeholder="Año" value="{{$pac->anio}}" disabled
                                                 >
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label for="actor" class="control-label col-md-2 col-xs-2">Actor que Origina
@@ -62,14 +66,14 @@
                                                     @foreach ($actoresEdit as $actor)
                                                         @if ($actor->id_actor === $pac->id_actor)
                                                             <option
-                                                                data-id="{{$actor->id_actor}}"
-                                                                value="{{$actor->id_actor}}"
-                                                                selected="selected"
+                                                                    data-id="{{$actor->id_actor}}"
+                                                                    value="{{$actor->id_actor}}"
+                                                                    selected="selected"
                                                             >{{$actor->nombre}}</option>
                                                         @else
                                                             <option
-                                                                data-id="{{$actor->id_actor}}"
-                                                                value="{{$actor->id_actor}}"
+                                                                    data-id="{{$actor->id_actor}}"
+                                                                    value="{{$actor->id_actor}}"
                                                             >{{$actor->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -77,7 +81,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label class="col-md-2 col-xs-2">Nombre:</label>
@@ -85,35 +89,35 @@
                                                 <div class="typeahead__field ">
                                                   <span class="typeahead__query ">
                                                     <input
-                                                        class="curso_typeahead form-control"
-                                                        name="nombre"
-                                                        type="search"
-                                                        placeholder="Buscar o agregar uno nuevo"
-                                                        autocomplete="off"
-                                                        value="{{$pac->nombre}}"
+                                                            class="curso_typeahead form-control"
+                                                            name="nombre"
+                                                            type="search"
+                                                            placeholder="Buscar o agregar uno nuevo"
+                                                            autocomplete="off"
+                                                            value="{{$pac->nombre}}"
                                                     >
                                                   </span>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label for="horas" class="control-label col-md-2 col-xs-2">Duración:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <input
-                                                    type="number"
-                                                    class="form-control"
-                                                    name="duracion"
-                                                    id="horas"
-                                                    placeholder="Duración en horas"
-                                                    value="{{$pac->duracion}}"
+                                                        type="number"
+                                                        class="form-control"
+                                                        name="duracion"
+                                                        id="horas"
+                                                        placeholder="Duración en horas"
+                                                        value="{{$pac->duracion}}"
                                                 >
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label for="tipo_accion" class="control-label col-md-2 col-xs-2">Tipo de
@@ -124,14 +128,14 @@
                                                     @foreach ($tipoAccionesEdit as $tipoAccion)
                                                         @if ($tipoAccion->id_linea_estrategica === $pac->id_accion)
                                                             <option
-                                                                data-id="{{$tipoAccion->id_linea_estrategica}}"
-                                                                value="{{$tipoAccion->id_linea_estrategica}}"
-                                                                selected="selected"
+                                                                    data-id="{{$tipoAccion->id_linea_estrategica}}"
+                                                                    value="{{$tipoAccion->id_linea_estrategica}}"
+                                                                    selected="selected"
                                                             >{{$tipoAccion->numero ." " .$tipoAccion->nombre}}</option>
                                                         @elseif(is_null($tipoAccion->deleted_at))
                                                             <option
-                                                                data-id="{{$tipoAccion->id_linea_estrategica}}"
-                                                                value="{{$tipoAccion->id_linea_estrategica}}"
+                                                                    data-id="{{$tipoAccion->id_linea_estrategica}}"
+                                                                    value="{{$tipoAccion->id_linea_estrategica}}"
                                                             >{{$tipoAccion->numero ." " .$tipoAccion->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -139,12 +143,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label
-                                                for="descripcion_tipo_accion"
-                                                class="control-label col-md-2 col-xs-2"
+                                                    for="descripcion_tipo_accion"
+                                                    class="control-label col-md-2 col-xs-2"
                                             ></label>
                                             <div class="col-md-8 col-xs-8">
                                                 <p id="descripcion_tipo_accion">
@@ -152,44 +156,44 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label
-                                                for="modalidad" class="control-label col-md-2 col-xs-2"
+                                                    for="modalidad" class="control-label col-md-2 col-xs-2"
                                             >Modalidad:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                    class="select-2 form-control" id="modalidad" name="id_modalidad"
+                                                        class="select-2 form-control" id="modalidad" name="id_modalidad"
                                                 >
                                                     <option></option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label
-                                                for="tematica"
-                                                class="control-label col-md-2 col-xs-2"
+                                                    for="tematica"
+                                                    class="control-label col-md-2 col-xs-2"
                                             >Temática/s:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                    class="select-2 form-control" id="tematica" name="id_tematica"
-                                                    aria-hidden="true" multiple
+                                                        class="select-2 form-control" id="tematica" name="id_tematica"
+                                                        aria-hidden="true" multiple
                                                 >
                                                     @foreach ($tematicasEdit as $tematica)
                                                         @if (in_array ($tematica->id_area_tematica, $pac->tematicas()->withTrashed()->get()->map(function ($_tematica) { return $_tematica->id_area_tematica; })->all() ))
                                                             <option
-                                                                data-id="{{$tematica->id_area_tematica}}"
-                                                                value="{{$tematica->id_area_tematica}}"
-                                                                selected="selected"
+                                                                    data-id="{{$tematica->id_area_tematica}}"
+                                                                    value="{{$tematica->id_area_tematica}}"
+                                                                    selected="selected"
                                                             >{{$tematica->nombre}}</option>
                                                         @elseif(is_null($tematica->deleted_at))
                                                             <option
-                                                                data-id="{{$tematica->id_area_tematica}}"
-                                                                value="{{$tematica->id_area_tematica}}"
+                                                                    data-id="{{$tematica->id_area_tematica}}"
+                                                                    value="{{$tematica->id_area_tematica}}"
                                                             >{{$tematica->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -197,7 +201,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label for="provincia" class="control-label col-md-2 col-xs-2">Jurisdicción
@@ -206,35 +210,35 @@
                                                 <br>
                                                 @if(Auth::user()->id_provincia == 25)
                                                     <select
-                                                        class="select-2 form-control" id="provincia"
-                                                        name="id_provincia"
+                                                            class="select-2 form-control" id="provincia"
+                                                            name="id_provincia"
                                                     >
                                                         <option></option>
                                                         @foreach ($provinciasEdit as $provincia)
                                                             @if ($provincia->id_provincia === $pac->id_provincia)
                                                                 <option
-                                                                    value="{{$provincia->id_provincia}}"
-                                                                    data-id="{{$provincia->id_provincia}}"
-                                                                    selected="selected"
+                                                                        value="{{$provincia->id_provincia}}"
+                                                                        data-id="{{$provincia->id_provincia}}"
+                                                                        selected="selected"
                                                                 >{{$provincia->nombre}}</option>
                                                             @else
                                                                 <option
-                                                                    value="{{$provincia->id_provincia}}"
-                                                                    data-id="{{$provincia->id_provincia}}"
+                                                                        value="{{$provincia->id_provincia}}"
+                                                                        data-id="{{$provincia->id_provincia}}"
                                                                 >{{$provincia->nombre}}</option>
                                                             @endif
                                                         @endforeach
                                                     </select>
                                                 @else
                                                     <select
-                                                        class="select2 form-control" id="provincia" name="provincia"
-                                                        disabled
+                                                            class="select2 form-control" id="provincia" name="provincia"
+                                                            disabled
                                                     >
                                                         @foreach ($provinciasEdit as $provincia)
                                                             @if ($provincia->id_provincia === $pac->id_provincia)
                                                                 <option
-                                                                    value="{{$provincia->id_provincia}}"
-                                                                    data-id="{{$provincia->id_provincia}}"
+                                                                        value="{{$provincia->id_provincia}}"
+                                                                        data-id="{{$provincia->id_provincia}}"
                                                                 >{{$provincia->nombre}}</option>
                                                             @endif
                                                         @endforeach
@@ -270,35 +274,35 @@
                                             </table>
                                         </div>
                                         <div
-                                            class="row" id="ficha-obligatoria"
-                                            data-ficha-obligatoria-id="{{$pac->ficha_obligatoria}}"
+                                                class="row" id="ficha-obligatoria"
+                                                data-ficha-obligatoria-id="{{$pac->ficha_obligatoria}}"
                                         >
                                         </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="alcance">
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label
-                                                for="destinatario" class="control-label col-md-2 col-xs-2"
+                                                    for="destinatario" class="control-label col-md-2 col-xs-2"
                                             >Destinatarios:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                    class="select-2 form-control" id="destinatario"
-                                                    name="id_destinatario" aria-hidden="true" multiple
+                                                        class="select-2 form-control" id="destinatario"
+                                                        name="id_destinatario" aria-hidden="true" multiple
                                                 >
                                                     @foreach ($destinatariosEdit as $destinatario)
                                                         @if (in_array ($destinatario->id_funcion, $pac->destinatarios()->withTrashed()->get()->map(function ($_destinatario) { return $_destinatario->id_funcion; })->all() ))
                                                             <option
-                                                                data-id="{{$destinatario->id_funcion}}"
-                                                                value="{{$destinatario->id_funcion}}"
-                                                                selected="selected"
+                                                                    data-id="{{$destinatario->id_funcion}}"
+                                                                    value="{{$destinatario->id_funcion}}"
+                                                                    selected="selected"
                                                             >{{$destinatario->nombre}}</option>
                                                         @elseif(is_null($destinatario->deleted_at))
                                                             <option
-                                                                data-id="{{$destinatario->id_funcion}}"
-                                                                value="{{$destinatario->id_funcion}}"
+                                                                    data-id="{{$destinatario->id_funcion}}"
+                                                                    value="{{$destinatario->id_funcion}}"
                                                             >{{$destinatario->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -306,27 +310,27 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label for="responsable" class="control-label col-md-2 col-xs-2">Responsables
                                                 de la Ejecución:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                    class="select-2 form-control" id="responsable"
-                                                    name="id_responsable" aria-hidden="true" multiple
+                                                        class="select-2 form-control" id="responsable"
+                                                        name="id_responsable" aria-hidden="true" multiple
                                                 >
                                                     @foreach ($responsablesEdit as $responsable)
                                                         @if (in_array ($responsable->id_responsable, $pac->responsables()->withTrashed()->get()->map(function ($_responsable) { return $_responsable->id_responsable; })->all() ))
                                                             <option
-                                                                data-id="{{$responsable->id_responsable}}"
-                                                                value="{{$responsable->id_responsable}}"
-                                                                selected="selected"
+                                                                    data-id="{{$responsable->id_responsable}}"
+                                                                    value="{{$responsable->id_responsable}}"
+                                                                    selected="selected"
                                                             >{{$responsable->nombre}}</option>
                                                         @elseif(is_null($responsable->deleted_at))
                                                             <option
-                                                                data-id="{{$responsable->id_responsable}}"
-                                                                value="{{$responsable->id_responsable}}"
+                                                                    data-id="{{$responsable->id_responsable}}"
+                                                                    value="{{$responsable->id_responsable}}"
                                                             >{{$responsable->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -334,28 +338,28 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label for="pauta" class="control-label col-md-2 col-xs-2">Pauta para
                                                 PAC:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                    class="select-2 form-control" id="pauta" name="id_pauta"
-                                                    aria-hidden="true"
+                                                        class="select-2 form-control" id="pauta" name="id_pauta"
+                                                        aria-hidden="true"
                                                 >
                                                     @foreach ($pautasEdit as $pauta)
                                                         @if ($pauta->id_pauta === $pac->id_pauta)
                                                             <option
-                                                                data-id="{{$pauta->id_pauta}}"
-                                                                value="{{$pauta->id_pauta}}"
-                                                                selected="selected"
+                                                                    data-id="{{$pauta->id_pauta}}"
+                                                                    value="{{$pauta->id_pauta}}"
+                                                                    selected="selected"
                                                             >
                                                                 {{ $pauta->anios->implode('anio', ',') ." - ".$pauta->numero.": ".$pauta->nombre}}</option>
                                                         @elseif(is_null($pauta->deleted_at))
                                                             <option
-                                                                data-id="{{$pauta->id_pauta}}"
-                                                                value="{{$pauta->id_pauta}}"
+                                                                    data-id="{{$pauta->id_pauta}}"
+                                                                    value="{{$pauta->id_pauta}}"
                                                             {{ $pauta->anios->implode('anio', ',') ." - ".$pauta->numero.": ".$pauta->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -363,11 +367,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label
-                                                for="descripcion_pauta" class="control-label col-md-2 col-xs-2"
+                                                    for="descripcion_pauta" class="control-label col-md-2 col-xs-2"
                                             ></label>
                                             <div class="col-md-8 col-xs-8">
                                                 <p id="descripcion_pauta">
@@ -375,27 +379,27 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div class="row">
                                         <div class="form-group col-xs-12 col-md-12">
                                             <label for="componente" class="control-label col-md-2 col-xs-2">Componentes
                                                 CAI:</label>
                                             <div class="col-md-8 col-xs-8">
                                                 <select
-                                                    class="select-2 form-control" id="componente"
-                                                    name="id_componente" aria-hidden="true" multiple
+                                                        class="select-2 form-control" id="componente"
+                                                        name="id_componente" aria-hidden="true" multiple
                                                 >
                                                     @foreach ($componentesEdit as $componente)
                                                         @if (in_array ($componente->id_componente, $pac->componentes()->withTrashed()->get()->map(function ($_componente) { return $_componente->id_componente; })->all() ))
                                                             <option
-                                                                data-id="{{$componente->id_componente}}"
-                                                                value="{{$componente->id_componente}}"
-                                                                selected="selected"
+                                                                    data-id="{{$componente->id_componente}}"
+                                                                    value="{{$componente->id_componente}}"
+                                                                    selected="selected"
                                                             >{{$componente->numero." - ".$componente->nombre}}</option>
                                                         @elseif(is_null($componente->deleted_at))
                                                             <option
-                                                                data-id="{{$componente->id_componente}}"
-                                                                value="{{$componente->id_componente}}"
+                                                                    data-id="{{$componente->id_componente}}"
+                                                                    value="{{$componente->id_componente}}"
                                                             >{{$componente->numero." - ".$componente->nombre}}</option>
                                                         @endif
                                                     @endforeach
@@ -403,7 +407,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <br />
+                                    <br/>
                                 </div>
                                 <div class="tab-pane" id="ediciones-tab">
                                     <div class="row" style="padding-left: 2em;">
@@ -414,9 +418,9 @@
                                     @if(!isset($disabled))
                                         <div class="row" style="padding-left: 1.5em;">
                                             <div
-                                                class="btn btn-info agregar_ediciones"
-                                                id="agregar_ediciones"
-                                                title="Agregar Ediciones"
+                                                    class="btn btn-info agregar_ediciones"
+                                                    id="agregar_ediciones"
+                                                    title="Agregar Ediciones"
                                             ><i class="fa fa-plus" aria-hidden="true"></i>
                                                 Agregar Ediciones
                                             </div>
@@ -427,17 +431,17 @@
                             <div class="box-body">
                                 <a href="{{url()->previous()}}">
                                     <div
-                                        class="btn btn-warning"
-                                        id="volver"
-                                        title="Volver"
+                                            class="btn btn-warning"
+                                            id="volver"
+                                            title="Volver"
                                     ><i class="fa fa-undo" aria-hidden="true"></i>
                                         Volver
                                     </div>
                                 </a>
                                 <div
-                                    class="btn btn-primary pull-right"
-                                    id="modificar"
-                                    title="Modificar"
+                                        class="btn btn-primary pull-right"
+                                        id="modificar"
+                                        title="Modificar"
                                 ><i class="fa fa-plus" aria-hidden="true"></i>
                                     Modificar
                                 </div>
@@ -455,18 +459,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
     <script
-        type="text/javascript"
-        src="{{asset("/bower_components/admin-lte/plugins/datepicker/bootstrap-datepicker.js")}}"
+            type="text/javascript"
+            src="{{asset("/bower_components/admin-lte/plugins/datepicker/bootstrap-datepicker.js")}}"
     ></script>
 
     <script
-        src="{{asset("/bower_components/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.es.js")}}"
-        charset="UTF-8"
+            src="{{asset("/bower_components/admin-lte/plugins/datepicker/locales/bootstrap-datepicker.es.js")}}"
+            charset="UTF-8"
     ></script>
 
     <script
-        type="text/javascript"
-        src="{{"https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"}}"
+            type="text/javascript"
+            src="{{"https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"}}"
     ></script>
 
     <script type="text/javascript">
@@ -489,46 +493,46 @@
             var data = '_token=' + $('.container-fluid input').first().val();
 
             jQuery('<div/>', {
-                id  : 'dialogABM',
+                id: 'dialogABM',
                 text: ''
             }).appendTo('.container-fluid');
 
             $("#dialogABM").dialog({
-                title        : "Verificacion",
-                show         : {
+                title: "Verificacion",
+                show: {
                     effect: "fold"
                 },
-                hide         : {
+                hide: {
                     effect: "fade"
                 },
-                modal        : true,
-                width        : 360,
-                height       : 220,
+                modal: true,
+                width: 360,
+                height: 220,
                 closeOnEscape: true,
-                resizable    : false,
-                dialogClass  : "alert",
-                open         : function () {
+                resizable: false,
+                dialogClass: "alert",
+                open: function () {
                     jQuery('<p/>', {
-                        id  : 'dialogABM',
+                        id: 'dialogABM',
                         text: messageText
                     }).appendTo('#dialogABM');
                 },
-                buttons      :
+                buttons:
                     {
-                        "Aceptar" : function () {
+                        "Aceptar": function () {
                             $(this).dialog("destroy");
                             $("#dialogABM").html("");
                             $('.container-fluid #dialogABM').html("");
                             $('.container-fluid #dialogABM').remove();
                             $.ajax({
-                                url    : "{{url('pacs/fichas_tecnicas/')}}" + '/' + id + url,
-                                method : 'post',
-                                data   : data,
+                                url: "{{url('pacs/fichas_tecnicas/')}}" + '/' + id + url,
+                                method: 'post',
+                                data: data,
                                 success: function (data) {
                                     console.log(log);
                                     $('#ficha_tecnica-table').DataTable().clear().draw();
                                 },
-                                error  : function (data) {
+                                error: function (data) {
                                     alert("Hubo un error al cargar la ficha técnica")
                                     console.log(data);
                                 }
@@ -550,54 +554,54 @@
         //Botones Ficha Tecnica
         function uploadFichaButton(id_pac) {
             return '<a href="#" data-id="' + id_pac + '" class="btn btn-circle upload-ficha_tecnica">' + iconFA({
-                icon  : "fa-upload",
-                color : "#FFD700",
+                icon: "fa-upload",
+                color: "#FFD700",
                 titulo: "Subir"
             }) + '</a>';
         }
 
         function updateFichaButton(id_ficha) {
             return '<a href="#" data-id="' + id_ficha + '" class="btn btn-circle update-ficha_tecnica">' + iconFA({
-                icon  : "fa-cloud-upload",
-                color : "#FFD700",
+                icon: "fa-cloud-upload",
+                color: "#FFD700",
                 titulo: "Reemplazar"
             }) + '</a>';
         }
 
         function downloadFichaButton(id_ficha) {
             return '<a href="{{url("/pacs/ficha_tecnica")}}/' + id_ficha + '/download" data-id="' + id_ficha + '" class="btn btn-circle download-ficha_tecnica">' + iconFA({
-                icon  : "fa-download",
-                color : "#2F2D2D",
+                icon: "fa-download",
+                color: "#2F2D2D",
                 titulo: "Descargar"
             }) + '</a>';
         }
 
         function aprobarFichaButton(id_ficha) {
             return '<a href="javascript:void(0)" data-id="' + id_ficha + '" class="btn btn-circle aprobar-ficha_tecnica">' + iconFA({
-                icon  : "fa-check",
-                color : "#228B22",
+                icon: "fa-check",
+                color: "#228B22",
                 titulo: "Aprobar"
             }) + '</a>';
         }
 
         function desaprobarFichaButton(id_ficha) {
             return '<a href="javascript:void(0)" data-id="' + id_ficha + '" class="btn btn-circle desaprobar-ficha_tecnica">' + iconFA({
-                icon  : "fa-close",
-                color : "#FFD700",
+                icon: "fa-close",
+                color: "#FFD700",
                 titulo: "Desaprobar"
             }) + '</a>';
         }
 
         function obligarFichaButton(id_pac) {
             return '<a href="javascript:void(0)" data-id="' + id_pac + '" class="btn btn-circle obligar-ficha_tecnica">' + trianguloFicha({
-                color : "#1E90FF",
+                color: "#1E90FF",
                 titulo: "Hacerla obligatoria"
             }) + '</a>';
         }
 
         function desobligarFichaButton(id_pac) {
             return '<a href="javascript:void(0)" data-id="' + id_pac + '" class="btn btn-circle desobligar-ficha_tecnica">' + trianguloFicha({
-                color : "#D3D3D3",
+                color: "#D3D3D3",
                 titulo: "Hacerla optativa"
             }) + '</a>';
         }
@@ -686,16 +690,16 @@
                 data = new FormData(form[0]);
                 id_pac = form.parent().find(".upload-ficha_tecnica").data("id");
                 $.ajax({
-                    url        : "{{url('pacs')}}" + "/" + id_pac,
-                    type       : 'post',
-                    data       : data,
+                    url: "{{url('pacs')}}" + "/" + id_pac,
+                    type: 'post',
+                    data: data,
                     processData: false,
                     contentType: false,
-                    success    : function (data) {
+                    success: function (data) {
                         console.log("success");
                         $('#ficha_tecnica-table').DataTable().clear().draw();
                     },
-                    error      : function (data) {
+                    error: function (data) {
                         alert("Error al subir el archivo.");
                     }
                 });
@@ -714,16 +718,16 @@
                 data = new FormData(form[0]);
                 id_ficha = form.parent().find(".update-ficha_tecnica").data("id");
                 $.ajax({
-                    url        : "{{url('pacs/fichas_tecnicas')}}" + "/" + id_ficha,
-                    type       : 'post',
-                    data       : data,
+                    url: "{{url('pacs/fichas_tecnicas')}}" + "/" + id_ficha,
+                    type: 'post',
+                    data: data,
                     processData: false,
                     contentType: false,
-                    success    : function (data) {
+                    success: function (data) {
                         console.log("success");
                         $('#ficha_tecnica-table').DataTable().clear().draw();
                     },
-                    error      : function (data) {
+                    error: function (data) {
                         alert("Error al actualizar el archivo.");
                     }
                 });
@@ -743,8 +747,8 @@
         function aprobarFichaBehaviour() {
             $('.container-fluid').on("click", ".aprobar-ficha_tecnica", function () {
                 alertChangeState($(this), {
-                    url        : "/aprobar",
-                    log        : "Se aprobo la ficha tecnica",
+                    url: "/aprobar",
+                    log: "Se aprobo la ficha tecnica",
                     messageText: "Está segura/o de aprobar la ficha técnica?"
                 });
             });
@@ -754,8 +758,8 @@
         function desaprobarFichaBehaviour() {
             $('.container-fluid').on("click", ".desaprobar-ficha_tecnica", function () {
                 alertChangeState($(this), {
-                    url        : "/desaprobar",
-                    log        : "Se desaprobo la ficha tecnica",
+                    url: "/desaprobar",
+                    log: "Se desaprobo la ficha tecnica",
                     messageText: "Está segura/o de desaprobar la ficha técnica?"
                 });
             });
@@ -765,8 +769,8 @@
         function obligarFichaBehaviour() {
             $('.container-fluid').on("click", ".obligar-ficha_tecnica", function () {
                 alertChangeState($(this), {
-                    url        : "/obligar",
-                    log        : "Se obligo la ficha tecnica",
+                    url: "/obligar",
+                    log: "Se obligo la ficha tecnica",
                     messageText: "Está segura/o que la ficha técnica debe ser obligatoria?"
                 });
             });
@@ -776,8 +780,8 @@
         function desobligarFichaBehaviour() {
             $('.container-fluid').on("click", ".desobligar-ficha_tecnica", function () {
                 alertChangeState($(this), {
-                    url        : "/desobligar",
-                    log        : "Se desobligo la ficha tecnica",
+                    url: "/desobligar",
+                    log: "Se desobligo la ficha tecnica",
                     messageText: "Está segura/o que la ficha técnica debe ser optativa?"
                 });
             });
@@ -786,66 +790,77 @@
         //Botones de Curso
         function verCursoButton(id_curso) {
             return '<a href="{{url("cursos")}}/' + id_curso + '/see" class="btn btn-circle ver">' + iconFA({
-                icon  : "fa-search",
-                color : "#337ab7",
+                icon: "fa-search",
+                color: "#337ab7",
                 titulo: "Ver"
             }) + '</a>';
         }
 
         function editarCursoButton(id_curso) {
             return '<a href="{{url("cursos")}}/' + id_curso + '" class="btn btn-circle editar">' + iconFA({
-                icon  : "fa-pencil",
-                color : "#337ab7",
+                icon: "fa-pencil",
+                color: "#337ab7",
                 titulo: "Editar"
             }) + '</a>';
         }
 
         function ejecutarCursoButton(id_curso) {
             return '<a href="javascript:void(0)" data-id="' + id_curso + '" class="btn btn-circle ejecutar_curso">' + iconFA({
-                icon  : "fa-check",
-                color : "#1E90FF",
+                icon: "fa-check",
+                color: "#1E90FF",
                 titulo: "Informar ejecución"
             }) + '</a>';
         }
 
         function reprogramarCursoButton(id_curso) {
             return '<a href="javascript:void(0)" data-id="' + id_curso + '" class="btn btn-circle reprogramar_curso">' + iconFA({
-                icon  : "fa-clock-o",
-                color : "#FFD700",
+                icon: "fa-clock-o",
+                color: "#FFD700",
                 titulo: "Reprogramar"
             }) + '</a>';
         }
 
         function desactivarCursoButton(id_curso) {
             return '<a href="javascript:void(0)" data-id="' + id_curso + '" class="btn btn-circle desactivar_curso">' + iconFA({
-                icon  : "fa-ban",
-                color : "#B22222",
+                icon: "fa-ban",
+                color: "#B22222",
                 titulo: "Desactivar"
             }) + '</a>';
         }
 
         //Acciones de Curso
-        function accionesEdiciones(estado, id_curso) {
-            buttons = verCursoButton(id_curso);
+        function accionesEdiciones(id_estado, id_curso) {
+            let buttons = verCursoButton(id_curso)
+            const pac = {!! $pac->toJson() !!};
 
-            @if(!isset($disabled))
+            @if(!isset($disabled) && Auth::user()->isAdmin())
                 buttons += editarCursoButton(id_curso);
             @endif
 
-            let estadoPac = $('#estados-tab #estados-row').data("estados-id");
-            let fichaObligatoria = $('#estados-tab #ficha-obligatoria').data("ficha-obligatoria-id");
-            if (estado != "Finalizado" && estado != "Desactivado") {
-                if (estadoPac.id_estado == 3) {
-                    if (estado != "Planificado") {
-                        buttons += ejecutarCursoButton(id_curso);
-                    } else if (!fichaObligatoria) {
-                        buttons += ejecutarCursoButton(id_curso);
-                    }
-                }
-                buttons += reprogramarCursoButton(id_curso) + desactivarCursoButton(id_curso);
+            if (pac.id_estado !== {{PacEstado::ACCION_APROBADA}}) {
+                return buttons + reprogramarCursoButton(id_curso) + desactivarCursoButton(id_curso);
             }
 
-            return buttons
+            switch (id_estado) {
+                case {{CursoEstado::CURSO_FINALIZADO}}:
+                case {{CursoEstado::CURSO_DESACTIVADO}}:
+                    return buttons;
+
+                case {{CursoEstado::CURSO_PLANIFICADO}}:
+                    return pac.ficha_obligatoria
+                        ? buttons + reprogramarCursoButton(id_curso) + desactivarCursoButton(id_curso)
+                        : buttons + ejecutarCursoButton(id_curso) + reprogramarCursoButton(id_curso) + desactivarCursoButton(id_curso)
+
+                case {{CursoEstado::CURSO_DISENIADO}}:
+                case {{CursoEstado::CURSO_EN_EJECUCION}}:
+                case {{CursoEstado::CURSO_REPROGRAMADO}}:
+                    return ((pac.ficha_obligatoria && pac.ficha_tecnica.aprobada) || !pac.ficha_obligatoria)
+                        ? buttons + ejecutarCursoButton(id_curso) + reprogramarCursoButton(id_curso) + desactivarCursoButton(id_curso)
+                        : buttons + reprogramarCursoButton(id_curso) + desactivarCursoButton(id_curso)
+
+                default:
+                    return buttons
+            }
         }
 
         //Comportamientos de Acciones
@@ -890,8 +905,8 @@
                 }
 
                 $('.datepicker').datepicker({
-                    format   : 'dd/mm/yyyy',
-                    language : 'es',
+                    format: 'dd/mm/yyyy',
+                    language: 'es',
                     autoclose: true,
                 });
 
@@ -904,61 +919,61 @@
                 var id = $(this).data('id');
 
                 jQuery('<div/>', {
-                    id  : 'dialogEjecutar',
+                    id: 'dialogEjecutar',
                     text: ''
                 }).appendTo('.container-fluid');
 
                 $("#dialogEjecutar").dialog({
-                    title        : "Informar la Ejecución del Curso",
-                    show         : {
+                    title: "Informar la Ejecución del Curso",
+                    show: {
                         effect: "fold"
                     },
-                    hide         : {
+                    hide: {
                         effect: "fade"
                     },
-                    modal        : true,
-                    width        : 400,
-                    height       : 300,
+                    modal: true,
+                    width: 400,
+                    height: 300,
                     closeOnEscape: true,
-                    resizable    : false,
-                    dialogClass  : "alert",
-                    open         : function () {
+                    resizable: false,
+                    dialogClass: "alert",
+                    open: function () {
                         jQuery('<p/>', {
-                            id  : 'dialogEjecutar',
+                            id: 'dialogEjecutar',
                             text: "Seleccionar las fechas de ejecución"
                         }).appendTo('#dialogEjecutar');
 
                         jQuery('<p/>', {
-                            id  : 'p_fecha_inicio',
+                            id: 'p_fecha_inicio',
                             text: 'Fecha Inicial de Ejecución'
                         }).appendTo('#dialogEjecutar');
 
                         jQuery('<input/>', {
-                            type : "text",
-                            name : "fecha_ejec_inicial",
-                            id   : "fecha_ejec_inicial",
+                            type: "text",
+                            name: "fecha_ejec_inicial",
+                            id: "fecha_ejec_inicial",
                             class: "form-control pull-right datepicker"
                         }).appendTo('#dialogEjecutar');
 
                         jQuery('<p/>', {
-                            id  : 'p_fecha_final',
+                            id: 'p_fecha_final',
                             text: 'Fecha Final de Ejecución'
                         }).appendTo('#dialogEjecutar');
 
                         jQuery('<input/>', {
-                            type : "text",
-                            name : "fecha_ejec_final",
-                            id   : "fecha_ejec_final",
+                            type: "text",
+                            name: "fecha_ejec_final",
+                            id: "fecha_ejec_final",
                             class: "form-control pull-right datepicker"
                         }).appendTo('#dialogEjecutar');
 
                         $('.datepicker').datepicker({
-                            format   : 'dd/mm/yyyy',
-                            language : 'es',
+                            format: 'dd/mm/yyyy',
+                            language: 'es',
                             autoclose: true,
                         });
                     },
-                    close        : function () {
+                    close: function () {
                         removeDialog($(this), 'dialogEjecutar');
                     },
 
@@ -966,9 +981,9 @@
                         {
                             "Aceptar y completar": function () {
                                 $.ajax({
-                                    url    : "{{url('cursos')}}" + '/' + id + '/ejecutar',
-                                    method : 'put',
-                                    data   : getDataEjecucionCurso(),
+                                    url: "{{url('cursos')}}" + '/' + id + '/ejecutar',
+                                    method: 'put',
+                                    data: getDataEjecucionCurso(),
                                     success: function (data) {
                                         if (data != "error") {
                                             console.log("Se informó la ejecución del curso: " + id + " y va a editarlo ahora");
@@ -977,7 +992,7 @@
                                             location.replace("{{url('cursos')}}" + '/' + id);
                                         }
                                     },
-                                    error  : function (data) {
+                                    error: function (data) {
                                         console.log('Hubo un error.');
                                         console.log(data);
                                     }
@@ -987,9 +1002,9 @@
 
                             "Aceptar": function () {
                                 $.ajax({
-                                    url    : "{{url('cursos')}}" + '/' + id + '/ejecutar',
-                                    method : 'put',
-                                    data   : getDataEjecucionCurso(),
+                                    url: "{{url('cursos')}}" + '/' + id + '/ejecutar',
+                                    method: 'put',
+                                    data: getDataEjecucionCurso(),
                                     success: function (data) {
                                         if (data != "error") {
                                             console.log("Se informó la ejecución del curso: " + id);
@@ -999,7 +1014,7 @@
                                             console.log(data + ': falta de fecha');
                                         }
                                     },
-                                    error  : function (data) {
+                                    error: function (data) {
                                         console.log('Hubo un error.');
                                         console.log(data);
                                     }
@@ -1025,23 +1040,23 @@
             var data =
                 [
                     {
-                        name : '_token',
+                        name: '_token',
                         value: $('.container-fluid input').first().val()
                     },
                     {
-                        name : 'fecha_ejec_inicial',
+                        name: 'fecha_ejec_inicial',
                         value: $('#fecha_ejec_inicial').val()
                     },
                     {
-                        name : 'fecha_ejec_final',
+                        name: 'fecha_ejec_final',
                         value: $('#fecha_ejec_final').val()
                     },
                     {
-                        name : 'fecha_display',
+                        name: 'fecha_display',
                         value: $('#fecha_ejec_inicial').val()
                     },
                     {
-                        name : 'id_estado',
+                        name: 'id_estado',
                         value: 4
                     }
                 ];
@@ -1070,61 +1085,61 @@
                 var id = $(this).data('id');
 
                 jQuery('<div/>', {
-                    id  : 'dialogReprogramar',
+                    id: 'dialogReprogramar',
                     text: ''
                 }).appendTo('.container-fluid');
 
                 $("#dialogReprogramar").dialog({
-                    title        : "Reprogramación del Curso",
-                    show         : {
+                    title: "Reprogramación del Curso",
+                    show: {
                         effect: "fold"
                     },
-                    hide         : {
+                    hide: {
                         effect: "fade"
                     },
-                    modal        : true,
-                    width        : 400,
-                    height       : 300,
+                    modal: true,
+                    width: 400,
+                    height: 300,
                     closeOnEscape: true,
-                    resizable    : false,
-                    dialogClass  : "alert",
-                    open         : function () {
+                    resizable: false,
+                    dialogClass: "alert",
+                    open: function () {
                         jQuery('<p/>', {
-                            id  : 'dialogReprogramar',
+                            id: 'dialogReprogramar',
                             text: "Seleccionar las fechas de reprogramación"
                         }).appendTo('#dialogReprogramar');
 
                         jQuery('<p/>', {
-                            id  : 'p_fecha_reprograma_inicial',
+                            id: 'p_fecha_reprograma_inicial',
                             text: 'Fecha Inicial Reprogramada'
                         }).appendTo('#dialogReprogramar');
 
                         jQuery('<input/>', {
-                            type : "text",
-                            name : "fecha_reprograma_inicial",
-                            id   : "fecha_reprograma_inicial",
+                            type: "text",
+                            name: "fecha_reprograma_inicial",
+                            id: "fecha_reprograma_inicial",
                             class: "form-control pull-right datepicker"
                         }).appendTo('#dialogReprogramar');
 
                         jQuery('<p/>', {
-                            id  : 'p_fecha_final',
+                            id: 'p_fecha_final',
                             text: 'Fecha Final Reprogramada'
                         }).appendTo('#dialogReprogramar');
 
                         jQuery('<input/>', {
-                            type : "text",
-                            name : "fecha_reprograma_final",
-                            id   : "fecha_reprograma_final",
+                            type: "text",
+                            name: "fecha_reprograma_final",
+                            id: "fecha_reprograma_final",
                             class: "form-control pull-right datepicker"
                         }).appendTo('#dialogReprogramar');
 
                         $('.datepicker').datepicker({
-                            format   : 'dd/mm/yyyy',
-                            language : 'es',
+                            format: 'dd/mm/yyyy',
+                            language: 'es',
                             autoclose: true,
                         });
                     },
-                    close        : function () {
+                    close: function () {
                         removeDialog($(this), 'dialogReprogramar');
                     },
 
@@ -1132,9 +1147,9 @@
                         {
                             "Aceptar": function () {
                                 $.ajax({
-                                    url    : "{{url('cursos')}}" + '/' + id + '/reprogramar',
-                                    method : 'put',
-                                    data   : getDataReprogramacionCurso(),
+                                    url: "{{url('cursos')}}" + '/' + id + '/reprogramar',
+                                    method: 'put',
+                                    data: getDataReprogramacionCurso(),
                                     success: function (data) {
                                         if (data != "error") {
                                             console.log("Se reprogramó el curso: " + id);
@@ -1144,7 +1159,7 @@
                                             console.log(data + ': falta de fecha');
                                         }
                                     },
-                                    error  : function (data) {
+                                    error: function (data) {
                                         console.log('Hubo un error.');
                                         console.log(data);
                                     }
@@ -1170,23 +1185,23 @@
             var data =
                 [
                     {
-                        name : '_token',
+                        name: '_token',
                         value: $('.container-fluid input').first().val()
                     },
                     {
-                        name : 'fecha_plan_inicial',
+                        name: 'fecha_plan_inicial',
                         value: $('#fecha_reprograma_inicial').val()
                     },
                     {
-                        name : 'fecha_plan_final',
+                        name: 'fecha_plan_final',
                         value: $('#fecha_reprograma_final').val()
                     },
                     {
-                        name : 'fecha_display',
+                        name: 'fecha_display',
                         value: $('#fecha_reprograma_inicial').val()
                     },
                     {
-                        name : 'id_estado',
+                        name: 'id_estado',
                         value: 5
                     }
                 ];
@@ -1200,46 +1215,46 @@
                 var id = $(this).data('id');
 
                 jQuery('<div/>', {
-                    id  : 'dialogDesactivar',
+                    id: 'dialogDesactivar',
                     text: ''
                 }).appendTo('.container-fluid');
 
                 $("#dialogDesactivar").dialog({
-                    title        : "Desactivación del Curso",
-                    show         : {
+                    title: "Desactivación del Curso",
+                    show: {
                         effect: "fold"
                     },
-                    hide         : {
+                    hide: {
                         effect: "fade"
                     },
-                    modal        : true,
-                    width        : 400,
-                    height       : 300,
+                    modal: true,
+                    width: 400,
+                    height: 300,
                     closeOnEscape: true,
-                    resizable    : false,
-                    dialogClass  : "alert",
-                    open         : function () {
+                    resizable: false,
+                    dialogClass: "alert",
+                    open: function () {
                         jQuery('<p/>', {
-                            id  : 'dialogDesactivar',
+                            id: 'dialogDesactivar',
                             text: "¿Está segura/o de desactivar el curso? Desactivarlo no le permitirá realizar el curso en el futuro"
                         }).appendTo('#dialogDesactivar');
                     },
-                    close        : function () {
+                    close: function () {
                         removeDialog($(this), 'dialogDesactivar');
                     },
-                    buttons      :
+                    buttons:
                         {
                             "Aceptar": function () {
                                 $.ajax({
-                                    url    : "{{url('cursos')}}" + '/' + id + '/desactivar',
-                                    method : 'put',
-                                    data   : getDataDesactivacionCurso(),
+                                    url: "{{url('cursos')}}" + '/' + id + '/desactivar',
+                                    method: 'put',
+                                    data: getDataDesactivacionCurso(),
                                     success: function (data) {
                                         console.log(data);
                                         alert("Se desactivó el curso");
                                         $('#ediciones-table').DataTable().clear().draw();
                                     },
-                                    error  : function (data) {
+                                    error: function (data) {
                                         console.log('Hubo un error.');
                                         console.log(data);
                                     }
@@ -1260,11 +1275,11 @@
             var data =
                 [
                     {
-                        name : '_token',
+                        name: '_token',
                         value: $('.container-fluid input').first().val()
                     },
                     {
-                        name : 'id_estado',
+                        name: 'id_estado',
                         value: 6
                     }
                 ];
@@ -1288,11 +1303,11 @@
             data =
                 [
                     {
-                        name : '_token',
+                        name: '_token',
                         value: $('.container-fluid input').first().val()
                     },
                     {
-                        name : "error",
+                        name: "error",
                         value: 0
                     }
                 ];
@@ -1303,7 +1318,7 @@
         //Inicializacion de Select2
         function inicializarSelect2() {
             $('.select-2').select2({
-                "width"      : "100%",
+                "width": "100%",
                 "placeholder": "   Seleccionar"
             }).change(function () {
                 $(this).valid();
@@ -1363,8 +1378,6 @@
                 let pautasHtml = '<option></option>';
 
                 pautas = {!! $pautasEdit->toJson() !!};
-
-                console.log(pautas)
 
                 let anio = $('#general #anio').val();
 
@@ -1476,23 +1489,23 @@
             var id_pac = $('.tab-content #general').data('id');
 
             let datatable = $('#estado-table').DataTable({
-                destroy   : true,
+                destroy: true,
                 responsive: true,
-                searching : false,
-                paginate  : false,
-                info      : false,
-                ajax      : "{{url('/pacs')}}" + "/" + id_pac + "/tablaEstado",
-                columns   : [
+                searching: false,
+                paginate: false,
+                info: false,
+                ajax: "{{url('/pacs')}}" + "/" + id_pac + "/tablaEstado",
+                columns: [
                     {
-                        title    : 'Estado', data: 'estado', defaultContent: 'No tiene estado', name: 'id_estado',
-                        render   : function (data) {
+                        title: 'Estado', data: 'estado', defaultContent: 'No tiene estado', name: 'id_estado',
+                        render: function (data) {
                             return renderEstado(data);
                         },
                         orderable: false
                     },
                     {
-                        title    : 'Acciones', data: 'estado', defaultContent: '-', name: 'id_estado',
-                        render   : function (data) {
+                        title: 'Acciones', data: 'estado', defaultContent: '-', name: 'id_estado',
+                        render: function (data) {
                             return estadoButtons(data);
                         },
                         orderable: false
@@ -1515,39 +1528,39 @@
             var id_pac = $('.tab-content #general').data('id');
 
             let datatable = $('#cambios-estados-table').DataTable({
-                destroy   : true,
+                destroy: true,
                 responsive: true,
-                searching : false,
-                paginate  : false,
-                info      : false,
-                order     : [2, 'desc'],
-                ajax      : "{{url('/pacs')}}" + "/" + id_pac + "/tablaCambiosEstados",
-                columns   : [
+                searching: false,
+                paginate: false,
+                info: false,
+                order: [2, 'desc'],
+                ajax: "{{url('/pacs')}}" + "/" + id_pac + "/tablaCambiosEstados",
+                columns: [
                     {
-                        title         : 'Estado Anterior',
-                        data          : 'estado_anterior',
+                        title: 'Estado Anterior',
+                        data: 'estado_anterior',
                         defaultContent: 'No tiene estado anterior',
-                        name          : 'id_estado_anterior',
-                        render        : function (data) {
+                        name: 'id_estado_anterior',
+                        render: function (data) {
                             return renderEstado(data);
                         },
-                        orderable     : false,
-                        width         : '15%'
+                        orderable: false,
+                        width: '15%'
                     },
                     {
-                        title         : 'Estado Nuevo',
-                        data          : 'estado_nuevo',
+                        title: 'Estado Nuevo',
+                        data: 'estado_nuevo',
                         defaultContent: 'No tiene estado nuevo',
-                        name          : 'id_estado_nuevo',
-                        render        : function (data) {
+                        name: 'id_estado_nuevo',
+                        render: function (data) {
                             return renderEstado(data);
                         },
-                        orderable     : false,
-                        width         : '15%'
+                        orderable: false,
+                        width: '15%'
                     },
                     {
-                        title    : 'Fecha', data: 'created_at', defaultContent: '-',
-                        render   : function (data) {
+                        title: 'Fecha', data: 'created_at', defaultContent: '-',
+                        render: function (data) {
                             if (data) {
                                 return moment(data).format('DD/MM/YYYY');
                             }
@@ -1555,8 +1568,8 @@
                         orderable: false, width: '15%'
                     },
                     {
-                        title    : 'Usuario', data: 'user', defaultContent: '-', name: 'id_user',
-                        render   : function (data) {
+                        title: 'Usuario', data: 'user', defaultContent: '-', name: 'id_user',
+                        render: function (data) {
                             if (data) {
                                 return data.title;
                             }
@@ -1584,43 +1597,43 @@
             var id_pac = $('.tab-content #general').data('id');
 
             var datatable = $('#ficha_tecnica-table').DataTable({
-                destroy   : true,
+                destroy: true,
                 responsive: true,
-                searching : false,
-                paginate  : false,
-                info      : false,
-                ajax      : "{{url('/pacs')}}" + "/" + id_pac + "/tablaFicha",
-                columns   : [
+                searching: false,
+                paginate: false,
+                info: false,
+                ajax: "{{url('/pacs')}}" + "/" + id_pac + "/tablaFicha",
+                columns: [
                     {
-                        title         : 'Archivo',
-                        data          : 'ficha_tecnica.original',
+                        title: 'Archivo',
+                        data: 'ficha_tecnica.original',
                         defaultContent: '<b>No subió Ficha Técnica</b>',
-                        name          : 'id_ficha_tecnica'
+                        name: 'id_ficha_tecnica'
                     },
                     {
-                        title         : 'Creado',
-                        data          : 'ficha_tecnica.created_at',
+                        title: 'Creado',
+                        data: 'ficha_tecnica.created_at',
                         defaultContent: '-',
-                        name          : 'id_ficha_tecnica',
-                        orderable     : false
+                        name: 'id_ficha_tecnica',
+                        orderable: false
                     },
                     {
-                        title         : 'Última modificación',
-                        data          : 'ficha_tecnica.updated_at',
+                        title: 'Última modificación',
+                        data: 'ficha_tecnica.updated_at',
                         defaultContent: '-',
-                        name          : 'id_ficha_tecnica',
-                        orderable     : false
+                        name: 'id_ficha_tecnica',
+                        orderable: false
                     },
                     {
-                        title    : 'Estado', data: 'ficha_tecnica', name: 'id_ficha_tecnica',
-                        render   : function (data, type, row, meta) {
+                        title: 'Estado', data: 'ficha_tecnica', name: 'id_ficha_tecnica',
+                        render: function (data, type, row, meta) {
                             return estadosFicha(data, row.ficha_obligatoria);
                         },
                         orderable: false
                     },
                     {
-                        title    : 'Acciones', data: 'ficha_tecnica', name: 'id_ficha_tecnica',
-                        render   : function (data, type, row, meta) {
+                        title: 'Acciones', data: 'ficha_tecnica', name: 'id_ficha_tecnica',
+                        render: function (data, type, row, meta) {
                             return fichaTecnicaAccionesButtons(data, row.id_pac, row.ficha_obligatoria);
                         },
                         orderable: false
@@ -1648,21 +1661,21 @@
             var id_pac = $('.tab-content #general').data('id');
 
             var datatable = $('#ediciones-tab .row #ediciones-table').DataTable({
-                destroy   : true,
+                destroy: true,
                 responsive: true,
-                searching : false,
-                ajax      : "{{url('/pacs')}}" + "/" + id_pac + "/tablaEdiciones",
-                columns   : [
+                searching: false,
+                ajax: "{{url('/pacs')}}" + "/" + id_pac + "/tablaEdiciones",
+                columns: [
                     {title: '#', data: 'edicion'},
                     {title: 'Estado', data: 'estado.nombre', defaultContent: '-', name: 'id_edicion'},
                     {
-                        title : 'Fecha inicial planificada', data: 'fecha_plan_inicial', defaultContent: '-',
+                        title: 'Fecha inicial planificada', data: 'fecha_plan_inicial', defaultContent: '-',
                         render: function (data, type, row, meta) {
                             return fechaPlanificada(data, row.fecha_plan_final, row.id_estado);
                         }
                     },
                     {
-                        title : 'Fecha inicial ejecución', data: 'fecha_ejec_inicial', defaultContent: '-',
+                        title: 'Fecha inicial ejecución', data: 'fecha_ejec_inicial', defaultContent: '-',
                         render: function (data) {
                             if (data) {
                                 return moment(data).format('DD/MM/YYYY');
@@ -1670,13 +1683,13 @@
                         }
                     },
                     {
-                        title : 'Fecha final planificada', data: 'fecha_plan_final', defaultContent: '-',
+                        title: 'Fecha final planificada', data: 'fecha_plan_final', defaultContent: '-',
                         render: function (data, type, row, meta) {
                             return fechaPlanificada(data, row.fecha_plan_final, row.id_estado);
                         }
                     },
                     {
-                        title : 'Fecha final ejecución', data: 'fecha_ejec_final', defaultContent: '-',
+                        title: 'Fecha final ejecución', data: 'fecha_ejec_final', defaultContent: '-',
                         render: function (data) {
                             if (data) {
                                 return moment(data).format('DD/MM/YYYY');
@@ -1684,8 +1697,8 @@
                         }
                     },
                     {
-                        data     : 'estado.nombre', name: 'id_estado',
-                        render   : function (data, type, row, meta) {
+                        data: 'estado.id_estado', name: 'id_estado',
+                        render: function (data, type, row, meta) {
                             return accionesEdiciones(data, row.id_curso);
                         },
                         orderable: false
@@ -1711,32 +1724,32 @@
             switch (estado['id_estado']) {
                 case 1:
                     return estado.nombre + ' ' + iconFA({
-                        icon  : 'fa-plus-square',
-                        color : '#007BFF',
+                        icon: 'fa-plus-square',
+                        color: '#007BFF',
                         titulo: estado.nombre
                     });
                 case 2:
                     return estado.nombre + ' ' + iconFA({
-                        icon  : 'fa-minus-square',
-                        color : '#FFC107',
+                        icon: 'fa-minus-square',
+                        color: '#FFC107',
                         titulo: estado.nombre
                     });
                 case 3:
                     return estado.nombre + ' ' + iconFA({
-                        icon  : 'fa-check-square',
-                        color : '#28A745',
+                        icon: 'fa-check-square',
+                        color: '#28A745',
                         titulo: estado.nombre
                     });
                 case 4:
                     return estado.nombre + ' ' + iconFA({
-                        icon  : 'fa-window-close',
-                        color : '#DC3545',
+                        icon: 'fa-window-close',
+                        color: '#DC3545',
                         titulo: estado.nombre
                     });
                 default:
                     return 'Estado desconocido  ' + iconFA({
-                        icon  : 'fa-question',
-                        color : '#6C757D',
+                        icon: 'fa-question',
+                        color: '#6C757D',
                         titulo: estado.nombre + ' - Estado desconocido'
                     });
             }
@@ -1744,16 +1757,16 @@
 
         function aprobarAccionButton() {
             return '<a href="javascript:void(0)" data-id="{{$pac->id_pac}}" class="btn btn-success aprobar-pac">' + iconFA({
-                icon  : "fa-check",
-                color : "white",
+                icon: "fa-check",
+                color: "white",
                 titulo: "Aprobar Acción"
             }) + 'Aprobar Acción </a>';
         }
 
         function rechazarAccionButton() {
             return '<a href="javascript:void(0)" data-id="{{$pac->id_pac}}" class="btn btn-danger rechazar-pac">' + iconFA({
-                icon  : "fa-close",
-                color : "white",
+                icon: "fa-close",
+                color: "white",
                 titulo: "Rechazar Acción"
             }) + 'Rechazar Acción </a>';
         }
@@ -1795,37 +1808,37 @@
                 var id = $(this).data('id');
 
                 jQuery('<div/>', {
-                    id  : 'dialogAprobar',
+                    id: 'dialogAprobar',
                     text: ''
                 }).appendTo('.container-fluid');
 
                 $("#dialogAprobar").dialog({
-                    title        : "Aprobar una Acción",
-                    show         : {
+                    title: "Aprobar una Acción",
+                    show: {
                         effect: "fold"
                     },
-                    hide         : {
+                    hide: {
                         effect: "fade"
                     },
-                    modal        : true,
-                    width        : 400,
-                    height       : 300,
+                    modal: true,
+                    width: 400,
+                    height: 300,
                     closeOnEscape: true,
-                    resizable    : false,
-                    dialogClass  : "alert",
-                    open         : function () {
+                    resizable: false,
+                    dialogClass: "alert",
+                    open: function () {
                         jQuery('<p/>', {
-                            id  : 'dialogAprobar',
+                            id: 'dialogAprobar',
                             text: "Mensaje adicional a la aprobación de la Acción"
                         }).appendTo('#dialogAprobar');
 
                         jQuery('<textarea/>', {
-                            name       : "mensaje",
-                            id         : "mensaje",
+                            name: "mensaje",
+                            id: "mensaje",
                             placeholder: "Mensaje optativo."
                         }).appendTo('#dialogAprobar');
                     },
-                    close        : function () {
+                    close: function () {
                         removeDialog($(this), 'dialogAprobar');
                     },
 
@@ -1833,9 +1846,9 @@
                         {
                             "Aceptar": function () {
                                 $.ajax({
-                                    url    : "{{url('pacs')}}" + '/' + id + '/aprobar',
-                                    method : 'put',
-                                    data   : getDataCambioEstadoAccion(),
+                                    url: "{{url('pacs')}}" + '/' + id + '/aprobar',
+                                    method: 'put',
+                                    data: getDataCambioEstadoAccion(),
                                     success: function (data) {
                                         console.log("Se aprobó la acción: " + id);
                                         alert("Se aprobó la acción");
@@ -1843,7 +1856,7 @@
                                         $('#cambios-estados-table').DataTable().clear().draw();
                                         $('#ediciones-table').DataTable().clear().draw();
                                     },
-                                    error  : function (data) {
+                                    error: function (data) {
                                         alert("Hubo un error");
                                         console.log(data);
                                     }
@@ -1864,37 +1877,37 @@
                 var id = $(this).data('id');
 
                 jQuery('<div/>', {
-                    id  : 'dialogRechazar',
+                    id: 'dialogRechazar',
                     text: ''
                 }).appendTo('.container-fluid');
 
                 $("#dialogRechazar").dialog({
-                    title        : "Aprobar una Acción",
-                    show         : {
+                    title: "Aprobar una Acción",
+                    show: {
                         effect: "fold"
                     },
-                    hide         : {
+                    hide: {
                         effect: "fade"
                     },
-                    modal        : true,
-                    width        : 400,
-                    height       : 300,
+                    modal: true,
+                    width: 400,
+                    height: 300,
                     closeOnEscape: true,
-                    resizable    : false,
-                    dialogClass  : "alert",
-                    open         : function () {
+                    resizable: false,
+                    dialogClass: "alert",
+                    open: function () {
                         jQuery('<p/>', {
-                            id  : 'dialogRechazar',
+                            id: 'dialogRechazar',
                             text: "Mensaje adicional al rechazo de la Acción"
                         }).appendTo('#dialogRechazar');
 
                         jQuery('<textarea/>', {
-                            name       : "mensaje",
-                            id         : "mensaje",
+                            name: "mensaje",
+                            id: "mensaje",
                             placeholder: "Mensaje optativo."
                         }).appendTo('#dialogRechazar');
                     },
-                    close        : function () {
+                    close: function () {
                         removeDialog($(this), 'dialogRechazar');
                     },
 
@@ -1902,9 +1915,9 @@
                         {
                             "Aceptar": function () {
                                 $.ajax({
-                                    url    : "{{url('pacs')}}" + '/' + id + '/rechazar',
-                                    method : 'put',
-                                    data   : getDataCambioEstadoAccion(),
+                                    url: "{{url('pacs')}}" + '/' + id + '/rechazar',
+                                    method: 'put',
+                                    data: getDataCambioEstadoAccion(),
                                     success: function (data) {
                                         console.log("Se rechazó la acción: " + id);
                                         alert("Se rechazó la acción");
@@ -1912,7 +1925,7 @@
                                         $('#cambios-estados-table').DataTable().clear().draw();
                                         $('#ediciones-table').DataTable().clear().draw();
                                     },
-                                    error  : function (data) {
+                                    error: function (data) {
                                         alert("Hubo un error");
                                         console.log(data);
                                     }
@@ -1933,11 +1946,11 @@
             var data =
                 [
                     {
-                        name : '_token',
+                        name: '_token',
                         value: $('.container-fluid input').first().val()
                     },
                     {
-                        name : 'mensaje',
+                        name: 'mensaje',
                         value: $('#mensaje').val()
                     },
                 ];
@@ -1949,13 +1962,13 @@
         //Inicializa el TypeAhead del nombre del Pac
         function inicializarTypeahead() {
             $.typeahead({
-                input   : '.curso_typeahead',
-                order   : "desc",
-                source  : {
+                input: '.curso_typeahead',
+                order: "desc",
+                source: {
                     info: {
                         ajax: {
                             type: "get",
-                            url : "{{url('cursos/nombres')}}",
+                            url: "{{url('cursos/nombres')}}",
                             path: "data.info"
                         }
                     }
@@ -2039,35 +2052,35 @@
 
             var selected = [
                 {
-                    name : 'id_actor',
+                    name: 'id_actor',
                     value: id_actor
                 },
                 {
-                    name : 'id_accion',
+                    name: 'id_accion',
                     value: id_accion
                 },
                 {
-                    name : 'id_modalidad',
+                    name: 'id_modalidad',
                     value: id_modalidad,
                 },
                 {
-                    name : 'id_provincia',
+                    name: 'id_provincia',
                     value: id_provincia
                 },
                 {
-                    name : 'ids_tematicas',
+                    name: 'ids_tematicas',
                     value: ids_tematicas
                 },
                 {
-                    name : 'ids_destinatarios',
+                    name: 'ids_destinatarios',
                     value: ids_destinatarios
                 },
                 {
-                    name : 'ids_responsables',
+                    name: 'ids_responsables',
                     value: ids_responsables
                 },
                 {
-                    name : 'ids_componentes',
+                    name: 'ids_componentes',
                     value: ids_componentes
                 }];
 
@@ -2084,36 +2097,36 @@
             newValidationMethods();
 
             const validator = $('#modificacion-pac #form-modificacion').validate({
-                rules         : {
-                    anio           : {
+                rules: {
+                    anio: {
                         required: true,
                     },
-                    nombre         : {
+                    nombre: {
                         required: true
                     },
-                    duracion       : {
+                    duracion: {
                         required: true,
-                        number  : true
+                        number: true
                     },
-                    id_actor       : {
+                    id_actor: {
                         selecciono: true
                     },
-                    id_accion      : {
+                    id_accion: {
                         selecciono: true
                     },
-                    id_modalidad   : {
+                    id_modalidad: {
                         selecciono: true
                     },
-                    id_tematica    : {
+                    id_tematica: {
                         selecciono: true
                     },
-                    id_provincia   : {
+                    id_provincia: {
                         selecciono: true
                     },
                     id_destinatario: {
                         selecciono: true
                     },
-                    id_responsable : {
+                    id_responsable: {
                         selecciono: true
                     },
                     // id_pauta: {
@@ -2123,7 +2136,7 @@
                     //   selecciono: true
                     // },
                     ediciones: {
-                        number     : true,
+                        number: true,
                         completados: true
                     }
                 },
@@ -2136,30 +2149,30 @@
                         error.insertAfter(element);
                     }
                 },
-                ignore        : '.select2-input, .select2-focusser, .select2-search__field',
-                messages      : {
-                    nombre  : "Campo obligatorio",
+                ignore: '.select2-input, .select2-focusser, .select2-search__field',
+                messages: {
+                    nombre: "Campo obligatorio",
                     duracion: "Campo obligatorio"
                 },
-                highlight     : function (element) {
+                highlight: function (element) {
                     $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
                 },
-                success       : function (element) {
+                success: function (element) {
                     $(element).text('').addClass('valid').closest('.form-group').removeClass('has-error')
                         .addClass('has-success');
                 },
 
                 submitHandler: function (form) {
                     $.ajax({
-                        type   : 'put',
-                        method : 'put',
-                        url    : "{{url('pacs')}}" + '/' + "{{$pac->id_pac}}",
-                        data   : getInput(),
+                        type: 'put',
+                        method: 'put',
+                        url: "{{url('pacs')}}" + '/' + "{{$pac->id_pac}}",
+                        data: getInput(),
                         success: function (data) {
                             alert("Se actualiza la pac.");
                             location.reload();
                         },
-                        error  : function (data) {
+                        error: function (data) {
                             alert("No se pudo modificar la pac.");
                         }
                     });
